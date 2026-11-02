@@ -1,0 +1,46 @@
+---
+title: Video Intelligence
+description: Generate, inspect, segment, and summarize a reproducible offline test video.
+---
+
+import WorkflowExecutionEvidence from "@site/src/components/WorkflowExecutionEvidence";
+
+import WorkflowLocalRun from "@site/src/components/WorkflowLocalRun";
+
+import {
+  WorkflowDag,
+  WorkflowPatternDetails,
+} from "@site/src/components/WorkflowShowcase";
+
+# Video Intelligence
+
+The workflow creates a known three-scene video, inspects its streams, extracts scene thumbnails, measures audio, and assembles a searchable timeline. The known input makes scene and duration assertions deterministic while still exercising real FFmpeg processing in the OCI image.
+
+<WorkflowDag
+  title="Video Intelligence"
+  stages={["prepare", ["probe", "scenes", "audio"], "timeline", "report"]}
+/>
+
+<WorkflowPatternDetails
+  inputs={["Generated three-scene audiovisual fixture"]}
+  outputs={[
+    "Source video metadata",
+    "Scene thumbnails",
+    "Audio measurements",
+    "Timestamped timeline",
+    "Artifact manifest",
+  ]}
+  evidence={[
+    "Stream codecs and dimensions",
+    "Observed duration",
+    "Scene count",
+    "Audio level method",
+  ]}
+/>
+
+<WorkflowLocalRun examplePath="media/video-intelligence" />
+
+<WorkflowExecutionEvidence
+  title="Video Intelligence"
+  examplePath="media/video-intelligence"
+/>

@@ -5,15 +5,91 @@ import (
 	"fmt"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
 	provider "github.com/UFFeScience/akoflow/internal/provider"
 )
 
+func TestMeasuredSnapshotSeparatesRemoteServiceFromTransportWall(t *testing.T) {
+	executor := &commandExecutorStub{responses: [][]byte{[]byte(`{"files":[],"serviceSeconds":0.001}`)}, delays: []time.Duration{20 * time.Millisecond}}
+	adapter := &Adapter{executor: executor}
+	started := time.Now()
+	files, service, err := adapter.measuredSnapshot(context.Background(), "/workspace")
+	if err != nil || len(files) != 0 || service != .001 || time.Since(started).Seconds() <= service {
+		t.Fatalf("service and transport wall conflated: %v %g %v", files, service, err)
+	}
+}
+
+func TestMeasuredSnapshotRejectsIncompleteOrNegativeService(t *testing.T) {
+	for _, response := range []string{`{}`, `{"files":[]}`, `{"files":[],"serviceSeconds":-1}`} {
+		adapter := &Adapter{executor: &commandExecutorStub{responses: [][]byte{[]byte(response)}}}
+		if _, _, err := adapter.measuredSnapshot(context.Background(), "/workspace"); err == nil {
+			t.Fatalf("accepted invalid measurement %s", response)
+		}
+	}
+}
+
+func TestTerminalArtifactObservationPublishesQueueFreeService(t *testing.T) {
+	finished := time.Now().UTC().Add(-time.Minute)
+	executor := &commandExecutorStub{responses: [][]byte{
+		[]byte("exited|0|" + finished.Format(time.RFC3339Nano)),
+		[]byte(`{"files":[],"serviceSeconds":0.001}`), nil,
+	}, delays: []time.Duration{0, 20 * time.Millisecond}}
+	adapter := &Adapter{executor: executor}
+	handle, err := adapter.Inspect(context.Background(), domain.ActivityHandle{
+		ExternalID: "container",
+		StartedAt:  float64(finished.UnixNano())/1e9 - 10,
+		Metadata:   map[string]any{"artifactObservationRoot": "/workspace", "artifactObservationBefore": "[]"},
+	})
+	if err != nil || handle.Metadata["remoteArtifactObservationServiceSeconds"] != .001 || handle.Metadata["remoteArtifactObservationSeconds"].(float64) <= .001 {
+		t.Fatalf("terminal service/wall evidence: %+v %v", handle, err)
+	}
+}
+
+func TestRemoteCompletionUsesNativeTimeNotInspectionDelay(t *testing.T) {
+	finished := time.Now().UTC().Add(-time.Minute)
+	executor := &commandExecutorStub{responses: [][]byte{[]byte("exited|0|" + finished.Format(time.RFC3339Nano))}}
+	adapter := &Adapter{executor: executor}
+	handle, err := adapter.Inspect(context.Background(), domain.ActivityHandle{ExternalID: "container", StartedAt: float64(finished.UnixNano())/1e9 - 10})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if handle.FinishedAt != float64(finished.UnixNano())/1e9 || handle.Metadata["terminalObservedAt"].(float64) <= handle.FinishedAt {
+		t.Fatalf("native/observed completion conflated: %+v", handle)
+	}
+}
+
+func TestRemoteObservationTimingDoesNotExtendNativeCompute(t *testing.T) {
+	finished := time.Now().UTC().Add(-time.Minute)
+	executor := &commandExecutorStub{
+		responses: [][]byte{[]byte("exited|0|" + finished.Format(time.RFC3339Nano)), []byte("[]"), nil},
+		delays:    []time.Duration{0, 20 * time.Millisecond},
+	}
+	adapter := &Adapter{executor: executor}
+	handle, err := adapter.Inspect(context.Background(), domain.ActivityHandle{
+		ExternalID: "container", StartedAt: float64(finished.UnixNano())/1e9 - 10,
+		Metadata: map[string]any{"artifactObservationRoot": "/workspace", "artifactObservationBefore": "[]"},
+	})
+	if err != nil || handle.Status != domain.HandleCompleted {
+		t.Fatalf("inspect: %+v %v", handle, err)
+	}
+	if handle.FinishedAt != float64(finished.UnixNano())/1e9 {
+		t.Fatal("observation inflated command runtime")
+	}
+	if handle.Metadata["remoteArtifactObservationSeconds"].(float64) < .02 {
+		t.Fatal("missing observation service duration")
+	}
+	if handle.Metadata["remoteArtifactsReadyAt"].(float64) <= handle.FinishedAt {
+		t.Fatal("publication must remain separate from native completion")
+	}
+}
+
 type commandExecutorStub struct {
 	calls     []commandCall
 	responses [][]byte
 	errors    []error
+	delays    []time.Duration
 }
 type commandCall struct {
 	name string
@@ -23,6 +99,9 @@ type commandCall struct {
 func (s *commandExecutorStub) Run(_ context.Context, name string, args []string, _ []byte) ([]byte, error) {
 	s.calls = append(s.calls, commandCall{name: name, args: append([]string(nil), args...)})
 	index := len(s.calls) - 1
+	if index < len(s.delays) {
+		time.Sleep(s.delays[index])
+	}
 	var response []byte
 	var err error
 	if index < len(s.responses) {
@@ -46,6 +125,33 @@ func executionFixture() domain.ActivityExecutionContext {
 			Resources: domain.ActivityResources{CPU: 2.5, MemoryBytes: 1024},
 		},
 		Resource: domain.Resource{ID: "machine"},
+	}
+}
+
+func TestRecoveryUsesAttemptScopedContainerName(t *testing.T) {
+	executor := &commandExecutorStub{responses: [][]byte{nil, []byte("[]"), []byte("container-id\n")}}
+	execution := executionFixture()
+	execution.Attempt = 2
+	handle, err := (&Adapter{executor: executor}).Start(context.Background(), execution)
+	if err != nil || handle.Metadata["containerName"] != "akoflow-run-one-activity-one-attempt-2" {
+		t.Fatalf("handle=%+v err=%v", handle, err)
+	}
+}
+
+func TestStartRecordsIndependentRemoteLaunchStages(t *testing.T) {
+	executor := &commandExecutorStub{
+		responses: [][]byte{nil, []byte("[]"), []byte("container-id\n")},
+		delays:    []time.Duration{5 * time.Millisecond, 10 * time.Millisecond, 15 * time.Millisecond, 20 * time.Millisecond},
+	}
+	handle, err := (&Adapter{executor: executor}).Start(context.Background(), executionFixture())
+	if err != nil {
+		t.Fatal(err)
+	}
+	for index, key := range []string{"remoteWorkspacePrepareSeconds", "remoteWorkspaceSnapshotSeconds", "remoteContainerLaunchSeconds", "remoteInitialTelemetrySeconds"} {
+		seconds, ok := handle.Metadata[key].(float64)
+		if !ok || seconds < executor.delays[index].Seconds() {
+			t.Fatalf("stage %s did not account for its own executor delay: %v", key, handle.Metadata[key])
+		}
 	}
 }
 

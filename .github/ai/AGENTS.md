@@ -1,5 +1,13 @@
 # Akoflow Agent Guide
 
+## Required Contribution Workflow
+
+- Every repository change follows `ISSUE -> BRANCH -> PR`.
+- Create or identify the GitHub issue before implementation.
+- Create a dedicated branch linked to that issue; do not implement directly on `main`.
+- Open a pull request from that branch and link it to the issue.
+- Do not bypass this sequence unless the user explicitly instructs otherwise for a specific change.
+
 ## Core Shape
 
 - Go project with CLI and server binaries.

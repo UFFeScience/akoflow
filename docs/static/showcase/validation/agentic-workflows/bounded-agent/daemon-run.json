@@ -1,0 +1,2155 @@
+{
+  "activityCount": 5,
+  "completedActivityCount": 5,
+  "image": "ghcr.io/uffescience/akoflow-examples/showcase-bounded-agent:local-ee8f8db4df791b16",
+  "imageId": "sha256:ee8f8db4df791b16467a174d5aa54399597785cf2ab9d390967e00be01f62f34",
+  "observedAt": "2026-10-20T19:14:21Z",
+  "planId": "showcase-bounded-agent-local-4f5eb97ca7-manual-plan-20261020t191412.777507000",
+  "projection": {
+    "activities": [
+      {
+        "activityId": "showcase-bounded-agent-local-4f5eb97ca7-prepare-objective",
+        "allocatedResourceId": "showcase-bounded-agent-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "finishedAt": 1792523653.398437,
+        "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-prepare-objective",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-bounded-agent-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-bounded-agent-local-4f5eb97ca7-manual-plan-20261020t191412.777507000-showcase-bounded-agent-local-4f5eb97ca7-prepare-objective",
+        "plannedResourceId": "showcase-bounded-agent-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523653.134747,
+        "readyAt": 1792523653.134747,
+        "runtimeId": "showcase-bounded-agent-local",
+        "runtimeSeconds": 0.11646533012390137,
+        "startedAt": 1792523653.2819717,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+        "allocatedResourceId": "showcase-bounded-agent-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "finishedAt": 1792523654.8856318,
+        "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14351773262023926,
+          "preparationFinishedAt": 1792523654.5991836,
+          "preparationStartedAt": 1792523654.4055457,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0026702880859375,
+          "runtimeId": "showcase-bounded-agent-local",
+          "transferElapsedSeconds": 0.19363784790039062,
+          "transferWorkSeconds": 0.19363784790039062
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-bounded-agent-local-4f5eb97ca7-manual-plan-20261020t191412.777507000-showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+        "plannedResourceId": "showcase-bounded-agent-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523654.3997319,
+        "readyAt": 1792523654.3997319,
+        "runtimeId": "showcase-bounded-agent-local",
+        "runtimeSeconds": 0.1429305076599121,
+        "startedAt": 1792523654.7427013,
+        "status": "completed",
+        "transferBytes": 524,
+        "transferSeconds": 0.19363784790039062
+      },
+      {
+        "activityId": "showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+        "allocatedResourceId": "showcase-bounded-agent-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "finishedAt": 1792523656.892098,
+        "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.12807893753051758,
+          "preparationFinishedAt": 1792523656.593787,
+          "preparationStartedAt": 1792523656.433376,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.001421213150024414,
+          "runtimeId": "showcase-bounded-agent-local",
+          "transferElapsedSeconds": 0.16041088104248047,
+          "transferWorkSeconds": 0.16041088104248047
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-bounded-agent-local-4f5eb97ca7-manual-plan-20261020t191412.777507000-showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+        "plannedResourceId": "showcase-bounded-agent-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523656.4205067,
+        "readyAt": 1792523656.4205067,
+        "runtimeId": "showcase-bounded-agent-local",
+        "runtimeSeconds": 0.17023205757141113,
+        "startedAt": 1792523656.721866,
+        "status": "completed",
+        "transferBytes": 1349,
+        "transferSeconds": 0.16041088104248047
+      },
+      {
+        "activityId": "showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+        "allocatedResourceId": "showcase-bounded-agent-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "finishedAt": 1792523658.931249,
+        "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.2736775875091553,
+          "preparationFinishedAt": 1792523658.5402107,
+          "preparationStartedAt": 1792523658.379233,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.002344846725463867,
+          "runtimeId": "showcase-bounded-agent-local",
+          "transferElapsedSeconds": 0.16097784042358398,
+          "transferWorkSeconds": 0.16097784042358398
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-bounded-agent-local-4f5eb97ca7-manual-plan-20261020t191412.777507000-showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+        "plannedResourceId": "showcase-bounded-agent-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523658.3737466,
+        "readyAt": 1792523658.3737466,
+        "runtimeId": "showcase-bounded-agent-local",
+        "runtimeSeconds": 0.11736059188842773,
+        "startedAt": 1792523658.8138883,
+        "status": "completed",
+        "transferBytes": 2224,
+        "transferSeconds": 0.16097784042358398
+      },
+      {
+        "activityId": "showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+        "allocatedResourceId": "showcase-bounded-agent-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "finishedAt": 1792523658.9433622,
+        "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.26236391067504883,
+          "preparationFinishedAt": 1792523658.565188,
+          "preparationStartedAt": 1792523658.3819594,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.003816366195678711,
+          "runtimeId": "showcase-bounded-agent-local",
+          "transferElapsedSeconds": 0.1832284927368164,
+          "transferWorkSeconds": 0.1832284927368164
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-bounded-agent-local-4f5eb97ca7-manual-plan-20261020t191412.777507000-showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+        "plannedResourceId": "showcase-bounded-agent-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523658.3749678,
+        "readyAt": 1792523658.3749678,
+        "runtimeId": "showcase-bounded-agent-local",
+        "runtimeSeconds": 0.11581039428710938,
+        "startedAt": 1792523658.8275518,
+        "status": "completed",
+        "transferBytes": 2224,
+        "transferSeconds": 0.1832284927368164
+      }
+    ],
+    "activityAttempts": [
+      {
+        "activityId": "showcase-bounded-agent-local-4f5eb97ca7-prepare-objective",
+        "allocatedResourceId": "showcase-bounded-agent-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "finishedAt": 1792523653.398437,
+        "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-prepare-objective",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-bounded-agent-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-bounded-agent-local-4f5eb97ca7-manual-plan-20261020t191412.777507000-showcase-bounded-agent-local-4f5eb97ca7-prepare-objective",
+        "plannedResourceId": "showcase-bounded-agent-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523653.134747,
+        "readyAt": 1792523653.134747,
+        "runtimeId": "showcase-bounded-agent-local",
+        "runtimeSeconds": 0.11646533012390137,
+        "startedAt": 1792523653.2819717,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+        "allocatedResourceId": "showcase-bounded-agent-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "finishedAt": 1792523654.8856318,
+        "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14351773262023926,
+          "preparationFinishedAt": 1792523654.5991836,
+          "preparationStartedAt": 1792523654.4055457,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0026702880859375,
+          "runtimeId": "showcase-bounded-agent-local",
+          "transferElapsedSeconds": 0.19363784790039062,
+          "transferWorkSeconds": 0.19363784790039062
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-bounded-agent-local-4f5eb97ca7-manual-plan-20261020t191412.777507000-showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+        "plannedResourceId": "showcase-bounded-agent-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523654.3997319,
+        "readyAt": 1792523654.3997319,
+        "runtimeId": "showcase-bounded-agent-local",
+        "runtimeSeconds": 0.1429305076599121,
+        "startedAt": 1792523654.7427013,
+        "status": "completed",
+        "transferBytes": 524,
+        "transferSeconds": 0.19363784790039062
+      },
+      {
+        "activityId": "showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+        "allocatedResourceId": "showcase-bounded-agent-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "finishedAt": 1792523656.892098,
+        "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.12807893753051758,
+          "preparationFinishedAt": 1792523656.593787,
+          "preparationStartedAt": 1792523656.433376,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.001421213150024414,
+          "runtimeId": "showcase-bounded-agent-local",
+          "transferElapsedSeconds": 0.16041088104248047,
+          "transferWorkSeconds": 0.16041088104248047
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-bounded-agent-local-4f5eb97ca7-manual-plan-20261020t191412.777507000-showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+        "plannedResourceId": "showcase-bounded-agent-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523656.4205067,
+        "readyAt": 1792523656.4205067,
+        "runtimeId": "showcase-bounded-agent-local",
+        "runtimeSeconds": 0.17023205757141113,
+        "startedAt": 1792523656.721866,
+        "status": "completed",
+        "transferBytes": 1349,
+        "transferSeconds": 0.16041088104248047
+      },
+      {
+        "activityId": "showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+        "allocatedResourceId": "showcase-bounded-agent-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "finishedAt": 1792523658.931249,
+        "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.2736775875091553,
+          "preparationFinishedAt": 1792523658.5402107,
+          "preparationStartedAt": 1792523658.379233,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.002344846725463867,
+          "runtimeId": "showcase-bounded-agent-local",
+          "transferElapsedSeconds": 0.16097784042358398,
+          "transferWorkSeconds": 0.16097784042358398
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-bounded-agent-local-4f5eb97ca7-manual-plan-20261020t191412.777507000-showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+        "plannedResourceId": "showcase-bounded-agent-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523658.3737466,
+        "readyAt": 1792523658.3737466,
+        "runtimeId": "showcase-bounded-agent-local",
+        "runtimeSeconds": 0.11736059188842773,
+        "startedAt": 1792523658.8138883,
+        "status": "completed",
+        "transferBytes": 2224,
+        "transferSeconds": 0.16097784042358398
+      },
+      {
+        "activityId": "showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+        "allocatedResourceId": "showcase-bounded-agent-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "finishedAt": 1792523658.9433622,
+        "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.26236391067504883,
+          "preparationFinishedAt": 1792523658.565188,
+          "preparationStartedAt": 1792523658.3819594,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.003816366195678711,
+          "runtimeId": "showcase-bounded-agent-local",
+          "transferElapsedSeconds": 0.1832284927368164,
+          "transferWorkSeconds": 0.1832284927368164
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-bounded-agent-local-4f5eb97ca7-manual-plan-20261020t191412.777507000-showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+        "plannedResourceId": "showcase-bounded-agent-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523658.3749678,
+        "readyAt": 1792523658.3749678,
+        "runtimeId": "showcase-bounded-agent-local",
+        "runtimeSeconds": 0.11581039428710938,
+        "startedAt": 1792523658.8275518,
+        "status": "completed",
+        "transferBytes": 2224,
+        "transferSeconds": 0.1832284927368164
+      }
+    ],
+    "artifactMaterializations": null,
+    "artifactTransferRuns": [
+      {
+        "activityId": "showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+        "durationSeconds": 0.19363784790039062,
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523654.5991836,
+        "id": "transfer-workspace-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-agent-loop-0",
+        "logicalBytes": 524,
+        "planId": "transfer-workspace-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-agent-loop-0",
+        "route": {
+          "consumerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-prepare-objective",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.10196091800000001,
+          "sourceEnvironmentId": "showcase-bounded-agent-v1",
+          "sourceResourceId": "showcase-bounded-agent-local-docker",
+          "sshChannelWaitSeconds": 2.91e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-bounded-agent-v1",
+          "targetResourceId": "showcase-bounded-agent-local-docker"
+        },
+        "startedAt": 1792523654.4055457,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 524
+      },
+      {
+        "activityId": "showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+        "durationSeconds": 0.16097784042358398,
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "filesTransferred": 4,
+        "finishedAt": 1792523658.5402107,
+        "id": "transfer-workspace-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-publish-result-0",
+        "logicalBytes": 2224,
+        "planId": "transfer-workspace-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-publish-result-0",
+        "route": {
+          "consumerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+          "filesTransferred": 4,
+          "producerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.069561666,
+          "sourceEnvironmentId": "showcase-bounded-agent-v1",
+          "sourceResourceId": "showcase-bounded-agent-local-docker",
+          "sshChannelWaitSeconds": 2.92e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-bounded-agent-v1",
+          "targetResourceId": "showcase-bounded-agent-local-docker"
+        },
+        "startedAt": 1792523658.379233,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 2224
+      },
+      {
+        "activityId": "showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+        "durationSeconds": 0.1832284927368164,
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "filesTransferred": 4,
+        "finishedAt": 1792523658.565188,
+        "id": "transfer-workspace-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-store-trace-0",
+        "logicalBytes": 2224,
+        "planId": "transfer-workspace-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-store-trace-0",
+        "route": {
+          "consumerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+          "filesTransferred": 4,
+          "producerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.092580584,
+          "sourceEnvironmentId": "showcase-bounded-agent-v1",
+          "sourceResourceId": "showcase-bounded-agent-local-docker",
+          "sshChannelWaitSeconds": 3.34e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-bounded-agent-v1",
+          "targetResourceId": "showcase-bounded-agent-local-docker"
+        },
+        "startedAt": 1792523658.3819594,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 2224
+      },
+      {
+        "activityId": "showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+        "durationSeconds": 0.16041088104248047,
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "filesTransferred": 2,
+        "finishedAt": 1792523656.593787,
+        "id": "transfer-workspace-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-validate-output-0",
+        "logicalBytes": 1349,
+        "planId": "transfer-workspace-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-validate-output-0",
+        "route": {
+          "consumerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09175254099999999,
+          "sourceEnvironmentId": "showcase-bounded-agent-v1",
+          "sourceResourceId": "showcase-bounded-agent-local-docker",
+          "sshChannelWaitSeconds": 4.58e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-bounded-agent-v1",
+          "targetResourceId": "showcase-bounded-agent-local-docker"
+        },
+        "startedAt": 1792523656.433376,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 1349
+      }
+    ],
+    "cloudBilling": {
+      "asOf": "2026-10-20T19:14:21.249321674Z",
+      "costBasis": "VM compute and boot-disk lifecycle at on-demand marginal rates; not a provider invoice",
+      "estimatedCost": 0,
+      "excludedCosts": [
+        "network-egress",
+        "public-ipv4",
+        "image-storage",
+        "discounts-and-tax"
+      ],
+      "instances": [],
+      "knownCost": 0,
+      "status": "estimated"
+    },
+    "dataLocations": [
+      {
+        "dataObjectInstanceId": "9835b2444362b56ccdd5dbad05cd994e",
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "id": "f964d9724f59419e11707cdbcb6b3cfc",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-bounded-agent-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "6f533b6f150488983601008d95ad72c2",
+        "uri": "file:///akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-agent-loop/stage-agent-loop.json"
+      },
+      {
+        "dataObjectInstanceId": "1d936712c2946526021192b2fac3c706",
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "id": "e43c6b39770d8b075fdb9bbedaa67c4f",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-bounded-agent-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "6f533b6f150488983601008d95ad72c2",
+        "uri": "file:///akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-prepare-objective/stage-prepare-objective.json"
+      },
+      {
+        "dataObjectInstanceId": "ece2ac951e26896e66d5f84e5e841497",
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "id": "c6db3767409e407e7fe65eb3655a085c",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-bounded-agent-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "6f533b6f150488983601008d95ad72c2",
+        "uri": "file:///akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-publish-result/answer.json"
+      },
+      {
+        "dataObjectInstanceId": "cf5acda07377baa330914fb0788fbba0",
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "id": "60253508a342a8db8d102ba22b61b172",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-bounded-agent-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "6f533b6f150488983601008d95ad72c2",
+        "uri": "file:///akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-publish-result/stage-publish-result.json"
+      },
+      {
+        "dataObjectInstanceId": "ab2f9023ca97461676c69d7e9ad9d1bf",
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "id": "8f42d9d2ae100532e0d5ec35191c7e46",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-bounded-agent-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "6f533b6f150488983601008d95ad72c2",
+        "uri": "file:///akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-store-trace/stage-store-trace.json"
+      },
+      {
+        "dataObjectInstanceId": "d4587d2a3eef86673c4a53548d406bd1",
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "id": "77c9bd18869e673d82e04e20feaa58ee",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-bounded-agent-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "6f533b6f150488983601008d95ad72c2",
+        "uri": "file:///akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-store-trace/trace.json"
+      },
+      {
+        "dataObjectInstanceId": "fab0d6a7478bb6a4b997d2d1d15ecdbc",
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "id": "98d05a372350c2303518fea75b41797a",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-bounded-agent-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "6f533b6f150488983601008d95ad72c2",
+        "uri": "file:///akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-validate-output/stage-validate-output.json"
+      },
+      {
+        "dataObjectInstanceId": "f6f0ffb1553be58aec4bec5fc90b4529",
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "id": "482600a48d783ea758b01d496879b25a",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-bounded-agent-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "6f533b6f150488983601008d95ad72c2",
+        "uri": "file:///akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-validate-output/validation.json"
+      }
+    ],
+    "dataObjects": [
+      {
+        "attempt": 1,
+        "checksum": "sha256:ddf406b9c882d0619536e266fe8c5b1d4d6cd2ef4c6eccc2484270570b4485fb",
+        "dataObjectId": "55a91c9f805ecf9d9b8a5a734e5efbfe",
+        "discovered": true,
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "id": "9835b2444362b56ccdd5dbad05cd994e",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+        "relativePath": "stage-agent-loop.json",
+        "sizeBytes": 825
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:5e5c63dedb6a14defa0a6f36e46f6053bce46893d8c9bf1b8d20ffb533889233",
+        "dataObjectId": "ca3cedee3cb284c7818c691b32466de5",
+        "discovered": true,
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "id": "1d936712c2946526021192b2fac3c706",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-prepare-objective",
+        "relativePath": "stage-prepare-objective.json",
+        "sizeBytes": 524
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:d91c1a200d6755feb92ebbb8c14e1e6993b6d216e02093e88c115ebdf7609c63",
+        "dataObjectId": "9f5802aacf841f5ad2598ddde18e7f7c",
+        "discovered": true,
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "id": "ece2ac951e26896e66d5f84e5e841497",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+        "relativePath": "answer.json",
+        "sizeBytes": 67
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:8e7341c6aed5b804bd1a50e1f9a39698f6a0ba1cbf06286ad5125705a9943284",
+        "dataObjectId": "eb46065ef53b748031e53917a5086014",
+        "discovered": true,
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "id": "cf5acda07377baa330914fb0788fbba0",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+        "relativePath": "stage-publish-result.json",
+        "sizeBytes": 431
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:5253f20e13996f20b40207016cd6944ef8cc527a564d960a81a80b0123cb7ade",
+        "dataObjectId": "d07d7119ae0dc998910ddb4dbd102d0c",
+        "discovered": true,
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "id": "ab2f9023ca97461676c69d7e9ad9d1bf",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+        "relativePath": "stage-store-trace.json",
+        "sizeBytes": 627
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:d8ab1685413a4a65a34ef793d833e8e0f34afc653aec3891c42a1b54e041f9fe",
+        "dataObjectId": "2dbc4cf4396d8e0211f782e2b68cbcc1",
+        "discovered": true,
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "id": "d4587d2a3eef86673c4a53548d406bd1",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+        "relativePath": "trace.json",
+        "sizeBytes": 242
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:908c47dac0f4fb51bee17396e4929f784a9b3f682fa1c769e88f72b2b62fdbec",
+        "dataObjectId": "ba0a22eed53ded4eb86bbe8741afae80",
+        "discovered": true,
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "id": "fab0d6a7478bb6a4b997d2d1d15ecdbc",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+        "relativePath": "stage-validate-output.json",
+        "sizeBytes": 823
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:4560b88d731ad0dd6b57909734ffbbe8281768a691c600511bd36ecf5dd21502",
+        "dataObjectId": "e0f6942f12812a9c486aff5b00848de2",
+        "discovered": true,
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "id": "f6f0ffb1553be58aec4bec5fc90b4529",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+        "relativePath": "validation.json",
+        "sizeBytes": 52
+      }
+    ],
+    "dataTransfers": [
+      {
+        "bytes": 524,
+        "consumerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+        "cost": 0,
+        "durationSeconds": 0.19363784790039062,
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "finishedAt": 1792523654.5991836,
+        "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-agent-loop:transfer-workspace-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-agent-loop-0",
+        "logicalBytes": 524,
+        "producerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-prepare-objective",
+        "route": {
+          "consumerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-prepare-objective",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.10196091800000001,
+          "sourceEnvironmentId": "showcase-bounded-agent-v1",
+          "sourceResourceId": "showcase-bounded-agent-local-docker",
+          "sshChannelWaitSeconds": 2.91e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-bounded-agent-v1",
+          "targetResourceId": "showcase-bounded-agent-local-docker"
+        },
+        "sourceResourceId": "showcase-bounded-agent-local-docker",
+        "startedAt": 1792523654.4055457,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-bounded-agent-local-docker"
+      },
+      {
+        "bytes": 1349,
+        "consumerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+        "cost": 0,
+        "durationSeconds": 0.16041088104248047,
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "finishedAt": 1792523656.593787,
+        "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-validate-output:transfer-workspace-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-validate-output-0",
+        "logicalBytes": 1349,
+        "producerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+        "route": {
+          "consumerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09175254099999999,
+          "sourceEnvironmentId": "showcase-bounded-agent-v1",
+          "sourceResourceId": "showcase-bounded-agent-local-docker",
+          "sshChannelWaitSeconds": 4.58e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-bounded-agent-v1",
+          "targetResourceId": "showcase-bounded-agent-local-docker"
+        },
+        "sourceResourceId": "showcase-bounded-agent-local-docker",
+        "startedAt": 1792523656.433376,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-bounded-agent-local-docker"
+      },
+      {
+        "bytes": 2224,
+        "consumerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+        "cost": 0,
+        "durationSeconds": 0.16097784042358398,
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "finishedAt": 1792523658.5402107,
+        "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-publish-result:transfer-workspace-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-publish-result-0",
+        "logicalBytes": 2224,
+        "producerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+        "route": {
+          "consumerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+          "filesTransferred": 4,
+          "producerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.069561666,
+          "sourceEnvironmentId": "showcase-bounded-agent-v1",
+          "sourceResourceId": "showcase-bounded-agent-local-docker",
+          "sshChannelWaitSeconds": 2.92e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-bounded-agent-v1",
+          "targetResourceId": "showcase-bounded-agent-local-docker"
+        },
+        "sourceResourceId": "showcase-bounded-agent-local-docker",
+        "startedAt": 1792523658.379233,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-bounded-agent-local-docker"
+      },
+      {
+        "bytes": 2224,
+        "consumerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+        "cost": 0,
+        "durationSeconds": 0.1832284927368164,
+        "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "finishedAt": 1792523658.565188,
+        "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-store-trace:transfer-workspace-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-store-trace-0",
+        "logicalBytes": 2224,
+        "producerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+        "route": {
+          "consumerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+          "filesTransferred": 4,
+          "producerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.092580584,
+          "sourceEnvironmentId": "showcase-bounded-agent-v1",
+          "sourceResourceId": "showcase-bounded-agent-local-docker",
+          "sshChannelWaitSeconds": 3.34e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-bounded-agent-v1",
+          "targetResourceId": "showcase-bounded-agent-local-docker"
+        },
+        "sourceResourceId": "showcase-bounded-agent-local-docker",
+        "startedAt": 1792523658.3819594,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-bounded-agent-local-docker"
+      }
+    ],
+    "events": [
+      {
+        "aggregateId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.started",
+        "id": "eb7de2c746f5d2d5d11aaf3d4b36e3dd",
+        "occurredAt": "2026-10-20T19:14:13.112711837Z",
+        "payload": {
+          "mode": "real",
+          "schedulePlanId": "showcase-bounded-agent-local-4f5eb97ca7-manual-plan-20261020t191412.777507000"
+        }
+      },
+      {
+        "aggregateId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-prepare-objective",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "738af997b5cdc613089f3bb7f793d503",
+        "occurredAt": "2026-10-20T19:14:14.308697671Z",
+        "payload": {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-prepare-objective",
+          "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-prepare-objective",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "6868ce83fea93fc48d0b875b68ad8909",
+        "occurredAt": "2026-10-20T19:14:14.396944754Z",
+        "payload": {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-prepare-objective",
+          "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11646533012390137,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "0e97ec232ad1134fb2e8e72150e3587c",
+        "occurredAt": "2026-10-20T19:14:16.308578005Z",
+        "payload": {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+          "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "71b7ac850b82294a685f986506b1f5c5",
+        "occurredAt": "2026-10-20T19:14:16.415629714Z",
+        "payload": {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+          "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+          "failureReason": "",
+          "runtimeSeconds": 0.1429305076599121,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "fb6c5eb495eb74eeab5e98c4b076c1fe",
+        "occurredAt": "2026-10-20T19:14:18.306782423Z",
+        "payload": {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+          "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "879f4e82b73c7f3261b590180fabff91",
+        "occurredAt": "2026-10-20T19:14:18.371008006Z",
+        "payload": {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+          "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+          "failureReason": "",
+          "runtimeSeconds": 0.17023205757141113,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "7a80c1d614cdbbe2ca3d3aaa1356b723",
+        "occurredAt": "2026-10-20T19:14:20.314015174Z",
+        "payload": {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+          "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "4239d8bbd879440589dc4daef7571522",
+        "occurredAt": "2026-10-20T19:14:20.318336341Z",
+        "payload": {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+          "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "08fba81e3a7788171056bdd791b20074",
+        "occurredAt": "2026-10-20T19:14:20.413709299Z",
+        "payload": {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+          "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11736059188842773,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "294553fcb9f7861beca1bf771b378e6d",
+        "occurredAt": "2026-10-20T19:14:20.420445799Z",
+        "payload": {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+          "executionRunId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11581039428710938,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.completed",
+        "id": "6f21c926dda671f0b97d1f75f6ed7b24",
+        "occurredAt": "2026-10-20T19:14:20.424426132Z",
+        "payload": {
+          "cost": 0,
+          "makespanSeconds": 5.661390542984009
+        }
+      }
+    ],
+    "handles": [
+      {
+        "activityId": "showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+        "artifacts": {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:ddf406b9c882d0619536e266fe8c5b1d4d6cd2ef4c6eccc2484270570b4485fb",
+              "modifiedUnixNano": 1792523654868521000,
+              "path": "stage-agent-loop.json",
+              "sizeBytes": 825
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:ddf406b9c882d0619536e266fe8c5b1d4d6cd2ef4c6eccc2484270570b4485fb",
+              "modifiedUnixNano": 1792523654868521000,
+              "path": "stage-agent-loop.json",
+              "sizeBytes": 825
+            },
+            {
+              "checksum": "sha256:5e5c63dedb6a14defa0a6f36e46f6053bce46893d8c9bf1b8d20ffb533889233",
+              "modifiedUnixNano": 1792523654555521000,
+              "path": "stage-prepare-objective.json",
+              "sizeBytes": 524
+            }
+          ],
+          "finishedAt": 1792523654.8856318,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:5e5c63dedb6a14defa0a6f36e46f6053bce46893d8c9bf1b8d20ffb533889233",
+              "modifiedUnixNano": 1792523654555521000,
+              "path": "stage-prepare-objective.json",
+              "sizeBytes": 524
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.1429305076599121,
+              "finishedAt": 1792523654.8856318,
+              "phase": "execution",
+              "startedAt": 1792523654.7427013,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+          "runId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+          "runtime": "showcase-bounded-agent-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523654.7427013,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 825
+          }
+        },
+        "exitCode": 0,
+        "externalId": "2ac61457bd0a7e79c7cf4595a595484c7210d3e3e0e343fe721b8933d936e6ad",
+        "finishedAt": 1792523654.8856318,
+        "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+        "log": "{\"activity\": \"agent-loop\", \"status\": \"success\", \"resultKeys\": [\"answer\", \"trace\", \"steps\", \"policy\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-bounded-agent-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523654.742712,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+          "submittedAt": 1792523654.7427013
+        },
+        "resourceId": "showcase-bounded-agent-local-docker",
+        "runId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "runtimeId": "showcase-bounded-agent-local",
+        "startedAt": 1792523654.7427013,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-bounded-agent-local-4f5eb97ca7-prepare-objective",
+        "artifacts": {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-prepare-objective",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:5e5c63dedb6a14defa0a6f36e46f6053bce46893d8c9bf1b8d20ffb533889233",
+              "modifiedUnixNano": 1792523653392521000,
+              "path": "stage-prepare-objective.json",
+              "sizeBytes": 524
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:5e5c63dedb6a14defa0a6f36e46f6053bce46893d8c9bf1b8d20ffb533889233",
+              "modifiedUnixNano": 1792523653392521000,
+              "path": "stage-prepare-objective.json",
+              "sizeBytes": 524
+            }
+          ],
+          "finishedAt": 1792523653.398437,
+          "phases": [
+            {
+              "durationSeconds": 0.11646533012390137,
+              "finishedAt": 1792523653.398437,
+              "phase": "execution",
+              "startedAt": 1792523653.2819717,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-prepare-objective",
+          "runId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+          "runtime": "showcase-bounded-agent-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523653.2819717,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 1,
+            "initialFiles": 0,
+            "modifiedFiles": 0,
+            "outputBytes": 524
+          }
+        },
+        "exitCode": 0,
+        "externalId": "79e5672a3a9fa84fccdd67b72532f8284c49777ee9f4260753002fc7a1b9712b",
+        "finishedAt": 1792523653.398437,
+        "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-prepare-objective",
+        "log": "{\"activity\": \"prepare-objective\", \"status\": \"success\", \"resultKeys\": [\"objective\", \"values\", \"maxSteps\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-bounded-agent-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-prepare-objective",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523653.2819815,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-prepare-objective",
+          "submittedAt": 1792523653.2819717
+        },
+        "resourceId": "showcase-bounded-agent-local-docker",
+        "runId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "runtimeId": "showcase-bounded-agent-local",
+        "startedAt": 1792523653.2819717,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+        "artifacts": {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:d91c1a200d6755feb92ebbb8c14e1e6993b6d216e02093e88c115ebdf7609c63",
+              "modifiedUnixNano": 1792523658925521000,
+              "path": "answer.json",
+              "sizeBytes": 67
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:8e7341c6aed5b804bd1a50e1f9a39698f6a0ba1cbf06286ad5125705a9943284",
+              "modifiedUnixNano": 1792523658925521000,
+              "path": "stage-publish-result.json",
+              "sizeBytes": 431
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:d91c1a200d6755feb92ebbb8c14e1e6993b6d216e02093e88c115ebdf7609c63",
+              "modifiedUnixNano": 1792523658925521000,
+              "path": "answer.json",
+              "sizeBytes": 67
+            },
+            {
+              "checksum": "sha256:ddf406b9c882d0619536e266fe8c5b1d4d6cd2ef4c6eccc2484270570b4485fb",
+              "modifiedUnixNano": 1792523658496521000,
+              "path": "stage-agent-loop.json",
+              "sizeBytes": 825
+            },
+            {
+              "checksum": "sha256:5e5c63dedb6a14defa0a6f36e46f6053bce46893d8c9bf1b8d20ffb533889233",
+              "modifiedUnixNano": 1792523658496521000,
+              "path": "stage-prepare-objective.json",
+              "sizeBytes": 524
+            },
+            {
+              "checksum": "sha256:8e7341c6aed5b804bd1a50e1f9a39698f6a0ba1cbf06286ad5125705a9943284",
+              "modifiedUnixNano": 1792523658925521000,
+              "path": "stage-publish-result.json",
+              "sizeBytes": 431
+            },
+            {
+              "checksum": "sha256:908c47dac0f4fb51bee17396e4929f784a9b3f682fa1c769e88f72b2b62fdbec",
+              "modifiedUnixNano": 1792523658496521000,
+              "path": "stage-validate-output.json",
+              "sizeBytes": 823
+            },
+            {
+              "checksum": "sha256:4560b88d731ad0dd6b57909734ffbbe8281768a691c600511bd36ecf5dd21502",
+              "modifiedUnixNano": 1792523658496521000,
+              "path": "validation.json",
+              "sizeBytes": 52
+            }
+          ],
+          "finishedAt": 1792523658.931249,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:ddf406b9c882d0619536e266fe8c5b1d4d6cd2ef4c6eccc2484270570b4485fb",
+              "modifiedUnixNano": 1792523658496521000,
+              "path": "stage-agent-loop.json",
+              "sizeBytes": 825
+            },
+            {
+              "checksum": "sha256:5e5c63dedb6a14defa0a6f36e46f6053bce46893d8c9bf1b8d20ffb533889233",
+              "modifiedUnixNano": 1792523658496521000,
+              "path": "stage-prepare-objective.json",
+              "sizeBytes": 524
+            },
+            {
+              "checksum": "sha256:908c47dac0f4fb51bee17396e4929f784a9b3f682fa1c769e88f72b2b62fdbec",
+              "modifiedUnixNano": 1792523658496521000,
+              "path": "stage-validate-output.json",
+              "sizeBytes": 823
+            },
+            {
+              "checksum": "sha256:4560b88d731ad0dd6b57909734ffbbe8281768a691c600511bd36ecf5dd21502",
+              "modifiedUnixNano": 1792523658496521000,
+              "path": "validation.json",
+              "sizeBytes": 52
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11736059188842773,
+              "finishedAt": 1792523658.931249,
+              "phase": "execution",
+              "startedAt": 1792523658.8138883,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+          "runId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+          "runtime": "showcase-bounded-agent-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523658.8138883,
+          "summary": {
+            "createdFiles": 2,
+            "deletedFiles": 0,
+            "finalFiles": 6,
+            "initialFiles": 4,
+            "modifiedFiles": 0,
+            "outputBytes": 498
+          }
+        },
+        "exitCode": 0,
+        "externalId": "ee70ebdcaf10df699c5b20a2e5b5adce303fc49061fea9999c0d35c6d001f1d5",
+        "finishedAt": 1792523658.931249,
+        "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+        "log": "{\"activity\": \"publish-result\", \"status\": \"success\", \"resultKeys\": [\"count\", \"mean\", \"minimum\", \"maximum\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-bounded-agent-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523658.813894,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+          "submittedAt": 1792523658.8138883
+        },
+        "resourceId": "showcase-bounded-agent-local-docker",
+        "runId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "runtimeId": "showcase-bounded-agent-local",
+        "startedAt": 1792523658.8138883,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+        "artifacts": {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:5253f20e13996f20b40207016cd6944ef8cc527a564d960a81a80b0123cb7ade",
+              "modifiedUnixNano": 1792523658937521000,
+              "path": "stage-store-trace.json",
+              "sizeBytes": 627
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:d8ab1685413a4a65a34ef793d833e8e0f34afc653aec3891c42a1b54e041f9fe",
+              "modifiedUnixNano": 1792523658937521000,
+              "path": "trace.json",
+              "sizeBytes": 242
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:ddf406b9c882d0619536e266fe8c5b1d4d6cd2ef4c6eccc2484270570b4485fb",
+              "modifiedUnixNano": 1792523658521521000,
+              "path": "stage-agent-loop.json",
+              "sizeBytes": 825
+            },
+            {
+              "checksum": "sha256:5e5c63dedb6a14defa0a6f36e46f6053bce46893d8c9bf1b8d20ffb533889233",
+              "modifiedUnixNano": 1792523658521521000,
+              "path": "stage-prepare-objective.json",
+              "sizeBytes": 524
+            },
+            {
+              "checksum": "sha256:5253f20e13996f20b40207016cd6944ef8cc527a564d960a81a80b0123cb7ade",
+              "modifiedUnixNano": 1792523658937521000,
+              "path": "stage-store-trace.json",
+              "sizeBytes": 627
+            },
+            {
+              "checksum": "sha256:908c47dac0f4fb51bee17396e4929f784a9b3f682fa1c769e88f72b2b62fdbec",
+              "modifiedUnixNano": 1792523658521521000,
+              "path": "stage-validate-output.json",
+              "sizeBytes": 823
+            },
+            {
+              "checksum": "sha256:d8ab1685413a4a65a34ef793d833e8e0f34afc653aec3891c42a1b54e041f9fe",
+              "modifiedUnixNano": 1792523658937521000,
+              "path": "trace.json",
+              "sizeBytes": 242
+            },
+            {
+              "checksum": "sha256:4560b88d731ad0dd6b57909734ffbbe8281768a691c600511bd36ecf5dd21502",
+              "modifiedUnixNano": 1792523658521521000,
+              "path": "validation.json",
+              "sizeBytes": 52
+            }
+          ],
+          "finishedAt": 1792523658.9433622,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:ddf406b9c882d0619536e266fe8c5b1d4d6cd2ef4c6eccc2484270570b4485fb",
+              "modifiedUnixNano": 1792523658521521000,
+              "path": "stage-agent-loop.json",
+              "sizeBytes": 825
+            },
+            {
+              "checksum": "sha256:5e5c63dedb6a14defa0a6f36e46f6053bce46893d8c9bf1b8d20ffb533889233",
+              "modifiedUnixNano": 1792523658521521000,
+              "path": "stage-prepare-objective.json",
+              "sizeBytes": 524
+            },
+            {
+              "checksum": "sha256:908c47dac0f4fb51bee17396e4929f784a9b3f682fa1c769e88f72b2b62fdbec",
+              "modifiedUnixNano": 1792523658521521000,
+              "path": "stage-validate-output.json",
+              "sizeBytes": 823
+            },
+            {
+              "checksum": "sha256:4560b88d731ad0dd6b57909734ffbbe8281768a691c600511bd36ecf5dd21502",
+              "modifiedUnixNano": 1792523658521521000,
+              "path": "validation.json",
+              "sizeBytes": 52
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11581039428710938,
+              "finishedAt": 1792523658.9433622,
+              "phase": "execution",
+              "startedAt": 1792523658.8275518,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+          "runId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+          "runtime": "showcase-bounded-agent-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523658.8275518,
+          "summary": {
+            "createdFiles": 2,
+            "deletedFiles": 0,
+            "finalFiles": 6,
+            "initialFiles": 4,
+            "modifiedFiles": 0,
+            "outputBytes": 869
+          }
+        },
+        "exitCode": 0,
+        "externalId": "6e329a4e81e9d2f18df809254f19f37ec8238ec12637f4efb6b3e00bf8da4c68",
+        "finishedAt": 1792523658.9433622,
+        "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+        "log": "{\"activity\": \"store-trace\", \"status\": \"success\", \"resultKeys\": [\"trace\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-bounded-agent-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523658.8275566,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+          "submittedAt": 1792523658.8275518
+        },
+        "resourceId": "showcase-bounded-agent-local-docker",
+        "runId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "runtimeId": "showcase-bounded-agent-local",
+        "startedAt": 1792523658.8275518,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+        "artifacts": {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:908c47dac0f4fb51bee17396e4929f784a9b3f682fa1c769e88f72b2b62fdbec",
+              "modifiedUnixNano": 1792523656876521000,
+              "path": "stage-validate-output.json",
+              "sizeBytes": 823
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:4560b88d731ad0dd6b57909734ffbbe8281768a691c600511bd36ecf5dd21502",
+              "modifiedUnixNano": 1792523656876521000,
+              "path": "validation.json",
+              "sizeBytes": 52
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:ddf406b9c882d0619536e266fe8c5b1d4d6cd2ef4c6eccc2484270570b4485fb",
+              "modifiedUnixNano": 1792523656548521000,
+              "path": "stage-agent-loop.json",
+              "sizeBytes": 825
+            },
+            {
+              "checksum": "sha256:5e5c63dedb6a14defa0a6f36e46f6053bce46893d8c9bf1b8d20ffb533889233",
+              "modifiedUnixNano": 1792523656548521000,
+              "path": "stage-prepare-objective.json",
+              "sizeBytes": 524
+            },
+            {
+              "checksum": "sha256:908c47dac0f4fb51bee17396e4929f784a9b3f682fa1c769e88f72b2b62fdbec",
+              "modifiedUnixNano": 1792523656876521000,
+              "path": "stage-validate-output.json",
+              "sizeBytes": 823
+            },
+            {
+              "checksum": "sha256:4560b88d731ad0dd6b57909734ffbbe8281768a691c600511bd36ecf5dd21502",
+              "modifiedUnixNano": 1792523656876521000,
+              "path": "validation.json",
+              "sizeBytes": 52
+            }
+          ],
+          "finishedAt": 1792523656.892098,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:ddf406b9c882d0619536e266fe8c5b1d4d6cd2ef4c6eccc2484270570b4485fb",
+              "modifiedUnixNano": 1792523656548521000,
+              "path": "stage-agent-loop.json",
+              "sizeBytes": 825
+            },
+            {
+              "checksum": "sha256:5e5c63dedb6a14defa0a6f36e46f6053bce46893d8c9bf1b8d20ffb533889233",
+              "modifiedUnixNano": 1792523656548521000,
+              "path": "stage-prepare-objective.json",
+              "sizeBytes": 524
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.17023205757141113,
+              "finishedAt": 1792523656.892098,
+              "phase": "execution",
+              "startedAt": 1792523656.721866,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+          "runId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+          "runtime": "showcase-bounded-agent-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523656.721866,
+          "summary": {
+            "createdFiles": 2,
+            "deletedFiles": 0,
+            "finalFiles": 4,
+            "initialFiles": 2,
+            "modifiedFiles": 0,
+            "outputBytes": 875
+          }
+        },
+        "exitCode": 0,
+        "externalId": "ff0639f74ebd63355377d318058129cfd7e1b46d5450c36b937b1afe409d283f",
+        "finishedAt": 1792523656.892098,
+        "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+        "log": "{\"activity\": \"validate-output\", \"status\": \"success\", \"resultKeys\": [\"answer\", \"trace\", \"steps\", \"policy\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-bounded-agent-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523656.721871,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+          "submittedAt": 1792523656.721866
+        },
+        "resourceId": "showcase-bounded-agent-local-docker",
+        "runId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "runtimeId": "showcase-bounded-agent-local",
+        "startedAt": 1792523656.721866,
+        "status": "completed"
+      }
+    ],
+    "infrastructureRuns": [],
+    "operationEvents": [],
+    "run": {
+      "activityCount": 5,
+      "breakdown": {
+        "computeSeconds": 0.6627988815307617,
+        "interferenceSeconds": 0,
+        "overheadSeconds": 0,
+        "queueSeconds": 0,
+        "transferSeconds": 0.6982550621032715
+      },
+      "completedActivityCount": 5,
+      "cost": 0,
+      "finishedAt": "2026-10-20T19:14:20Z",
+      "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+      "kind": "workflow",
+      "makespanSeconds": 5.661390542984009,
+      "mode": "real",
+      "schedulePlanId": "showcase-bounded-agent-local-4f5eb97ca7-manual-plan-20261020t191412.777507000",
+      "seed": 0,
+      "startedAt": "2026-10-20T19:14:13Z",
+      "status": "completed",
+      "title": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+      "transferredBytes": 6321
+    },
+    "timeline": {
+      "computeMakespanSeconds": 5.661390542984009,
+      "coveredWallSeconds": 1.7907967567443848,
+      "finishedAt": 1792523660,
+      "phases": [
+        {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-prepare-objective",
+          "category": "resource-queue",
+          "durationSeconds": 0.14722466468811035,
+          "finishedAt": 1792523653.2819717,
+          "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-prepare-objective:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523653.134747,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-prepare-objective",
+          "category": "runtime",
+          "durationSeconds": 0.11646533012390137,
+          "finishedAt": 1792523653.398437,
+          "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-prepare-objective:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523653.2819717,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+          "category": "resource-queue",
+          "durationSeconds": 0.0058138370513916016,
+          "finishedAt": 1792523654.4055457,
+          "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-agent-loop:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523654.3997319,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.19363784790039062,
+          "finishedAt": 1792523654.5991836,
+          "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-agent-loop:transfer-workspace-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-agent-loop-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523654.4055457,
+          "status": "completed",
+          "transferId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-agent-loop:transfer-workspace-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-agent-loop-0"
+        },
+        {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+          "category": "launch",
+          "durationSeconds": 0.14351773262023926,
+          "finishedAt": 1792523654.7427013,
+          "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-agent-loop:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523654.5991836,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+          "category": "runtime",
+          "durationSeconds": 0.1429305076599121,
+          "finishedAt": 1792523654.8856318,
+          "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-agent-loop:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523654.7427013,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+          "category": "resource-queue",
+          "durationSeconds": 0.01286935806274414,
+          "finishedAt": 1792523656.433376,
+          "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-validate-output:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523656.4205067,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.16041088104248047,
+          "finishedAt": 1792523656.593787,
+          "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-validate-output:transfer-workspace-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-validate-output-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523656.433376,
+          "status": "completed",
+          "transferId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-validate-output:transfer-workspace-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-validate-output-0"
+        },
+        {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+          "category": "launch",
+          "durationSeconds": 0.12807893753051758,
+          "finishedAt": 1792523656.721866,
+          "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-validate-output:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523656.593787,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+          "category": "runtime",
+          "durationSeconds": 0.17023205757141113,
+          "finishedAt": 1792523656.892098,
+          "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-validate-output:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523656.721866,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+          "category": "resource-queue",
+          "durationSeconds": 0.005486249923706055,
+          "finishedAt": 1792523658.379233,
+          "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-publish-result:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523658.3737466,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+          "category": "resource-queue",
+          "durationSeconds": 0.00699162483215332,
+          "finishedAt": 1792523658.3819594,
+          "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-store-trace:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523658.3749678,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.16097784042358398,
+          "finishedAt": 1792523658.5402107,
+          "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-publish-result:transfer-workspace-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-publish-result-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523658.379233,
+          "status": "completed",
+          "transferId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-publish-result:transfer-workspace-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-publish-result-0"
+        },
+        {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.1832284927368164,
+          "finishedAt": 1792523658.565188,
+          "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-store-trace:transfer-workspace-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-store-trace-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523658.3819594,
+          "status": "completed",
+          "transferId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-store-trace:transfer-workspace-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-store-trace-0"
+        },
+        {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+          "category": "launch",
+          "durationSeconds": 0.2736775875091553,
+          "finishedAt": 1792523658.8138883,
+          "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-publish-result:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523658.5402107,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+          "category": "launch",
+          "durationSeconds": 0.26236391067504883,
+          "finishedAt": 1792523658.8275518,
+          "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-store-trace:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523658.565188,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+          "category": "runtime",
+          "durationSeconds": 0.11736059188842773,
+          "finishedAt": 1792523658.931249,
+          "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-publish-result:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523658.8138883,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+          "category": "runtime",
+          "durationSeconds": 0.11581039428710938,
+          "finishedAt": 1792523658.9433622,
+          "id": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000:showcase-bounded-agent-local-4f5eb97ca7-store-trace:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523658.8275518,
+          "status": "completed"
+        }
+      ],
+      "startedAt": 1792523653,
+      "totals": {
+        "destroySeconds": 0,
+        "executablePreparationSeconds": 0,
+        "launchSeconds": 0.8076381683349609,
+        "provisionSeconds": 0,
+        "resourceQueueSeconds": 0.17838573455810547,
+        "runtimeSeconds": 0.6627988815307617,
+        "startSeconds": 0,
+        "stopSeconds": 0,
+        "validationSeconds": 0,
+        "workspaceTransferSeconds": 0.6982550621032715
+      },
+      "unclassifiedWallSeconds": 5.209203243255615,
+      "wallSeconds": 7
+    },
+    "workspaceLeases": [
+      {
+        "consumerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+        "id": "workspace-lease-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-agent-loop-showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+        "producerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:14:16.595914839Z",
+        "runId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "workspaceId": "workspace-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-agent-loop"
+      },
+      {
+        "consumerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+        "id": "workspace-lease-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-prepare-objective-showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+        "producerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-prepare-objective",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:14:14.600637671Z",
+        "runId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "workspaceId": "workspace-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-prepare-objective"
+      },
+      {
+        "consumerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+        "id": "workspace-lease-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-validate-output-showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+        "producerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:14:18.541986256Z",
+        "runId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "workspaceId": "workspace-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-validate-output"
+      },
+      {
+        "consumerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+        "id": "workspace-lease-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-validate-output-showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+        "producerActivityId": "showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:14:18.577961256Z",
+        "runId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "workspaceId": "workspace-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-validate-output"
+      }
+    ],
+    "workspaces": [
+      {
+        "activityId": "showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+        "createdAt": "2026-10-20T19:14:13.114966087Z",
+        "driver": "local",
+        "environmentId": "showcase-bounded-agent-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+        "fileCount": 2,
+        "id": "workspace-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+        "inputBytes": 524,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:ddf406b9c882d0619536e266fe8c5b1d4d6cd2ef4c6eccc2484270570b4485fb",
+              "path": "stage-agent-loop.json",
+              "sizeBytes": 825
+            },
+            {
+              "digest": "sha256:5e5c63dedb6a14defa0a6f36e46f6053bce46893d8c9bf1b8d20ffb533889233",
+              "path": "stage-prepare-objective.json",
+              "sizeBytes": 524
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:5e5c63dedb6a14defa0a6f36e46f6053bce46893d8c9bf1b8d20ffb533889233",
+              "path": "stage-prepare-objective.json",
+              "sizeBytes": 524
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:5e5c63dedb6a14defa0a6f36e46f6053bce46893d8c9bf1b8d20ffb533889233",
+              "path": "stage-prepare-objective.json",
+              "sizeBytes": 524
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:ddf406b9c882d0619536e266fe8c5b1d4d6cd2ef4c6eccc2484270570b4485fb",
+              "path": "stage-agent-loop.json",
+              "sizeBytes": 825
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-agent-loop",
+        "outputBytes": 825,
+        "pinned": false,
+        "reclaimedBytes": 1349,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:14:16.599447714Z",
+        "resourceId": "showcase-bounded-agent-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "runtimeId": "showcase-bounded-agent-local",
+        "sealedAt": "2026-10-20T19:14:16.406243005Z",
+        "sizeBytes": 1349,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-agent-loop"
+      },
+      {
+        "activityId": "showcase-bounded-agent-local-4f5eb97ca7-prepare-objective",
+        "createdAt": "2026-10-20T19:14:13.114966087Z",
+        "driver": "local",
+        "environmentId": "showcase-bounded-agent-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-prepare-objective",
+        "fileCount": 1,
+        "id": "workspace-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-prepare-objective",
+        "inputBytes": 0,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:5e5c63dedb6a14defa0a6f36e46f6053bce46893d8c9bf1b8d20ffb533889233",
+              "path": "stage-prepare-objective.json",
+              "sizeBytes": 524
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:5e5c63dedb6a14defa0a6f36e46f6053bce46893d8c9bf1b8d20ffb533889233",
+              "path": "stage-prepare-objective.json",
+              "sizeBytes": 524
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-prepare-objective",
+        "outputBytes": 524,
+        "pinned": false,
+        "reclaimedBytes": 524,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:14:14.606034921Z",
+        "resourceId": "showcase-bounded-agent-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "runtimeId": "showcase-bounded-agent-local",
+        "sealedAt": "2026-10-20T19:14:14.388965588Z",
+        "sizeBytes": 524,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-prepare-objective"
+      },
+      {
+        "activityId": "showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+        "createdAt": "2026-10-20T19:14:13.114966087Z",
+        "driver": "local",
+        "environmentId": "showcase-bounded-agent-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+        "fileCount": 2,
+        "id": "workspace-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+        "inputBytes": 2224,
+        "isFinal": true,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:d91c1a200d6755feb92ebbb8c14e1e6993b6d216e02093e88c115ebdf7609c63",
+              "path": "answer.json",
+              "sizeBytes": 67
+            },
+            {
+              "digest": "sha256:ddf406b9c882d0619536e266fe8c5b1d4d6cd2ef4c6eccc2484270570b4485fb",
+              "path": "stage-agent-loop.json",
+              "sizeBytes": 825
+            },
+            {
+              "digest": "sha256:5e5c63dedb6a14defa0a6f36e46f6053bce46893d8c9bf1b8d20ffb533889233",
+              "path": "stage-prepare-objective.json",
+              "sizeBytes": 524
+            },
+            {
+              "digest": "sha256:8e7341c6aed5b804bd1a50e1f9a39698f6a0ba1cbf06286ad5125705a9943284",
+              "path": "stage-publish-result.json",
+              "sizeBytes": 431
+            },
+            {
+              "digest": "sha256:908c47dac0f4fb51bee17396e4929f784a9b3f682fa1c769e88f72b2b62fdbec",
+              "path": "stage-validate-output.json",
+              "sizeBytes": 823
+            },
+            {
+              "digest": "sha256:4560b88d731ad0dd6b57909734ffbbe8281768a691c600511bd36ecf5dd21502",
+              "path": "validation.json",
+              "sizeBytes": 52
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:ddf406b9c882d0619536e266fe8c5b1d4d6cd2ef4c6eccc2484270570b4485fb",
+              "path": "stage-agent-loop.json",
+              "sizeBytes": 825
+            },
+            {
+              "digest": "sha256:5e5c63dedb6a14defa0a6f36e46f6053bce46893d8c9bf1b8d20ffb533889233",
+              "path": "stage-prepare-objective.json",
+              "sizeBytes": 524
+            },
+            {
+              "digest": "sha256:908c47dac0f4fb51bee17396e4929f784a9b3f682fa1c769e88f72b2b62fdbec",
+              "path": "stage-validate-output.json",
+              "sizeBytes": 823
+            },
+            {
+              "digest": "sha256:4560b88d731ad0dd6b57909734ffbbe8281768a691c600511bd36ecf5dd21502",
+              "path": "validation.json",
+              "sizeBytes": 52
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:ddf406b9c882d0619536e266fe8c5b1d4d6cd2ef4c6eccc2484270570b4485fb",
+              "path": "stage-agent-loop.json",
+              "sizeBytes": 825
+            },
+            {
+              "digest": "sha256:5e5c63dedb6a14defa0a6f36e46f6053bce46893d8c9bf1b8d20ffb533889233",
+              "path": "stage-prepare-objective.json",
+              "sizeBytes": 524
+            },
+            {
+              "digest": "sha256:908c47dac0f4fb51bee17396e4929f784a9b3f682fa1c769e88f72b2b62fdbec",
+              "path": "stage-validate-output.json",
+              "sizeBytes": 823
+            },
+            {
+              "digest": "sha256:4560b88d731ad0dd6b57909734ffbbe8281768a691c600511bd36ecf5dd21502",
+              "path": "validation.json",
+              "sizeBytes": 52
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:d91c1a200d6755feb92ebbb8c14e1e6993b6d216e02093e88c115ebdf7609c63",
+              "path": "answer.json",
+              "sizeBytes": 67
+            },
+            {
+              "digest": "sha256:8e7341c6aed5b804bd1a50e1f9a39698f6a0ba1cbf06286ad5125705a9943284",
+              "path": "stage-publish-result.json",
+              "sizeBytes": 431
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-publish-result",
+        "outputBytes": 498,
+        "pinned": false,
+        "reclaimedBytes": 2224,
+        "releaseReason": "inherited inputs pruned",
+        "resourceId": "showcase-bounded-agent-local-docker",
+        "retention": "final",
+        "runId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "runtimeId": "showcase-bounded-agent-local",
+        "sealedAt": "2026-10-20T19:14:20.408664924Z",
+        "sizeBytes": 498,
+        "state": "sealed",
+        "uri": "file:///akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-publish-result"
+      },
+      {
+        "activityId": "showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+        "createdAt": "2026-10-20T19:14:13.114966087Z",
+        "driver": "local",
+        "environmentId": "showcase-bounded-agent-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+        "fileCount": 2,
+        "id": "workspace-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+        "inputBytes": 2224,
+        "isFinal": true,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:ddf406b9c882d0619536e266fe8c5b1d4d6cd2ef4c6eccc2484270570b4485fb",
+              "path": "stage-agent-loop.json",
+              "sizeBytes": 825
+            },
+            {
+              "digest": "sha256:5e5c63dedb6a14defa0a6f36e46f6053bce46893d8c9bf1b8d20ffb533889233",
+              "path": "stage-prepare-objective.json",
+              "sizeBytes": 524
+            },
+            {
+              "digest": "sha256:5253f20e13996f20b40207016cd6944ef8cc527a564d960a81a80b0123cb7ade",
+              "path": "stage-store-trace.json",
+              "sizeBytes": 627
+            },
+            {
+              "digest": "sha256:908c47dac0f4fb51bee17396e4929f784a9b3f682fa1c769e88f72b2b62fdbec",
+              "path": "stage-validate-output.json",
+              "sizeBytes": 823
+            },
+            {
+              "digest": "sha256:d8ab1685413a4a65a34ef793d833e8e0f34afc653aec3891c42a1b54e041f9fe",
+              "path": "trace.json",
+              "sizeBytes": 242
+            },
+            {
+              "digest": "sha256:4560b88d731ad0dd6b57909734ffbbe8281768a691c600511bd36ecf5dd21502",
+              "path": "validation.json",
+              "sizeBytes": 52
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:ddf406b9c882d0619536e266fe8c5b1d4d6cd2ef4c6eccc2484270570b4485fb",
+              "path": "stage-agent-loop.json",
+              "sizeBytes": 825
+            },
+            {
+              "digest": "sha256:5e5c63dedb6a14defa0a6f36e46f6053bce46893d8c9bf1b8d20ffb533889233",
+              "path": "stage-prepare-objective.json",
+              "sizeBytes": 524
+            },
+            {
+              "digest": "sha256:908c47dac0f4fb51bee17396e4929f784a9b3f682fa1c769e88f72b2b62fdbec",
+              "path": "stage-validate-output.json",
+              "sizeBytes": 823
+            },
+            {
+              "digest": "sha256:4560b88d731ad0dd6b57909734ffbbe8281768a691c600511bd36ecf5dd21502",
+              "path": "validation.json",
+              "sizeBytes": 52
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:ddf406b9c882d0619536e266fe8c5b1d4d6cd2ef4c6eccc2484270570b4485fb",
+              "path": "stage-agent-loop.json",
+              "sizeBytes": 825
+            },
+            {
+              "digest": "sha256:5e5c63dedb6a14defa0a6f36e46f6053bce46893d8c9bf1b8d20ffb533889233",
+              "path": "stage-prepare-objective.json",
+              "sizeBytes": 524
+            },
+            {
+              "digest": "sha256:908c47dac0f4fb51bee17396e4929f784a9b3f682fa1c769e88f72b2b62fdbec",
+              "path": "stage-validate-output.json",
+              "sizeBytes": 823
+            },
+            {
+              "digest": "sha256:4560b88d731ad0dd6b57909734ffbbe8281768a691c600511bd36ecf5dd21502",
+              "path": "validation.json",
+              "sizeBytes": 52
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:5253f20e13996f20b40207016cd6944ef8cc527a564d960a81a80b0123cb7ade",
+              "path": "stage-store-trace.json",
+              "sizeBytes": 627
+            },
+            {
+              "digest": "sha256:d8ab1685413a4a65a34ef793d833e8e0f34afc653aec3891c42a1b54e041f9fe",
+              "path": "trace.json",
+              "sizeBytes": 242
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-store-trace",
+        "outputBytes": 869,
+        "pinned": false,
+        "reclaimedBytes": 2224,
+        "releaseReason": "inherited inputs pruned",
+        "resourceId": "showcase-bounded-agent-local-docker",
+        "retention": "final",
+        "runId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "runtimeId": "showcase-bounded-agent-local",
+        "sealedAt": "2026-10-20T19:14:20.415908632Z",
+        "sizeBytes": 869,
+        "state": "sealed",
+        "uri": "file:///akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-store-trace"
+      },
+      {
+        "activityId": "showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+        "createdAt": "2026-10-20T19:14:13.114966087Z",
+        "driver": "local",
+        "environmentId": "showcase-bounded-agent-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+        "fileCount": 4,
+        "id": "workspace-showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000-showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+        "inputBytes": 1349,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:ddf406b9c882d0619536e266fe8c5b1d4d6cd2ef4c6eccc2484270570b4485fb",
+              "path": "stage-agent-loop.json",
+              "sizeBytes": 825
+            },
+            {
+              "digest": "sha256:5e5c63dedb6a14defa0a6f36e46f6053bce46893d8c9bf1b8d20ffb533889233",
+              "path": "stage-prepare-objective.json",
+              "sizeBytes": 524
+            },
+            {
+              "digest": "sha256:908c47dac0f4fb51bee17396e4929f784a9b3f682fa1c769e88f72b2b62fdbec",
+              "path": "stage-validate-output.json",
+              "sizeBytes": 823
+            },
+            {
+              "digest": "sha256:4560b88d731ad0dd6b57909734ffbbe8281768a691c600511bd36ecf5dd21502",
+              "path": "validation.json",
+              "sizeBytes": 52
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:ddf406b9c882d0619536e266fe8c5b1d4d6cd2ef4c6eccc2484270570b4485fb",
+              "path": "stage-agent-loop.json",
+              "sizeBytes": 825
+            },
+            {
+              "digest": "sha256:5e5c63dedb6a14defa0a6f36e46f6053bce46893d8c9bf1b8d20ffb533889233",
+              "path": "stage-prepare-objective.json",
+              "sizeBytes": 524
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:ddf406b9c882d0619536e266fe8c5b1d4d6cd2ef4c6eccc2484270570b4485fb",
+              "path": "stage-agent-loop.json",
+              "sizeBytes": 825
+            },
+            {
+              "digest": "sha256:5e5c63dedb6a14defa0a6f36e46f6053bce46893d8c9bf1b8d20ffb533889233",
+              "path": "stage-prepare-objective.json",
+              "sizeBytes": 524
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:908c47dac0f4fb51bee17396e4929f784a9b3f682fa1c769e88f72b2b62fdbec",
+              "path": "stage-validate-output.json",
+              "sizeBytes": 823
+            },
+            {
+              "digest": "sha256:4560b88d731ad0dd6b57909734ffbbe8281768a691c600511bd36ecf5dd21502",
+              "path": "validation.json",
+              "sizeBytes": 52
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-validate-output",
+        "outputBytes": 875,
+        "pinned": false,
+        "reclaimedBytes": 2224,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:14:18.584133256Z",
+        "resourceId": "showcase-bounded-agent-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+        "runtimeId": "showcase-bounded-agent-local",
+        "sealedAt": "2026-10-20T19:14:18.368157381Z",
+        "sizeBytes": 2224,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000/showcase-bounded-agent-local-4f5eb97ca7-validate-output"
+      }
+    ]
+  },
+  "runId": "showcase-bounded-agent-local-4f5eb97ca7-run-20261020t191412.780353000",
+  "status": "completed",
+  "workflowId": "showcase-bounded-agent-local-4f5eb97ca7"
+}

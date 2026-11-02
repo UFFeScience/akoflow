@@ -1,0 +1,27 @@
+{
+ "issue":"AKO-165",
+ "scope":"fixed-58-activity-HPC-placement; shared model supports class-specific stages across runtimes",
+ "trainingRun":"montage-prism-all-hpc-real-20261011-v1",
+ "validationRun":"montage-prism-all-hpc-real-20261011-v2",
+ "holdoutUsedForCalibration":false,
+ "newRealSubmitted":false,
+ "computeChanged":false,
+ "placementChanged":false,
+ "previousSimulatedMakespanSeconds":731.4037441142812,
+ "stageCalibratedSimulatedMakespanSeconds":1021.6136364533885,
+ "observedHoldoutMakespanSeconds":1296.0180189609528,
+ "observedHoldoutRunWindowSeconds":1338,
+ "previousAbsolutePredictionErrorPercent":43.565359,
+ "stageCalibratedAbsolutePredictionErrorPercent":21.172941,
+ "activitiesWithin20PercentBefore":12,
+ "activitiesWithin20PercentAfter":26,
+ "medianActivityWallErrorPercentAfter":22.575879938992422,
+ "gateAccepted":false,
+ "limitations":[
+  "Effective preparation residual and publication measurements still contain unidentified waiting/poll delays; not queue-free service calibration.",
+  "Gateway fallbacks and scheduler waits are not injected into baseline internal-route forecast.",
+  "Per-runtime/class calibration parameters must not be borrowed across unmeasured routes or runtimes.",
+  "V1 recovered/multi-handle activities excluded; 28 merge and preparation observations and 34 publication observations used.",
+  "Shared network model remains unchanged; no global makespan multiplier applied."
+ ]
+}

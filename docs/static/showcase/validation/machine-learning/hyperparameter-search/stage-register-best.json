@@ -1,0 +1,25 @@
+{
+  "dependencies": [
+    "compare-trials"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:39.056892Z",
+  "finishedAtUnixNs": 1792523559051809000,
+  "inputDigest": "3f9f767aff2cdcd7d7c4c21897033272eaa951cb64b1207311f4717b805a2033",
+  "result": {
+    "candidate": "trial-n",
+    "epochs": 300,
+    "learningRate": 0.06,
+    "model": {
+      "bias": 0.7000638860082541,
+      "weight": 2.400313266993068
+    },
+    "rmse": 0.02111409566003897
+  },
+  "showcase": "hyperparameter-search",
+  "stage": "register-best",
+  "startedAt": "2026-10-20T19:12:39.01014Z",
+  "startedAtUnixNs": 1792523559051520000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

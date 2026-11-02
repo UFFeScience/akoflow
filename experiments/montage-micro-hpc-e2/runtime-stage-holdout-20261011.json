@@ -1,0 +1,33 @@
+{
+ "issue":"AKO-166",
+ "mode":"offline-fixed-placement-evaluation-and-native-SimGrid",
+ "newRealSubmitted":false,
+ "daemonRestarted":false,
+ "globalMakespanMultiplierUsed":false,
+ "stageRules":[
+  "Merge component service fitted once per consumer, including peer/relay routes without folding network into merge.",
+  "Initial workspace scan is moved from runtime overhead to preparation, exactly once.",
+  "Network-route residual cannot be interpreted as input scan; direct scan telemetry is required for cloud.",
+  "Different runtime drivers cannot be mixed in a single class calibration.",
+  "Training workspace projection uses actual training resource types, not holdout placement.",
+  "Canonical activity names align historical IDs exactly; no family-only joins.",
+  "Fixed placement evaluator updates PRISM forecast without changing resource/core/order."
+ ],
+ "cases":[
+  {"scope":"HPC Slurm","training":"montage-prism-all-hpc-real-20261011-v1, single-attempt subset","holdout":"montage-prism-all-hpc-real-20261011-v2","plannedSeconds":1021.6136364533885,"simulatedSeconds":1021.6136364533885,"observedMakespanSeconds":1296.0180189609528,"absoluteMakespanErrorPercentApprox":21.17,"activityWallWithin20Percent":26,"activityCount":58,"aggregateWithin25Percent":true,"fullyValidated":false},
+  {"scope":"mixed cloud e2-micro / HPC Slurm; cloud stage calibration","training":"montage-docker-image-real-20261010-v2","holdout":"montage-clean-real-20261011-v1","plannedSeconds":2765.959075445268,"simulatedSeconds":2773.638558133343,"observedMakespanSeconds":3150.6341450214386,"absolutePlannedMakespanErrorPercentApprox":12.21,"absoluteSimulatedMakespanErrorPercentApprox":11.9657,"activityWallWithin20Percent":20,"activityCount":58,"medianActivityWallErrorPercent":48.42921507396264,"aggregateWithin25Percent":true,"fullyValidated":false},
+  {"scope":"cloud e2-medium","training":"montage-docker-image-real-20261010-v2","mergeSamples":6,"publicationSamples":10,"independentHoldoutAvailable":false,"fullyValidated":false}
+ ],
+ "goalComplete":false,
+ "toleranceDefinition":"For the user target, check abs(real - predicted) / predicted <= 0.25. Report reference-denominator accuracy separately; do not interchange them.",
+ "realExcessRelativePlannedPercent":{"hpcApprox":26.86,"mixedCloudHpcApprox":13.91},
+ "realExcessRelativeSimulatedPercent":{"hpcApprox":26.86,"mixedCloudHpcApprox":13.59},
+ "userTolerancePassed":{"hpc":false,"mixedCloudHpcAggregate":true,"e2Medium":"not-verified"},
+ "remaining":[
+  "Dominant activity residuals still too large; aggregate agreement alone does not establish validation.",
+  "Need an independent holdout with e2-medium before claiming that class meets tolerance.",
+  "Cloud training and holdout use different runtime-era overheads; profiles must carry provenance and confidence.",
+  "Remaining effective-wall publication/preparation coefficients contain unidentified waiting; distinguish CPU/IO service from channel queue before accepting contention model.",
+  "Recovered cloud/HPC run must not be used as clean makespan holdout."
+ ]
+}

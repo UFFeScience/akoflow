@@ -22,7 +22,7 @@ func (workspaceEndpointResolver) ResolveTransferEndpoint(_ context.Context, loca
 type directWorkspaceEndpointResolver struct{}
 
 func (directWorkspaceEndpointResolver) ResolveTransferEndpoint(_ context.Context, location domain.TransferLocation) (domain.TransferEndpoint, error) {
-	return domain.TransferEndpoint{URI: location.URI, ConnectionID: "shared-hpc"}, nil
+	return domain.TransferEndpoint{URI: location.URI, ConnectionID: "shared-hpc", CloudInstanceID: location.CloudInstanceID}, nil
 }
 
 func workspaceURL(path string) string { return (&url.URL{Scheme: "file", Path: path}).String() }
@@ -69,7 +69,7 @@ func TestWorkspaceRsyncSSHRemoteShellKeepsProxyCommandInOneArgument(t *testing.T
 		t.Fatalf("rsync arguments lack remote shell: %q", args)
 	}
 	for _, expected := range []string{
-		"ssh -o BatchMode=yes -i storage/credentials/ssh/ovvesley-personal",
+		"ssh -o BatchMode=yes -o ConnectionAttempts=1 -o ConnectTimeout=10 -i storage/credentials/ssh/ovvesley-personal",
 		`-o "ProxyCommand=ssh `,
 		` -W plafrim:22" -A`,
 	} {
@@ -210,7 +210,11 @@ func TestWorkspaceRsyncCopiesDirectlyInsideSharedHPC(t *testing.T) {
 	}
 	bin := t.TempDir()
 	fakeSSH := filepath.Join(bin, "ssh")
-	if err := os.WriteFile(fakeSSH, []byte("#!/bin/sh\nwhile [ \"$#\" -gt 1 ]; do shift; done\nexec sh -c \"$1\"\n"), 0o700); err != nil {
+	if err := os.WriteFile(
+		fakeSSH,
+		[]byte("#!/bin/sh\nwhile [ \"$#\" -gt 1 ]; do shift; done\ncase \"$1\" in *'stat -f'*) printf 'lustre test-fsid lustre server:/fixture /home\\nlustre test-fsid lustre server:/fixture /home\\n'; exit 0;; esac\nexec sh -c \"$1\"\n"),
+		0o700,
+	); err != nil {
 		t.Fatal(err)
 	}
 	t.Setenv("PATH", bin+string(os.PathListSeparator)+os.Getenv("PATH"))
@@ -245,6 +249,17 @@ func TestWorkspaceRsyncCopiesDirectlyInsideSharedHPC(t *testing.T) {
 	for _, run := range runs {
 		if run.Status != domain.TransferCompleted || run.Strategy != domain.TransferDirectRuntime || run.NetworkBytes != 0 || run.FilesTransferred != 1 {
 			t.Fatalf("unexpected direct transfer: %+v", run)
+		}
+		if run.Route.MergeExecutionSeconds <= 0 || run.Route.MergeSSHChannelWaitSeconds < 0 || run.Route.MergeCommandOverheadSeconds < 0 {
+			t.Fatalf("missing separated remote merge timings: %+v", run.Route)
+		}
+		for _, phase := range run.Route.Phases {
+			if phase.Name == "shared-conflict-check-copy-and-verify" {
+				difference := phase.DurationSeconds - run.Route.MergeSSHChannelWaitSeconds - run.Route.MergeExecutionSeconds
+				if difference < -1e-6 || difference > 1e-6 {
+					t.Fatalf("queue and command do not account for merge wall time: %g", difference)
+				}
+			}
 		}
 	}
 	runs, err = (WorkspaceRsync{Resolver: directWorkspaceEndpointResolver{}}).Sync(context.Background(), plans)

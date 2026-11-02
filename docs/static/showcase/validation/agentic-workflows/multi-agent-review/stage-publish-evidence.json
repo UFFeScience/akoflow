@@ -1,0 +1,19 @@
+{
+  "dependencies": [
+    "synthesize"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:47.805865Z",
+  "finishedAtUnixNs": 1792523567800861000,
+  "inputDigest": "515725fca7c650aa18f2c2af0438ac3160938890c432b1b81a828a2f831d7567",
+  "result": {
+    "claimAccepted": false,
+    "correctedMean": 8
+  },
+  "showcase": "multi-agent-review",
+  "stage": "publish-evidence",
+  "startedAt": "2026-10-20T19:12:47.761252Z",
+  "startedAtUnixNs": 1792523567800542000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

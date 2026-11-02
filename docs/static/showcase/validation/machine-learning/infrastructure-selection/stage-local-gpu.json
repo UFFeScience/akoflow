@@ -1,0 +1,21 @@
+{
+  "dependencies": [
+    "profile-workload"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:39.520569Z",
+  "finishedAtUnixNs": 1792523559515596000,
+  "inputDigest": "3b6c90c515d07dd702b174871b89a1cbb33fec6f216fcd854ae98bcff90589e0",
+  "result": {
+    "basis": "declared assumptions and one measured local CPU fit",
+    "candidate": "local-gpu",
+    "estimatedCost": 0,
+    "estimatedSeconds": 0.000044771
+  },
+  "showcase": "infrastructure-selection",
+  "stage": "local-gpu",
+  "startedAt": "2026-10-20T19:12:39.475787Z",
+  "startedAtUnixNs": 1792523559515440000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

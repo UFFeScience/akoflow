@@ -29,6 +29,32 @@ flowchart LR
 
 The diagram highlights two distinct paths. A build run produces an artifact whose bytes are either already at a verified location or are materialized on the target resource before execution. A storage browse can also promote an existing file directly into the artifact catalog or the scientific record. Produced files from an execution become evidence through the artifact manifest; that manifest is what makes a run scientifically citable.
 
+## Import a public Docker Hub image
+
+In Desktop, expand **Import from Docker Hub** in an activity's executable selector, or open **Artifacts → Build artifact**. Search for an image, choose a tag and a Linux architecture, review the artifact ID and version, and click **Import and build SIF**. The daemon resolves the selected platform to an immutable digest before registering the artifact and creating its SIF build specification. The Desktop then starts the build and follows its status. A completed, verified artifact is selected automatically when importing from a workflow activity.
+
+The daemon must have its Apptainer builder configured. Failed or cancelled builds remain visible through the artifact's build logs; retrying from the import panel starts another run for the same registered build. Registering an image does not make it executable until its SIF bytes are published at a verified location.
+
+Metadata endpoints use the usual AkôFlow API authentication:
+
+- `GET /docker-hub/search/?q=python&page=1` searches public repositories.
+- `GET /docker-hub/tags/?repository=library/python&q=3.12&page=1` lists tags and Linux image platforms.
+
+Both return `{ "results": [...], "hasMore": false }`, with 20 upstream records per page. Tags without usable Linux images are omitted, so a page may have fewer than 20 results while `hasMore` is true. Successful metadata responses are cached for one minute. Docker Hub throttling returns HTTP 429 and preserves its `Retry-After` header. Repository search uses Docker Hub's public search endpoint, which is not part of its versioned Hub API reference; tags use the documented namespace API.
+
+Register the selection with the existing Docker artifact endpoint:
+
+```json
+{
+  "artifactId": "library-python",
+  "version": "3.12",
+  "architecture": "amd64",
+  "dockerHub": { "repository": "library/python", "tag": "3.12" }
+}
+```
+
+Send this body to `POST /artifacts/docker/`, then start the returned build with `POST /artifact-builds/{build.id}/runs/`. An unavailable repository, invalid tag, unsupported platform, or ambiguous platform variant is rejected before catalog registration. The original `image` request field remains available for manually specified registry references.
+
 ## Browse storage
 
 In Desktop, open **Infrastructure**, select an environment, then open **Storage**. Choose a storage card and one of its declared roots. Entries are loaded lazily; opening this view does not scan an entire filesystem.

@@ -1,27 +1,26 @@
 import { themes as prismThemes } from "prism-react-renderer";
 import type { Config } from "@docusaurus/types";
 import type * as Preset from "@docusaurus/preset-classic";
+import { publicSiteUrl } from "./src/utils/publicSiteUrl";
 
 const config: Config = {
   title: "AkôFlow",
   tagline: "Open Source Engine for Containerized Scientific Workflows",
-  favicon: "img/brand/akoflow-macos.png",
+  favicon: "img/brand/akoflow-logo.png",
 
-  // GitHub Pages is the deployment origin. The public proxy exposes the
-  // documentation at this canonical root, so generated links and assets must
-  // not retain the GitHub Pages repository prefix.
-  url: "https://akoflow.com",
-  baseUrl: "/",
+  // The public domain proxies this deployment and rewrites its base paths.
+  // Keep the build prefix required by the institutional and Pages origins.
+  url: "https://uffescience.ic.uff.br",
+  baseUrl: "/akoflow/",
 
-  // GitHub Pages also exposes this build under /akoflow/, while its assets
-  // are built for the public root domain. Redirect direct Pages visits before
-  // the app loads so navigation works there as well.
+  // Redirect legacy origins before hydration. Build the prefix from path
+  // segments: the public proxy rewrites literal base-path strings in HTML.
   headTags: [
     {
       tagName: "script",
       attributes: {},
       innerHTML:
-        "if (location.hostname === 'uffescience.github.io' && location.pathname.startsWith('/akoflow/')) { location.replace('https://akoflow.com' + location.pathname.slice('/akoflow'.length) + location.search + location.hash); }",
+        "if (['uffescience.ic.uff.br', 'uffescience.github.io'].includes(location.hostname)) { var segments = location.pathname.split('/'); if (segments[1] === 'akoflow') { location.replace('https://akoflow.com/' + segments.slice(2).join('/') + location.search + location.hash); } }",
     },
   ],
 
@@ -45,12 +44,30 @@ const config: Config = {
       "classic",
       {
         debug: false,
+        sitemap: {
+          async createSitemapItems({ defaultCreateSitemapItems, ...params }) {
+            const items = await defaultCreateSitemapItems(params);
+            return items.map((item) => ({
+              ...item,
+              url: publicSiteUrl(item.url),
+            }));
+          },
+        },
         docs: {
           sidebarPath: "./sidebars.ts",
           editUrl: "https://github.com/UFFeScience/akoflow/tree/main/docs/",
           routeBasePath: "docs",
         },
-        blog: false,
+        blog: {
+          blogTitle: "AkôFlow Blog",
+          blogDescription:
+            "Tutorials, experiments, and results from the AkôFlow project.",
+          showReadingTime: true,
+          postsPerPage: "ALL",
+          blogSidebarCount: 0,
+          onInlineTags: "ignore",
+          onUntruncatedBlogPosts: "ignore",
+        },
         theme: {
           customCss: "./src/css/custom.css",
         },
@@ -130,7 +147,8 @@ const config: Config = {
           clusterBkg: "#f2f2f2",
           clusterBorder: "#151515",
           edgeLabelBackground: "#ffffff",
-          fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
+          fontFamily:
+            "system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
           fontSize: "15px",
         },
         themeCSS: `
@@ -181,12 +199,12 @@ const config: Config = {
       respectPrefersColorScheme: true,
     },
     navbar: {
-      title: "AkôFlow Docs",
+      title: "AkôFlow",
       hideOnScroll: false,
       logo: {
         alt: "AkôFlow application logo",
-        src: "img/brand/akoflow-macos.png",
-        srcDark: "img/brand/akoflow-macos.png",
+        src: "img/brand/akoflow-logo.png",
+        srcDark: "img/brand/akoflow-logo.png",
       },
       items: [
         {
@@ -204,6 +222,7 @@ const config: Config = {
           position: "left",
           label: "API Reference",
         },
+        { to: "/blog", position: "left", label: "Blog" },
         {
           href: "https://github.com/UFFeScience/akoflow",
           label: "GitHub",

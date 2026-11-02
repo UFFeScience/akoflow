@@ -1,0 +1,26 @@
+{
+  "issue": "AKO-160",
+  "mode": "offline-simulation-only",
+  "realExecutionSubmitted": false,
+  "computeFallback": {
+    "formula": "donorSecondsPerWorkUnit * sourceSpeedup / targetSpeedup",
+    "donorSelection": "measured work-unit profile with greatest sample count; stable profile ID tie-break",
+    "measuredProfilesPreserved": true,
+    "derivedProfilesAdded": 16,
+    "derivedSampleSize": 0,
+    "status": "extrapolated-not-measured"
+  },
+  "hpcStorageCap": "explicitly-removed-by-user-AKO-159",
+  "selectedPlacement": {"hpcActivities": 58, "cloudActivities": 0, "hpcNodesUsed": 1},
+  "predictedMakespanSeconds": 731.4037441142812,
+  "simulatedMakespanSeconds": 731.4037441142812,
+  "simulatedActivities": 58,
+  "interpretation": "The same-node HPC candidate is now eligible. PRISM and SimGrid consume identical completed compute profiles and the unchanged transfer/preparation model. Agreement is not independent validation.",
+  "limitations": [
+    "Speedups are approximate; estimated profiles are not HPC measurements.",
+    "Same-node placement avoids inter-machine network traffic, not workspace copy/merge.",
+    "HPC merge profile exists; explicit HPC input-observation and publication profiles are absent in this input.",
+    "Future Slurm queue waits are not established by this result.",
+    "Runtime compatibility, CPU/memory feasibility and route evidence remain required. No firewall/storage trust is relaxed."
+  ]
+}

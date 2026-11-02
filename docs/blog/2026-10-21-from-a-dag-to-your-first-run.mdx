@@ -1,0 +1,322 @@
+---
+slug: from-a-dag-to-your-first-run
+authors: [ovvesley, llms]
+title: From a DAG to your first AkôFlow run
+description: With AkôFlow Desktop installed, follow annotated screenshots to create your first local workflow, execute it, and inspect its output.
+image: /img/interface/workflows/definitions.png
+cover_alt: AkôFlow Desktop workflow definitions catalog with the Import YAML action.
+cover_dag: [write-report]
+tags: [Getting started, Desktop, Experiments]
+hide_table_of_contents: false
+---
+
+import WorkflowDag from "@site/src/components/WorkflowDag";
+import AnnotatedScreenshot from "@site/src/components/blog/AnnotatedScreenshot";
+import tutorialShots from "@site/src/components/blog/tutorialShots";
+
+With AkôFlow Desktop already installed, your first experiment can start on your own workstation. Describe one activity in YAML, select your local machine, and watch a real execution produce a file. Then turn that first activity into a small analysis pipeline.
+
+This walkthrough uses **AkôFlow Desktop throughout**. Desktop starts its matching local services and manages the connection to the engine. You do not need to clone the source repository, start a development Compose stack, or copy an API token.
+
+<!-- truncate -->
+
+## What you will build
+
+Begin with `write-report`: one activity that writes `result.txt` and prints its contents in the activity log. This checks the complete path from a definition to a local execution and its recorded output.
+
+After that succeeds, import a second YAML with three activities: prepare three measurements, compute their mean, and write a report. The expected answer is **4.00**.
+
+Both examples use a small BusyBox container on your local Docker engine. They perform **real execution**. They do not simulate work or allocate cloud machines.
+
+## 1. Begin after Desktop is installed
+
+This walkthrough starts **after installing AkôFlow Desktop**. If you still need the application, follow [Install AkôFlow Desktop](/docs/installation), then return here.
+
+1. Start Docker and open the installed AkôFlow Desktop application.
+2. Let the engine checkup finish and wait for **Overview**.
+3. Confirm **Connected** at the bottom-left corner.
+4. Start with **Infrastructure → Environments** in the sidebar.
+
+The screenshots below were captured from the actual interface. They show the controls using an existing reference instance: its workflow is named `hello`, its activity is `a`, and its local environment is `Local environment`. **For your experiment, enter the tutorial names `first-local-check`, `write-report`, `Local check`, and `First local scope`.** Your fresh catalogs may be empty. The reference run's counts and files are identified in each caption rather than presented as your experiment's results.
+
+Each red number has a matching instruction below the image. **Click a screenshot to enlarge it with its arrows**; on a phone, scroll the enlarged view sideways to read the controls.
+
+<AnnotatedScreenshot shot={tutorialShots.connected} />
+
+**Checkpoint:** Desktop is connected. If startup fails, open its failure details before retrying.
+
+## 2. Connect your local machine
+
+Open **Infrastructure → Environments**. To create the environment from scratch, follow the two screens below. If you already created `Local check`, open it and continue with its connection check instead.
+
+<AnnotatedScreenshot shot={tutorialShots.environments} />
+
+1. Select **Connect environment** (called **New environment** in some releases), then **Local machine**.
+2. Name it `Local check`.
+3. Select **Test connection**.
+4. When the test succeeds, select **Save environment**.
+
+<AnnotatedScreenshot shot={tutorialShots.localForm} />
+
+On the environment page, select **Check now**. Wait until **Local machine** shows **online**. This makes the local resource available for planning.
+
+An _environment_ describes where the work can run. Here, the target is the machine reached through your local AkôFlow engine. Desktop requests connection checks from the daemon.
+
+<AnnotatedScreenshot shot={tutorialShots.checkOnline} />
+
+**Checkpoint:** the local resource is online. Remember its environment name for step 5.
+
+## 3. Save your first workflow YAML
+
+Create a plain-text file named `first-local-check.yaml`, or [download the complete YAML](/downloads/blog/first-local-run/first-local-check.yaml). Copy the whole document, preserving indentation, and save it with the `.yaml` extension.
+
+```yaml
+name: first-local-check
+spec:
+  namespace: learning
+  activities:
+    - name: write-report
+      cpuLimit: "0.1"
+      memoryLimit: 32Mi
+      command:
+        executable:
+          source:
+            type: oci
+            reference: docker.io/library/busybox:1.36
+          delivery:
+            strategy: auto
+            targetFormat: oci
+        entrypoint: sh
+        arguments:
+          - -c
+          - |
+            printf 'Akoflow local check\n' > result.txt
+            cat result.txt
+      expectedOutputs: [result.txt]
+```
+
+Read the document from the outside in:
+
+- `name` identifies the workflow. `namespace` groups it under `learning`.
+- `activities` contains one unit of work: `write-report`.
+- `command.executable` names the BusyBox image. `targetFormat: oci` selects the container format used by local Docker.
+- `entrypoint: sh` and the `-c` argument run the following shell script.
+- `printf` creates the file in the activity workspace. `cat` prints it into the activity log.
+- `expectedOutputs` asserts that `result.txt` exists after execution.
+- CPU and memory limits describe the activity's small resource demand.
+
+The image comes from Docker Hub, so its first use may take longer while it downloads. For a research reproducibility bundle, also retain the resolved image digest alongside the version tag.
+
+## 4. Import the YAML in Desktop
+
+<AnnotatedScreenshot shot={tutorialShots.import} />
+
+1. Open **Workflows → Definitions**.
+2. Select **Import YAML** and choose `first-local-check.yaml`.
+3. Open the new `first-local-check` definition.
+4. Confirm that the DAG contains one activity named **write-report**.
+
+A _DAG_ is a directed acyclic graph: nodes are activities and arrows are dependencies. This first graph has one node and no arrows, enough to learn the execution lifecycle before adding data handoffs.
+
+If the name already exists, open the existing definition or change `name` before importing another copy. The importer normalizes names into identifiers, so each new definition needs a distinct name.
+
+**Checkpoint:** the definition exists and its graph matches the YAML. Importing saves a definition; it does not start a run.
+
+## 5. Create a local execution scope
+
+<AnnotatedScreenshot shot={tutorialShots.scopeCatalog} />
+
+1. Open **Infrastructure → Execution scopes**.
+2. Select **Create scope** (called **New execution scope** in some releases).
+3. Name it `First local scope` and select your local environment.
+4. Leave **Create the initial network topology** enabled.
+5. Select **Create execution scope**.
+
+<AnnotatedScreenshot shot={tutorialShots.scopeName} />
+
+<AnnotatedScreenshot shot={tutorialShots.scopeEnvironment} />
+
+After selecting `Local check`, scroll to the bottom of the form to save it:
+
+<AnnotatedScreenshot shot={tutorialShots.scopeSave} />
+
+A _scope_ selects the environment resources offered to planning. Its topology describes the connections between them. A one-machine experiment needs no network links.
+
+Desktop creates these records and their identifiers. The YAML here describes the workflow; you do not need to author environment, scope, or plan API envelopes.
+
+## 6. Make a plan and start the run
+
+Return to `first-local-check` and select **Generate plan**:
+
+<AnnotatedScreenshot shot={tutorialShots.planAction} />
+
+<AnnotatedScreenshot shot={tutorialShots.manualMode} />
+
+1. Choose **Create manually**.
+2. Select `First local scope`.
+3. Select **write-report** in the activity graph.
+4. Choose your **local machine runtime** and **local machine resource**.
+5. Set **Expected execution time** to `1` second.
+6. Select **Generate plan**.
+
+<AnnotatedScreenshot shot={tutorialShots.placement} />
+
+The duration is an estimate, not a timeout or a measurement. Image download and startup can make the first run take longer.
+
+On the saved plan page, select **Execute plan**:
+
+<AnnotatedScreenshot shot={tutorialShots.execute} />
+
+Review the selected plan, **Real execution**, and the local runtime. Keep the suggested unique run ID or enter your own:
+
+<AnnotatedScreenshot shot={tutorialShots.review} />
+
+Scroll to the bottom, then select **Start execution** once:
+
+<AnnotatedScreenshot shot={tutorialShots.start} />
+
+Wait until the run says **completed** and **1/1** activities settled:
+
+<AnnotatedScreenshot shot={tutorialShots.completed} />
+
+A _plan_ describes where work should run. A _run_ records what happened. Submission is asynchronous: pending or running can appear before completed.
+
+## 7. Inspect your first result
+
+On the completed run, select **Activities**, then `write-report`. Open its **Details** link or **Open activity page** from its information panel (some releases label this **Open activity details**).
+
+<AnnotatedScreenshot shot={tutorialShots.activity} />
+
+| Where to look       | Expected result                       |
+| ------------------- | ------------------------------------- |
+| Execution details   | **Exit code 0**                       |
+| Activity output/log | `Akoflow local check`                 |
+| **Generated files** | `result.txt`, with a SHA-256 checksum |
+
+Scroll down the activity page to **Activity output** and **Generated files**:
+
+<AnnotatedScreenshot shot={tutorialShots.files} />
+
+The generated file belongs to the activity workspace managed by the engine. Listing a file records that it was observed; it does not automatically download it into your computer's Downloads folder.
+
+You have now submitted and inspected a real local experiment. Save the YAML with your experiment material so the definition can be reused.
+
+## 8. Extend it into a small analysis
+
+Save the next document as `first-local-analysis.yaml`, or [download the complete analysis YAML](/downloads/blog/first-local-run/first-local-analysis.yaml). This is a **new, complete workflow**, with a different name from the first definition.
+
+<WorkflowDag
+  title="First local analysis"
+  stages={["prepare", "analyze", "write-report"]}
+/>
+
+| Activity       | Reads                                   | Produces                              |
+| -------------- | --------------------------------------- | ------------------------------------- |
+| `prepare`      | Values declared in its command: 2, 4, 6 | `measurements.txt`                    |
+| `analyze`      | `measurements.txt`                      | `mean.txt`, containing `4.00`         |
+| `write-report` | `mean.txt`                              | `report.txt`, containing `Mean: 4.00` |
+
+```yaml
+name: first-local-analysis
+spec:
+  namespace: learning
+  activities:
+    - name: prepare
+      cpuLimit: "0.1"
+      memoryLimit: 32Mi
+      command:
+        executable:
+          source:
+            type: oci
+            reference: docker.io/library/busybox:1.36
+          delivery:
+            strategy: auto
+            targetFormat: oci
+        entrypoint: sh
+        arguments:
+          - -c
+          - |
+            printf '2\n4\n6\n' > measurements.txt
+            cat measurements.txt
+      expectedOutputs: [measurements.txt]
+
+    - name: analyze
+      dependsOn: [prepare]
+      cpuLimit: "0.1"
+      memoryLimit: 32Mi
+      command:
+        executable:
+          source:
+            type: oci
+            reference: docker.io/library/busybox:1.36
+          delivery:
+            strategy: auto
+            targetFormat: oci
+        entrypoint: sh
+        arguments:
+          - -c
+          - |
+            awk '{sum += $1; n++} END {printf "%.2f\n", sum/n}' measurements.txt > mean.txt
+            cat mean.txt
+      expectedOutputs: [mean.txt]
+
+    - name: write-report
+      dependsOn: [analyze]
+      cpuLimit: "0.1"
+      memoryLimit: 32Mi
+      command:
+        executable:
+          source:
+            type: oci
+            reference: docker.io/library/busybox:1.36
+          delivery:
+            strategy: auto
+            targetFormat: oci
+        entrypoint: sh
+        arguments:
+          - -c
+          - |
+            printf 'Mean: %s\n' "$(cat mean.txt)" > report.txt
+            cat report.txt
+      expectedOutputs: [report.txt]
+```
+
+The new field is `dependsOn`. `analyze` waits for `prepare`, and `write-report` waits for `analyze`. AkôFlow stages the predecessor's workspace before a dependent activity starts. Each stage writes a different output path, avoiding conflicting contents at the same path. `expectedOutputs` verifies that the required file exists.
+
+Repeat the Desktop sequence:
+
+1. Import `first-local-analysis.yaml` in **Workflows → Definitions**.
+2. Confirm the three-node DAG above.
+3. Create a manual plan using the existing `First local scope`.
+4. Assign **all three activities** to the local runtime and resource, with an expected duration of `1` second each.
+5. Generate the plan, choose **Execute plan → Real execution**, and start it.
+6. Wait for **completed** and **3/3** activities settled.
+7. Open the final **write-report** activity. Its log should print `Mean: 4.00`. Its generated files should include `report.txt` with a checksum.
+
+This graph is sequential because each stage consumes the previous stage's output. A future independent branch should declare only the dependencies it needs. Dependencies determine readiness; resource capacity determines whether ready activities can run together.
+
+## If something stops you
+
+| Symptom                                               | Next action                                                                                                |
+| ----------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Desktop does not reach **Connected**                  | Check Docker and inspect first-start failure details.                                                      |
+| Local environment is offline or missing from planning | Test its connection, save it, and select **Check now**.                                                    |
+| YAML import fails                                     | Check indentation, retain the complete `name`/`spec` wrapper, and use a distinct workflow name.            |
+| No compatible runtime appears                         | Recheck the environment's runtime binding and select a real local scope.                                   |
+| The first activity cannot obtain its image            | Inspect the activity error and verify access to Docker Hub and the local Docker engine.                    |
+| Analysis cannot find its input                        | Check `dependsOn`, the predecessor's completion, and workspace-staging evidence.                           |
+| A run fails or stays pending                          | Open activity details and run events, then see [Troubleshooting](/docs/guides/operations/troubleshooting). |
+
+## The idea behind AkôFlow
+
+The original AkôFlow paper introduces middleware for parallel scientific workflows in containerized environments, with provenance capture and an astronomy evaluation. It gives the research context for the project:
+
+Ferreira, W.; Kunstmann, L.; Paes, A.; Bedo, M.; de Oliveira, D. **AkôFlow: um Middleware para execução de Workflows científicos em múltiplos ambientes conteinerizados.** SBBD, 2024, pp. 27–39. [Read the paper](https://doi.org/10.5753/sbbd.2024.241126).
+
+This post follows the current Desktop interface and portable workflow format, which have evolved since the publication. The paper explains the research motivation; the documentation and downloadable YAML files describe the steps used here.
+
+Here, the YAML is the workflow definition, the environment is your local machine, the scope selects eligible resources, the plan assigns activities, and the run holds observed results. Generated files and checksums provide a first piece of execution evidence.
+
+For your next experiment, change the measurements in a new copy of the analysis YAML and check that the mean changes accordingly. Continue with [planning alternatives](/docs/guides/workflows/planning), [workflow authoring](/docs/guides/workflows/definitions), or the [Montage 050 scientific workflow](/docs/showcase/scientific-workflows/montage-050).
+
+API automation is a separate next step once you know these objects; see [API access](/docs/tutorials/api-access). The Desktop path manages its internal credentials for you.

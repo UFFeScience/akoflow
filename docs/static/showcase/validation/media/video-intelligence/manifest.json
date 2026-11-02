@@ -1,0 +1,27 @@
+{
+  "artifacts": [
+    "source.mp4",
+    "probe.json",
+    "scenes.json",
+    "audio.json",
+    "timeline.json"
+  ],
+  "sha256": {
+    "audio.json": "a10b207c04c1ad61cb2ddac20e027f69e573124e52e65852be40a2d0cb35262c",
+    "probe.json": "0952f5f19da651e89337758b160c21091e22bbf14ba862b2d5c7568701926e34",
+    "scenes.json": "ea09e7ccd1d3bbaec98e27ae4ea11c06bd4c7c48cd0d10e6fe072f4a7f962f02",
+    "source.mp4": "9d64d3c2d2de8b6e9cd70ee7a05ed598ecc1efeeb9c7d2df757313a8e88fb0b4",
+    "timeline.json": "a95c21418d18720b10ba49e5913dc6e014cb7e45d7e83f8b0fac13c0455fa7ec"
+  },
+  "showcase": "video-intelligence",
+  "stages": [
+    "prepare",
+    "probe",
+    "scenes",
+    "audio",
+    "timeline",
+    "report"
+  ],
+  "status": "success",
+  "validationMode": "local-pipeline"
+}

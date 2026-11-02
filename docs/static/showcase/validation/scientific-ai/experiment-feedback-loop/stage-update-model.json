@@ -1,0 +1,44 @@
+{
+  "dependencies": [
+    "observations"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:37.148538Z",
+  "finishedAtUnixNs": 1792523557143992000,
+  "inputDigest": "d9e556a6b7304fafafd5cdc8b9d8c75513300c069a561242c39fb50c6e5313bb",
+  "result": {
+    "coefficients": [
+      5.160000000000007,
+      4.399999999999978,
+      -0.9999999999999944
+    ],
+    "observations": [
+      [
+        0,
+        5.159999999999999
+      ],
+      [
+        0.5,
+        7.109999999999999
+      ],
+      [
+        1,
+        8.559999999999999
+      ],
+      [
+        3,
+        9.36
+      ],
+      [
+        4,
+        6.760000000000001
+      ]
+    ]
+  },
+  "showcase": "experiment-feedback-loop",
+  "stage": "update-model",
+  "startedAt": "2026-10-20T19:12:37.102934Z",
+  "startedAtUnixNs": 1792523557143886000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

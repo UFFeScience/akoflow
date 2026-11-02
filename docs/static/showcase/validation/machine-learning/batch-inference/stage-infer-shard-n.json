@@ -1,0 +1,119 @@
+{
+  "dependencies": [
+    "partition-input"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:38.300022Z",
+  "finishedAtUnixNs": 1792523558294568000,
+  "inputDigest": "70550d9845fe9f8e849594d196afda135aca8d4bbe87291ffa91eb0c6a10b058",
+  "result": {
+    "predictions": [
+      {
+        "index": 2,
+        "input": -2.8,
+        "prediction": -6.017821426491512
+      },
+      {
+        "index": 5,
+        "input": -2.5,
+        "prediction": -5.298052024930494
+      },
+      {
+        "index": 8,
+        "input": -2.2,
+        "prediction": -4.578282623369477
+      },
+      {
+        "index": 11,
+        "input": -1.9,
+        "prediction": -3.8585132218084572
+      },
+      {
+        "index": 14,
+        "input": -1.6,
+        "prediction": -3.1387438202474396
+      },
+      {
+        "index": 17,
+        "input": -1.3,
+        "prediction": -2.418974418686421
+      },
+      {
+        "index": 20,
+        "input": -1,
+        "prediction": -1.6992050171254025
+      },
+      {
+        "index": 23,
+        "input": -0.7,
+        "prediction": -0.9794356155643841
+      },
+      {
+        "index": 26,
+        "input": -0.4,
+        "prediction": -0.259666214003366
+      },
+      {
+        "index": 29,
+        "input": -0.1,
+        "prediction": 0.46010318755765245
+      },
+      {
+        "index": 32,
+        "input": 0.2,
+        "prediction": 1.1798725891186708
+      },
+      {
+        "index": 35,
+        "input": 0.5,
+        "prediction": 1.8996419906796893
+      },
+      {
+        "index": 38,
+        "input": 0.8,
+        "prediction": 2.619411392240708
+      },
+      {
+        "index": 41,
+        "input": 1.1,
+        "prediction": 3.3391807938017264
+      },
+      {
+        "index": 44,
+        "input": 1.4,
+        "prediction": 4.058950195362744
+      },
+      {
+        "index": 47,
+        "input": 1.7,
+        "prediction": 4.778719596923763
+      },
+      {
+        "index": 50,
+        "input": 2,
+        "prediction": 5.498488998484781
+      },
+      {
+        "index": 53,
+        "input": 2.3,
+        "prediction": 6.218258400045799
+      },
+      {
+        "index": 56,
+        "input": 2.6,
+        "prediction": 6.938027801606818
+      },
+      {
+        "index": 59,
+        "input": 2.9,
+        "prediction": 7.657797203167836
+      }
+    ]
+  },
+  "showcase": "batch-inference",
+  "stage": "infer-shard-n",
+  "startedAt": "2026-10-20T19:12:38.250639Z",
+  "startedAtUnixNs": 1792523558294443000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

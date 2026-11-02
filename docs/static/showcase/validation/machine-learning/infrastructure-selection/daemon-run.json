@@ -1,0 +1,3128 @@
+{
+  "activityCount": 7,
+  "completedActivityCount": 7,
+  "image": "ghcr.io/uffescience/akoflow-examples/showcase-infrastructure-selection:local-e2309626ebd50488",
+  "imageId": "sha256:e2309626ebd50488a596e89cd649a9fbab8726944c3a315d98ecf4feeb3ccdaf",
+  "observedAt": "2026-10-20T19:10:23Z",
+  "planId": "showcase-infrastructure-selection-local-a206990755-manual-plan-20261020t191013.326119000",
+  "projection": {
+    "activities": [
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-profile-workload",
+        "allocatedResourceId": "showcase-infrastructure-selection-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "finishedAt": 1792523413.9524019,
+        "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-profile-workload",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-infrastructure-selection-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-infrastructure-selection-local-a206990755-manual-plan-20261020t191013.326119000-showcase-infrastructure-selection-local-a206990755-profile-workload",
+        "plannedResourceId": "showcase-infrastructure-selection-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523413.6484349,
+        "readyAt": 1792523413.6484349,
+        "runtimeId": "showcase-infrastructure-selection-local",
+        "runtimeSeconds": 0.13911652565002441,
+        "startedAt": 1792523413.8132854,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-local-gpu",
+        "allocatedResourceId": "showcase-infrastructure-selection-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "finishedAt": 1792523415.4847746,
+        "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-local-gpu",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.2328319549560547,
+          "preparationFinishedAt": 1792523415.1105106,
+          "preparationStartedAt": 1792523414.9273534,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.003147125244140625,
+          "runtimeId": "showcase-infrastructure-selection-local",
+          "transferElapsedSeconds": 0.18315720558166504,
+          "transferWorkSeconds": 0.18315720558166504
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-infrastructure-selection-local-a206990755-manual-plan-20261020t191013.326119000-showcase-infrastructure-selection-local-a206990755-local-gpu",
+        "plannedResourceId": "showcase-infrastructure-selection-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523414.9215593,
+        "readyAt": 1792523414.9215593,
+        "runtimeId": "showcase-infrastructure-selection-local",
+        "runtimeSeconds": 0.1414320468902588,
+        "startedAt": 1792523415.3433425,
+        "status": "completed",
+        "transferBytes": 499,
+        "transferSeconds": 0.18315720558166504
+      },
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-hpc",
+        "allocatedResourceId": "showcase-infrastructure-selection-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "finishedAt": 1792523415.4903674,
+        "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-hpc",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.24302268028259277,
+          "preparationFinishedAt": 1792523415.11082,
+          "preparationStartedAt": 1792523414.929554,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.00452876091003418,
+          "runtimeId": "showcase-infrastructure-selection-local",
+          "transferElapsedSeconds": 0.18126606941223145,
+          "transferWorkSeconds": 0.18126606941223145
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-infrastructure-selection-local-a206990755-manual-plan-20261020t191013.326119000-showcase-infrastructure-selection-local-a206990755-hpc",
+        "plannedResourceId": "showcase-infrastructure-selection-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523414.919928,
+        "readyAt": 1792523414.919928,
+        "runtimeId": "showcase-infrastructure-selection-local",
+        "runtimeSeconds": 0.13652467727661133,
+        "startedAt": 1792523415.3538427,
+        "status": "completed",
+        "transferBytes": 499,
+        "transferSeconds": 0.18126606941223145
+      },
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-cloud",
+        "allocatedResourceId": "showcase-infrastructure-selection-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "finishedAt": 1792523415.5016756,
+        "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-cloud",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.2535390853881836,
+          "preparationFinishedAt": 1792523415.1113136,
+          "preparationStartedAt": 1792523414.9321084,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.005673646926879883,
+          "runtimeId": "showcase-infrastructure-selection-local",
+          "transferElapsedSeconds": 0.17920517921447754,
+          "transferWorkSeconds": 0.17920517921447754
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-infrastructure-selection-local-a206990755-manual-plan-20261020t191013.326119000-showcase-infrastructure-selection-local-a206990755-cloud",
+        "plannedResourceId": "showcase-infrastructure-selection-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523414.9185505,
+        "readyAt": 1792523414.9185505,
+        "runtimeId": "showcase-infrastructure-selection-local",
+        "runtimeSeconds": 0.13682293891906738,
+        "startedAt": 1792523415.3648527,
+        "status": "completed",
+        "transferBytes": 499,
+        "transferSeconds": 0.17920517921447754
+      },
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+        "allocatedResourceId": "showcase-infrastructure-selection-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "finishedAt": 1792523417.898604,
+        "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-compare-plans",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1773693561553955,
+          "preparationFinishedAt": 1792523417.5972922,
+          "preparationStartedAt": 1792523417.0349028,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0030765533447265625,
+          "runtimeId": "showcase-infrastructure-selection-local",
+          "transferElapsedSeconds": 0.5623893737792969,
+          "transferWorkSeconds": 1.262481451034546
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-infrastructure-selection-local-a206990755-manual-plan-20261020t191013.326119000-showcase-infrastructure-selection-local-a206990755-compare-plans",
+        "plannedResourceId": "showcase-infrastructure-selection-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523417.0287318,
+        "readyAt": 1792523417.0287318,
+        "runtimeId": "showcase-infrastructure-selection-local",
+        "runtimeSeconds": 0.12394237518310547,
+        "startedAt": 1792523417.7746615,
+        "status": "completed",
+        "transferBytes": 2091,
+        "transferSeconds": 1.262481451034546
+      },
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-select-scope",
+        "allocatedResourceId": "showcase-infrastructure-selection-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "finishedAt": 1792523419.4493484,
+        "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-select-scope",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.15120768547058105,
+          "preparationFinishedAt": 1792523419.181253,
+          "preparationStartedAt": 1792523419.0122304,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0015726089477539062,
+          "runtimeId": "showcase-infrastructure-selection-local",
+          "transferElapsedSeconds": 0.1690225601196289,
+          "transferWorkSeconds": 0.1690225601196289
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-infrastructure-selection-local-a206990755-manual-plan-20261020t191013.326119000-showcase-infrastructure-selection-local-a206990755-select-scope",
+        "plannedResourceId": "showcase-infrastructure-selection-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523419.0083706,
+        "readyAt": 1792523419.0083706,
+        "runtimeId": "showcase-infrastructure-selection-local",
+        "runtimeSeconds": 0.11688780784606934,
+        "startedAt": 1792523419.3324606,
+        "status": "completed",
+        "transferBytes": 3104,
+        "transferSeconds": 0.1690225601196289
+      },
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-train",
+        "allocatedResourceId": "showcase-infrastructure-selection-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "finishedAt": 1792523421.3587897,
+        "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-train",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1267385482788086,
+          "preparationFinishedAt": 1792523421.1156037,
+          "preparationStartedAt": 1792523420.9308803,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0014476776123046875,
+          "runtimeId": "showcase-infrastructure-selection-local",
+          "transferElapsedSeconds": 0.1847233772277832,
+          "transferWorkSeconds": 0.1847233772277832
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-infrastructure-selection-local-a206990755-manual-plan-20261020t191013.326119000-showcase-infrastructure-selection-local-a206990755-train",
+        "plannedResourceId": "showcase-infrastructure-selection-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523420.927209,
+        "readyAt": 1792523420.927209,
+        "runtimeId": "showcase-infrastructure-selection-local",
+        "runtimeSeconds": 0.11644744873046875,
+        "startedAt": 1792523421.2423422,
+        "status": "completed",
+        "transferBytes": 4338,
+        "transferSeconds": 0.1847233772277832
+      }
+    ],
+    "activityAttempts": [
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-profile-workload",
+        "allocatedResourceId": "showcase-infrastructure-selection-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "finishedAt": 1792523413.9524019,
+        "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-profile-workload",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-infrastructure-selection-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-infrastructure-selection-local-a206990755-manual-plan-20261020t191013.326119000-showcase-infrastructure-selection-local-a206990755-profile-workload",
+        "plannedResourceId": "showcase-infrastructure-selection-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523413.6484349,
+        "readyAt": 1792523413.6484349,
+        "runtimeId": "showcase-infrastructure-selection-local",
+        "runtimeSeconds": 0.13911652565002441,
+        "startedAt": 1792523413.8132854,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-local-gpu",
+        "allocatedResourceId": "showcase-infrastructure-selection-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "finishedAt": 1792523415.4847746,
+        "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-local-gpu",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.2328319549560547,
+          "preparationFinishedAt": 1792523415.1105106,
+          "preparationStartedAt": 1792523414.9273534,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.003147125244140625,
+          "runtimeId": "showcase-infrastructure-selection-local",
+          "transferElapsedSeconds": 0.18315720558166504,
+          "transferWorkSeconds": 0.18315720558166504
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-infrastructure-selection-local-a206990755-manual-plan-20261020t191013.326119000-showcase-infrastructure-selection-local-a206990755-local-gpu",
+        "plannedResourceId": "showcase-infrastructure-selection-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523414.9215593,
+        "readyAt": 1792523414.9215593,
+        "runtimeId": "showcase-infrastructure-selection-local",
+        "runtimeSeconds": 0.1414320468902588,
+        "startedAt": 1792523415.3433425,
+        "status": "completed",
+        "transferBytes": 499,
+        "transferSeconds": 0.18315720558166504
+      },
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-hpc",
+        "allocatedResourceId": "showcase-infrastructure-selection-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "finishedAt": 1792523415.4903674,
+        "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-hpc",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.24302268028259277,
+          "preparationFinishedAt": 1792523415.11082,
+          "preparationStartedAt": 1792523414.929554,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.00452876091003418,
+          "runtimeId": "showcase-infrastructure-selection-local",
+          "transferElapsedSeconds": 0.18126606941223145,
+          "transferWorkSeconds": 0.18126606941223145
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-infrastructure-selection-local-a206990755-manual-plan-20261020t191013.326119000-showcase-infrastructure-selection-local-a206990755-hpc",
+        "plannedResourceId": "showcase-infrastructure-selection-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523414.919928,
+        "readyAt": 1792523414.919928,
+        "runtimeId": "showcase-infrastructure-selection-local",
+        "runtimeSeconds": 0.13652467727661133,
+        "startedAt": 1792523415.3538427,
+        "status": "completed",
+        "transferBytes": 499,
+        "transferSeconds": 0.18126606941223145
+      },
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-cloud",
+        "allocatedResourceId": "showcase-infrastructure-selection-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "finishedAt": 1792523415.5016756,
+        "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-cloud",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.2535390853881836,
+          "preparationFinishedAt": 1792523415.1113136,
+          "preparationStartedAt": 1792523414.9321084,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.005673646926879883,
+          "runtimeId": "showcase-infrastructure-selection-local",
+          "transferElapsedSeconds": 0.17920517921447754,
+          "transferWorkSeconds": 0.17920517921447754
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-infrastructure-selection-local-a206990755-manual-plan-20261020t191013.326119000-showcase-infrastructure-selection-local-a206990755-cloud",
+        "plannedResourceId": "showcase-infrastructure-selection-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523414.9185505,
+        "readyAt": 1792523414.9185505,
+        "runtimeId": "showcase-infrastructure-selection-local",
+        "runtimeSeconds": 0.13682293891906738,
+        "startedAt": 1792523415.3648527,
+        "status": "completed",
+        "transferBytes": 499,
+        "transferSeconds": 0.17920517921447754
+      },
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+        "allocatedResourceId": "showcase-infrastructure-selection-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "finishedAt": 1792523417.898604,
+        "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-compare-plans",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1773693561553955,
+          "preparationFinishedAt": 1792523417.5972922,
+          "preparationStartedAt": 1792523417.0349028,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0030765533447265625,
+          "runtimeId": "showcase-infrastructure-selection-local",
+          "transferElapsedSeconds": 0.5623893737792969,
+          "transferWorkSeconds": 1.262481451034546
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-infrastructure-selection-local-a206990755-manual-plan-20261020t191013.326119000-showcase-infrastructure-selection-local-a206990755-compare-plans",
+        "plannedResourceId": "showcase-infrastructure-selection-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523417.0287318,
+        "readyAt": 1792523417.0287318,
+        "runtimeId": "showcase-infrastructure-selection-local",
+        "runtimeSeconds": 0.12394237518310547,
+        "startedAt": 1792523417.7746615,
+        "status": "completed",
+        "transferBytes": 2091,
+        "transferSeconds": 1.262481451034546
+      },
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-select-scope",
+        "allocatedResourceId": "showcase-infrastructure-selection-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "finishedAt": 1792523419.4493484,
+        "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-select-scope",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.15120768547058105,
+          "preparationFinishedAt": 1792523419.181253,
+          "preparationStartedAt": 1792523419.0122304,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0015726089477539062,
+          "runtimeId": "showcase-infrastructure-selection-local",
+          "transferElapsedSeconds": 0.1690225601196289,
+          "transferWorkSeconds": 0.1690225601196289
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-infrastructure-selection-local-a206990755-manual-plan-20261020t191013.326119000-showcase-infrastructure-selection-local-a206990755-select-scope",
+        "plannedResourceId": "showcase-infrastructure-selection-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523419.0083706,
+        "readyAt": 1792523419.0083706,
+        "runtimeId": "showcase-infrastructure-selection-local",
+        "runtimeSeconds": 0.11688780784606934,
+        "startedAt": 1792523419.3324606,
+        "status": "completed",
+        "transferBytes": 3104,
+        "transferSeconds": 0.1690225601196289
+      },
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-train",
+        "allocatedResourceId": "showcase-infrastructure-selection-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "finishedAt": 1792523421.3587897,
+        "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-train",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1267385482788086,
+          "preparationFinishedAt": 1792523421.1156037,
+          "preparationStartedAt": 1792523420.9308803,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0014476776123046875,
+          "runtimeId": "showcase-infrastructure-selection-local",
+          "transferElapsedSeconds": 0.1847233772277832,
+          "transferWorkSeconds": 0.1847233772277832
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-infrastructure-selection-local-a206990755-manual-plan-20261020t191013.326119000-showcase-infrastructure-selection-local-a206990755-train",
+        "plannedResourceId": "showcase-infrastructure-selection-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523420.927209,
+        "readyAt": 1792523420.927209,
+        "runtimeId": "showcase-infrastructure-selection-local",
+        "runtimeSeconds": 0.11644744873046875,
+        "startedAt": 1792523421.2423422,
+        "status": "completed",
+        "transferBytes": 4338,
+        "transferSeconds": 0.1847233772277832
+      }
+    ],
+    "artifactMaterializations": null,
+    "artifactTransferRuns": [
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-cloud",
+        "durationSeconds": 0.17920517921447754,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523415.1113136,
+        "id": "transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-cloud-0",
+        "logicalBytes": 499,
+        "planId": "transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-cloud-0",
+        "route": {
+          "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-cloud",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-infrastructure-selection-local-a206990755-profile-workload",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.08916729100000001,
+          "sourceEnvironmentId": "showcase-infrastructure-selection-v1",
+          "sourceResourceId": "showcase-infrastructure-selection-local-docker",
+          "sshChannelWaitSeconds": 5.420000000000001e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-infrastructure-selection-v1",
+          "targetResourceId": "showcase-infrastructure-selection-local-docker"
+        },
+        "startedAt": 1792523414.9321084,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 499
+      },
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+        "durationSeconds": 0.2780473232269287,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "filesTransferred": 2,
+        "finishedAt": 1792523417.3129501,
+        "id": "transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-compare-plans-0",
+        "logicalBytes": 1026,
+        "planId": "transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-compare-plans-0",
+        "route": {
+          "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-infrastructure-selection-local-a206990755-local-gpu",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.095751667,
+          "sourceEnvironmentId": "showcase-infrastructure-selection-v1",
+          "sourceResourceId": "showcase-infrastructure-selection-local-docker",
+          "sshChannelWaitSeconds": 4.16e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-infrastructure-selection-v1",
+          "targetResourceId": "showcase-infrastructure-selection-local-docker"
+        },
+        "startedAt": 1792523417.0349028,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 1026
+      },
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+        "durationSeconds": 0.4220447540283203,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523417.4569476,
+        "id": "transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-compare-plans-1",
+        "logicalBytes": 1034,
+        "planId": "transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-compare-plans-1",
+        "route": {
+          "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-infrastructure-selection-local-a206990755-hpc",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.093426375,
+          "sourceEnvironmentId": "showcase-infrastructure-selection-v1",
+          "sourceResourceId": "showcase-infrastructure-selection-local-docker",
+          "sshChannelWaitSeconds": 2.5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-infrastructure-selection-v1",
+          "targetResourceId": "showcase-infrastructure-selection-local-docker"
+        },
+        "startedAt": 1792523417.0349028,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 535
+      },
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+        "durationSeconds": 0.5623893737792969,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523417.5972922,
+        "id": "transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-compare-plans-2",
+        "logicalBytes": 1029,
+        "planId": "transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-compare-plans-2",
+        "route": {
+          "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-infrastructure-selection-local-a206990755-cloud",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.090192917,
+          "sourceEnvironmentId": "showcase-infrastructure-selection-v1",
+          "sourceResourceId": "showcase-infrastructure-selection-local-docker",
+          "sshChannelWaitSeconds": 4.17e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-infrastructure-selection-v1",
+          "targetResourceId": "showcase-infrastructure-selection-local-docker"
+        },
+        "startedAt": 1792523417.0349028,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 530
+      },
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-hpc",
+        "durationSeconds": 0.18126606941223145,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523415.11082,
+        "id": "transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-hpc-0",
+        "logicalBytes": 499,
+        "planId": "transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-hpc-0",
+        "route": {
+          "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-hpc",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-infrastructure-selection-local-a206990755-profile-workload",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.090838875,
+          "sourceEnvironmentId": "showcase-infrastructure-selection-v1",
+          "sourceResourceId": "showcase-infrastructure-selection-local-docker",
+          "sshChannelWaitSeconds": 2.91e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-infrastructure-selection-v1",
+          "targetResourceId": "showcase-infrastructure-selection-local-docker"
+        },
+        "startedAt": 1792523414.929554,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 499
+      },
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-local-gpu",
+        "durationSeconds": 0.18315720558166504,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523415.1105106,
+        "id": "transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-local-gpu-0",
+        "logicalBytes": 499,
+        "planId": "transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-local-gpu-0",
+        "route": {
+          "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-local-gpu",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-infrastructure-selection-local-a206990755-profile-workload",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.090384084,
+          "sourceEnvironmentId": "showcase-infrastructure-selection-v1",
+          "sourceResourceId": "showcase-infrastructure-selection-local-docker",
+          "sshChannelWaitSeconds": 2.0899999999999998e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-infrastructure-selection-v1",
+          "targetResourceId": "showcase-infrastructure-selection-local-docker"
+        },
+        "startedAt": 1792523414.9273534,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 499
+      },
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-select-scope",
+        "durationSeconds": 0.1690225601196289,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "filesTransferred": 5,
+        "finishedAt": 1792523419.181253,
+        "id": "transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-select-scope-0",
+        "logicalBytes": 3104,
+        "planId": "transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-select-scope-0",
+        "route": {
+          "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-select-scope",
+          "filesTransferred": 5,
+          "producerActivityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.07180175,
+          "sourceEnvironmentId": "showcase-infrastructure-selection-v1",
+          "sourceResourceId": "showcase-infrastructure-selection-local-docker",
+          "sshChannelWaitSeconds": 3.34e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-infrastructure-selection-v1",
+          "targetResourceId": "showcase-infrastructure-selection-local-docker"
+        },
+        "startedAt": 1792523419.0122304,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 3104
+      },
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-train",
+        "durationSeconds": 0.1847233772277832,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "filesTransferred": 6,
+        "finishedAt": 1792523421.1156037,
+        "id": "transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-train-0",
+        "logicalBytes": 4338,
+        "planId": "transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-train-0",
+        "route": {
+          "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-train",
+          "filesTransferred": 6,
+          "producerActivityId": "showcase-infrastructure-selection-local-a206990755-select-scope",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.0903445,
+          "sourceEnvironmentId": "showcase-infrastructure-selection-v1",
+          "sourceResourceId": "showcase-infrastructure-selection-local-docker",
+          "sshChannelWaitSeconds": 5.420000000000001e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-infrastructure-selection-v1",
+          "targetResourceId": "showcase-infrastructure-selection-local-docker"
+        },
+        "startedAt": 1792523420.9308803,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 4338
+      }
+    ],
+    "cloudBilling": {
+      "asOf": "2026-10-20T19:10:23.707429884Z",
+      "costBasis": "VM compute and boot-disk lifecycle at on-demand marginal rates; not a provider invoice",
+      "estimatedCost": 0,
+      "excludedCosts": [
+        "network-egress",
+        "public-ipv4",
+        "image-storage",
+        "discounts-and-tax"
+      ],
+      "instances": [],
+      "knownCost": 0,
+      "status": "estimated"
+    },
+    "dataLocations": [
+      {
+        "dataObjectInstanceId": "722eedd00640f9b2e2706b83e5ce3345",
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "id": "6bf838ed7562db806db6369ceaba9f2c",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-infrastructure-selection-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "94691fd61b190ec3ae6f86b1d02bb24d",
+        "uri": "file:///akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-cloud/stage-cloud.json"
+      },
+      {
+        "dataObjectInstanceId": "5cbdf311c0655fcd2e067d02f84b51c4",
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "id": "cf18b5eb00a3f12398b4ce0b0ee84ba1",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-infrastructure-selection-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "94691fd61b190ec3ae6f86b1d02bb24d",
+        "uri": "file:///akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-compare-plans/stage-compare-plans.json"
+      },
+      {
+        "dataObjectInstanceId": "b1137dfa465ba99e55e6966963fd60d1",
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "id": "873b8852e7a03ea19972b00e5969ae4e",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-infrastructure-selection-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "94691fd61b190ec3ae6f86b1d02bb24d",
+        "uri": "file:///akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-hpc/stage-hpc.json"
+      },
+      {
+        "dataObjectInstanceId": "f7f86b65ea2127ce9a9fac87e489fa6c",
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "id": "14f274f8bb7289ba04ef5be52ecc335e",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-infrastructure-selection-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "94691fd61b190ec3ae6f86b1d02bb24d",
+        "uri": "file:///akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-local-gpu/stage-local-gpu.json"
+      },
+      {
+        "dataObjectInstanceId": "219b153e421816c525702fb2667d5372",
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "id": "d16ad87295d71765c51cd8c5d6ed1d1b",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-infrastructure-selection-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "94691fd61b190ec3ae6f86b1d02bb24d",
+        "uri": "file:///akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-profile-workload/stage-profile-workload.json"
+      },
+      {
+        "dataObjectInstanceId": "d0a2917a41a524f0b64cc1aa2585466f",
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "id": "849572805983a0172dfd7730d97b03e1",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-infrastructure-selection-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "94691fd61b190ec3ae6f86b1d02bb24d",
+        "uri": "file:///akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-select-scope/stage-select-scope.json"
+      },
+      {
+        "dataObjectInstanceId": "b2d752bfecad142544927bbd72da163e",
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "id": "a08e8dcdf0b07fbc3676487390b2860e",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-infrastructure-selection-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "94691fd61b190ec3ae6f86b1d02bb24d",
+        "uri": "file:///akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-train/cost-comparison.csv"
+      },
+      {
+        "dataObjectInstanceId": "96a20dd9906ca991cdf9ad8393cd164c",
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "id": "840641f2add29e51f84a3f492918ff61",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-infrastructure-selection-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "94691fd61b190ec3ae6f86b1d02bb24d",
+        "uri": "file:///akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-train/decision.json"
+      },
+      {
+        "dataObjectInstanceId": "9bc4df7a81482d5d1dad5238fa82a29b",
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "id": "313212df649046d105b848ca84ec2ff3",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-infrastructure-selection-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "94691fd61b190ec3ae6f86b1d02bb24d",
+        "uri": "file:///akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-train/stage-train.json"
+      }
+    ],
+    "dataObjects": [
+      {
+        "attempt": 1,
+        "checksum": "sha256:6c5acfcd4eb1eb17b00b826535ecb57eed7cd1a3940a89d0ad5f49a376cf8164",
+        "dataObjectId": "45de3e75a02834dd1376ed3fec7898df",
+        "discovered": true,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "id": "722eedd00640f9b2e2706b83e5ce3345",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-infrastructure-selection-local-a206990755-cloud",
+        "relativePath": "stage-cloud.json",
+        "sizeBytes": 530
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:1861a0f96bfa896fac80baf64bfb8476d53a215dd6f471a820a5a8d086261d94",
+        "dataObjectId": "b9719b8549e9a53dac42e2283bcab230",
+        "discovered": true,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "id": "5cbdf311c0655fcd2e067d02f84b51c4",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+        "relativePath": "stage-compare-plans.json",
+        "sizeBytes": 1013
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:a33e2bce05e98fb54f02fbde6b480438bc782406a25b279c1ff14df8f14980c5",
+        "dataObjectId": "e899f03980c2211839930140f67f6b37",
+        "discovered": true,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "id": "b1137dfa465ba99e55e6966963fd60d1",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-infrastructure-selection-local-a206990755-hpc",
+        "relativePath": "stage-hpc.json",
+        "sizeBytes": 535
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:1a08cc9f419363165e39d8f5c6c104f8b49d93ba78dd842d28eb7f9e2e9ca2e2",
+        "dataObjectId": "f725e7bcaf00bd2fa186445c3608ba74",
+        "discovered": true,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "id": "f7f86b65ea2127ce9a9fac87e489fa6c",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-infrastructure-selection-local-a206990755-local-gpu",
+        "relativePath": "stage-local-gpu.json",
+        "sizeBytes": 527
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+        "dataObjectId": "b6fe9a411dadadbdad570fc2a9940075",
+        "discovered": true,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "id": "219b153e421816c525702fb2667d5372",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-infrastructure-selection-local-a206990755-profile-workload",
+        "relativePath": "stage-profile-workload.json",
+        "sizeBytes": 499
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:f84831ef2554e9d3fc8b8fcb984575b118b6f66c5efb433982658122a4688b02",
+        "dataObjectId": "5bacbd6940c63a15658c99a1de4e71d3",
+        "discovered": true,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "id": "d0a2917a41a524f0b64cc1aa2585466f",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-infrastructure-selection-local-a206990755-select-scope",
+        "relativePath": "stage-select-scope.json",
+        "sizeBytes": 1234
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:337f01ca9e7a741fad6b5a347fe1440e9c93da927d03807c0e0f295a5e7a5458",
+        "dataObjectId": "5f7f449c09c2ea1b5c6569fb4cc7b714",
+        "discovered": true,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "id": "b2d752bfecad142544927bbd72da163e",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-infrastructure-selection-local-a206990755-train",
+        "relativePath": "cost-comparison.csv",
+        "sizeBytes": 306
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:e4c9b99e841dffe79d60842369fdcc848c73f2f6bf6318360c8261ea83a5cd72",
+        "dataObjectId": "4a805770eadfbedda239b4552b85027f",
+        "discovered": true,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "id": "96a20dd9906ca991cdf9ad8393cd164c",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-infrastructure-selection-local-a206990755-train",
+        "relativePath": "decision.json",
+        "sizeBytes": 967
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:1c4867838880e5408a866d025f8fd7bf32f61f5fa61a7556273109e1599749be",
+        "dataObjectId": "8ac962a7aa2a51e0cc5758a38034df9c",
+        "discovered": true,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "id": "9bc4df7a81482d5d1dad5238fa82a29b",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-infrastructure-selection-local-a206990755-train",
+        "relativePath": "stage-train.json",
+        "sizeBytes": 1388
+      }
+    ],
+    "dataTransfers": [
+      {
+        "bytes": 499,
+        "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-local-gpu",
+        "cost": 0,
+        "durationSeconds": 0.18315720558166504,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "finishedAt": 1792523415.1105106,
+        "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-local-gpu:transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-local-gpu-0",
+        "logicalBytes": 499,
+        "producerActivityId": "showcase-infrastructure-selection-local-a206990755-profile-workload",
+        "route": {
+          "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-local-gpu",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-infrastructure-selection-local-a206990755-profile-workload",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.090384084,
+          "sourceEnvironmentId": "showcase-infrastructure-selection-v1",
+          "sourceResourceId": "showcase-infrastructure-selection-local-docker",
+          "sshChannelWaitSeconds": 2.0899999999999998e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-infrastructure-selection-v1",
+          "targetResourceId": "showcase-infrastructure-selection-local-docker"
+        },
+        "sourceResourceId": "showcase-infrastructure-selection-local-docker",
+        "startedAt": 1792523414.9273534,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-infrastructure-selection-local-docker"
+      },
+      {
+        "bytes": 499,
+        "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-hpc",
+        "cost": 0,
+        "durationSeconds": 0.18126606941223145,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "finishedAt": 1792523415.11082,
+        "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-hpc:transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-hpc-0",
+        "logicalBytes": 499,
+        "producerActivityId": "showcase-infrastructure-selection-local-a206990755-profile-workload",
+        "route": {
+          "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-hpc",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-infrastructure-selection-local-a206990755-profile-workload",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.090838875,
+          "sourceEnvironmentId": "showcase-infrastructure-selection-v1",
+          "sourceResourceId": "showcase-infrastructure-selection-local-docker",
+          "sshChannelWaitSeconds": 2.91e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-infrastructure-selection-v1",
+          "targetResourceId": "showcase-infrastructure-selection-local-docker"
+        },
+        "sourceResourceId": "showcase-infrastructure-selection-local-docker",
+        "startedAt": 1792523414.929554,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-infrastructure-selection-local-docker"
+      },
+      {
+        "bytes": 499,
+        "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-cloud",
+        "cost": 0,
+        "durationSeconds": 0.17920517921447754,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "finishedAt": 1792523415.1113136,
+        "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-cloud:transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-cloud-0",
+        "logicalBytes": 499,
+        "producerActivityId": "showcase-infrastructure-selection-local-a206990755-profile-workload",
+        "route": {
+          "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-cloud",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-infrastructure-selection-local-a206990755-profile-workload",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.08916729100000001,
+          "sourceEnvironmentId": "showcase-infrastructure-selection-v1",
+          "sourceResourceId": "showcase-infrastructure-selection-local-docker",
+          "sshChannelWaitSeconds": 5.420000000000001e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-infrastructure-selection-v1",
+          "targetResourceId": "showcase-infrastructure-selection-local-docker"
+        },
+        "sourceResourceId": "showcase-infrastructure-selection-local-docker",
+        "startedAt": 1792523414.9321084,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-infrastructure-selection-local-docker"
+      },
+      {
+        "bytes": 530,
+        "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+        "cost": 0,
+        "durationSeconds": 0.5623893737792969,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "finishedAt": 1792523417.5972922,
+        "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-compare-plans:transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-compare-plans-2",
+        "logicalBytes": 1029,
+        "producerActivityId": "showcase-infrastructure-selection-local-a206990755-cloud",
+        "route": {
+          "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-infrastructure-selection-local-a206990755-cloud",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.090192917,
+          "sourceEnvironmentId": "showcase-infrastructure-selection-v1",
+          "sourceResourceId": "showcase-infrastructure-selection-local-docker",
+          "sshChannelWaitSeconds": 4.17e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-infrastructure-selection-v1",
+          "targetResourceId": "showcase-infrastructure-selection-local-docker"
+        },
+        "sourceResourceId": "showcase-infrastructure-selection-local-docker",
+        "startedAt": 1792523417.0349028,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-infrastructure-selection-local-docker"
+      },
+      {
+        "bytes": 535,
+        "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+        "cost": 0,
+        "durationSeconds": 0.4220447540283203,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "finishedAt": 1792523417.4569476,
+        "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-compare-plans:transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-compare-plans-1",
+        "logicalBytes": 1034,
+        "producerActivityId": "showcase-infrastructure-selection-local-a206990755-hpc",
+        "route": {
+          "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-infrastructure-selection-local-a206990755-hpc",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.093426375,
+          "sourceEnvironmentId": "showcase-infrastructure-selection-v1",
+          "sourceResourceId": "showcase-infrastructure-selection-local-docker",
+          "sshChannelWaitSeconds": 2.5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-infrastructure-selection-v1",
+          "targetResourceId": "showcase-infrastructure-selection-local-docker"
+        },
+        "sourceResourceId": "showcase-infrastructure-selection-local-docker",
+        "startedAt": 1792523417.0349028,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-infrastructure-selection-local-docker"
+      },
+      {
+        "bytes": 1026,
+        "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+        "cost": 0,
+        "durationSeconds": 0.2780473232269287,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "finishedAt": 1792523417.3129501,
+        "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-compare-plans:transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-compare-plans-0",
+        "logicalBytes": 1026,
+        "producerActivityId": "showcase-infrastructure-selection-local-a206990755-local-gpu",
+        "route": {
+          "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-infrastructure-selection-local-a206990755-local-gpu",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.095751667,
+          "sourceEnvironmentId": "showcase-infrastructure-selection-v1",
+          "sourceResourceId": "showcase-infrastructure-selection-local-docker",
+          "sshChannelWaitSeconds": 4.16e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-infrastructure-selection-v1",
+          "targetResourceId": "showcase-infrastructure-selection-local-docker"
+        },
+        "sourceResourceId": "showcase-infrastructure-selection-local-docker",
+        "startedAt": 1792523417.0349028,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-infrastructure-selection-local-docker"
+      },
+      {
+        "bytes": 3104,
+        "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-select-scope",
+        "cost": 0,
+        "durationSeconds": 0.1690225601196289,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "finishedAt": 1792523419.181253,
+        "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-select-scope:transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-select-scope-0",
+        "logicalBytes": 3104,
+        "producerActivityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+        "route": {
+          "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-select-scope",
+          "filesTransferred": 5,
+          "producerActivityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.07180175,
+          "sourceEnvironmentId": "showcase-infrastructure-selection-v1",
+          "sourceResourceId": "showcase-infrastructure-selection-local-docker",
+          "sshChannelWaitSeconds": 3.34e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-infrastructure-selection-v1",
+          "targetResourceId": "showcase-infrastructure-selection-local-docker"
+        },
+        "sourceResourceId": "showcase-infrastructure-selection-local-docker",
+        "startedAt": 1792523419.0122304,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-infrastructure-selection-local-docker"
+      },
+      {
+        "bytes": 4338,
+        "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-train",
+        "cost": 0,
+        "durationSeconds": 0.1847233772277832,
+        "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "finishedAt": 1792523421.1156037,
+        "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-train:transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-train-0",
+        "logicalBytes": 4338,
+        "producerActivityId": "showcase-infrastructure-selection-local-a206990755-select-scope",
+        "route": {
+          "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-train",
+          "filesTransferred": 6,
+          "producerActivityId": "showcase-infrastructure-selection-local-a206990755-select-scope",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.0903445,
+          "sourceEnvironmentId": "showcase-infrastructure-selection-v1",
+          "sourceResourceId": "showcase-infrastructure-selection-local-docker",
+          "sshChannelWaitSeconds": 5.420000000000001e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-infrastructure-selection-v1",
+          "targetResourceId": "showcase-infrastructure-selection-local-docker"
+        },
+        "sourceResourceId": "showcase-infrastructure-selection-local-docker",
+        "startedAt": 1792523420.9308803,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-infrastructure-selection-local-docker"
+      }
+    ],
+    "events": [
+      {
+        "aggregateId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.started",
+        "id": "de3480709253f6c1d44617ff4a0876d7",
+        "occurredAt": "2026-10-20T19:10:13.609106254Z",
+        "payload": {
+          "mode": "real",
+          "schedulePlanId": "showcase-infrastructure-selection-local-a206990755-manual-plan-20261020t191013.326119000"
+        }
+      },
+      {
+        "aggregateId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-profile-workload",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "b954362a938ddaec8d77ed0d269970f2",
+        "occurredAt": "2026-10-20T19:10:14.844290588Z",
+        "payload": {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-profile-workload",
+          "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-profile-workload",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "284085fa522f3c80117fb4d2b45f3120",
+        "occurredAt": "2026-10-20T19:10:14.916986046Z",
+        "payload": {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-profile-workload",
+          "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+          "failureReason": "",
+          "runtimeSeconds": 0.13911652565002441,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-cloud",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "05d25ee04d6426f2e09c1fbffc460022",
+        "occurredAt": "2026-10-20T19:10:16.853910256Z",
+        "payload": {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-cloud",
+          "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-cloud",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "f4ff2c3b6b39d373e242cdec46f259e1",
+        "occurredAt": "2026-10-20T19:10:16.925160256Z",
+        "payload": {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-cloud",
+          "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+          "failureReason": "",
+          "runtimeSeconds": 0.13682293891906738,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-hpc",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "56bbfcb1e7e870ff39759ef8cf5c9926",
+        "occurredAt": "2026-10-20T19:10:16.927543006Z",
+        "payload": {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-hpc",
+          "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-local-gpu",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "6500c7567f20971b89c77b1305f0eb13",
+        "occurredAt": "2026-10-20T19:10:16.929877797Z",
+        "payload": {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-local-gpu",
+          "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-local-gpu",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "f2e9c7a44872ac48792f4b60615d0ef3",
+        "occurredAt": "2026-10-20T19:10:17.022785089Z",
+        "payload": {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-local-gpu",
+          "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+          "failureReason": "",
+          "runtimeSeconds": 0.1414320468902588,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-hpc",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "4609c297ef92621f3f2a976aa93be4da",
+        "occurredAt": "2026-10-20T19:10:17.027278714Z",
+        "payload": {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-hpc",
+          "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+          "failureReason": "",
+          "runtimeSeconds": 0.13652467727661133,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-compare-plans",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "538559157fef2e3d068009bddd6cdb3e",
+        "occurredAt": "2026-10-20T19:10:18.86906209Z",
+        "payload": {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+          "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-compare-plans",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "e71d23bf3b0b419f532b6fa01e1a0d88",
+        "occurredAt": "2026-10-20T19:10:19.006633507Z",
+        "payload": {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+          "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+          "failureReason": "",
+          "runtimeSeconds": 0.12394237518310547,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-select-scope",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "84692e54a3839d7853b3ce524475de8b",
+        "occurredAt": "2026-10-20T19:10:20.858100049Z",
+        "payload": {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-select-scope",
+          "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-select-scope",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "258e7ffc9107d5a233e308b4c6bf8848",
+        "occurredAt": "2026-10-20T19:10:20.925438758Z",
+        "payload": {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-select-scope",
+          "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11688780784606934,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-train",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "22d698868f9f3d26ea00c11861ee2f6f",
+        "occurredAt": "2026-10-20T19:10:22.871094258Z",
+        "payload": {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-train",
+          "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-train",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "3a5483d53a26a52f52a7c55038c8ccc7",
+        "occurredAt": "2026-10-20T19:10:22.9367018Z",
+        "payload": {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-train",
+          "executionRunId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11644744873046875,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.completed",
+        "id": "653d286aa4a58225336e19e4666e5b3a",
+        "occurredAt": "2026-10-20T19:10:22.94034155Z",
+        "payload": {
+          "cost": 0,
+          "makespanSeconds": 7.545504331588745
+        }
+      }
+    ],
+    "handles": [
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-cloud",
+        "artifacts": {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-cloud",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:6c5acfcd4eb1eb17b00b826535ecb57eed7cd1a3940a89d0ad5f49a376cf8164",
+              "modifiedUnixNano": 1792523415495219000,
+              "path": "stage-cloud.json",
+              "sizeBytes": 530
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:6c5acfcd4eb1eb17b00b826535ecb57eed7cd1a3940a89d0ad5f49a376cf8164",
+              "modifiedUnixNano": 1792523415495219000,
+              "path": "stage-cloud.json",
+              "sizeBytes": 530
+            },
+            {
+              "checksum": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "modifiedUnixNano": 1792523415068219000,
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            }
+          ],
+          "finishedAt": 1792523415.5016756,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "modifiedUnixNano": 1792523415068219000,
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.13682293891906738,
+              "finishedAt": 1792523415.5016756,
+              "phase": "execution",
+              "startedAt": 1792523415.3648527,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-cloud",
+          "runId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+          "runtime": "showcase-infrastructure-selection-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523415.3648527,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 530
+          }
+        },
+        "exitCode": 0,
+        "externalId": "bc7ab4d909079a6b620fc65541de8352a9dbac417bd483901440bd8a28c9f376",
+        "finishedAt": 1792523415.5016756,
+        "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-cloud",
+        "log": "{\"activity\": \"cloud\", \"status\": \"success\", \"resultKeys\": [\"candidate\", \"estimatedSeconds\", \"estimatedCost\", \"basis\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-infrastructure-selection-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-cloud",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523415.3648665,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-cloud",
+          "submittedAt": 1792523415.3648527
+        },
+        "resourceId": "showcase-infrastructure-selection-local-docker",
+        "runId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "runtimeId": "showcase-infrastructure-selection-local",
+        "startedAt": 1792523415.3648527,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+        "artifacts": {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:1861a0f96bfa896fac80baf64bfb8476d53a215dd6f471a820a5a8d086261d94",
+              "modifiedUnixNano": 1792523417891219000,
+              "path": "stage-compare-plans.json",
+              "sizeBytes": 1013
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:6c5acfcd4eb1eb17b00b826535ecb57eed7cd1a3940a89d0ad5f49a376cf8164",
+              "modifiedUnixNano": 1792523417553219000,
+              "path": "stage-cloud.json",
+              "sizeBytes": 530
+            },
+            {
+              "checksum": "sha256:1861a0f96bfa896fac80baf64bfb8476d53a215dd6f471a820a5a8d086261d94",
+              "modifiedUnixNano": 1792523417891219000,
+              "path": "stage-compare-plans.json",
+              "sizeBytes": 1013
+            },
+            {
+              "checksum": "sha256:a33e2bce05e98fb54f02fbde6b480438bc782406a25b279c1ff14df8f14980c5",
+              "modifiedUnixNano": 1792523417411219000,
+              "path": "stage-hpc.json",
+              "sizeBytes": 535
+            },
+            {
+              "checksum": "sha256:1a08cc9f419363165e39d8f5c6c104f8b49d93ba78dd842d28eb7f9e2e9ca2e2",
+              "modifiedUnixNano": 1792523417265219000,
+              "path": "stage-local-gpu.json",
+              "sizeBytes": 527
+            },
+            {
+              "checksum": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "modifiedUnixNano": 1792523417265219000,
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            }
+          ],
+          "finishedAt": 1792523417.898604,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:6c5acfcd4eb1eb17b00b826535ecb57eed7cd1a3940a89d0ad5f49a376cf8164",
+              "modifiedUnixNano": 1792523417553219000,
+              "path": "stage-cloud.json",
+              "sizeBytes": 530
+            },
+            {
+              "checksum": "sha256:a33e2bce05e98fb54f02fbde6b480438bc782406a25b279c1ff14df8f14980c5",
+              "modifiedUnixNano": 1792523417411219000,
+              "path": "stage-hpc.json",
+              "sizeBytes": 535
+            },
+            {
+              "checksum": "sha256:1a08cc9f419363165e39d8f5c6c104f8b49d93ba78dd842d28eb7f9e2e9ca2e2",
+              "modifiedUnixNano": 1792523417265219000,
+              "path": "stage-local-gpu.json",
+              "sizeBytes": 527
+            },
+            {
+              "checksum": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "modifiedUnixNano": 1792523417265219000,
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.12394237518310547,
+              "finishedAt": 1792523417.898604,
+              "phase": "execution",
+              "startedAt": 1792523417.7746615,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-compare-plans",
+          "runId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+          "runtime": "showcase-infrastructure-selection-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523417.7746615,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 5,
+            "initialFiles": 4,
+            "modifiedFiles": 0,
+            "outputBytes": 1013
+          }
+        },
+        "exitCode": 0,
+        "externalId": "64a35f7bbc8957b2bfe3c3dbce231ce964b0214e2616271c9f92d264d8f8d419",
+        "finishedAt": 1792523417.898604,
+        "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-compare-plans",
+        "log": "{\"activity\": \"compare-plans\", \"status\": \"success\", \"resultKeys\": [\"candidates\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-infrastructure-selection-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-compare-plans",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523417.7746668,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-compare-plans",
+          "submittedAt": 1792523417.7746615
+        },
+        "resourceId": "showcase-infrastructure-selection-local-docker",
+        "runId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "runtimeId": "showcase-infrastructure-selection-local",
+        "startedAt": 1792523417.7746615,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-hpc",
+        "artifacts": {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-hpc",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:a33e2bce05e98fb54f02fbde6b480438bc782406a25b279c1ff14df8f14980c5",
+              "modifiedUnixNano": 1792523415484219000,
+              "path": "stage-hpc.json",
+              "sizeBytes": 535
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:a33e2bce05e98fb54f02fbde6b480438bc782406a25b279c1ff14df8f14980c5",
+              "modifiedUnixNano": 1792523415484219000,
+              "path": "stage-hpc.json",
+              "sizeBytes": 535
+            },
+            {
+              "checksum": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "modifiedUnixNano": 1792523415067219000,
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            }
+          ],
+          "finishedAt": 1792523415.4903674,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "modifiedUnixNano": 1792523415067219000,
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.13652467727661133,
+              "finishedAt": 1792523415.4903674,
+              "phase": "execution",
+              "startedAt": 1792523415.3538427,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-hpc",
+          "runId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+          "runtime": "showcase-infrastructure-selection-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523415.3538427,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 535
+          }
+        },
+        "exitCode": 0,
+        "externalId": "cb859ece3f7cc29d96e5aa8ca8f6096b78819ce1522b75570b33c86189436723",
+        "finishedAt": 1792523415.4903674,
+        "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-hpc",
+        "log": "{\"activity\": \"hpc\", \"status\": \"success\", \"resultKeys\": [\"candidate\", \"estimatedSeconds\", \"estimatedCost\", \"basis\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-infrastructure-selection-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-hpc",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523415.3538594,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-hpc",
+          "submittedAt": 1792523415.3538427
+        },
+        "resourceId": "showcase-infrastructure-selection-local-docker",
+        "runId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "runtimeId": "showcase-infrastructure-selection-local",
+        "startedAt": 1792523415.3538427,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-local-gpu",
+        "artifacts": {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-local-gpu",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:1a08cc9f419363165e39d8f5c6c104f8b49d93ba78dd842d28eb7f9e2e9ca2e2",
+              "modifiedUnixNano": 1792523415475219000,
+              "path": "stage-local-gpu.json",
+              "sizeBytes": 527
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:1a08cc9f419363165e39d8f5c6c104f8b49d93ba78dd842d28eb7f9e2e9ca2e2",
+              "modifiedUnixNano": 1792523415475219000,
+              "path": "stage-local-gpu.json",
+              "sizeBytes": 527
+            },
+            {
+              "checksum": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "modifiedUnixNano": 1792523415067219000,
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            }
+          ],
+          "finishedAt": 1792523415.4847746,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "modifiedUnixNano": 1792523415067219000,
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.1414320468902588,
+              "finishedAt": 1792523415.4847746,
+              "phase": "execution",
+              "startedAt": 1792523415.3433425,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-local-gpu",
+          "runId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+          "runtime": "showcase-infrastructure-selection-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523415.3433425,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 527
+          }
+        },
+        "exitCode": 0,
+        "externalId": "1c1771eca1240fbc7adf4d1dfeebe85e4fd852664a62b7c6b4f85b7e7fef261b",
+        "finishedAt": 1792523415.4847746,
+        "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-local-gpu",
+        "log": "{\"activity\": \"local-gpu\", \"status\": \"success\", \"resultKeys\": [\"candidate\", \"estimatedSeconds\", \"estimatedCost\", \"basis\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-infrastructure-selection-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-local-gpu",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523415.3433483,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-local-gpu",
+          "submittedAt": 1792523415.3433425
+        },
+        "resourceId": "showcase-infrastructure-selection-local-docker",
+        "runId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "runtimeId": "showcase-infrastructure-selection-local",
+        "startedAt": 1792523415.3433425,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-profile-workload",
+        "artifacts": {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-profile-workload",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "modifiedUnixNano": 1792523413945219000,
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "modifiedUnixNano": 1792523413945219000,
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            }
+          ],
+          "finishedAt": 1792523413.9524019,
+          "phases": [
+            {
+              "durationSeconds": 0.13911652565002441,
+              "finishedAt": 1792523413.9524019,
+              "phase": "execution",
+              "startedAt": 1792523413.8132854,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-profile-workload",
+          "runId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+          "runtime": "showcase-infrastructure-selection-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523413.8132854,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 1,
+            "initialFiles": 0,
+            "modifiedFiles": 0,
+            "outputBytes": 499
+          }
+        },
+        "exitCode": 0,
+        "externalId": "e0892a1583e547cb1e523cd618b301db9ee80e3036b101283b94ed633b6948fa",
+        "finishedAt": 1792523413.9524019,
+        "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-profile-workload",
+        "log": "{\"activity\": \"profile-workload\", \"status\": \"success\", \"resultKeys\": [\"model\", \"measuredCpuNanoseconds\", \"trainingRows\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-infrastructure-selection-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-profile-workload",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523413.8132908,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-profile-workload",
+          "submittedAt": 1792523413.8132854
+        },
+        "resourceId": "showcase-infrastructure-selection-local-docker",
+        "runId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "runtimeId": "showcase-infrastructure-selection-local",
+        "startedAt": 1792523413.8132854,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-select-scope",
+        "artifacts": {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-select-scope",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:f84831ef2554e9d3fc8b8fcb984575b118b6f66c5efb433982658122a4688b02",
+              "modifiedUnixNano": 1792523419443219000,
+              "path": "stage-select-scope.json",
+              "sizeBytes": 1234
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:6c5acfcd4eb1eb17b00b826535ecb57eed7cd1a3940a89d0ad5f49a376cf8164",
+              "modifiedUnixNano": 1792523419137219000,
+              "path": "stage-cloud.json",
+              "sizeBytes": 530
+            },
+            {
+              "checksum": "sha256:1861a0f96bfa896fac80baf64bfb8476d53a215dd6f471a820a5a8d086261d94",
+              "modifiedUnixNano": 1792523419137219000,
+              "path": "stage-compare-plans.json",
+              "sizeBytes": 1013
+            },
+            {
+              "checksum": "sha256:a33e2bce05e98fb54f02fbde6b480438bc782406a25b279c1ff14df8f14980c5",
+              "modifiedUnixNano": 1792523419137219000,
+              "path": "stage-hpc.json",
+              "sizeBytes": 535
+            },
+            {
+              "checksum": "sha256:1a08cc9f419363165e39d8f5c6c104f8b49d93ba78dd842d28eb7f9e2e9ca2e2",
+              "modifiedUnixNano": 1792523419137219000,
+              "path": "stage-local-gpu.json",
+              "sizeBytes": 527
+            },
+            {
+              "checksum": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "modifiedUnixNano": 1792523419137219000,
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            },
+            {
+              "checksum": "sha256:f84831ef2554e9d3fc8b8fcb984575b118b6f66c5efb433982658122a4688b02",
+              "modifiedUnixNano": 1792523419443219000,
+              "path": "stage-select-scope.json",
+              "sizeBytes": 1234
+            }
+          ],
+          "finishedAt": 1792523419.4493484,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:6c5acfcd4eb1eb17b00b826535ecb57eed7cd1a3940a89d0ad5f49a376cf8164",
+              "modifiedUnixNano": 1792523419137219000,
+              "path": "stage-cloud.json",
+              "sizeBytes": 530
+            },
+            {
+              "checksum": "sha256:1861a0f96bfa896fac80baf64bfb8476d53a215dd6f471a820a5a8d086261d94",
+              "modifiedUnixNano": 1792523419137219000,
+              "path": "stage-compare-plans.json",
+              "sizeBytes": 1013
+            },
+            {
+              "checksum": "sha256:a33e2bce05e98fb54f02fbde6b480438bc782406a25b279c1ff14df8f14980c5",
+              "modifiedUnixNano": 1792523419137219000,
+              "path": "stage-hpc.json",
+              "sizeBytes": 535
+            },
+            {
+              "checksum": "sha256:1a08cc9f419363165e39d8f5c6c104f8b49d93ba78dd842d28eb7f9e2e9ca2e2",
+              "modifiedUnixNano": 1792523419137219000,
+              "path": "stage-local-gpu.json",
+              "sizeBytes": 527
+            },
+            {
+              "checksum": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "modifiedUnixNano": 1792523419137219000,
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11688780784606934,
+              "finishedAt": 1792523419.4493484,
+              "phase": "execution",
+              "startedAt": 1792523419.3324606,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-select-scope",
+          "runId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+          "runtime": "showcase-infrastructure-selection-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523419.3324606,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 6,
+            "initialFiles": 5,
+            "modifiedFiles": 0,
+            "outputBytes": 1234
+          }
+        },
+        "exitCode": 0,
+        "externalId": "6af0948182925041b5d7384f788a9e82c675cc7086da871bcbe1b213380bdf32",
+        "finishedAt": 1792523419.4493484,
+        "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-select-scope",
+        "log": "{\"activity\": \"select-scope\", \"status\": \"success\", \"resultKeys\": [\"selected\", \"candidates\", \"executionScope\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-infrastructure-selection-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-select-scope",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523419.3324714,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-select-scope",
+          "submittedAt": 1792523419.3324606
+        },
+        "resourceId": "showcase-infrastructure-selection-local-docker",
+        "runId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "runtimeId": "showcase-infrastructure-selection-local",
+        "startedAt": 1792523419.3324606,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-train",
+        "artifacts": {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-train",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:337f01ca9e7a741fad6b5a347fe1440e9c93da927d03807c0e0f295a5e7a5458",
+              "modifiedUnixNano": 1792523421350219000,
+              "path": "cost-comparison.csv",
+              "sizeBytes": 306
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:e4c9b99e841dffe79d60842369fdcc848c73f2f6bf6318360c8261ea83a5cd72",
+              "modifiedUnixNano": 1792523421350219000,
+              "path": "decision.json",
+              "sizeBytes": 967
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:1c4867838880e5408a866d025f8fd7bf32f61f5fa61a7556273109e1599749be",
+              "modifiedUnixNano": 1792523421350219000,
+              "path": "stage-train.json",
+              "sizeBytes": 1388
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:337f01ca9e7a741fad6b5a347fe1440e9c93da927d03807c0e0f295a5e7a5458",
+              "modifiedUnixNano": 1792523421350219000,
+              "path": "cost-comparison.csv",
+              "sizeBytes": 306
+            },
+            {
+              "checksum": "sha256:e4c9b99e841dffe79d60842369fdcc848c73f2f6bf6318360c8261ea83a5cd72",
+              "modifiedUnixNano": 1792523421350219000,
+              "path": "decision.json",
+              "sizeBytes": 967
+            },
+            {
+              "checksum": "sha256:6c5acfcd4eb1eb17b00b826535ecb57eed7cd1a3940a89d0ad5f49a376cf8164",
+              "modifiedUnixNano": 1792523421071219000,
+              "path": "stage-cloud.json",
+              "sizeBytes": 530
+            },
+            {
+              "checksum": "sha256:1861a0f96bfa896fac80baf64bfb8476d53a215dd6f471a820a5a8d086261d94",
+              "modifiedUnixNano": 1792523421071219000,
+              "path": "stage-compare-plans.json",
+              "sizeBytes": 1013
+            },
+            {
+              "checksum": "sha256:a33e2bce05e98fb54f02fbde6b480438bc782406a25b279c1ff14df8f14980c5",
+              "modifiedUnixNano": 1792523421071219000,
+              "path": "stage-hpc.json",
+              "sizeBytes": 535
+            },
+            {
+              "checksum": "sha256:1a08cc9f419363165e39d8f5c6c104f8b49d93ba78dd842d28eb7f9e2e9ca2e2",
+              "modifiedUnixNano": 1792523421071219000,
+              "path": "stage-local-gpu.json",
+              "sizeBytes": 527
+            },
+            {
+              "checksum": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "modifiedUnixNano": 1792523421071219000,
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            },
+            {
+              "checksum": "sha256:f84831ef2554e9d3fc8b8fcb984575b118b6f66c5efb433982658122a4688b02",
+              "modifiedUnixNano": 1792523421071219000,
+              "path": "stage-select-scope.json",
+              "sizeBytes": 1234
+            },
+            {
+              "checksum": "sha256:1c4867838880e5408a866d025f8fd7bf32f61f5fa61a7556273109e1599749be",
+              "modifiedUnixNano": 1792523421350219000,
+              "path": "stage-train.json",
+              "sizeBytes": 1388
+            }
+          ],
+          "finishedAt": 1792523421.3587897,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:6c5acfcd4eb1eb17b00b826535ecb57eed7cd1a3940a89d0ad5f49a376cf8164",
+              "modifiedUnixNano": 1792523421071219000,
+              "path": "stage-cloud.json",
+              "sizeBytes": 530
+            },
+            {
+              "checksum": "sha256:1861a0f96bfa896fac80baf64bfb8476d53a215dd6f471a820a5a8d086261d94",
+              "modifiedUnixNano": 1792523421071219000,
+              "path": "stage-compare-plans.json",
+              "sizeBytes": 1013
+            },
+            {
+              "checksum": "sha256:a33e2bce05e98fb54f02fbde6b480438bc782406a25b279c1ff14df8f14980c5",
+              "modifiedUnixNano": 1792523421071219000,
+              "path": "stage-hpc.json",
+              "sizeBytes": 535
+            },
+            {
+              "checksum": "sha256:1a08cc9f419363165e39d8f5c6c104f8b49d93ba78dd842d28eb7f9e2e9ca2e2",
+              "modifiedUnixNano": 1792523421071219000,
+              "path": "stage-local-gpu.json",
+              "sizeBytes": 527
+            },
+            {
+              "checksum": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "modifiedUnixNano": 1792523421071219000,
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            },
+            {
+              "checksum": "sha256:f84831ef2554e9d3fc8b8fcb984575b118b6f66c5efb433982658122a4688b02",
+              "modifiedUnixNano": 1792523421071219000,
+              "path": "stage-select-scope.json",
+              "sizeBytes": 1234
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11644744873046875,
+              "finishedAt": 1792523421.3587897,
+              "phase": "execution",
+              "startedAt": 1792523421.2423422,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-train",
+          "runId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+          "runtime": "showcase-infrastructure-selection-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523421.2423422,
+          "summary": {
+            "createdFiles": 3,
+            "deletedFiles": 0,
+            "finalFiles": 9,
+            "initialFiles": 6,
+            "modifiedFiles": 0,
+            "outputBytes": 2661
+          }
+        },
+        "exitCode": 0,
+        "externalId": "c807c7bcd6a95b9964761957fb62d00792c73108316e221f2735c1522d0bbc28",
+        "finishedAt": 1792523421.3587897,
+        "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-train",
+        "log": "{\"activity\": \"train\", \"status\": \"success\", \"resultKeys\": [\"selected\", \"candidates\", \"executionScope\", \"model\", \"observedRmse\", \"provisionedResources\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-infrastructure-selection-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-train",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523421.2423568,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-train",
+          "submittedAt": 1792523421.2423422
+        },
+        "resourceId": "showcase-infrastructure-selection-local-docker",
+        "runId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "runtimeId": "showcase-infrastructure-selection-local",
+        "startedAt": 1792523421.2423422,
+        "status": "completed"
+      }
+    ],
+    "infrastructureRuns": [],
+    "operationEvents": [],
+    "run": {
+      "activityCount": 7,
+      "breakdown": {
+        "computeSeconds": 0.9111738204956055,
+        "interferenceSeconds": 0,
+        "overheadSeconds": 0,
+        "queueSeconds": 0,
+        "transferSeconds": 2.159855842590332
+      },
+      "completedActivityCount": 7,
+      "cost": 0,
+      "finishedAt": "2026-10-20T19:10:22Z",
+      "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+      "kind": "workflow",
+      "makespanSeconds": 7.545504331588745,
+      "mode": "real",
+      "schedulePlanId": "showcase-infrastructure-selection-local-a206990755-manual-plan-20261020t191013.326119000",
+      "seed": 0,
+      "startedAt": "2026-10-20T19:10:13Z",
+      "status": "completed",
+      "title": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+      "transferredBytes": 11030
+    },
+    "timeline": {
+      "computeMakespanSeconds": 7.545504331588745,
+      "coveredWallSeconds": 2.6295228004455566,
+      "finishedAt": 1792523422,
+      "phases": [
+        {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-profile-workload",
+          "category": "resource-queue",
+          "durationSeconds": 0.16485047340393066,
+          "finishedAt": 1792523413.8132854,
+          "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-profile-workload:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523413.6484349,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-profile-workload",
+          "category": "runtime",
+          "durationSeconds": 0.13911652565002441,
+          "finishedAt": 1792523413.9524019,
+          "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-profile-workload:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523413.8132854,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-cloud",
+          "category": "resource-queue",
+          "durationSeconds": 0.013557910919189453,
+          "finishedAt": 1792523414.9321084,
+          "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-cloud:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523414.9185505,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-hpc",
+          "category": "resource-queue",
+          "durationSeconds": 0.009625911712646484,
+          "finishedAt": 1792523414.929554,
+          "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-hpc:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523414.919928,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-local-gpu",
+          "category": "resource-queue",
+          "durationSeconds": 0.005794048309326172,
+          "finishedAt": 1792523414.9273534,
+          "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-local-gpu:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523414.9215593,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-local-gpu",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.18315720558166504,
+          "finishedAt": 1792523415.1105106,
+          "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-local-gpu:transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-local-gpu-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523414.9273534,
+          "status": "completed",
+          "transferId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-local-gpu:transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-local-gpu-0"
+        },
+        {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-hpc",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.18126606941223145,
+          "finishedAt": 1792523415.11082,
+          "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-hpc:transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-hpc-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523414.929554,
+          "status": "completed",
+          "transferId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-hpc:transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-hpc-0"
+        },
+        {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-cloud",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.17920517921447754,
+          "finishedAt": 1792523415.1113136,
+          "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-cloud:transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-cloud-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523414.9321084,
+          "status": "completed",
+          "transferId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-cloud:transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-cloud-0"
+        },
+        {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-local-gpu",
+          "category": "launch",
+          "durationSeconds": 0.2328319549560547,
+          "finishedAt": 1792523415.3433425,
+          "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-local-gpu:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523415.1105106,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-hpc",
+          "category": "launch",
+          "durationSeconds": 0.24302268028259277,
+          "finishedAt": 1792523415.3538427,
+          "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-hpc:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523415.11082,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-cloud",
+          "category": "launch",
+          "durationSeconds": 0.2535390853881836,
+          "finishedAt": 1792523415.3648527,
+          "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-cloud:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523415.1113136,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-local-gpu",
+          "category": "runtime",
+          "durationSeconds": 0.1414320468902588,
+          "finishedAt": 1792523415.4847746,
+          "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-local-gpu:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523415.3433425,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-hpc",
+          "category": "runtime",
+          "durationSeconds": 0.13652467727661133,
+          "finishedAt": 1792523415.4903674,
+          "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-hpc:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523415.3538427,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-cloud",
+          "category": "runtime",
+          "durationSeconds": 0.13682293891906738,
+          "finishedAt": 1792523415.5016756,
+          "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-cloud:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523415.3648527,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+          "category": "resource-queue",
+          "durationSeconds": 0.006170988082885742,
+          "finishedAt": 1792523417.0349028,
+          "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-compare-plans:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523417.0287318,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.2780473232269287,
+          "finishedAt": 1792523417.3129501,
+          "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-compare-plans:transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-compare-plans-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523417.0349028,
+          "status": "completed",
+          "transferId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-compare-plans:transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-compare-plans-0"
+        },
+        {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.4220447540283203,
+          "finishedAt": 1792523417.4569476,
+          "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-compare-plans:transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-compare-plans-1",
+          "source": "transfer-observation",
+          "startedAt": 1792523417.0349028,
+          "status": "completed",
+          "transferId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-compare-plans:transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-compare-plans-1"
+        },
+        {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.5623893737792969,
+          "finishedAt": 1792523417.5972922,
+          "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-compare-plans:transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-compare-plans-2",
+          "source": "transfer-observation",
+          "startedAt": 1792523417.0349028,
+          "status": "completed",
+          "transferId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-compare-plans:transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-compare-plans-2"
+        },
+        {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+          "category": "launch",
+          "durationSeconds": 0.1773693561553955,
+          "finishedAt": 1792523417.7746615,
+          "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-compare-plans:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523417.5972922,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+          "category": "runtime",
+          "durationSeconds": 0.12394237518310547,
+          "finishedAt": 1792523417.898604,
+          "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-compare-plans:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523417.7746615,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-select-scope",
+          "category": "resource-queue",
+          "durationSeconds": 0.0038597583770751953,
+          "finishedAt": 1792523419.0122304,
+          "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-select-scope:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523419.0083706,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-select-scope",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.1690225601196289,
+          "finishedAt": 1792523419.181253,
+          "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-select-scope:transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-select-scope-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523419.0122304,
+          "status": "completed",
+          "transferId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-select-scope:transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-select-scope-0"
+        },
+        {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-select-scope",
+          "category": "launch",
+          "durationSeconds": 0.15120768547058105,
+          "finishedAt": 1792523419.3324606,
+          "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-select-scope:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523419.181253,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-select-scope",
+          "category": "runtime",
+          "durationSeconds": 0.11688780784606934,
+          "finishedAt": 1792523419.4493484,
+          "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-select-scope:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523419.3324606,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-train",
+          "category": "resource-queue",
+          "durationSeconds": 0.003671407699584961,
+          "finishedAt": 1792523420.9308803,
+          "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-train:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523420.927209,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-train",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.1847233772277832,
+          "finishedAt": 1792523421.1156037,
+          "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-train:transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-train-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523420.9308803,
+          "status": "completed",
+          "transferId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-train:transfer-workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-train-0"
+        },
+        {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-train",
+          "category": "launch",
+          "durationSeconds": 0.1267385482788086,
+          "finishedAt": 1792523421.2423422,
+          "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-train:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523421.1156037,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-infrastructure-selection-local-a206990755-train",
+          "category": "runtime",
+          "durationSeconds": 0.11644744873046875,
+          "finishedAt": 1792523421.3587897,
+          "id": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000:showcase-infrastructure-selection-local-a206990755-train:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523421.2423422,
+          "status": "completed"
+        }
+      ],
+      "startedAt": 1792523413,
+      "totals": {
+        "destroySeconds": 0,
+        "executablePreparationSeconds": 0,
+        "launchSeconds": 1.1847093105316162,
+        "provisionSeconds": 0,
+        "resourceQueueSeconds": 0.20753049850463867,
+        "runtimeSeconds": 0.9111738204956055,
+        "startSeconds": 0,
+        "stopSeconds": 0,
+        "validationSeconds": 0,
+        "workspaceTransferSeconds": 2.159855842590332
+      },
+      "unclassifiedWallSeconds": 6.370477199554443,
+      "wallSeconds": 9
+    },
+    "workspaceLeases": [
+      {
+        "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+        "id": "workspace-lease-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-cloud-showcase-infrastructure-selection-local-a206990755-compare-plans",
+        "producerActivityId": "showcase-infrastructure-selection-local-a206990755-cloud",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:10:17.600709339Z",
+        "runId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "workspaceId": "workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-cloud"
+      },
+      {
+        "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-select-scope",
+        "id": "workspace-lease-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-compare-plans-showcase-infrastructure-selection-local-a206990755-select-scope",
+        "producerActivityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:10:19.18352334Z",
+        "runId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "workspaceId": "workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-compare-plans"
+      },
+      {
+        "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+        "id": "workspace-lease-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-hpc-showcase-infrastructure-selection-local-a206990755-compare-plans",
+        "producerActivityId": "showcase-infrastructure-selection-local-a206990755-hpc",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:10:17.600709339Z",
+        "runId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "workspaceId": "workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-hpc"
+      },
+      {
+        "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+        "id": "workspace-lease-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-local-gpu-showcase-infrastructure-selection-local-a206990755-compare-plans",
+        "producerActivityId": "showcase-infrastructure-selection-local-a206990755-local-gpu",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:10:17.600709339Z",
+        "runId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "workspaceId": "workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-local-gpu"
+      },
+      {
+        "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-cloud",
+        "id": "workspace-lease-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-profile-workload-showcase-infrastructure-selection-local-a206990755-cloud",
+        "producerActivityId": "showcase-infrastructure-selection-local-a206990755-profile-workload",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:10:15.119811213Z",
+        "runId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "workspaceId": "workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-profile-workload"
+      },
+      {
+        "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-hpc",
+        "id": "workspace-lease-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-profile-workload-showcase-infrastructure-selection-local-a206990755-hpc",
+        "producerActivityId": "showcase-infrastructure-selection-local-a206990755-profile-workload",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:10:15.119563588Z",
+        "runId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "workspaceId": "workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-profile-workload"
+      },
+      {
+        "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-local-gpu",
+        "id": "workspace-lease-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-profile-workload-showcase-infrastructure-selection-local-a206990755-local-gpu",
+        "producerActivityId": "showcase-infrastructure-selection-local-a206990755-profile-workload",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:10:15.114483338Z",
+        "runId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "workspaceId": "workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-profile-workload"
+      },
+      {
+        "consumerActivityId": "showcase-infrastructure-selection-local-a206990755-train",
+        "id": "workspace-lease-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-select-scope-showcase-infrastructure-selection-local-a206990755-train",
+        "producerActivityId": "showcase-infrastructure-selection-local-a206990755-select-scope",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:10:21.117478049Z",
+        "runId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "workspaceId": "workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-select-scope"
+      }
+    ],
+    "workspaces": [
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-cloud",
+        "createdAt": "2026-10-20T19:10:13.611022379Z",
+        "driver": "local",
+        "environmentId": "showcase-infrastructure-selection-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-cloud",
+        "fileCount": 2,
+        "id": "workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-cloud",
+        "inputBytes": 499,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:6c5acfcd4eb1eb17b00b826535ecb57eed7cd1a3940a89d0ad5f49a376cf8164",
+              "path": "stage-cloud.json",
+              "sizeBytes": 530
+            },
+            {
+              "digest": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:6c5acfcd4eb1eb17b00b826535ecb57eed7cd1a3940a89d0ad5f49a376cf8164",
+              "path": "stage-cloud.json",
+              "sizeBytes": 530
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-cloud",
+        "outputBytes": 530,
+        "pinned": false,
+        "reclaimedBytes": 1029,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:10:17.604113131Z",
+        "resourceId": "showcase-infrastructure-selection-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "runtimeId": "showcase-infrastructure-selection-local",
+        "sealedAt": "2026-10-20T19:10:16.922199964Z",
+        "sizeBytes": 1029,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-cloud"
+      },
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-compare-plans",
+        "createdAt": "2026-10-20T19:10:13.611022379Z",
+        "driver": "local",
+        "environmentId": "showcase-infrastructure-selection-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-compare-plans",
+        "fileCount": 5,
+        "id": "workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-compare-plans",
+        "inputBytes": 2091,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:6c5acfcd4eb1eb17b00b826535ecb57eed7cd1a3940a89d0ad5f49a376cf8164",
+              "path": "stage-cloud.json",
+              "sizeBytes": 530
+            },
+            {
+              "digest": "sha256:1861a0f96bfa896fac80baf64bfb8476d53a215dd6f471a820a5a8d086261d94",
+              "path": "stage-compare-plans.json",
+              "sizeBytes": 1013
+            },
+            {
+              "digest": "sha256:a33e2bce05e98fb54f02fbde6b480438bc782406a25b279c1ff14df8f14980c5",
+              "path": "stage-hpc.json",
+              "sizeBytes": 535
+            },
+            {
+              "digest": "sha256:1a08cc9f419363165e39d8f5c6c104f8b49d93ba78dd842d28eb7f9e2e9ca2e2",
+              "path": "stage-local-gpu.json",
+              "sizeBytes": 527
+            },
+            {
+              "digest": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:6c5acfcd4eb1eb17b00b826535ecb57eed7cd1a3940a89d0ad5f49a376cf8164",
+              "path": "stage-cloud.json",
+              "sizeBytes": 530
+            },
+            {
+              "digest": "sha256:a33e2bce05e98fb54f02fbde6b480438bc782406a25b279c1ff14df8f14980c5",
+              "path": "stage-hpc.json",
+              "sizeBytes": 535
+            },
+            {
+              "digest": "sha256:1a08cc9f419363165e39d8f5c6c104f8b49d93ba78dd842d28eb7f9e2e9ca2e2",
+              "path": "stage-local-gpu.json",
+              "sizeBytes": 527
+            },
+            {
+              "digest": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:6c5acfcd4eb1eb17b00b826535ecb57eed7cd1a3940a89d0ad5f49a376cf8164",
+              "path": "stage-cloud.json",
+              "sizeBytes": 530
+            },
+            {
+              "digest": "sha256:a33e2bce05e98fb54f02fbde6b480438bc782406a25b279c1ff14df8f14980c5",
+              "path": "stage-hpc.json",
+              "sizeBytes": 535
+            },
+            {
+              "digest": "sha256:1a08cc9f419363165e39d8f5c6c104f8b49d93ba78dd842d28eb7f9e2e9ca2e2",
+              "path": "stage-local-gpu.json",
+              "sizeBytes": 527
+            },
+            {
+              "digest": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:1861a0f96bfa896fac80baf64bfb8476d53a215dd6f471a820a5a8d086261d94",
+              "path": "stage-compare-plans.json",
+              "sizeBytes": 1013
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-compare-plans",
+        "outputBytes": 1013,
+        "pinned": false,
+        "reclaimedBytes": 3104,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:10:19.18791459Z",
+        "resourceId": "showcase-infrastructure-selection-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "runtimeId": "showcase-infrastructure-selection-local",
+        "sealedAt": "2026-10-20T19:10:19.003760548Z",
+        "sizeBytes": 3104,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-compare-plans"
+      },
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-hpc",
+        "createdAt": "2026-10-20T19:10:13.611022379Z",
+        "driver": "local",
+        "environmentId": "showcase-infrastructure-selection-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-hpc",
+        "fileCount": 2,
+        "id": "workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-hpc",
+        "inputBytes": 499,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:a33e2bce05e98fb54f02fbde6b480438bc782406a25b279c1ff14df8f14980c5",
+              "path": "stage-hpc.json",
+              "sizeBytes": 535
+            },
+            {
+              "digest": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:a33e2bce05e98fb54f02fbde6b480438bc782406a25b279c1ff14df8f14980c5",
+              "path": "stage-hpc.json",
+              "sizeBytes": 535
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-hpc",
+        "outputBytes": 535,
+        "pinned": false,
+        "reclaimedBytes": 1034,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:10:17.610662089Z",
+        "resourceId": "showcase-infrastructure-selection-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "runtimeId": "showcase-infrastructure-selection-local",
+        "sealedAt": "2026-10-20T19:10:17.025308797Z",
+        "sizeBytes": 1034,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-hpc"
+      },
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-local-gpu",
+        "createdAt": "2026-10-20T19:10:13.611022379Z",
+        "driver": "local",
+        "environmentId": "showcase-infrastructure-selection-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-local-gpu",
+        "fileCount": 2,
+        "id": "workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-local-gpu",
+        "inputBytes": 499,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:1a08cc9f419363165e39d8f5c6c104f8b49d93ba78dd842d28eb7f9e2e9ca2e2",
+              "path": "stage-local-gpu.json",
+              "sizeBytes": 527
+            },
+            {
+              "digest": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:1a08cc9f419363165e39d8f5c6c104f8b49d93ba78dd842d28eb7f9e2e9ca2e2",
+              "path": "stage-local-gpu.json",
+              "sizeBytes": 527
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-local-gpu",
+        "outputBytes": 527,
+        "pinned": false,
+        "reclaimedBytes": 1026,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:10:17.615093548Z",
+        "resourceId": "showcase-infrastructure-selection-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "runtimeId": "showcase-infrastructure-selection-local",
+        "sealedAt": "2026-10-20T19:10:17.019157506Z",
+        "sizeBytes": 1026,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-local-gpu"
+      },
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-profile-workload",
+        "createdAt": "2026-10-20T19:10:13.611022379Z",
+        "driver": "local",
+        "environmentId": "showcase-infrastructure-selection-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-profile-workload",
+        "fileCount": 1,
+        "id": "workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-profile-workload",
+        "inputBytes": 0,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-profile-workload",
+        "outputBytes": 499,
+        "pinned": false,
+        "reclaimedBytes": 499,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:10:15.131929588Z",
+        "resourceId": "showcase-infrastructure-selection-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "runtimeId": "showcase-infrastructure-selection-local",
+        "sealedAt": "2026-10-20T19:10:14.913870588Z",
+        "sizeBytes": 499,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-profile-workload"
+      },
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-select-scope",
+        "createdAt": "2026-10-20T19:10:13.611022379Z",
+        "driver": "local",
+        "environmentId": "showcase-infrastructure-selection-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-select-scope",
+        "fileCount": 6,
+        "id": "workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-select-scope",
+        "inputBytes": 3104,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:6c5acfcd4eb1eb17b00b826535ecb57eed7cd1a3940a89d0ad5f49a376cf8164",
+              "path": "stage-cloud.json",
+              "sizeBytes": 530
+            },
+            {
+              "digest": "sha256:1861a0f96bfa896fac80baf64bfb8476d53a215dd6f471a820a5a8d086261d94",
+              "path": "stage-compare-plans.json",
+              "sizeBytes": 1013
+            },
+            {
+              "digest": "sha256:a33e2bce05e98fb54f02fbde6b480438bc782406a25b279c1ff14df8f14980c5",
+              "path": "stage-hpc.json",
+              "sizeBytes": 535
+            },
+            {
+              "digest": "sha256:1a08cc9f419363165e39d8f5c6c104f8b49d93ba78dd842d28eb7f9e2e9ca2e2",
+              "path": "stage-local-gpu.json",
+              "sizeBytes": 527
+            },
+            {
+              "digest": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            },
+            {
+              "digest": "sha256:f84831ef2554e9d3fc8b8fcb984575b118b6f66c5efb433982658122a4688b02",
+              "path": "stage-select-scope.json",
+              "sizeBytes": 1234
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:6c5acfcd4eb1eb17b00b826535ecb57eed7cd1a3940a89d0ad5f49a376cf8164",
+              "path": "stage-cloud.json",
+              "sizeBytes": 530
+            },
+            {
+              "digest": "sha256:1861a0f96bfa896fac80baf64bfb8476d53a215dd6f471a820a5a8d086261d94",
+              "path": "stage-compare-plans.json",
+              "sizeBytes": 1013
+            },
+            {
+              "digest": "sha256:a33e2bce05e98fb54f02fbde6b480438bc782406a25b279c1ff14df8f14980c5",
+              "path": "stage-hpc.json",
+              "sizeBytes": 535
+            },
+            {
+              "digest": "sha256:1a08cc9f419363165e39d8f5c6c104f8b49d93ba78dd842d28eb7f9e2e9ca2e2",
+              "path": "stage-local-gpu.json",
+              "sizeBytes": 527
+            },
+            {
+              "digest": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:6c5acfcd4eb1eb17b00b826535ecb57eed7cd1a3940a89d0ad5f49a376cf8164",
+              "path": "stage-cloud.json",
+              "sizeBytes": 530
+            },
+            {
+              "digest": "sha256:1861a0f96bfa896fac80baf64bfb8476d53a215dd6f471a820a5a8d086261d94",
+              "path": "stage-compare-plans.json",
+              "sizeBytes": 1013
+            },
+            {
+              "digest": "sha256:a33e2bce05e98fb54f02fbde6b480438bc782406a25b279c1ff14df8f14980c5",
+              "path": "stage-hpc.json",
+              "sizeBytes": 535
+            },
+            {
+              "digest": "sha256:1a08cc9f419363165e39d8f5c6c104f8b49d93ba78dd842d28eb7f9e2e9ca2e2",
+              "path": "stage-local-gpu.json",
+              "sizeBytes": 527
+            },
+            {
+              "digest": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:f84831ef2554e9d3fc8b8fcb984575b118b6f66c5efb433982658122a4688b02",
+              "path": "stage-select-scope.json",
+              "sizeBytes": 1234
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-select-scope",
+        "outputBytes": 1234,
+        "pinned": false,
+        "reclaimedBytes": 4338,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:10:21.120907841Z",
+        "resourceId": "showcase-infrastructure-selection-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "runtimeId": "showcase-infrastructure-selection-local",
+        "sealedAt": "2026-10-20T19:10:20.921943258Z",
+        "sizeBytes": 4338,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-select-scope"
+      },
+      {
+        "activityId": "showcase-infrastructure-selection-local-a206990755-train",
+        "createdAt": "2026-10-20T19:10:13.611022379Z",
+        "driver": "local",
+        "environmentId": "showcase-infrastructure-selection-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-train",
+        "fileCount": 3,
+        "id": "workspace-showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000-showcase-infrastructure-selection-local-a206990755-train",
+        "inputBytes": 4338,
+        "isFinal": true,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:337f01ca9e7a741fad6b5a347fe1440e9c93da927d03807c0e0f295a5e7a5458",
+              "path": "cost-comparison.csv",
+              "sizeBytes": 306
+            },
+            {
+              "digest": "sha256:e4c9b99e841dffe79d60842369fdcc848c73f2f6bf6318360c8261ea83a5cd72",
+              "path": "decision.json",
+              "sizeBytes": 967
+            },
+            {
+              "digest": "sha256:6c5acfcd4eb1eb17b00b826535ecb57eed7cd1a3940a89d0ad5f49a376cf8164",
+              "path": "stage-cloud.json",
+              "sizeBytes": 530
+            },
+            {
+              "digest": "sha256:1861a0f96bfa896fac80baf64bfb8476d53a215dd6f471a820a5a8d086261d94",
+              "path": "stage-compare-plans.json",
+              "sizeBytes": 1013
+            },
+            {
+              "digest": "sha256:a33e2bce05e98fb54f02fbde6b480438bc782406a25b279c1ff14df8f14980c5",
+              "path": "stage-hpc.json",
+              "sizeBytes": 535
+            },
+            {
+              "digest": "sha256:1a08cc9f419363165e39d8f5c6c104f8b49d93ba78dd842d28eb7f9e2e9ca2e2",
+              "path": "stage-local-gpu.json",
+              "sizeBytes": 527
+            },
+            {
+              "digest": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            },
+            {
+              "digest": "sha256:f84831ef2554e9d3fc8b8fcb984575b118b6f66c5efb433982658122a4688b02",
+              "path": "stage-select-scope.json",
+              "sizeBytes": 1234
+            },
+            {
+              "digest": "sha256:1c4867838880e5408a866d025f8fd7bf32f61f5fa61a7556273109e1599749be",
+              "path": "stage-train.json",
+              "sizeBytes": 1388
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:6c5acfcd4eb1eb17b00b826535ecb57eed7cd1a3940a89d0ad5f49a376cf8164",
+              "path": "stage-cloud.json",
+              "sizeBytes": 530
+            },
+            {
+              "digest": "sha256:1861a0f96bfa896fac80baf64bfb8476d53a215dd6f471a820a5a8d086261d94",
+              "path": "stage-compare-plans.json",
+              "sizeBytes": 1013
+            },
+            {
+              "digest": "sha256:a33e2bce05e98fb54f02fbde6b480438bc782406a25b279c1ff14df8f14980c5",
+              "path": "stage-hpc.json",
+              "sizeBytes": 535
+            },
+            {
+              "digest": "sha256:1a08cc9f419363165e39d8f5c6c104f8b49d93ba78dd842d28eb7f9e2e9ca2e2",
+              "path": "stage-local-gpu.json",
+              "sizeBytes": 527
+            },
+            {
+              "digest": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            },
+            {
+              "digest": "sha256:f84831ef2554e9d3fc8b8fcb984575b118b6f66c5efb433982658122a4688b02",
+              "path": "stage-select-scope.json",
+              "sizeBytes": 1234
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:6c5acfcd4eb1eb17b00b826535ecb57eed7cd1a3940a89d0ad5f49a376cf8164",
+              "path": "stage-cloud.json",
+              "sizeBytes": 530
+            },
+            {
+              "digest": "sha256:1861a0f96bfa896fac80baf64bfb8476d53a215dd6f471a820a5a8d086261d94",
+              "path": "stage-compare-plans.json",
+              "sizeBytes": 1013
+            },
+            {
+              "digest": "sha256:a33e2bce05e98fb54f02fbde6b480438bc782406a25b279c1ff14df8f14980c5",
+              "path": "stage-hpc.json",
+              "sizeBytes": 535
+            },
+            {
+              "digest": "sha256:1a08cc9f419363165e39d8f5c6c104f8b49d93ba78dd842d28eb7f9e2e9ca2e2",
+              "path": "stage-local-gpu.json",
+              "sizeBytes": 527
+            },
+            {
+              "digest": "sha256:91be88df6b28b78f0f572f5c9c65ab9a62d0da31b100fd2a87f2d7e5718f4934",
+              "path": "stage-profile-workload.json",
+              "sizeBytes": 499
+            },
+            {
+              "digest": "sha256:f84831ef2554e9d3fc8b8fcb984575b118b6f66c5efb433982658122a4688b02",
+              "path": "stage-select-scope.json",
+              "sizeBytes": 1234
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:337f01ca9e7a741fad6b5a347fe1440e9c93da927d03807c0e0f295a5e7a5458",
+              "path": "cost-comparison.csv",
+              "sizeBytes": 306
+            },
+            {
+              "digest": "sha256:e4c9b99e841dffe79d60842369fdcc848c73f2f6bf6318360c8261ea83a5cd72",
+              "path": "decision.json",
+              "sizeBytes": 967
+            },
+            {
+              "digest": "sha256:1c4867838880e5408a866d025f8fd7bf32f61f5fa61a7556273109e1599749be",
+              "path": "stage-train.json",
+              "sizeBytes": 1388
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-train",
+        "outputBytes": 2661,
+        "pinned": false,
+        "reclaimedBytes": 4338,
+        "releaseReason": "inherited inputs pruned",
+        "resourceId": "showcase-infrastructure-selection-local-docker",
+        "retention": "final",
+        "runId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+        "runtimeId": "showcase-infrastructure-selection-local",
+        "sealedAt": "2026-10-20T19:10:22.932279008Z",
+        "sizeBytes": 2661,
+        "state": "sealed",
+        "uri": "file:///akoflow/workspace/runs/showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000/showcase-infrastructure-selection-local-a206990755-train"
+      }
+    ]
+  },
+  "runId": "showcase-infrastructure-selection-local-a206990755-run-20261020t191013.331438000",
+  "status": "completed",
+  "workflowId": "showcase-infrastructure-selection-local-a206990755"
+}

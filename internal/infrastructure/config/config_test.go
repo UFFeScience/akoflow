@@ -44,3 +44,18 @@ func TestLoadSettings(t *testing.T) {
 		t.Fatal("expected schema changes to recreate the development database")
 	}
 }
+
+func TestMCPConfiguration(t *testing.T) {
+	t.Setenv("AKOFLOW_MCP_ENABLED", "true")
+	t.Setenv("AKOFLOW_MCP_TOKEN", "test-mcp-token")
+	t.Setenv("AKOFLOW_MCP_PERMISSIONS", "admin")
+	t.Setenv("AKOFLOW_MCP_STATE_DIRECTORY", "/tmp/akoflow-mcp-state")
+	t.Setenv("AKOFLOW_MCP_ALLOWED_ORIGINS", " https://trusted.example, ,https://another.example ")
+	settings := Load()
+	if !settings.MCPEnabled || settings.MCPToken != "test-mcp-token" || settings.MCPPermissions != "admin" {
+		t.Fatal("MCP settings were not loaded")
+	}
+	if settings.MCPStateDirectory != "/tmp/akoflow-mcp-state" || len(settings.MCPAllowedOrigins) != 2 {
+		t.Fatal("MCP state directory or origins were not loaded")
+	}
+}

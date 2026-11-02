@@ -1,0 +1,3128 @@
+{
+  "activityCount": 7,
+  "completedActivityCount": 7,
+  "image": "ghcr.io/uffescience/akoflow-examples/showcase-model-ensemble:local-f697a92241279de0",
+  "imageId": "sha256:f697a92241279de0401056d5c61e3cd8278663753f63bf2d1a15fc528e897fa8",
+  "observedAt": "2026-10-20T19:12:02Z",
+  "planId": "showcase-model-ensemble-local-68ef5b0c9f-manual-plan-20261020t191151.790863000",
+  "projection": {
+    "activities": [
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+        "allocatedResourceId": "showcase-model-ensemble-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "finishedAt": 1792523512.4027383,
+        "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-model-ensemble-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-ensemble-local-68ef5b0c9f-manual-plan-20261020t191151.790863000-showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+        "plannedResourceId": "showcase-model-ensemble-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523512.1483235,
+        "readyAt": 1792523512.1483235,
+        "runtimeId": "showcase-model-ensemble-local",
+        "runtimeSeconds": 0.11705446243286133,
+        "startedAt": 1792523512.2856839,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+        "allocatedResourceId": "showcase-model-ensemble-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "finishedAt": 1792523513.8159401,
+        "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14233136177062988,
+          "preparationFinishedAt": 1792523513.5505757,
+          "preparationStartedAt": 1792523513.3936822,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.004255771636962891,
+          "runtimeId": "showcase-model-ensemble-local",
+          "transferElapsedSeconds": 0.15689349174499512,
+          "transferWorkSeconds": 0.15689349174499512
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-ensemble-local-68ef5b0c9f-manual-plan-20261020t191151.790863000-showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+        "plannedResourceId": "showcase-model-ensemble-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523513.3841038,
+        "readyAt": 1792523513.3841038,
+        "runtimeId": "showcase-model-ensemble-local",
+        "runtimeSeconds": 0.12303304672241211,
+        "startedAt": 1792523513.692907,
+        "status": "completed",
+        "transferBytes": 3827,
+        "transferSeconds": 0.15689349174499512
+      },
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+        "allocatedResourceId": "showcase-model-ensemble-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "finishedAt": 1792523513.8947005,
+        "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.19318056106567383,
+          "preparationFinishedAt": 1792523513.573302,
+          "preparationStartedAt": 1792523513.3916833,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.003293275833129883,
+          "runtimeId": "showcase-model-ensemble-local",
+          "transferElapsedSeconds": 0.18161869049072266,
+          "transferWorkSeconds": 0.18161869049072266
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-ensemble-local-68ef5b0c9f-manual-plan-20261020t191151.790863000-showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+        "plannedResourceId": "showcase-model-ensemble-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523513.38223,
+        "readyAt": 1792523513.38223,
+        "runtimeId": "showcase-model-ensemble-local",
+        "runtimeSeconds": 0.1282179355621338,
+        "startedAt": 1792523513.7664826,
+        "status": "completed",
+        "transferBytes": 3827,
+        "transferSeconds": 0.18161869049072266
+      },
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+        "allocatedResourceId": "showcase-model-ensemble-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "finishedAt": 1792523513.906457,
+        "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.21079039573669434,
+          "preparationFinishedAt": 1792523513.571498,
+          "preparationStartedAt": 1792523513.3952663,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0048961639404296875,
+          "runtimeId": "showcase-model-ensemble-local",
+          "transferElapsedSeconds": 0.17623162269592285,
+          "transferWorkSeconds": 0.17623162269592285
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-ensemble-local-68ef5b0c9f-manual-plan-20261020t191151.790863000-showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+        "plannedResourceId": "showcase-model-ensemble-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523513.385349,
+        "readyAt": 1792523513.385349,
+        "runtimeId": "showcase-model-ensemble-local",
+        "runtimeSeconds": 0.12416863441467285,
+        "startedAt": 1792523513.7822883,
+        "status": "completed",
+        "transferBytes": 3827,
+        "transferSeconds": 0.17623162269592285
+      },
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+        "allocatedResourceId": "showcase-model-ensemble-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "finishedAt": 1792523516.2510438,
+        "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-combine",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.15747737884521484,
+          "preparationFinishedAt": 1792523515.9816382,
+          "preparationStartedAt": 1792523515.4601717,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0026922225952148438,
+          "runtimeId": "showcase-model-ensemble-local",
+          "transferElapsedSeconds": 0.5214664936065674,
+          "transferWorkSeconds": 1.1428852081298828
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-ensemble-local-68ef5b0c9f-manual-plan-20261020t191151.790863000-showcase-model-ensemble-local-68ef5b0c9f-combine",
+        "plannedResourceId": "showcase-model-ensemble-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523515.4549568,
+        "readyAt": 1792523515.4549568,
+        "runtimeId": "showcase-model-ensemble-local",
+        "runtimeSeconds": 0.11192822456359863,
+        "startedAt": 1792523516.1391156,
+        "status": "completed",
+        "transferBytes": 9054,
+        "transferSeconds": 1.1428852081298828
+      },
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+        "allocatedResourceId": "showcase-model-ensemble-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "finishedAt": 1792523517.875672,
+        "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.12691378593444824,
+          "preparationFinishedAt": 1792523517.6411746,
+          "preparationStartedAt": 1792523517.4703727,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.002295970916748047,
+          "runtimeId": "showcase-model-ensemble-local",
+          "transferElapsedSeconds": 0.17080187797546387,
+          "transferWorkSeconds": 0.17080187797546387
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-ensemble-local-68ef5b0c9f-manual-plan-20261020t191151.790863000-showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+        "plannedResourceId": "showcase-model-ensemble-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523517.464946,
+        "readyAt": 1792523517.464946,
+        "runtimeId": "showcase-model-ensemble-local",
+        "runtimeSeconds": 0.10758376121520996,
+        "startedAt": 1792523517.7680883,
+        "status": "completed",
+        "transferBytes": 11027,
+        "transferSeconds": 0.17080187797546387
+      },
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-publish",
+        "allocatedResourceId": "showcase-model-ensemble-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "finishedAt": 1792523519.787928,
+        "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-publish",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13144946098327637,
+          "preparationFinishedAt": 1792523519.551385,
+          "preparationStartedAt": 1792523519.4105763,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.000978708267211914,
+          "runtimeId": "showcase-model-ensemble-local",
+          "transferElapsedSeconds": 0.1408085823059082,
+          "transferWorkSeconds": 0.1408085823059082
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-ensemble-local-68ef5b0c9f-manual-plan-20261020t191151.790863000-showcase-model-ensemble-local-68ef5b0c9f-publish",
+        "plannedResourceId": "showcase-model-ensemble-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523519.406931,
+        "readyAt": 1792523519.406931,
+        "runtimeId": "showcase-model-ensemble-local",
+        "runtimeSeconds": 0.10509371757507324,
+        "startedAt": 1792523519.6828344,
+        "status": "completed",
+        "transferBytes": 13042,
+        "transferSeconds": 0.1408085823059082
+      }
+    ],
+    "activityAttempts": [
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+        "allocatedResourceId": "showcase-model-ensemble-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "finishedAt": 1792523512.4027383,
+        "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-model-ensemble-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-ensemble-local-68ef5b0c9f-manual-plan-20261020t191151.790863000-showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+        "plannedResourceId": "showcase-model-ensemble-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523512.1483235,
+        "readyAt": 1792523512.1483235,
+        "runtimeId": "showcase-model-ensemble-local",
+        "runtimeSeconds": 0.11705446243286133,
+        "startedAt": 1792523512.2856839,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+        "allocatedResourceId": "showcase-model-ensemble-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "finishedAt": 1792523513.8159401,
+        "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14233136177062988,
+          "preparationFinishedAt": 1792523513.5505757,
+          "preparationStartedAt": 1792523513.3936822,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.004255771636962891,
+          "runtimeId": "showcase-model-ensemble-local",
+          "transferElapsedSeconds": 0.15689349174499512,
+          "transferWorkSeconds": 0.15689349174499512
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-ensemble-local-68ef5b0c9f-manual-plan-20261020t191151.790863000-showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+        "plannedResourceId": "showcase-model-ensemble-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523513.3841038,
+        "readyAt": 1792523513.3841038,
+        "runtimeId": "showcase-model-ensemble-local",
+        "runtimeSeconds": 0.12303304672241211,
+        "startedAt": 1792523513.692907,
+        "status": "completed",
+        "transferBytes": 3827,
+        "transferSeconds": 0.15689349174499512
+      },
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+        "allocatedResourceId": "showcase-model-ensemble-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "finishedAt": 1792523513.8947005,
+        "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.19318056106567383,
+          "preparationFinishedAt": 1792523513.573302,
+          "preparationStartedAt": 1792523513.3916833,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.003293275833129883,
+          "runtimeId": "showcase-model-ensemble-local",
+          "transferElapsedSeconds": 0.18161869049072266,
+          "transferWorkSeconds": 0.18161869049072266
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-ensemble-local-68ef5b0c9f-manual-plan-20261020t191151.790863000-showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+        "plannedResourceId": "showcase-model-ensemble-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523513.38223,
+        "readyAt": 1792523513.38223,
+        "runtimeId": "showcase-model-ensemble-local",
+        "runtimeSeconds": 0.1282179355621338,
+        "startedAt": 1792523513.7664826,
+        "status": "completed",
+        "transferBytes": 3827,
+        "transferSeconds": 0.18161869049072266
+      },
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+        "allocatedResourceId": "showcase-model-ensemble-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "finishedAt": 1792523513.906457,
+        "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.21079039573669434,
+          "preparationFinishedAt": 1792523513.571498,
+          "preparationStartedAt": 1792523513.3952663,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0048961639404296875,
+          "runtimeId": "showcase-model-ensemble-local",
+          "transferElapsedSeconds": 0.17623162269592285,
+          "transferWorkSeconds": 0.17623162269592285
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-ensemble-local-68ef5b0c9f-manual-plan-20261020t191151.790863000-showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+        "plannedResourceId": "showcase-model-ensemble-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523513.385349,
+        "readyAt": 1792523513.385349,
+        "runtimeId": "showcase-model-ensemble-local",
+        "runtimeSeconds": 0.12416863441467285,
+        "startedAt": 1792523513.7822883,
+        "status": "completed",
+        "transferBytes": 3827,
+        "transferSeconds": 0.17623162269592285
+      },
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+        "allocatedResourceId": "showcase-model-ensemble-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "finishedAt": 1792523516.2510438,
+        "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-combine",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.15747737884521484,
+          "preparationFinishedAt": 1792523515.9816382,
+          "preparationStartedAt": 1792523515.4601717,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0026922225952148438,
+          "runtimeId": "showcase-model-ensemble-local",
+          "transferElapsedSeconds": 0.5214664936065674,
+          "transferWorkSeconds": 1.1428852081298828
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-ensemble-local-68ef5b0c9f-manual-plan-20261020t191151.790863000-showcase-model-ensemble-local-68ef5b0c9f-combine",
+        "plannedResourceId": "showcase-model-ensemble-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523515.4549568,
+        "readyAt": 1792523515.4549568,
+        "runtimeId": "showcase-model-ensemble-local",
+        "runtimeSeconds": 0.11192822456359863,
+        "startedAt": 1792523516.1391156,
+        "status": "completed",
+        "transferBytes": 9054,
+        "transferSeconds": 1.1428852081298828
+      },
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+        "allocatedResourceId": "showcase-model-ensemble-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "finishedAt": 1792523517.875672,
+        "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.12691378593444824,
+          "preparationFinishedAt": 1792523517.6411746,
+          "preparationStartedAt": 1792523517.4703727,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.002295970916748047,
+          "runtimeId": "showcase-model-ensemble-local",
+          "transferElapsedSeconds": 0.17080187797546387,
+          "transferWorkSeconds": 0.17080187797546387
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-ensemble-local-68ef5b0c9f-manual-plan-20261020t191151.790863000-showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+        "plannedResourceId": "showcase-model-ensemble-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523517.464946,
+        "readyAt": 1792523517.464946,
+        "runtimeId": "showcase-model-ensemble-local",
+        "runtimeSeconds": 0.10758376121520996,
+        "startedAt": 1792523517.7680883,
+        "status": "completed",
+        "transferBytes": 11027,
+        "transferSeconds": 0.17080187797546387
+      },
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-publish",
+        "allocatedResourceId": "showcase-model-ensemble-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "finishedAt": 1792523519.787928,
+        "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-publish",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13144946098327637,
+          "preparationFinishedAt": 1792523519.551385,
+          "preparationStartedAt": 1792523519.4105763,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.000978708267211914,
+          "runtimeId": "showcase-model-ensemble-local",
+          "transferElapsedSeconds": 0.1408085823059082,
+          "transferWorkSeconds": 0.1408085823059082
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-ensemble-local-68ef5b0c9f-manual-plan-20261020t191151.790863000-showcase-model-ensemble-local-68ef5b0c9f-publish",
+        "plannedResourceId": "showcase-model-ensemble-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523519.406931,
+        "readyAt": 1792523519.406931,
+        "runtimeId": "showcase-model-ensemble-local",
+        "runtimeSeconds": 0.10509371757507324,
+        "startedAt": 1792523519.6828344,
+        "status": "completed",
+        "transferBytes": 13042,
+        "transferSeconds": 0.1408085823059082
+      }
+    ],
+    "artifactMaterializations": null,
+    "artifactTransferRuns": [
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+        "durationSeconds": 0.259554386138916,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "filesTransferred": 2,
+        "finishedAt": 1792523515.719726,
+        "id": "transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-combine-0",
+        "logicalBytes": 5568,
+        "planId": "transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-combine-0",
+        "route": {
+          "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.095882083,
+          "sourceEnvironmentId": "showcase-model-ensemble-v1",
+          "sourceResourceId": "showcase-model-ensemble-local-docker",
+          "sshChannelWaitSeconds": 5.000000000000001e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-ensemble-v1",
+          "targetResourceId": "showcase-model-ensemble-local-docker"
+        },
+        "startedAt": 1792523515.4601717,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 5568
+      },
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+        "durationSeconds": 0.3618643283843994,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523515.822036,
+        "id": "transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-combine-1",
+        "logicalBytes": 5570,
+        "planId": "transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-combine-1",
+        "route": {
+          "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.074457875,
+          "sourceEnvironmentId": "showcase-model-ensemble-v1",
+          "sourceResourceId": "showcase-model-ensemble-local-docker",
+          "sshChannelWaitSeconds": 2.5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-ensemble-v1",
+          "targetResourceId": "showcase-model-ensemble-local-docker"
+        },
+        "startedAt": 1792523515.4601717,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 1743
+      },
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+        "durationSeconds": 0.5214664936065674,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523515.9816382,
+        "id": "transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-combine-2",
+        "logicalBytes": 5570,
+        "planId": "transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-combine-2",
+        "route": {
+          "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.096656833,
+          "sourceEnvironmentId": "showcase-model-ensemble-v1",
+          "sourceResourceId": "showcase-model-ensemble-local-docker",
+          "sshChannelWaitSeconds": 2.51e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-ensemble-v1",
+          "targetResourceId": "showcase-model-ensemble-local-docker"
+        },
+        "startedAt": 1792523515.4601717,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 1743
+      },
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+        "durationSeconds": 0.17080187797546387,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "filesTransferred": 5,
+        "finishedAt": 1792523517.6411746,
+        "id": "transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-evaluate-0",
+        "logicalBytes": 11027,
+        "planId": "transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-evaluate-0",
+        "route": {
+          "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+          "filesTransferred": 5,
+          "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.070380708,
+          "sourceEnvironmentId": "showcase-model-ensemble-v1",
+          "sourceResourceId": "showcase-model-ensemble-local-docker",
+          "sshChannelWaitSeconds": 4.99e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-ensemble-v1",
+          "targetResourceId": "showcase-model-ensemble-local-docker"
+        },
+        "startedAt": 1792523517.4703727,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 11027
+      },
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+        "durationSeconds": 0.18161869049072266,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523513.573302,
+        "id": "transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-predict-a-0",
+        "logicalBytes": 3827,
+        "planId": "transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-predict-a-0",
+        "route": {
+          "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.08934275,
+          "sourceEnvironmentId": "showcase-model-ensemble-v1",
+          "sourceResourceId": "showcase-model-ensemble-local-docker",
+          "sshChannelWaitSeconds": 5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-ensemble-v1",
+          "targetResourceId": "showcase-model-ensemble-local-docker"
+        },
+        "startedAt": 1792523513.3916833,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 3827
+      },
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+        "durationSeconds": 0.15689349174499512,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523513.5505757,
+        "id": "transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-predict-b-0",
+        "logicalBytes": 3827,
+        "planId": "transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-predict-b-0",
+        "route": {
+          "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.08931483400000001,
+          "sourceEnvironmentId": "showcase-model-ensemble-v1",
+          "sourceResourceId": "showcase-model-ensemble-local-docker",
+          "sshChannelWaitSeconds": 4.17e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-ensemble-v1",
+          "targetResourceId": "showcase-model-ensemble-local-docker"
+        },
+        "startedAt": 1792523513.3936822,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 3827
+      },
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+        "durationSeconds": 0.17623162269592285,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523513.571498,
+        "id": "transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-predict-c-0",
+        "logicalBytes": 3827,
+        "planId": "transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-predict-c-0",
+        "route": {
+          "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.087643708,
+          "sourceEnvironmentId": "showcase-model-ensemble-v1",
+          "sourceResourceId": "showcase-model-ensemble-local-docker",
+          "sshChannelWaitSeconds": 2.5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-ensemble-v1",
+          "targetResourceId": "showcase-model-ensemble-local-docker"
+        },
+        "startedAt": 1792523513.3952663,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 3827
+      },
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-publish",
+        "durationSeconds": 0.1408085823059082,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "filesTransferred": 6,
+        "finishedAt": 1792523519.551385,
+        "id": "transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-publish-0",
+        "logicalBytes": 13042,
+        "planId": "transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-publish-0",
+        "route": {
+          "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-publish",
+          "filesTransferred": 6,
+          "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.069807875,
+          "sourceEnvironmentId": "showcase-model-ensemble-v1",
+          "sourceResourceId": "showcase-model-ensemble-local-docker",
+          "sshChannelWaitSeconds": 2.08e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-ensemble-v1",
+          "targetResourceId": "showcase-model-ensemble-local-docker"
+        },
+        "startedAt": 1792523519.4105763,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 13042
+      }
+    ],
+    "cloudBilling": {
+      "asOf": "2026-10-20T19:12:02.211843013Z",
+      "costBasis": "VM compute and boot-disk lifecycle at on-demand marginal rates; not a provider invoice",
+      "estimatedCost": 0,
+      "excludedCosts": [
+        "network-egress",
+        "public-ipv4",
+        "image-storage",
+        "discounts-and-tax"
+      ],
+      "instances": [],
+      "knownCost": 0,
+      "status": "estimated"
+    },
+    "dataLocations": [
+      {
+        "dataObjectInstanceId": "1f2a59023255e4d65a24d9b583cad825",
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "id": "b1ab655abc3b7d2effacb6fdfa83da29",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-ensemble-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "427d66c6397af34ece791c11bba077b7",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-combine/stage-combine.json"
+      },
+      {
+        "dataObjectInstanceId": "35ddbae368e3e70b7363122d7e8905a9",
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "id": "c60063166b19206220fe298b6af37066",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-ensemble-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "427d66c6397af34ece791c11bba077b7",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-evaluate/stage-evaluate.json"
+      },
+      {
+        "dataObjectInstanceId": "e8e749a79b85f0fb20cb3cf6b9a37814",
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "id": "80bccc7f6a452c48d919ae63978210df",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-ensemble-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "427d66c6397af34ece791c11bba077b7",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-predict-a/stage-predict-a.json"
+      },
+      {
+        "dataObjectInstanceId": "cd039892796a78fe7f2ce9bf3bcd4d66",
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "id": "549bc8c5bbb72018ae09ef3827243bbc",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-ensemble-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "427d66c6397af34ece791c11bba077b7",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-predict-b/stage-predict-b.json"
+      },
+      {
+        "dataObjectInstanceId": "ee7de922085d3b4959841a34742e6c9b",
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "id": "dcf441fb13eec0edf024693efa2d962b",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-ensemble-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "427d66c6397af34ece791c11bba077b7",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-predict-c/stage-predict-c.json"
+      },
+      {
+        "dataObjectInstanceId": "a86bb7cbedb0739c0b0748f76a8b73a9",
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "id": "e63d67488e8f533eb40ea9525342ae43",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-ensemble-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "427d66c6397af34ece791c11bba077b7",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-prepare-input/stage-prepare-input.json"
+      },
+      {
+        "dataObjectInstanceId": "90564e10b6fa4414b5cf80f0a330ebfd",
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "id": "3048059cfe1c02f0b2ce184ac242e183",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-ensemble-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "427d66c6397af34ece791c11bba077b7",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-publish/ensemble.pkl"
+      },
+      {
+        "dataObjectInstanceId": "0434dffd1981dd81743e474f0d01262f",
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "id": "7d29d60bd795ba4b1120ed6029a189bc",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-ensemble-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "427d66c6397af34ece791c11bba077b7",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-publish/metrics.json"
+      },
+      {
+        "dataObjectInstanceId": "38c3f66e670e598d83b78eaebd4af70c",
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "id": "5173e2194411d05c424373882576b71e",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-ensemble-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "427d66c6397af34ece791c11bba077b7",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-publish/stage-publish.json"
+      }
+    ],
+    "dataObjects": [
+      {
+        "attempt": 1,
+        "checksum": "sha256:f81118f52fede0cd4fcba9aca11e0f6501043117691d74ac128e21d004cb116f",
+        "dataObjectId": "d6a4f71f3fed45d30052c77ffe577908",
+        "discovered": true,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "id": "1f2a59023255e4d65a24d9b583cad825",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+        "relativePath": "stage-combine.json",
+        "sizeBytes": 1973
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:09979261690a3bd3daa966c0233d04c80cc9dff73b49b6199ca33fce58d4a74a",
+        "dataObjectId": "62ab7a0d3a2365f3dd818ca7b920d2a2",
+        "discovered": true,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "id": "35ddbae368e3e70b7363122d7e8905a9",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+        "relativePath": "stage-evaluate.json",
+        "sizeBytes": 2015
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:8860a0787d7fe3a7e684f0f355c1e900f2e23af042815b9498869876ea1154ed",
+        "dataObjectId": "215b3fbe4f81b82a03acbd6cc632d1ae",
+        "discovered": true,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "id": "e8e749a79b85f0fb20cb3cf6b9a37814",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+        "relativePath": "stage-predict-a.json",
+        "sizeBytes": 1741
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:21a257b0379cfa614ff868423c1ed74bd542d0fcf4ed2b1be8c879c179f6f280",
+        "dataObjectId": "d7d059d75abd564605176958321d7b0b",
+        "discovered": true,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "id": "cd039892796a78fe7f2ce9bf3bcd4d66",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+        "relativePath": "stage-predict-b.json",
+        "sizeBytes": 1743
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:f5762aace0319c99b31b79b64249e8c8c43612faf2c5bf153ecc793dbeb85203",
+        "dataObjectId": "8956a72c8a7cd5b21f6b6f8ca1c455b4",
+        "discovered": true,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "id": "ee7de922085d3b4959841a34742e6c9b",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+        "relativePath": "stage-predict-c.json",
+        "sizeBytes": 1743
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+        "dataObjectId": "790f7edfb4cafcc61c3c3821e31ac762",
+        "discovered": true,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "id": "a86bb7cbedb0739c0b0748f76a8b73a9",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+        "relativePath": "stage-prepare-input.json",
+        "sizeBytes": 3827
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:b4c56f0909cc9960dfd19f645b759e5d9a519b2dfecc332ef6e7d490e01187a3",
+        "dataObjectId": "a10633620c4039770890f79e24206f7f",
+        "discovered": true,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "id": "90564e10b6fa4414b5cf80f0a330ebfd",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-publish",
+        "relativePath": "ensemble.pkl",
+        "sizeBytes": 137
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:67d46dd70e183dd36cf9559f91eaf7b5b069da4363ae11f2300ad471ed30ad1f",
+        "dataObjectId": "9590ad0a398d64627b54b4b41454d412",
+        "discovered": true,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "id": "0434dffd1981dd81743e474f0d01262f",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-publish",
+        "relativePath": "metrics.json",
+        "sizeBytes": 49
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:d3b2cb3e83de4a8ceab8baeebd993e645e5df9444acbf0b4d1ccd06f05d9d2b7",
+        "dataObjectId": "1f1be06b8e364081dca1c9c3ca6e07d8",
+        "discovered": true,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "id": "38c3f66e670e598d83b78eaebd4af70c",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-publish",
+        "relativePath": "stage-publish.json",
+        "sizeBytes": 396
+      }
+    ],
+    "dataTransfers": [
+      {
+        "bytes": 3827,
+        "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+        "cost": 0,
+        "durationSeconds": 0.18161869049072266,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "finishedAt": 1792523513.573302,
+        "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-a:transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-predict-a-0",
+        "logicalBytes": 3827,
+        "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+        "route": {
+          "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.08934275,
+          "sourceEnvironmentId": "showcase-model-ensemble-v1",
+          "sourceResourceId": "showcase-model-ensemble-local-docker",
+          "sshChannelWaitSeconds": 5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-ensemble-v1",
+          "targetResourceId": "showcase-model-ensemble-local-docker"
+        },
+        "sourceResourceId": "showcase-model-ensemble-local-docker",
+        "startedAt": 1792523513.3916833,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-model-ensemble-local-docker"
+      },
+      {
+        "bytes": 3827,
+        "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+        "cost": 0,
+        "durationSeconds": 0.15689349174499512,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "finishedAt": 1792523513.5505757,
+        "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-b:transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-predict-b-0",
+        "logicalBytes": 3827,
+        "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+        "route": {
+          "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.08931483400000001,
+          "sourceEnvironmentId": "showcase-model-ensemble-v1",
+          "sourceResourceId": "showcase-model-ensemble-local-docker",
+          "sshChannelWaitSeconds": 4.17e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-ensemble-v1",
+          "targetResourceId": "showcase-model-ensemble-local-docker"
+        },
+        "sourceResourceId": "showcase-model-ensemble-local-docker",
+        "startedAt": 1792523513.3936822,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-model-ensemble-local-docker"
+      },
+      {
+        "bytes": 3827,
+        "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+        "cost": 0,
+        "durationSeconds": 0.17623162269592285,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "finishedAt": 1792523513.571498,
+        "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-c:transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-predict-c-0",
+        "logicalBytes": 3827,
+        "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+        "route": {
+          "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.087643708,
+          "sourceEnvironmentId": "showcase-model-ensemble-v1",
+          "sourceResourceId": "showcase-model-ensemble-local-docker",
+          "sshChannelWaitSeconds": 2.5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-ensemble-v1",
+          "targetResourceId": "showcase-model-ensemble-local-docker"
+        },
+        "sourceResourceId": "showcase-model-ensemble-local-docker",
+        "startedAt": 1792523513.3952663,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-model-ensemble-local-docker"
+      },
+      {
+        "bytes": 5568,
+        "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+        "cost": 0,
+        "durationSeconds": 0.259554386138916,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "finishedAt": 1792523515.719726,
+        "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-combine:transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-combine-0",
+        "logicalBytes": 5568,
+        "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+        "route": {
+          "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.095882083,
+          "sourceEnvironmentId": "showcase-model-ensemble-v1",
+          "sourceResourceId": "showcase-model-ensemble-local-docker",
+          "sshChannelWaitSeconds": 5.000000000000001e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-ensemble-v1",
+          "targetResourceId": "showcase-model-ensemble-local-docker"
+        },
+        "sourceResourceId": "showcase-model-ensemble-local-docker",
+        "startedAt": 1792523515.4601717,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-model-ensemble-local-docker"
+      },
+      {
+        "bytes": 1743,
+        "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+        "cost": 0,
+        "durationSeconds": 0.3618643283843994,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "finishedAt": 1792523515.822036,
+        "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-combine:transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-combine-1",
+        "logicalBytes": 5570,
+        "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+        "route": {
+          "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.074457875,
+          "sourceEnvironmentId": "showcase-model-ensemble-v1",
+          "sourceResourceId": "showcase-model-ensemble-local-docker",
+          "sshChannelWaitSeconds": 2.5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-ensemble-v1",
+          "targetResourceId": "showcase-model-ensemble-local-docker"
+        },
+        "sourceResourceId": "showcase-model-ensemble-local-docker",
+        "startedAt": 1792523515.4601717,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-model-ensemble-local-docker"
+      },
+      {
+        "bytes": 1743,
+        "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+        "cost": 0,
+        "durationSeconds": 0.5214664936065674,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "finishedAt": 1792523515.9816382,
+        "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-combine:transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-combine-2",
+        "logicalBytes": 5570,
+        "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+        "route": {
+          "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.096656833,
+          "sourceEnvironmentId": "showcase-model-ensemble-v1",
+          "sourceResourceId": "showcase-model-ensemble-local-docker",
+          "sshChannelWaitSeconds": 2.51e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-ensemble-v1",
+          "targetResourceId": "showcase-model-ensemble-local-docker"
+        },
+        "sourceResourceId": "showcase-model-ensemble-local-docker",
+        "startedAt": 1792523515.4601717,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-model-ensemble-local-docker"
+      },
+      {
+        "bytes": 11027,
+        "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+        "cost": 0,
+        "durationSeconds": 0.17080187797546387,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "finishedAt": 1792523517.6411746,
+        "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-evaluate:transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-evaluate-0",
+        "logicalBytes": 11027,
+        "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+        "route": {
+          "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+          "filesTransferred": 5,
+          "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.070380708,
+          "sourceEnvironmentId": "showcase-model-ensemble-v1",
+          "sourceResourceId": "showcase-model-ensemble-local-docker",
+          "sshChannelWaitSeconds": 4.99e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-ensemble-v1",
+          "targetResourceId": "showcase-model-ensemble-local-docker"
+        },
+        "sourceResourceId": "showcase-model-ensemble-local-docker",
+        "startedAt": 1792523517.4703727,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-model-ensemble-local-docker"
+      },
+      {
+        "bytes": 13042,
+        "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-publish",
+        "cost": 0,
+        "durationSeconds": 0.1408085823059082,
+        "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "finishedAt": 1792523519.551385,
+        "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-publish:transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-publish-0",
+        "logicalBytes": 13042,
+        "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+        "route": {
+          "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-publish",
+          "filesTransferred": 6,
+          "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.069807875,
+          "sourceEnvironmentId": "showcase-model-ensemble-v1",
+          "sourceResourceId": "showcase-model-ensemble-local-docker",
+          "sshChannelWaitSeconds": 2.08e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-ensemble-v1",
+          "targetResourceId": "showcase-model-ensemble-local-docker"
+        },
+        "sourceResourceId": "showcase-model-ensemble-local-docker",
+        "startedAt": 1792523519.4105763,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-model-ensemble-local-docker"
+      }
+    ],
+    "events": [
+      {
+        "aggregateId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.started",
+        "id": "1ba62d8f6b2e70da00b5f7aa1c7378ee",
+        "occurredAt": "2026-10-20T19:11:52.114379383Z",
+        "payload": {
+          "mode": "real",
+          "schedulePlanId": "showcase-model-ensemble-local-68ef5b0c9f-manual-plan-20261020t191151.790863000"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "55645bc4e7b936270e12e6877e4edff9",
+        "occurredAt": "2026-10-20T19:11:53.309265759Z",
+        "payload": {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+          "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "7b260d1563f24f1a0192fdd96ae12264",
+        "occurredAt": "2026-10-20T19:11:53.378618467Z",
+        "payload": {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+          "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11705446243286133,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "273471a779e3d86447cab1f67bd3883f",
+        "occurredAt": "2026-10-20T19:11:55.326597593Z",
+        "payload": {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+          "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "41ffe261682b563a1fc3da6083ab7737",
+        "occurredAt": "2026-10-20T19:11:55.329744343Z",
+        "payload": {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+          "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "ee01b98e0d935b7efc11cc0b5d32b2d8",
+        "occurredAt": "2026-10-20T19:11:55.33247001Z",
+        "payload": {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+          "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "a221d5bd986b743737d04aa815f37558",
+        "occurredAt": "2026-10-20T19:11:55.445838968Z",
+        "payload": {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+          "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+          "failureReason": "",
+          "runtimeSeconds": 0.12303304672241211,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "e97d22b1caa25a1fb97480e0d3e65df9",
+        "occurredAt": "2026-10-20T19:11:55.449622093Z",
+        "payload": {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+          "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+          "failureReason": "",
+          "runtimeSeconds": 0.12416863441467285,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "978aadefcfa4d001dcd8d3add2e00395",
+        "occurredAt": "2026-10-20T19:11:55.453264635Z",
+        "payload": {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+          "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+          "failureReason": "",
+          "runtimeSeconds": 0.1282179355621338,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-combine",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "b660d2dae944c3f8379c6b1cdd23fdad",
+        "occurredAt": "2026-10-20T19:11:57.349092136Z",
+        "payload": {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+          "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-combine",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "a48edb339f64c568a66e0407ba82b2e0",
+        "occurredAt": "2026-10-20T19:11:57.462122011Z",
+        "payload": {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+          "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11192822456359863,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "b578c9c6b0a682bf6d53fa280375d9e5",
+        "occurredAt": "2026-10-20T19:11:59.335617012Z",
+        "payload": {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+          "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "eacaa952ec8d7e73ca290d7c9d3e1fad",
+        "occurredAt": "2026-10-20T19:11:59.404550928Z",
+        "payload": {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+          "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+          "failureReason": "",
+          "runtimeSeconds": 0.10758376121520996,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-publish",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "d3286df6a8f8b2e23ea2337f16c5d46a",
+        "occurredAt": "2026-10-20T19:12:01.338858554Z",
+        "payload": {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-publish",
+          "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-publish",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "7e9c76ae08293d6c6643104f46171e2c",
+        "occurredAt": "2026-10-20T19:12:01.408361596Z",
+        "payload": {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-publish",
+          "executionRunId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+          "failureReason": "",
+          "runtimeSeconds": 0.10509371757507324,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.completed",
+        "id": "7040d7b18fe8eb1c037af796501ebcd1",
+        "occurredAt": "2026-10-20T19:12:01.411083929Z",
+        "payload": {
+          "cost": 0,
+          "makespanSeconds": 7.502244234085083
+        }
+      }
+    ],
+    "handles": [
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+        "artifacts": {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:f81118f52fede0cd4fcba9aca11e0f6501043117691d74ac128e21d004cb116f",
+              "modifiedUnixNano": 1792523516243754000,
+              "path": "stage-combine.json",
+              "sizeBytes": 1973
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:f81118f52fede0cd4fcba9aca11e0f6501043117691d74ac128e21d004cb116f",
+              "modifiedUnixNano": 1792523516243754000,
+              "path": "stage-combine.json",
+              "sizeBytes": 1973
+            },
+            {
+              "checksum": "sha256:8860a0787d7fe3a7e684f0f355c1e900f2e23af042815b9498869876ea1154ed",
+              "modifiedUnixNano": 1792523515671754000,
+              "path": "stage-predict-a.json",
+              "sizeBytes": 1741
+            },
+            {
+              "checksum": "sha256:21a257b0379cfa614ff868423c1ed74bd542d0fcf4ed2b1be8c879c179f6f280",
+              "modifiedUnixNano": 1792523515798754000,
+              "path": "stage-predict-b.json",
+              "sizeBytes": 1743
+            },
+            {
+              "checksum": "sha256:f5762aace0319c99b31b79b64249e8c8c43612faf2c5bf153ecc793dbeb85203",
+              "modifiedUnixNano": 1792523515937754000,
+              "path": "stage-predict-c.json",
+              "sizeBytes": 1743
+            },
+            {
+              "checksum": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "modifiedUnixNano": 1792523515671754000,
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ],
+          "finishedAt": 1792523516.2510438,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:8860a0787d7fe3a7e684f0f355c1e900f2e23af042815b9498869876ea1154ed",
+              "modifiedUnixNano": 1792523515671754000,
+              "path": "stage-predict-a.json",
+              "sizeBytes": 1741
+            },
+            {
+              "checksum": "sha256:21a257b0379cfa614ff868423c1ed74bd542d0fcf4ed2b1be8c879c179f6f280",
+              "modifiedUnixNano": 1792523515798754000,
+              "path": "stage-predict-b.json",
+              "sizeBytes": 1743
+            },
+            {
+              "checksum": "sha256:f5762aace0319c99b31b79b64249e8c8c43612faf2c5bf153ecc793dbeb85203",
+              "modifiedUnixNano": 1792523515937754000,
+              "path": "stage-predict-c.json",
+              "sizeBytes": 1743
+            },
+            {
+              "checksum": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "modifiedUnixNano": 1792523515671754000,
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11192822456359863,
+              "finishedAt": 1792523516.2510438,
+              "phase": "execution",
+              "startedAt": 1792523516.1391156,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-combine",
+          "runId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+          "runtime": "showcase-model-ensemble-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523516.1391156,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 5,
+            "initialFiles": 4,
+            "modifiedFiles": 0,
+            "outputBytes": 1973
+          }
+        },
+        "exitCode": 0,
+        "externalId": "c2fc7795e1a441eed2b2e0794f5060762487f0ef97b4066a4e3b138d5628635b",
+        "finishedAt": 1792523516.2510438,
+        "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-combine",
+        "log": "{\"activity\": \"combine\", \"status\": \"success\", \"resultKeys\": [\"models\", \"predictions\", \"targets\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-model-ensemble-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-combine",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523516.1391208,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-combine",
+          "submittedAt": 1792523516.1391156
+        },
+        "resourceId": "showcase-model-ensemble-local-docker",
+        "runId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "runtimeId": "showcase-model-ensemble-local",
+        "startedAt": 1792523516.1391156,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+        "artifacts": {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:09979261690a3bd3daa966c0233d04c80cc9dff73b49b6199ca33fce58d4a74a",
+              "modifiedUnixNano": 1792523517868754000,
+              "path": "stage-evaluate.json",
+              "sizeBytes": 2015
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:f81118f52fede0cd4fcba9aca11e0f6501043117691d74ac128e21d004cb116f",
+              "modifiedUnixNano": 1792523517617754000,
+              "path": "stage-combine.json",
+              "sizeBytes": 1973
+            },
+            {
+              "checksum": "sha256:09979261690a3bd3daa966c0233d04c80cc9dff73b49b6199ca33fce58d4a74a",
+              "modifiedUnixNano": 1792523517868754000,
+              "path": "stage-evaluate.json",
+              "sizeBytes": 2015
+            },
+            {
+              "checksum": "sha256:8860a0787d7fe3a7e684f0f355c1e900f2e23af042815b9498869876ea1154ed",
+              "modifiedUnixNano": 1792523517617754000,
+              "path": "stage-predict-a.json",
+              "sizeBytes": 1741
+            },
+            {
+              "checksum": "sha256:21a257b0379cfa614ff868423c1ed74bd542d0fcf4ed2b1be8c879c179f6f280",
+              "modifiedUnixNano": 1792523517617754000,
+              "path": "stage-predict-b.json",
+              "sizeBytes": 1743
+            },
+            {
+              "checksum": "sha256:f5762aace0319c99b31b79b64249e8c8c43612faf2c5bf153ecc793dbeb85203",
+              "modifiedUnixNano": 1792523517617754000,
+              "path": "stage-predict-c.json",
+              "sizeBytes": 1743
+            },
+            {
+              "checksum": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "modifiedUnixNano": 1792523517617754000,
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ],
+          "finishedAt": 1792523517.875672,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:f81118f52fede0cd4fcba9aca11e0f6501043117691d74ac128e21d004cb116f",
+              "modifiedUnixNano": 1792523517617754000,
+              "path": "stage-combine.json",
+              "sizeBytes": 1973
+            },
+            {
+              "checksum": "sha256:8860a0787d7fe3a7e684f0f355c1e900f2e23af042815b9498869876ea1154ed",
+              "modifiedUnixNano": 1792523517617754000,
+              "path": "stage-predict-a.json",
+              "sizeBytes": 1741
+            },
+            {
+              "checksum": "sha256:21a257b0379cfa614ff868423c1ed74bd542d0fcf4ed2b1be8c879c179f6f280",
+              "modifiedUnixNano": 1792523517617754000,
+              "path": "stage-predict-b.json",
+              "sizeBytes": 1743
+            },
+            {
+              "checksum": "sha256:f5762aace0319c99b31b79b64249e8c8c43612faf2c5bf153ecc793dbeb85203",
+              "modifiedUnixNano": 1792523517617754000,
+              "path": "stage-predict-c.json",
+              "sizeBytes": 1743
+            },
+            {
+              "checksum": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "modifiedUnixNano": 1792523517617754000,
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.10758376121520996,
+              "finishedAt": 1792523517.875672,
+              "phase": "execution",
+              "startedAt": 1792523517.7680883,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+          "runId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+          "runtime": "showcase-model-ensemble-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523517.7680883,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 6,
+            "initialFiles": 5,
+            "modifiedFiles": 0,
+            "outputBytes": 2015
+          }
+        },
+        "exitCode": 0,
+        "externalId": "339d7e352ff21a9a07bf2da7e278198d72943c9793de763e95443487036bd325",
+        "finishedAt": 1792523517.875672,
+        "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+        "log": "{\"activity\": \"evaluate\", \"status\": \"success\", \"resultKeys\": [\"models\", \"predictions\", \"targets\", \"metrics\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-model-ensemble-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523517.7681,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+          "submittedAt": 1792523517.7680883
+        },
+        "resourceId": "showcase-model-ensemble-local-docker",
+        "runId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "runtimeId": "showcase-model-ensemble-local",
+        "startedAt": 1792523517.7680883,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+        "artifacts": {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:8860a0787d7fe3a7e684f0f355c1e900f2e23af042815b9498869876ea1154ed",
+              "modifiedUnixNano": 1792523513887754000,
+              "path": "stage-predict-a.json",
+              "sizeBytes": 1741
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:8860a0787d7fe3a7e684f0f355c1e900f2e23af042815b9498869876ea1154ed",
+              "modifiedUnixNano": 1792523513887754000,
+              "path": "stage-predict-a.json",
+              "sizeBytes": 1741
+            },
+            {
+              "checksum": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "modifiedUnixNano": 1792523513529754000,
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ],
+          "finishedAt": 1792523513.8947005,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "modifiedUnixNano": 1792523513529754000,
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.1282179355621338,
+              "finishedAt": 1792523513.8947005,
+              "phase": "execution",
+              "startedAt": 1792523513.7664826,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+          "runId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+          "runtime": "showcase-model-ensemble-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523513.7664826,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 1741
+          }
+        },
+        "exitCode": 0,
+        "externalId": "b1e00791e5c69858f24430f0448a511317dc52e97ff8c6762442e47f1c6b1d69",
+        "finishedAt": 1792523513.8947005,
+        "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+        "log": "{\"activity\": \"predict-a\", \"status\": \"success\", \"resultKeys\": [\"model\", \"predictions\", \"targets\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-model-ensemble-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523513.766488,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+          "submittedAt": 1792523513.7664826
+        },
+        "resourceId": "showcase-model-ensemble-local-docker",
+        "runId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "runtimeId": "showcase-model-ensemble-local",
+        "startedAt": 1792523513.7664826,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+        "artifacts": {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:21a257b0379cfa614ff868423c1ed74bd542d0fcf4ed2b1be8c879c179f6f280",
+              "modifiedUnixNano": 1792523513810754000,
+              "path": "stage-predict-b.json",
+              "sizeBytes": 1743
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:21a257b0379cfa614ff868423c1ed74bd542d0fcf4ed2b1be8c879c179f6f280",
+              "modifiedUnixNano": 1792523513810754000,
+              "path": "stage-predict-b.json",
+              "sizeBytes": 1743
+            },
+            {
+              "checksum": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "modifiedUnixNano": 1792523513506754000,
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ],
+          "finishedAt": 1792523513.8159401,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "modifiedUnixNano": 1792523513506754000,
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.12303304672241211,
+              "finishedAt": 1792523513.8159401,
+              "phase": "execution",
+              "startedAt": 1792523513.692907,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+          "runId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+          "runtime": "showcase-model-ensemble-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523513.692907,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 1743
+          }
+        },
+        "exitCode": 0,
+        "externalId": "b5b9dd2caee450163be48647ad940b37eda8e725f1bc9621f1930303105ba5f2",
+        "finishedAt": 1792523513.8159401,
+        "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+        "log": "{\"activity\": \"predict-b\", \"status\": \"success\", \"resultKeys\": [\"model\", \"predictions\", \"targets\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-model-ensemble-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523513.6929119,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+          "submittedAt": 1792523513.692907
+        },
+        "resourceId": "showcase-model-ensemble-local-docker",
+        "runId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "runtimeId": "showcase-model-ensemble-local",
+        "startedAt": 1792523513.692907,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+        "artifacts": {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:f5762aace0319c99b31b79b64249e8c8c43612faf2c5bf153ecc793dbeb85203",
+              "modifiedUnixNano": 1792523513900754000,
+              "path": "stage-predict-c.json",
+              "sizeBytes": 1743
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:f5762aace0319c99b31b79b64249e8c8c43612faf2c5bf153ecc793dbeb85203",
+              "modifiedUnixNano": 1792523513900754000,
+              "path": "stage-predict-c.json",
+              "sizeBytes": 1743
+            },
+            {
+              "checksum": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "modifiedUnixNano": 1792523513528754000,
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ],
+          "finishedAt": 1792523513.906457,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "modifiedUnixNano": 1792523513528754000,
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.12416863441467285,
+              "finishedAt": 1792523513.906457,
+              "phase": "execution",
+              "startedAt": 1792523513.7822883,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+          "runId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+          "runtime": "showcase-model-ensemble-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523513.7822883,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 1743
+          }
+        },
+        "exitCode": 0,
+        "externalId": "aad1fdb0f5be5338d35570998d9dec2936dcd1c785a13128832a45bfa21d3c2d",
+        "finishedAt": 1792523513.906457,
+        "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+        "log": "{\"activity\": \"predict-c\", \"status\": \"success\", \"resultKeys\": [\"model\", \"predictions\", \"targets\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-model-ensemble-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523513.7822938,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+          "submittedAt": 1792523513.7822883
+        },
+        "resourceId": "showcase-model-ensemble-local-docker",
+        "runId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "runtimeId": "showcase-model-ensemble-local",
+        "startedAt": 1792523513.7822883,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+        "artifacts": {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "modifiedUnixNano": 1792523512395754000,
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "modifiedUnixNano": 1792523512395754000,
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ],
+          "finishedAt": 1792523512.4027383,
+          "phases": [
+            {
+              "durationSeconds": 0.11705446243286133,
+              "finishedAt": 1792523512.4027383,
+              "phase": "execution",
+              "startedAt": 1792523512.2856839,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+          "runId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+          "runtime": "showcase-model-ensemble-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523512.2856839,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 1,
+            "initialFiles": 0,
+            "modifiedFiles": 0,
+            "outputBytes": 3827
+          }
+        },
+        "exitCode": 0,
+        "externalId": "1d6882f3ba73be04cd82b8e15e8d7acfc7f199ed2c8458c90ada5bbde92b2d49",
+        "finishedAt": 1792523512.4027383,
+        "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+        "log": "{\"activity\": \"prepare-input\", \"status\": \"success\", \"resultKeys\": [\"training\", \"validation\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-model-ensemble-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523512.2856894,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+          "submittedAt": 1792523512.2856839
+        },
+        "resourceId": "showcase-model-ensemble-local-docker",
+        "runId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "runtimeId": "showcase-model-ensemble-local",
+        "startedAt": 1792523512.2856839,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-publish",
+        "artifacts": {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-publish",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:b4c56f0909cc9960dfd19f645b759e5d9a519b2dfecc332ef6e7d490e01187a3",
+              "modifiedUnixNano": 1792523519782754000,
+              "path": "ensemble.pkl",
+              "sizeBytes": 137
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:67d46dd70e183dd36cf9559f91eaf7b5b069da4363ae11f2300ad471ed30ad1f",
+              "modifiedUnixNano": 1792523519782754000,
+              "path": "metrics.json",
+              "sizeBytes": 49
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:d3b2cb3e83de4a8ceab8baeebd993e645e5df9444acbf0b4d1ccd06f05d9d2b7",
+              "modifiedUnixNano": 1792523519782754000,
+              "path": "stage-publish.json",
+              "sizeBytes": 396
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:b4c56f0909cc9960dfd19f645b759e5d9a519b2dfecc332ef6e7d490e01187a3",
+              "modifiedUnixNano": 1792523519782754000,
+              "path": "ensemble.pkl",
+              "sizeBytes": 137
+            },
+            {
+              "checksum": "sha256:67d46dd70e183dd36cf9559f91eaf7b5b069da4363ae11f2300ad471ed30ad1f",
+              "modifiedUnixNano": 1792523519782754000,
+              "path": "metrics.json",
+              "sizeBytes": 49
+            },
+            {
+              "checksum": "sha256:f81118f52fede0cd4fcba9aca11e0f6501043117691d74ac128e21d004cb116f",
+              "modifiedUnixNano": 1792523519507754000,
+              "path": "stage-combine.json",
+              "sizeBytes": 1973
+            },
+            {
+              "checksum": "sha256:09979261690a3bd3daa966c0233d04c80cc9dff73b49b6199ca33fce58d4a74a",
+              "modifiedUnixNano": 1792523519507754000,
+              "path": "stage-evaluate.json",
+              "sizeBytes": 2015
+            },
+            {
+              "checksum": "sha256:8860a0787d7fe3a7e684f0f355c1e900f2e23af042815b9498869876ea1154ed",
+              "modifiedUnixNano": 1792523519507754000,
+              "path": "stage-predict-a.json",
+              "sizeBytes": 1741
+            },
+            {
+              "checksum": "sha256:21a257b0379cfa614ff868423c1ed74bd542d0fcf4ed2b1be8c879c179f6f280",
+              "modifiedUnixNano": 1792523519507754000,
+              "path": "stage-predict-b.json",
+              "sizeBytes": 1743
+            },
+            {
+              "checksum": "sha256:f5762aace0319c99b31b79b64249e8c8c43612faf2c5bf153ecc793dbeb85203",
+              "modifiedUnixNano": 1792523519507754000,
+              "path": "stage-predict-c.json",
+              "sizeBytes": 1743
+            },
+            {
+              "checksum": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "modifiedUnixNano": 1792523519507754000,
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            },
+            {
+              "checksum": "sha256:d3b2cb3e83de4a8ceab8baeebd993e645e5df9444acbf0b4d1ccd06f05d9d2b7",
+              "modifiedUnixNano": 1792523519782754000,
+              "path": "stage-publish.json",
+              "sizeBytes": 396
+            }
+          ],
+          "finishedAt": 1792523519.787928,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:f81118f52fede0cd4fcba9aca11e0f6501043117691d74ac128e21d004cb116f",
+              "modifiedUnixNano": 1792523519507754000,
+              "path": "stage-combine.json",
+              "sizeBytes": 1973
+            },
+            {
+              "checksum": "sha256:09979261690a3bd3daa966c0233d04c80cc9dff73b49b6199ca33fce58d4a74a",
+              "modifiedUnixNano": 1792523519507754000,
+              "path": "stage-evaluate.json",
+              "sizeBytes": 2015
+            },
+            {
+              "checksum": "sha256:8860a0787d7fe3a7e684f0f355c1e900f2e23af042815b9498869876ea1154ed",
+              "modifiedUnixNano": 1792523519507754000,
+              "path": "stage-predict-a.json",
+              "sizeBytes": 1741
+            },
+            {
+              "checksum": "sha256:21a257b0379cfa614ff868423c1ed74bd542d0fcf4ed2b1be8c879c179f6f280",
+              "modifiedUnixNano": 1792523519507754000,
+              "path": "stage-predict-b.json",
+              "sizeBytes": 1743
+            },
+            {
+              "checksum": "sha256:f5762aace0319c99b31b79b64249e8c8c43612faf2c5bf153ecc793dbeb85203",
+              "modifiedUnixNano": 1792523519507754000,
+              "path": "stage-predict-c.json",
+              "sizeBytes": 1743
+            },
+            {
+              "checksum": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "modifiedUnixNano": 1792523519507754000,
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.10509371757507324,
+              "finishedAt": 1792523519.787928,
+              "phase": "execution",
+              "startedAt": 1792523519.6828344,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-publish",
+          "runId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+          "runtime": "showcase-model-ensemble-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523519.6828344,
+          "summary": {
+            "createdFiles": 3,
+            "deletedFiles": 0,
+            "finalFiles": 9,
+            "initialFiles": 6,
+            "modifiedFiles": 0,
+            "outputBytes": 582
+          }
+        },
+        "exitCode": 0,
+        "externalId": "05345763b9d03605629622b9e8a064fe17a60bc19f52ba7f8e3e4f8c17f36516",
+        "finishedAt": 1792523519.787928,
+        "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-publish",
+        "log": "{\"activity\": \"publish\", \"status\": \"success\", \"resultKeys\": [\"rmse\", \"models\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-model-ensemble-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-publish",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523519.682841,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-publish",
+          "submittedAt": 1792523519.6828344
+        },
+        "resourceId": "showcase-model-ensemble-local-docker",
+        "runId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "runtimeId": "showcase-model-ensemble-local",
+        "startedAt": 1792523519.6828344,
+        "status": "completed"
+      }
+    ],
+    "infrastructureRuns": [],
+    "operationEvents": [],
+    "run": {
+      "activityCount": 7,
+      "breakdown": {
+        "computeSeconds": 0.8170797824859619,
+        "interferenceSeconds": 0,
+        "overheadSeconds": 0,
+        "queueSeconds": 0,
+        "transferSeconds": 1.9692394733428955
+      },
+      "completedActivityCount": 7,
+      "cost": 0,
+      "finishedAt": "2026-10-20T19:12:01Z",
+      "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+      "kind": "workflow",
+      "makespanSeconds": 7.502244234085083,
+      "mode": "real",
+      "schedulePlanId": "showcase-model-ensemble-local-68ef5b0c9f-manual-plan-20261020t191151.790863000",
+      "seed": 0,
+      "startedAt": "2026-10-20T19:11:52Z",
+      "status": "completed",
+      "title": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+      "transferredBytes": 44604
+    },
+    "timeline": {
+      "computeMakespanSeconds": 7.502244234085083,
+      "coveredWallSeconds": 2.3664519786834717,
+      "finishedAt": 1792523521,
+      "phases": [
+        {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+          "category": "resource-queue",
+          "durationSeconds": 0.1373603343963623,
+          "finishedAt": 1792523512.2856839,
+          "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-prepare-input:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523512.1483235,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+          "category": "runtime",
+          "durationSeconds": 0.11705446243286133,
+          "finishedAt": 1792523512.4027383,
+          "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-prepare-input:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523512.2856839,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+          "category": "resource-queue",
+          "durationSeconds": 0.009453296661376953,
+          "finishedAt": 1792523513.3916833,
+          "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-a:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523513.38223,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+          "category": "resource-queue",
+          "durationSeconds": 0.009578466415405273,
+          "finishedAt": 1792523513.3936822,
+          "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-b:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523513.3841038,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+          "category": "resource-queue",
+          "durationSeconds": 0.009917259216308594,
+          "finishedAt": 1792523513.3952663,
+          "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-c:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523513.385349,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.18161869049072266,
+          "finishedAt": 1792523513.573302,
+          "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-a:transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-predict-a-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523513.3916833,
+          "status": "completed",
+          "transferId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-a:transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-predict-a-0"
+        },
+        {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.15689349174499512,
+          "finishedAt": 1792523513.5505757,
+          "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-b:transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-predict-b-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523513.3936822,
+          "status": "completed",
+          "transferId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-b:transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-predict-b-0"
+        },
+        {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.17623162269592285,
+          "finishedAt": 1792523513.571498,
+          "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-c:transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-predict-c-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523513.3952663,
+          "status": "completed",
+          "transferId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-c:transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-predict-c-0"
+        },
+        {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+          "category": "launch",
+          "durationSeconds": 0.14233136177062988,
+          "finishedAt": 1792523513.692907,
+          "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-b:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523513.5505757,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+          "category": "launch",
+          "durationSeconds": 0.21079039573669434,
+          "finishedAt": 1792523513.7822883,
+          "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-c:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523513.571498,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+          "category": "launch",
+          "durationSeconds": 0.19318056106567383,
+          "finishedAt": 1792523513.7664826,
+          "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-a:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523513.573302,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+          "category": "runtime",
+          "durationSeconds": 0.12303304672241211,
+          "finishedAt": 1792523513.8159401,
+          "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-b:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523513.692907,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+          "category": "runtime",
+          "durationSeconds": 0.1282179355621338,
+          "finishedAt": 1792523513.8947005,
+          "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-a:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523513.7664826,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+          "category": "runtime",
+          "durationSeconds": 0.12416863441467285,
+          "finishedAt": 1792523513.906457,
+          "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-predict-c:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523513.7822883,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+          "category": "resource-queue",
+          "durationSeconds": 0.0052149295806884766,
+          "finishedAt": 1792523515.4601717,
+          "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-combine:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523515.4549568,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.259554386138916,
+          "finishedAt": 1792523515.719726,
+          "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-combine:transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-combine-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523515.4601717,
+          "status": "completed",
+          "transferId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-combine:transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-combine-0"
+        },
+        {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.3618643283843994,
+          "finishedAt": 1792523515.822036,
+          "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-combine:transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-combine-1",
+          "source": "transfer-observation",
+          "startedAt": 1792523515.4601717,
+          "status": "completed",
+          "transferId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-combine:transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-combine-1"
+        },
+        {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.5214664936065674,
+          "finishedAt": 1792523515.9816382,
+          "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-combine:transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-combine-2",
+          "source": "transfer-observation",
+          "startedAt": 1792523515.4601717,
+          "status": "completed",
+          "transferId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-combine:transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-combine-2"
+        },
+        {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+          "category": "launch",
+          "durationSeconds": 0.15747737884521484,
+          "finishedAt": 1792523516.1391156,
+          "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-combine:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523515.9816382,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+          "category": "runtime",
+          "durationSeconds": 0.11192822456359863,
+          "finishedAt": 1792523516.2510438,
+          "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-combine:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523516.1391156,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+          "category": "resource-queue",
+          "durationSeconds": 0.005426645278930664,
+          "finishedAt": 1792523517.4703727,
+          "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-evaluate:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523517.464946,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.17080187797546387,
+          "finishedAt": 1792523517.6411746,
+          "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-evaluate:transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-evaluate-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523517.4703727,
+          "status": "completed",
+          "transferId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-evaluate:transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-evaluate-0"
+        },
+        {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+          "category": "launch",
+          "durationSeconds": 0.12691378593444824,
+          "finishedAt": 1792523517.7680883,
+          "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-evaluate:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523517.6411746,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+          "category": "runtime",
+          "durationSeconds": 0.10758376121520996,
+          "finishedAt": 1792523517.875672,
+          "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-evaluate:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523517.7680883,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-publish",
+          "category": "resource-queue",
+          "durationSeconds": 0.0036454200744628906,
+          "finishedAt": 1792523519.4105763,
+          "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-publish:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523519.406931,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-publish",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.1408085823059082,
+          "finishedAt": 1792523519.551385,
+          "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-publish:transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-publish-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523519.4105763,
+          "status": "completed",
+          "transferId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-publish:transfer-workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-publish-0"
+        },
+        {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-publish",
+          "category": "launch",
+          "durationSeconds": 0.13144946098327637,
+          "finishedAt": 1792523519.6828344,
+          "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-publish:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523519.551385,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-ensemble-local-68ef5b0c9f-publish",
+          "category": "runtime",
+          "durationSeconds": 0.10509371757507324,
+          "finishedAt": 1792523519.787928,
+          "id": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000:showcase-model-ensemble-local-68ef5b0c9f-publish:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523519.6828344,
+          "status": "completed"
+        }
+      ],
+      "startedAt": 1792523512,
+      "totals": {
+        "destroySeconds": 0,
+        "executablePreparationSeconds": 0,
+        "launchSeconds": 0.9621429443359375,
+        "provisionSeconds": 0,
+        "resourceQueueSeconds": 0.18059635162353516,
+        "runtimeSeconds": 0.8170797824859619,
+        "startSeconds": 0,
+        "stopSeconds": 0,
+        "validationSeconds": 0,
+        "workspaceTransferSeconds": 1.9692394733428955
+      },
+      "unclassifiedWallSeconds": 6.633548021316528,
+      "wallSeconds": 9
+    },
+    "workspaceLeases": [
+      {
+        "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+        "id": "workspace-lease-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-combine-showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+        "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:11:57.643386344Z",
+        "runId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "workspaceId": "workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-combine"
+      },
+      {
+        "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-publish",
+        "id": "workspace-lease-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-evaluate-showcase-model-ensemble-local-68ef5b0c9f-publish",
+        "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:11:59.553112137Z",
+        "runId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "workspaceId": "workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-evaluate"
+      },
+      {
+        "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+        "id": "workspace-lease-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-predict-a-showcase-model-ensemble-local-68ef5b0c9f-combine",
+        "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:11:55.99266001Z",
+        "runId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "workspaceId": "workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-predict-a"
+      },
+      {
+        "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+        "id": "workspace-lease-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-predict-b-showcase-model-ensemble-local-68ef5b0c9f-combine",
+        "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:11:55.99266001Z",
+        "runId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "workspaceId": "workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-predict-b"
+      },
+      {
+        "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+        "id": "workspace-lease-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-predict-c-showcase-model-ensemble-local-68ef5b0c9f-combine",
+        "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:11:55.99266001Z",
+        "runId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "workspaceId": "workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-predict-c"
+      },
+      {
+        "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+        "id": "workspace-lease-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-prepare-input-showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+        "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:11:53.575936925Z",
+        "runId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "workspaceId": "workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-prepare-input"
+      },
+      {
+        "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+        "id": "workspace-lease-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-prepare-input-showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+        "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:11:53.552944134Z",
+        "runId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "workspaceId": "workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-prepare-input"
+      },
+      {
+        "consumerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+        "id": "workspace-lease-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-prepare-input-showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+        "producerActivityId": "showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:11:53.573157467Z",
+        "runId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "workspaceId": "workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-prepare-input"
+      }
+    ],
+    "workspaces": [
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-combine",
+        "createdAt": "2026-10-20T19:11:52.117210175Z",
+        "driver": "local",
+        "environmentId": "showcase-model-ensemble-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-combine",
+        "fileCount": 5,
+        "id": "workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-combine",
+        "inputBytes": 9054,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:f81118f52fede0cd4fcba9aca11e0f6501043117691d74ac128e21d004cb116f",
+              "path": "stage-combine.json",
+              "sizeBytes": 1973
+            },
+            {
+              "digest": "sha256:8860a0787d7fe3a7e684f0f355c1e900f2e23af042815b9498869876ea1154ed",
+              "path": "stage-predict-a.json",
+              "sizeBytes": 1741
+            },
+            {
+              "digest": "sha256:21a257b0379cfa614ff868423c1ed74bd542d0fcf4ed2b1be8c879c179f6f280",
+              "path": "stage-predict-b.json",
+              "sizeBytes": 1743
+            },
+            {
+              "digest": "sha256:f5762aace0319c99b31b79b64249e8c8c43612faf2c5bf153ecc793dbeb85203",
+              "path": "stage-predict-c.json",
+              "sizeBytes": 1743
+            },
+            {
+              "digest": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:8860a0787d7fe3a7e684f0f355c1e900f2e23af042815b9498869876ea1154ed",
+              "path": "stage-predict-a.json",
+              "sizeBytes": 1741
+            },
+            {
+              "digest": "sha256:21a257b0379cfa614ff868423c1ed74bd542d0fcf4ed2b1be8c879c179f6f280",
+              "path": "stage-predict-b.json",
+              "sizeBytes": 1743
+            },
+            {
+              "digest": "sha256:f5762aace0319c99b31b79b64249e8c8c43612faf2c5bf153ecc793dbeb85203",
+              "path": "stage-predict-c.json",
+              "sizeBytes": 1743
+            },
+            {
+              "digest": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:8860a0787d7fe3a7e684f0f355c1e900f2e23af042815b9498869876ea1154ed",
+              "path": "stage-predict-a.json",
+              "sizeBytes": 1741
+            },
+            {
+              "digest": "sha256:21a257b0379cfa614ff868423c1ed74bd542d0fcf4ed2b1be8c879c179f6f280",
+              "path": "stage-predict-b.json",
+              "sizeBytes": 1743
+            },
+            {
+              "digest": "sha256:f5762aace0319c99b31b79b64249e8c8c43612faf2c5bf153ecc793dbeb85203",
+              "path": "stage-predict-c.json",
+              "sizeBytes": 1743
+            },
+            {
+              "digest": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:f81118f52fede0cd4fcba9aca11e0f6501043117691d74ac128e21d004cb116f",
+              "path": "stage-combine.json",
+              "sizeBytes": 1973
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-combine",
+        "outputBytes": 1973,
+        "pinned": false,
+        "reclaimedBytes": 11027,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:11:57.647426886Z",
+        "resourceId": "showcase-model-ensemble-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "runtimeId": "showcase-model-ensemble-local",
+        "sealedAt": "2026-10-20T19:11:57.457320886Z",
+        "sizeBytes": 11027,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-combine"
+      },
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+        "createdAt": "2026-10-20T19:11:52.117210175Z",
+        "driver": "local",
+        "environmentId": "showcase-model-ensemble-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+        "fileCount": 6,
+        "id": "workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+        "inputBytes": 11027,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:f81118f52fede0cd4fcba9aca11e0f6501043117691d74ac128e21d004cb116f",
+              "path": "stage-combine.json",
+              "sizeBytes": 1973
+            },
+            {
+              "digest": "sha256:09979261690a3bd3daa966c0233d04c80cc9dff73b49b6199ca33fce58d4a74a",
+              "path": "stage-evaluate.json",
+              "sizeBytes": 2015
+            },
+            {
+              "digest": "sha256:8860a0787d7fe3a7e684f0f355c1e900f2e23af042815b9498869876ea1154ed",
+              "path": "stage-predict-a.json",
+              "sizeBytes": 1741
+            },
+            {
+              "digest": "sha256:21a257b0379cfa614ff868423c1ed74bd542d0fcf4ed2b1be8c879c179f6f280",
+              "path": "stage-predict-b.json",
+              "sizeBytes": 1743
+            },
+            {
+              "digest": "sha256:f5762aace0319c99b31b79b64249e8c8c43612faf2c5bf153ecc793dbeb85203",
+              "path": "stage-predict-c.json",
+              "sizeBytes": 1743
+            },
+            {
+              "digest": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:f81118f52fede0cd4fcba9aca11e0f6501043117691d74ac128e21d004cb116f",
+              "path": "stage-combine.json",
+              "sizeBytes": 1973
+            },
+            {
+              "digest": "sha256:8860a0787d7fe3a7e684f0f355c1e900f2e23af042815b9498869876ea1154ed",
+              "path": "stage-predict-a.json",
+              "sizeBytes": 1741
+            },
+            {
+              "digest": "sha256:21a257b0379cfa614ff868423c1ed74bd542d0fcf4ed2b1be8c879c179f6f280",
+              "path": "stage-predict-b.json",
+              "sizeBytes": 1743
+            },
+            {
+              "digest": "sha256:f5762aace0319c99b31b79b64249e8c8c43612faf2c5bf153ecc793dbeb85203",
+              "path": "stage-predict-c.json",
+              "sizeBytes": 1743
+            },
+            {
+              "digest": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:f81118f52fede0cd4fcba9aca11e0f6501043117691d74ac128e21d004cb116f",
+              "path": "stage-combine.json",
+              "sizeBytes": 1973
+            },
+            {
+              "digest": "sha256:8860a0787d7fe3a7e684f0f355c1e900f2e23af042815b9498869876ea1154ed",
+              "path": "stage-predict-a.json",
+              "sizeBytes": 1741
+            },
+            {
+              "digest": "sha256:21a257b0379cfa614ff868423c1ed74bd542d0fcf4ed2b1be8c879c179f6f280",
+              "path": "stage-predict-b.json",
+              "sizeBytes": 1743
+            },
+            {
+              "digest": "sha256:f5762aace0319c99b31b79b64249e8c8c43612faf2c5bf153ecc793dbeb85203",
+              "path": "stage-predict-c.json",
+              "sizeBytes": 1743
+            },
+            {
+              "digest": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:09979261690a3bd3daa966c0233d04c80cc9dff73b49b6199ca33fce58d4a74a",
+              "path": "stage-evaluate.json",
+              "sizeBytes": 2015
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-evaluate",
+        "outputBytes": 2015,
+        "pinned": false,
+        "reclaimedBytes": 13042,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:11:59.556831553Z",
+        "resourceId": "showcase-model-ensemble-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "runtimeId": "showcase-model-ensemble-local",
+        "sealedAt": "2026-10-20T19:11:59.40110022Z",
+        "sizeBytes": 13042,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-evaluate"
+      },
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+        "createdAt": "2026-10-20T19:11:52.117210175Z",
+        "driver": "local",
+        "environmentId": "showcase-model-ensemble-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+        "fileCount": 2,
+        "id": "workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+        "inputBytes": 3827,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:8860a0787d7fe3a7e684f0f355c1e900f2e23af042815b9498869876ea1154ed",
+              "path": "stage-predict-a.json",
+              "sizeBytes": 1741
+            },
+            {
+              "digest": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:8860a0787d7fe3a7e684f0f355c1e900f2e23af042815b9498869876ea1154ed",
+              "path": "stage-predict-a.json",
+              "sizeBytes": 1741
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-predict-a",
+        "outputBytes": 1741,
+        "pinned": false,
+        "reclaimedBytes": 5568,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:11:56.008232802Z",
+        "resourceId": "showcase-model-ensemble-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "runtimeId": "showcase-model-ensemble-local",
+        "sealedAt": "2026-10-20T19:11:55.451713968Z",
+        "sizeBytes": 5568,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-predict-a"
+      },
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+        "createdAt": "2026-10-20T19:11:52.117210175Z",
+        "driver": "local",
+        "environmentId": "showcase-model-ensemble-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+        "fileCount": 2,
+        "id": "workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+        "inputBytes": 3827,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:21a257b0379cfa614ff868423c1ed74bd542d0fcf4ed2b1be8c879c179f6f280",
+              "path": "stage-predict-b.json",
+              "sizeBytes": 1743
+            },
+            {
+              "digest": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:21a257b0379cfa614ff868423c1ed74bd542d0fcf4ed2b1be8c879c179f6f280",
+              "path": "stage-predict-b.json",
+              "sizeBytes": 1743
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-predict-b",
+        "outputBytes": 1743,
+        "pinned": false,
+        "reclaimedBytes": 5570,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:11:56.020691052Z",
+        "resourceId": "showcase-model-ensemble-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "runtimeId": "showcase-model-ensemble-local",
+        "sealedAt": "2026-10-20T19:11:55.443518426Z",
+        "sizeBytes": 5570,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-predict-b"
+      },
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+        "createdAt": "2026-10-20T19:11:52.117210175Z",
+        "driver": "local",
+        "environmentId": "showcase-model-ensemble-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+        "fileCount": 2,
+        "id": "workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+        "inputBytes": 3827,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:f5762aace0319c99b31b79b64249e8c8c43612faf2c5bf153ecc793dbeb85203",
+              "path": "stage-predict-c.json",
+              "sizeBytes": 1743
+            },
+            {
+              "digest": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:f5762aace0319c99b31b79b64249e8c8c43612faf2c5bf153ecc793dbeb85203",
+              "path": "stage-predict-c.json",
+              "sizeBytes": 1743
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-predict-c",
+        "outputBytes": 1743,
+        "pinned": false,
+        "reclaimedBytes": 5570,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:11:56.026343718Z",
+        "resourceId": "showcase-model-ensemble-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "runtimeId": "showcase-model-ensemble-local",
+        "sealedAt": "2026-10-20T19:11:55.447856468Z",
+        "sizeBytes": 5570,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-predict-c"
+      },
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+        "createdAt": "2026-10-20T19:11:52.117210175Z",
+        "driver": "local",
+        "environmentId": "showcase-model-ensemble-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+        "fileCount": 1,
+        "id": "workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+        "inputBytes": 0,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-prepare-input",
+        "outputBytes": 3827,
+        "pinned": false,
+        "reclaimedBytes": 3827,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:11:53.585234342Z",
+        "resourceId": "showcase-model-ensemble-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "runtimeId": "showcase-model-ensemble-local",
+        "sealedAt": "2026-10-20T19:11:53.37535405Z",
+        "sizeBytes": 3827,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-prepare-input"
+      },
+      {
+        "activityId": "showcase-model-ensemble-local-68ef5b0c9f-publish",
+        "createdAt": "2026-10-20T19:11:52.117210175Z",
+        "driver": "local",
+        "environmentId": "showcase-model-ensemble-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-publish",
+        "fileCount": 3,
+        "id": "workspace-showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000-showcase-model-ensemble-local-68ef5b0c9f-publish",
+        "inputBytes": 13042,
+        "isFinal": true,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:b4c56f0909cc9960dfd19f645b759e5d9a519b2dfecc332ef6e7d490e01187a3",
+              "path": "ensemble.pkl",
+              "sizeBytes": 137
+            },
+            {
+              "digest": "sha256:67d46dd70e183dd36cf9559f91eaf7b5b069da4363ae11f2300ad471ed30ad1f",
+              "path": "metrics.json",
+              "sizeBytes": 49
+            },
+            {
+              "digest": "sha256:f81118f52fede0cd4fcba9aca11e0f6501043117691d74ac128e21d004cb116f",
+              "path": "stage-combine.json",
+              "sizeBytes": 1973
+            },
+            {
+              "digest": "sha256:09979261690a3bd3daa966c0233d04c80cc9dff73b49b6199ca33fce58d4a74a",
+              "path": "stage-evaluate.json",
+              "sizeBytes": 2015
+            },
+            {
+              "digest": "sha256:8860a0787d7fe3a7e684f0f355c1e900f2e23af042815b9498869876ea1154ed",
+              "path": "stage-predict-a.json",
+              "sizeBytes": 1741
+            },
+            {
+              "digest": "sha256:21a257b0379cfa614ff868423c1ed74bd542d0fcf4ed2b1be8c879c179f6f280",
+              "path": "stage-predict-b.json",
+              "sizeBytes": 1743
+            },
+            {
+              "digest": "sha256:f5762aace0319c99b31b79b64249e8c8c43612faf2c5bf153ecc793dbeb85203",
+              "path": "stage-predict-c.json",
+              "sizeBytes": 1743
+            },
+            {
+              "digest": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            },
+            {
+              "digest": "sha256:d3b2cb3e83de4a8ceab8baeebd993e645e5df9444acbf0b4d1ccd06f05d9d2b7",
+              "path": "stage-publish.json",
+              "sizeBytes": 396
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:f81118f52fede0cd4fcba9aca11e0f6501043117691d74ac128e21d004cb116f",
+              "path": "stage-combine.json",
+              "sizeBytes": 1973
+            },
+            {
+              "digest": "sha256:09979261690a3bd3daa966c0233d04c80cc9dff73b49b6199ca33fce58d4a74a",
+              "path": "stage-evaluate.json",
+              "sizeBytes": 2015
+            },
+            {
+              "digest": "sha256:8860a0787d7fe3a7e684f0f355c1e900f2e23af042815b9498869876ea1154ed",
+              "path": "stage-predict-a.json",
+              "sizeBytes": 1741
+            },
+            {
+              "digest": "sha256:21a257b0379cfa614ff868423c1ed74bd542d0fcf4ed2b1be8c879c179f6f280",
+              "path": "stage-predict-b.json",
+              "sizeBytes": 1743
+            },
+            {
+              "digest": "sha256:f5762aace0319c99b31b79b64249e8c8c43612faf2c5bf153ecc793dbeb85203",
+              "path": "stage-predict-c.json",
+              "sizeBytes": 1743
+            },
+            {
+              "digest": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:f81118f52fede0cd4fcba9aca11e0f6501043117691d74ac128e21d004cb116f",
+              "path": "stage-combine.json",
+              "sizeBytes": 1973
+            },
+            {
+              "digest": "sha256:09979261690a3bd3daa966c0233d04c80cc9dff73b49b6199ca33fce58d4a74a",
+              "path": "stage-evaluate.json",
+              "sizeBytes": 2015
+            },
+            {
+              "digest": "sha256:8860a0787d7fe3a7e684f0f355c1e900f2e23af042815b9498869876ea1154ed",
+              "path": "stage-predict-a.json",
+              "sizeBytes": 1741
+            },
+            {
+              "digest": "sha256:21a257b0379cfa614ff868423c1ed74bd542d0fcf4ed2b1be8c879c179f6f280",
+              "path": "stage-predict-b.json",
+              "sizeBytes": 1743
+            },
+            {
+              "digest": "sha256:f5762aace0319c99b31b79b64249e8c8c43612faf2c5bf153ecc793dbeb85203",
+              "path": "stage-predict-c.json",
+              "sizeBytes": 1743
+            },
+            {
+              "digest": "sha256:d49a36180f457bc73f236cecf39f6c16a9511d1de23fa947b0a7f548bff7e601",
+              "path": "stage-prepare-input.json",
+              "sizeBytes": 3827
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:b4c56f0909cc9960dfd19f645b759e5d9a519b2dfecc332ef6e7d490e01187a3",
+              "path": "ensemble.pkl",
+              "sizeBytes": 137
+            },
+            {
+              "digest": "sha256:67d46dd70e183dd36cf9559f91eaf7b5b069da4363ae11f2300ad471ed30ad1f",
+              "path": "metrics.json",
+              "sizeBytes": 49
+            },
+            {
+              "digest": "sha256:d3b2cb3e83de4a8ceab8baeebd993e645e5df9444acbf0b4d1ccd06f05d9d2b7",
+              "path": "stage-publish.json",
+              "sizeBytes": 396
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-publish",
+        "outputBytes": 582,
+        "pinned": false,
+        "reclaimedBytes": 13042,
+        "releaseReason": "inherited inputs pruned",
+        "resourceId": "showcase-model-ensemble-local-docker",
+        "retention": "final",
+        "runId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+        "runtimeId": "showcase-model-ensemble-local",
+        "sealedAt": "2026-10-20T19:12:01.403686096Z",
+        "sizeBytes": 582,
+        "state": "sealed",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000/showcase-model-ensemble-local-68ef5b0c9f-publish"
+      }
+    ]
+  },
+  "runId": "showcase-model-ensemble-local-68ef5b0c9f-run-20261020t191151.795620000",
+  "status": "completed",
+  "workflowId": "showcase-model-ensemble-local-68ef5b0c9f"
+}

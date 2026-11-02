@@ -1,0 +1,1785 @@
+{
+  "schemaVersion": 1,
+  "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+  "activityFamilyTypeIds": {
+    "madd": "montage-reference-work-v1-madd",
+    "mbackground": "montage-reference-work-v1-mbackground",
+    "mbgmodel": "montage-reference-work-v1-mbgmodel",
+    "mconcatfit": "montage-reference-work-v1-mconcatfit",
+    "mdifffit": "montage-reference-work-v1-mdifffit",
+    "mimgtbl": "montage-reference-work-v1-mimgtbl",
+    "mproject": "montage-reference-work-v1-mproject",
+    "mviewer": "montage-reference-work-v1-mviewer"
+  },
+  "activityProfiles": [
+    {
+      "id": "montage-reference-work-v1-madd-montage-gcp-fog-e2-micro-01",
+      "activityTypeId": "montage-reference-work-v1-madd",
+      "resourceId": "montage-gcp-fog-e2-micro-01",
+      "runtimeSeconds": 0.9374836550818549,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 3,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.10642316606309679,
+          4.108689546585083
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-madd-montage-gcp-fog-e2-micro-02",
+      "activityTypeId": "montage-reference-work-v1-madd",
+      "resourceId": "montage-gcp-fog-e2-micro-02",
+      "runtimeSeconds": 0.9374836550818549,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 3,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.10642316606309679,
+          4.108689546585083
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-madd-montage-gcp-fog-e2-micro-03",
+      "activityTypeId": "montage-reference-work-v1-madd",
+      "resourceId": "montage-gcp-fog-e2-micro-03",
+      "runtimeSeconds": 0.9374836550818549,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 3,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.10642316606309679,
+          4.108689546585083
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-madd-montage-gcp-fog-e2-micro-04",
+      "activityTypeId": "montage-reference-work-v1-madd",
+      "resourceId": "montage-gcp-fog-e2-micro-04",
+      "runtimeSeconds": 0.9374836550818549,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 3,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.10642316606309679,
+          4.108689546585083
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-madd-montage-gcp-fog-e2-micro-05",
+      "activityTypeId": "montage-reference-work-v1-madd",
+      "resourceId": "montage-gcp-fog-e2-micro-05",
+      "runtimeSeconds": 0.9374836550818549,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 3,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.10642316606309679,
+          4.108689546585083
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-madd-montage-gcp-fog-e2-micro-06",
+      "activityTypeId": "montage-reference-work-v1-madd",
+      "resourceId": "montage-gcp-fog-e2-micro-06",
+      "runtimeSeconds": 0.9374836550818549,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 3,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.10642316606309679,
+          4.108689546585083
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-madd-montage-gcp-fog-e2-micro-07",
+      "activityTypeId": "montage-reference-work-v1-madd",
+      "resourceId": "montage-gcp-fog-e2-micro-07",
+      "runtimeSeconds": 0.9374836550818549,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 3,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.10642316606309679,
+          4.108689546585083
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-madd-montage-gcp-fog-e2-micro-08",
+      "activityTypeId": "montage-reference-work-v1-madd",
+      "resourceId": "montage-gcp-fog-e2-micro-08",
+      "runtimeSeconds": 0.9374836550818549,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 3,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.10642316606309679,
+          4.108689546585083
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-madd-montage-gcp-fog-e2-micro-09",
+      "activityTypeId": "montage-reference-work-v1-madd",
+      "resourceId": "montage-gcp-fog-e2-micro-09",
+      "runtimeSeconds": 0.9374836550818549,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 3,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.10642316606309679,
+          4.108689546585083
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-madd-montage-gcp-fog-e2-micro-10",
+      "activityTypeId": "montage-reference-work-v1-madd",
+      "resourceId": "montage-gcp-fog-e2-micro-10",
+      "runtimeSeconds": 0.9374836550818549,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 3,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.10642316606309679,
+          4.108689546585083
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mbackground-montage-gcp-e2-medium-1",
+      "activityTypeId": "montage-reference-work-v1-mbackground",
+      "resourceId": "montage-gcp-e2-medium-1",
+      "runtimeSeconds": 0.32499454332434613,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.02318926479505456,
+          0.6267998218536377
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mbackground-montage-gcp-e2-medium-2",
+      "activityTypeId": "montage-reference-work-v1-mbackground",
+      "resourceId": "montage-gcp-e2-medium-2",
+      "runtimeSeconds": 0.32499454332434613,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.02318926479505456,
+          0.6267998218536377
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mbackground-montage-gcp-fog-e2-micro-01",
+      "activityTypeId": "montage-reference-work-v1-mbackground",
+      "resourceId": "montage-gcp-fog-e2-micro-01",
+      "runtimeSeconds": 0.13403182718488904,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 8,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.09645940860112508,
+          13.19267725944519
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mbackground-montage-gcp-fog-e2-micro-02",
+      "activityTypeId": "montage-reference-work-v1-mbackground",
+      "resourceId": "montage-gcp-fog-e2-micro-02",
+      "runtimeSeconds": 0.13403182718488904,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 8,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.09645940860112508,
+          13.19267725944519
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mbackground-montage-gcp-fog-e2-micro-03",
+      "activityTypeId": "montage-reference-work-v1-mbackground",
+      "resourceId": "montage-gcp-fog-e2-micro-03",
+      "runtimeSeconds": 0.13403182718488904,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 8,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.09645940860112508,
+          13.19267725944519
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mbackground-montage-gcp-fog-e2-micro-04",
+      "activityTypeId": "montage-reference-work-v1-mbackground",
+      "resourceId": "montage-gcp-fog-e2-micro-04",
+      "runtimeSeconds": 0.13403182718488904,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 8,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.09645940860112508,
+          13.19267725944519
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mbackground-montage-gcp-fog-e2-micro-05",
+      "activityTypeId": "montage-reference-work-v1-mbackground",
+      "resourceId": "montage-gcp-fog-e2-micro-05",
+      "runtimeSeconds": 0.13403182718488904,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 8,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.09645940860112508,
+          13.19267725944519
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mbackground-montage-gcp-fog-e2-micro-06",
+      "activityTypeId": "montage-reference-work-v1-mbackground",
+      "resourceId": "montage-gcp-fog-e2-micro-06",
+      "runtimeSeconds": 0.13403182718488904,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 8,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.09645940860112508,
+          13.19267725944519
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mbackground-montage-gcp-fog-e2-micro-07",
+      "activityTypeId": "montage-reference-work-v1-mbackground",
+      "resourceId": "montage-gcp-fog-e2-micro-07",
+      "runtimeSeconds": 0.13403182718488904,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 8,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.09645940860112508,
+          13.19267725944519
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mbackground-montage-gcp-fog-e2-micro-08",
+      "activityTypeId": "montage-reference-work-v1-mbackground",
+      "resourceId": "montage-gcp-fog-e2-micro-08",
+      "runtimeSeconds": 0.13403182718488904,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 8,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.09645940860112508,
+          13.19267725944519
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mbackground-montage-gcp-fog-e2-micro-09",
+      "activityTypeId": "montage-reference-work-v1-mbackground",
+      "resourceId": "montage-gcp-fog-e2-micro-09",
+      "runtimeSeconds": 0.13403182718488904,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 8,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.09645940860112508,
+          13.19267725944519
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mbackground-montage-gcp-fog-e2-micro-10",
+      "activityTypeId": "montage-reference-work-v1-mbackground",
+      "resourceId": "montage-gcp-fog-e2-micro-10",
+      "runtimeSeconds": 0.13403182718488904,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 8,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.09645940860112508,
+          13.19267725944519
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mbackground-plafrim-execution-ssh-node-bora001",
+      "activityTypeId": "montage-reference-work-v1-mbackground",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "runtimeSeconds": 2.042281486093998,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.1621987372636795,
+          3.9223642349243164
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 2
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mbackground-plafrim-execution-ssh-node-diablo03",
+      "activityTypeId": "montage-reference-work-v1-mbackground",
+      "resourceId": "plafrim-execution-ssh-node-diablo03",
+      "runtimeSeconds": 2.042281486093998,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.1621987372636795,
+          3.9223642349243164
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 2
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mbgmodel-montage-gcp-fog-e2-micro-01",
+      "activityTypeId": "montage-reference-work-v1-mbgmodel",
+      "resourceId": "montage-gcp-fog-e2-micro-01",
+      "runtimeSeconds": 0.07053212135557144,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.05229279730055067,
+          0.08877144541059222
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mbgmodel-montage-gcp-fog-e2-micro-02",
+      "activityTypeId": "montage-reference-work-v1-mbgmodel",
+      "resourceId": "montage-gcp-fog-e2-micro-02",
+      "runtimeSeconds": 0.07053212135557144,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.05229279730055067,
+          0.08877144541059222
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mbgmodel-montage-gcp-fog-e2-micro-03",
+      "activityTypeId": "montage-reference-work-v1-mbgmodel",
+      "resourceId": "montage-gcp-fog-e2-micro-03",
+      "runtimeSeconds": 0.07053212135557144,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.05229279730055067,
+          0.08877144541059222
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mbgmodel-montage-gcp-fog-e2-micro-04",
+      "activityTypeId": "montage-reference-work-v1-mbgmodel",
+      "resourceId": "montage-gcp-fog-e2-micro-04",
+      "runtimeSeconds": 0.07053212135557144,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.05229279730055067,
+          0.08877144541059222
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mbgmodel-montage-gcp-fog-e2-micro-05",
+      "activityTypeId": "montage-reference-work-v1-mbgmodel",
+      "resourceId": "montage-gcp-fog-e2-micro-05",
+      "runtimeSeconds": 0.07053212135557144,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.05229279730055067,
+          0.08877144541059222
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mbgmodel-montage-gcp-fog-e2-micro-06",
+      "activityTypeId": "montage-reference-work-v1-mbgmodel",
+      "resourceId": "montage-gcp-fog-e2-micro-06",
+      "runtimeSeconds": 0.07053212135557144,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.05229279730055067,
+          0.08877144541059222
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mbgmodel-montage-gcp-fog-e2-micro-07",
+      "activityTypeId": "montage-reference-work-v1-mbgmodel",
+      "resourceId": "montage-gcp-fog-e2-micro-07",
+      "runtimeSeconds": 0.07053212135557144,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.05229279730055067,
+          0.08877144541059222
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mbgmodel-montage-gcp-fog-e2-micro-08",
+      "activityTypeId": "montage-reference-work-v1-mbgmodel",
+      "resourceId": "montage-gcp-fog-e2-micro-08",
+      "runtimeSeconds": 0.07053212135557144,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.05229279730055067,
+          0.08877144541059222
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mbgmodel-montage-gcp-fog-e2-micro-09",
+      "activityTypeId": "montage-reference-work-v1-mbgmodel",
+      "resourceId": "montage-gcp-fog-e2-micro-09",
+      "runtimeSeconds": 0.07053212135557144,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.05229279730055067,
+          0.08877144541059222
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mbgmodel-montage-gcp-fog-e2-micro-10",
+      "activityTypeId": "montage-reference-work-v1-mbgmodel",
+      "resourceId": "montage-gcp-fog-e2-micro-10",
+      "runtimeSeconds": 0.07053212135557144,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.05229279730055067,
+          0.08877144541059222
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mbgmodel-montage-gcp-e2-medium-1",
+      "activityTypeId": "montage-reference-work-v1-mbgmodel",
+      "resourceId": "montage-gcp-e2-medium-1",
+      "runtimeSeconds": 0.025992941856384278,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 1,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.025992941856384278,
+          0.025992941856384278
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mbgmodel-montage-gcp-e2-medium-2",
+      "activityTypeId": "montage-reference-work-v1-mbgmodel",
+      "resourceId": "montage-gcp-e2-medium-2",
+      "runtimeSeconds": 0.025992941856384278,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 1,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.025992941856384278,
+          0.025992941856384278
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mconcatfit-plafrim-execution-ssh-node-bora001",
+      "activityTypeId": "montage-reference-work-v1-mconcatfit",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "runtimeSeconds": 0.16663997313555548,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 1,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.16663997313555548,
+          0.16663997313555548
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 1
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mconcatfit-plafrim-execution-ssh-node-diablo03",
+      "activityTypeId": "montage-reference-work-v1-mconcatfit",
+      "resourceId": "plafrim-execution-ssh-node-diablo03",
+      "runtimeSeconds": 0.16663997313555548,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 1,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.16663997313555548,
+          0.16663997313555548
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 1
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mconcatfit-montage-gcp-fog-e2-micro-01",
+      "activityTypeId": "montage-reference-work-v1-mconcatfit",
+      "resourceId": "montage-gcp-fog-e2-micro-01",
+      "runtimeSeconds": 0.5174553818172878,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.5118624687194824,
+          0.5230482949150933
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mconcatfit-montage-gcp-fog-e2-micro-02",
+      "activityTypeId": "montage-reference-work-v1-mconcatfit",
+      "resourceId": "montage-gcp-fog-e2-micro-02",
+      "runtimeSeconds": 0.5174553818172878,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.5118624687194824,
+          0.5230482949150933
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mconcatfit-montage-gcp-fog-e2-micro-03",
+      "activityTypeId": "montage-reference-work-v1-mconcatfit",
+      "resourceId": "montage-gcp-fog-e2-micro-03",
+      "runtimeSeconds": 0.5174553818172878,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.5118624687194824,
+          0.5230482949150933
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mconcatfit-montage-gcp-fog-e2-micro-04",
+      "activityTypeId": "montage-reference-work-v1-mconcatfit",
+      "resourceId": "montage-gcp-fog-e2-micro-04",
+      "runtimeSeconds": 0.5174553818172878,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.5118624687194824,
+          0.5230482949150933
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mconcatfit-montage-gcp-fog-e2-micro-05",
+      "activityTypeId": "montage-reference-work-v1-mconcatfit",
+      "resourceId": "montage-gcp-fog-e2-micro-05",
+      "runtimeSeconds": 0.5174553818172878,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.5118624687194824,
+          0.5230482949150933
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mconcatfit-montage-gcp-fog-e2-micro-06",
+      "activityTypeId": "montage-reference-work-v1-mconcatfit",
+      "resourceId": "montage-gcp-fog-e2-micro-06",
+      "runtimeSeconds": 0.5174553818172878,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.5118624687194824,
+          0.5230482949150933
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mconcatfit-montage-gcp-fog-e2-micro-07",
+      "activityTypeId": "montage-reference-work-v1-mconcatfit",
+      "resourceId": "montage-gcp-fog-e2-micro-07",
+      "runtimeSeconds": 0.5174553818172878,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.5118624687194824,
+          0.5230482949150933
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mconcatfit-montage-gcp-fog-e2-micro-08",
+      "activityTypeId": "montage-reference-work-v1-mconcatfit",
+      "resourceId": "montage-gcp-fog-e2-micro-08",
+      "runtimeSeconds": 0.5174553818172878,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.5118624687194824,
+          0.5230482949150933
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mconcatfit-montage-gcp-fog-e2-micro-09",
+      "activityTypeId": "montage-reference-work-v1-mconcatfit",
+      "resourceId": "montage-gcp-fog-e2-micro-09",
+      "runtimeSeconds": 0.5174553818172878,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.5118624687194824,
+          0.5230482949150933
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mconcatfit-montage-gcp-fog-e2-micro-10",
+      "activityTypeId": "montage-reference-work-v1-mconcatfit",
+      "resourceId": "montage-gcp-fog-e2-micro-10",
+      "runtimeSeconds": 0.5174553818172878,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.5118624687194824,
+          0.5230482949150933
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mdifffit-montage-gcp-fog-e2-micro-01",
+      "activityTypeId": "montage-reference-work-v1-mdifffit",
+      "resourceId": "montage-gcp-fog-e2-micro-01",
+      "runtimeSeconds": 0.5160782317320506,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 14,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.02842045823733012,
+          2.6107197046279906
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mdifffit-montage-gcp-fog-e2-micro-02",
+      "activityTypeId": "montage-reference-work-v1-mdifffit",
+      "resourceId": "montage-gcp-fog-e2-micro-02",
+      "runtimeSeconds": 0.5160782317320506,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 14,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.02842045823733012,
+          2.6107197046279906
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mdifffit-montage-gcp-fog-e2-micro-03",
+      "activityTypeId": "montage-reference-work-v1-mdifffit",
+      "resourceId": "montage-gcp-fog-e2-micro-03",
+      "runtimeSeconds": 0.5160782317320506,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 14,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.02842045823733012,
+          2.6107197046279906
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mdifffit-montage-gcp-fog-e2-micro-04",
+      "activityTypeId": "montage-reference-work-v1-mdifffit",
+      "resourceId": "montage-gcp-fog-e2-micro-04",
+      "runtimeSeconds": 0.5160782317320506,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 14,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.02842045823733012,
+          2.6107197046279906
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mdifffit-montage-gcp-fog-e2-micro-05",
+      "activityTypeId": "montage-reference-work-v1-mdifffit",
+      "resourceId": "montage-gcp-fog-e2-micro-05",
+      "runtimeSeconds": 0.5160782317320506,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 14,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.02842045823733012,
+          2.6107197046279906
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mdifffit-montage-gcp-fog-e2-micro-06",
+      "activityTypeId": "montage-reference-work-v1-mdifffit",
+      "resourceId": "montage-gcp-fog-e2-micro-06",
+      "runtimeSeconds": 0.5160782317320506,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 14,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.02842045823733012,
+          2.6107197046279906
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mdifffit-montage-gcp-fog-e2-micro-07",
+      "activityTypeId": "montage-reference-work-v1-mdifffit",
+      "resourceId": "montage-gcp-fog-e2-micro-07",
+      "runtimeSeconds": 0.5160782317320506,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 14,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.02842045823733012,
+          2.6107197046279906
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mdifffit-montage-gcp-fog-e2-micro-08",
+      "activityTypeId": "montage-reference-work-v1-mdifffit",
+      "resourceId": "montage-gcp-fog-e2-micro-08",
+      "runtimeSeconds": 0.5160782317320506,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 14,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.02842045823733012,
+          2.6107197046279906
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mdifffit-montage-gcp-fog-e2-micro-09",
+      "activityTypeId": "montage-reference-work-v1-mdifffit",
+      "resourceId": "montage-gcp-fog-e2-micro-09",
+      "runtimeSeconds": 0.5160782317320506,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 14,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.02842045823733012,
+          2.6107197046279906
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mdifffit-montage-gcp-fog-e2-micro-10",
+      "activityTypeId": "montage-reference-work-v1-mdifffit",
+      "resourceId": "montage-gcp-fog-e2-micro-10",
+      "runtimeSeconds": 0.5160782317320506,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 14,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.02842045823733012,
+          2.6107197046279906
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mdifffit-plafrim-execution-ssh-node-bora001",
+      "activityTypeId": "montage-reference-work-v1-mdifffit",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "runtimeSeconds": 0.15401040880303635,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 3,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.08495262265205383,
+          0.20197521556507458
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 3
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mdifffit-plafrim-execution-ssh-node-diablo03",
+      "activityTypeId": "montage-reference-work-v1-mdifffit",
+      "resourceId": "plafrim-execution-ssh-node-diablo03",
+      "runtimeSeconds": 0.15401040880303635,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 3,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.08495262265205383,
+          0.20197521556507458
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 3
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mdifffit-montage-gcp-e2-medium-1",
+      "activityTypeId": "montage-reference-work-v1-mdifffit",
+      "resourceId": "montage-gcp-e2-medium-1",
+      "runtimeSeconds": 0.3221574563246507,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 1,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.3221574563246507,
+          0.3221574563246507
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mdifffit-montage-gcp-e2-medium-2",
+      "activityTypeId": "montage-reference-work-v1-mdifffit",
+      "resourceId": "montage-gcp-e2-medium-2",
+      "runtimeSeconds": 0.3221574563246507,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 1,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.3221574563246507,
+          0.3221574563246507
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mimgtbl-montage-gcp-fog-e2-micro-01",
+      "activityTypeId": "montage-reference-work-v1-mimgtbl",
+      "resourceId": "montage-gcp-fog-e2-micro-01",
+      "runtimeSeconds": 0.06577382304451683,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 3,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.01489914788140191,
+          0.0769037914276123
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mimgtbl-montage-gcp-fog-e2-micro-02",
+      "activityTypeId": "montage-reference-work-v1-mimgtbl",
+      "resourceId": "montage-gcp-fog-e2-micro-02",
+      "runtimeSeconds": 0.06577382304451683,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 3,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.01489914788140191,
+          0.0769037914276123
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mimgtbl-montage-gcp-fog-e2-micro-03",
+      "activityTypeId": "montage-reference-work-v1-mimgtbl",
+      "resourceId": "montage-gcp-fog-e2-micro-03",
+      "runtimeSeconds": 0.06577382304451683,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 3,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.01489914788140191,
+          0.0769037914276123
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mimgtbl-montage-gcp-fog-e2-micro-04",
+      "activityTypeId": "montage-reference-work-v1-mimgtbl",
+      "resourceId": "montage-gcp-fog-e2-micro-04",
+      "runtimeSeconds": 0.06577382304451683,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 3,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.01489914788140191,
+          0.0769037914276123
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mimgtbl-montage-gcp-fog-e2-micro-05",
+      "activityTypeId": "montage-reference-work-v1-mimgtbl",
+      "resourceId": "montage-gcp-fog-e2-micro-05",
+      "runtimeSeconds": 0.06577382304451683,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 3,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.01489914788140191,
+          0.0769037914276123
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mimgtbl-montage-gcp-fog-e2-micro-06",
+      "activityTypeId": "montage-reference-work-v1-mimgtbl",
+      "resourceId": "montage-gcp-fog-e2-micro-06",
+      "runtimeSeconds": 0.06577382304451683,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 3,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.01489914788140191,
+          0.0769037914276123
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mimgtbl-montage-gcp-fog-e2-micro-07",
+      "activityTypeId": "montage-reference-work-v1-mimgtbl",
+      "resourceId": "montage-gcp-fog-e2-micro-07",
+      "runtimeSeconds": 0.06577382304451683,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 3,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.01489914788140191,
+          0.0769037914276123
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mimgtbl-montage-gcp-fog-e2-micro-08",
+      "activityTypeId": "montage-reference-work-v1-mimgtbl",
+      "resourceId": "montage-gcp-fog-e2-micro-08",
+      "runtimeSeconds": 0.06577382304451683,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 3,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.01489914788140191,
+          0.0769037914276123
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mimgtbl-montage-gcp-fog-e2-micro-09",
+      "activityTypeId": "montage-reference-work-v1-mimgtbl",
+      "resourceId": "montage-gcp-fog-e2-micro-09",
+      "runtimeSeconds": 0.06577382304451683,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 3,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.01489914788140191,
+          0.0769037914276123
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mimgtbl-montage-gcp-fog-e2-micro-10",
+      "activityTypeId": "montage-reference-work-v1-mimgtbl",
+      "resourceId": "montage-gcp-fog-e2-micro-10",
+      "runtimeSeconds": 0.06577382304451683,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 3,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.01489914788140191,
+          0.0769037914276123
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mproject-montage-gcp-e2-medium-1",
+      "activityTypeId": "montage-reference-work-v1-mproject",
+      "resourceId": "montage-gcp-e2-medium-1",
+      "runtimeSeconds": 0.5422618222257024,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 4,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.482687460737569,
+          0.6058569879823626
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mproject-montage-gcp-e2-medium-2",
+      "activityTypeId": "montage-reference-work-v1-mproject",
+      "resourceId": "montage-gcp-e2-medium-2",
+      "runtimeSeconds": 0.5422618222257024,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 4,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.482687460737569,
+          0.6058569879823626
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mproject-montage-gcp-fog-e2-micro-01",
+      "activityTypeId": "montage-reference-work-v1-mproject",
+      "resourceId": "montage-gcp-fog-e2-micro-01",
+      "runtimeSeconds": 4.142489493875232,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 6,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          2.4189968622063263,
+          7.97978781444439
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mproject-montage-gcp-fog-e2-micro-02",
+      "activityTypeId": "montage-reference-work-v1-mproject",
+      "resourceId": "montage-gcp-fog-e2-micro-02",
+      "runtimeSeconds": 4.142489493875232,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 6,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          2.4189968622063263,
+          7.97978781444439
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mproject-montage-gcp-fog-e2-micro-03",
+      "activityTypeId": "montage-reference-work-v1-mproject",
+      "resourceId": "montage-gcp-fog-e2-micro-03",
+      "runtimeSeconds": 4.142489493875232,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 6,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          2.4189968622063263,
+          7.97978781444439
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mproject-montage-gcp-fog-e2-micro-04",
+      "activityTypeId": "montage-reference-work-v1-mproject",
+      "resourceId": "montage-gcp-fog-e2-micro-04",
+      "runtimeSeconds": 4.142489493875232,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 6,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          2.4189968622063263,
+          7.97978781444439
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mproject-montage-gcp-fog-e2-micro-05",
+      "activityTypeId": "montage-reference-work-v1-mproject",
+      "resourceId": "montage-gcp-fog-e2-micro-05",
+      "runtimeSeconds": 4.142489493875232,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 6,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          2.4189968622063263,
+          7.97978781444439
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mproject-montage-gcp-fog-e2-micro-06",
+      "activityTypeId": "montage-reference-work-v1-mproject",
+      "resourceId": "montage-gcp-fog-e2-micro-06",
+      "runtimeSeconds": 4.142489493875232,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 6,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          2.4189968622063263,
+          7.97978781444439
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mproject-montage-gcp-fog-e2-micro-07",
+      "activityTypeId": "montage-reference-work-v1-mproject",
+      "resourceId": "montage-gcp-fog-e2-micro-07",
+      "runtimeSeconds": 4.142489493875232,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 6,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          2.4189968622063263,
+          7.97978781444439
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mproject-montage-gcp-fog-e2-micro-08",
+      "activityTypeId": "montage-reference-work-v1-mproject",
+      "resourceId": "montage-gcp-fog-e2-micro-08",
+      "runtimeSeconds": 4.142489493875232,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 6,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          2.4189968622063263,
+          7.97978781444439
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mproject-montage-gcp-fog-e2-micro-09",
+      "activityTypeId": "montage-reference-work-v1-mproject",
+      "resourceId": "montage-gcp-fog-e2-micro-09",
+      "runtimeSeconds": 4.142489493875232,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 6,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          2.4189968622063263,
+          7.97978781444439
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mproject-montage-gcp-fog-e2-micro-10",
+      "activityTypeId": "montage-reference-work-v1-mproject",
+      "resourceId": "montage-gcp-fog-e2-micro-10",
+      "runtimeSeconds": 4.142489493875232,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 6,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          2.4189968622063263,
+          7.97978781444439
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mproject-plafrim-execution-ssh-node-bora001",
+      "activityTypeId": "montage-reference-work-v1-mproject",
+      "resourceId": "plafrim-execution-ssh-node-bora001",
+      "runtimeSeconds": 0.280406867515572,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.2784816492421198,
+          0.2823320857890241
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 2
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mproject-plafrim-execution-ssh-node-diablo03",
+      "activityTypeId": "montage-reference-work-v1-mproject",
+      "resourceId": "plafrim-execution-ssh-node-diablo03",
+      "runtimeSeconds": 0.280406867515572,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.2784816492421198,
+          0.2823320857890241
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 2
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mviewer-montage-gcp-e2-medium-1",
+      "activityTypeId": "montage-reference-work-v1-mviewer",
+      "resourceId": "montage-gcp-e2-medium-1",
+      "runtimeSeconds": 0.24281440161857284,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.07336857739616842,
+          0.41226022584097727
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mviewer-montage-gcp-e2-medium-2",
+      "activityTypeId": "montage-reference-work-v1-mviewer",
+      "resourceId": "montage-gcp-e2-medium-2",
+      "runtimeSeconds": 0.24281440161857284,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.07336857739616842,
+          0.41226022584097727
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mviewer-montage-gcp-fog-e2-micro-01",
+      "activityTypeId": "montage-reference-work-v1-mviewer",
+      "resourceId": "montage-gcp-fog-e2-micro-01",
+      "runtimeSeconds": 13.308445498347282,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.20626267790794373,
+          26.41062831878662
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mviewer-montage-gcp-fog-e2-micro-02",
+      "activityTypeId": "montage-reference-work-v1-mviewer",
+      "resourceId": "montage-gcp-fog-e2-micro-02",
+      "runtimeSeconds": 13.308445498347282,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.20626267790794373,
+          26.41062831878662
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mviewer-montage-gcp-fog-e2-micro-03",
+      "activityTypeId": "montage-reference-work-v1-mviewer",
+      "resourceId": "montage-gcp-fog-e2-micro-03",
+      "runtimeSeconds": 13.308445498347282,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.20626267790794373,
+          26.41062831878662
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mviewer-montage-gcp-fog-e2-micro-04",
+      "activityTypeId": "montage-reference-work-v1-mviewer",
+      "resourceId": "montage-gcp-fog-e2-micro-04",
+      "runtimeSeconds": 13.308445498347282,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.20626267790794373,
+          26.41062831878662
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mviewer-montage-gcp-fog-e2-micro-05",
+      "activityTypeId": "montage-reference-work-v1-mviewer",
+      "resourceId": "montage-gcp-fog-e2-micro-05",
+      "runtimeSeconds": 13.308445498347282,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.20626267790794373,
+          26.41062831878662
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mviewer-montage-gcp-fog-e2-micro-06",
+      "activityTypeId": "montage-reference-work-v1-mviewer",
+      "resourceId": "montage-gcp-fog-e2-micro-06",
+      "runtimeSeconds": 13.308445498347282,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.20626267790794373,
+          26.41062831878662
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mviewer-montage-gcp-fog-e2-micro-07",
+      "activityTypeId": "montage-reference-work-v1-mviewer",
+      "resourceId": "montage-gcp-fog-e2-micro-07",
+      "runtimeSeconds": 13.308445498347282,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.20626267790794373,
+          26.41062831878662
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mviewer-montage-gcp-fog-e2-micro-08",
+      "activityTypeId": "montage-reference-work-v1-mviewer",
+      "resourceId": "montage-gcp-fog-e2-micro-08",
+      "runtimeSeconds": 13.308445498347282,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.20626267790794373,
+          26.41062831878662
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mviewer-montage-gcp-fog-e2-micro-09",
+      "activityTypeId": "montage-reference-work-v1-mviewer",
+      "resourceId": "montage-gcp-fog-e2-micro-09",
+      "runtimeSeconds": 13.308445498347282,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.20626267790794373,
+          26.41062831878662
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    },
+    {
+      "id": "montage-reference-work-v1-mviewer-montage-gcp-fog-e2-micro-10",
+      "activityTypeId": "montage-reference-work-v1-mviewer",
+      "resourceId": "montage-gcp-fog-e2-micro-10",
+      "runtimeSeconds": 13.308445498347282,
+      "modelVersion": "reference-work-v1",
+      "source": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "sampleSize": 2,
+      "metadata": {
+        "units": "wall-seconds-per-reference-second",
+        "observedRange": [
+          0.20626267790794373,
+          26.41062831878662
+        ],
+        "includesPhysicalSharing": true,
+        "taskRuntimeFallbackSamples": 0
+      }
+    }
+  ],
+  "limitations": [
+    "Class-level historical wall rates; no per-activity replay.",
+    "Unobserved family/class pairs have no measured profile.",
+    "Includes physical sharing: additional interference factors require separate evidence."
+  ]
+}

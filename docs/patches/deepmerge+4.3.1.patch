@@ -1,0 +1,68 @@
+diff --git a/node_modules/deepmerge/dist/cjs.js b/node_modules/deepmerge/dist/cjs.js
+index 7c36cbd..f54122a 100644
+--- a/node_modules/deepmerge/dist/cjs.js
++++ b/node_modules/deepmerge/dist/cjs.js
+@@ -80,7 +80,10 @@ function mergeObject(target, source, options) {
+ 	var destination = {};
+ 	if (options.isMergeableObject(target)) {
+ 		getKeys(target).forEach(function(key) {
+-			destination[key] = cloneUnlessOtherwiseSpecified(target[key], options);
++			Object.defineProperty(destination, key, {
++                value: cloneUnlessOtherwiseSpecified(target[key], options),
++                enumerable: true, configurable: true, writable: true
++            });
+ 		});
+ 	}
+ 	getKeys(source).forEach(function(key) {
+@@ -89,9 +92,15 @@ function mergeObject(target, source, options) {
+ 		}
+ 
+ 		if (propertyIsOnObject(target, key) && options.isMergeableObject(source[key])) {
+-			destination[key] = getMergeFunction(key, options)(target[key], source[key], options);
++			Object.defineProperty(destination, key, {
++                value: getMergeFunction(key, options)(target[key], source[key], options),
++                enumerable: true, configurable: true, writable: true
++            });
+ 		} else {
+-			destination[key] = cloneUnlessOtherwiseSpecified(source[key], options);
++			Object.defineProperty(destination, key, {
++                value: cloneUnlessOtherwiseSpecified(source[key], options),
++                enumerable: true, configurable: true, writable: true
++            });
+ 		}
+ 	});
+ 	return destination
+diff --git a/node_modules/deepmerge/dist/umd.js b/node_modules/deepmerge/dist/umd.js
+index 4071e7c..39175c8 100644
+--- a/node_modules/deepmerge/dist/umd.js
++++ b/node_modules/deepmerge/dist/umd.js
+@@ -84,7 +84,10 @@
+ 		var destination = {};
+ 		if (options.isMergeableObject(target)) {
+ 			getKeys(target).forEach(function(key) {
+-				destination[key] = cloneUnlessOtherwiseSpecified(target[key], options);
++				Object.defineProperty(destination, key, {
++                value: cloneUnlessOtherwiseSpecified(target[key], options),
++                enumerable: true, configurable: true, writable: true
++            });
+ 			});
+ 		}
+ 		getKeys(source).forEach(function(key) {
+@@ -93,9 +96,15 @@
+ 			}
+ 
+ 			if (propertyIsOnObject(target, key) && options.isMergeableObject(source[key])) {
+-				destination[key] = getMergeFunction(key, options)(target[key], source[key], options);
++				Object.defineProperty(destination, key, {
++                value: getMergeFunction(key, options)(target[key], source[key], options),
++                enumerable: true, configurable: true, writable: true
++            });
+ 			} else {
+-				destination[key] = cloneUnlessOtherwiseSpecified(source[key], options);
++				Object.defineProperty(destination, key, {
++                value: cloneUnlessOtherwiseSpecified(source[key], options),
++                enumerable: true, configurable: true, writable: true
++            });
+ 			}
+ 		});
+ 		return destination

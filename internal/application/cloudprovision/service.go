@@ -21,6 +21,44 @@ type Provisioner struct {
 	sshKeys      ports.CloudSSHKeyManager
 	terraform    ports.TerraformRunner
 	configurator ports.MachineConfigurator
+	hostVerifier ports.CloudHostTrustVerifier
+}
+
+func (s *Provisioner) WithHostTrustVerifier(verifier ports.CloudHostTrustVerifier) *Provisioner {
+	s.hostVerifier = verifier
+	return s
+}
+
+func (s *Provisioner) verifyHostTrust(ctx context.Context, instance *domain.CloudProvisionedInstance) error {
+	if s.hostVerifier == nil {
+		return nil
+	}
+	definition, err := s.environments.Find(ctx, instance.EnvironmentID)
+	if err != nil || definition == nil {
+		return fmt.Errorf("load environment for host verification: %w", err)
+	}
+	connection := cloudConnection(definition.Connections)
+	if connection == nil {
+		return fmt.Errorf("cloud connection unavailable for host verification")
+	}
+	credential, err := s.credentials.Resolve(connection.CredentialRef)
+	if err != nil {
+		return err
+	}
+	trust, err := s.hostVerifier.Verify(ctx, *connection, credential, *instance)
+	if err != nil {
+		return fmt.Errorf("verify cloud SSH identity: %w", err)
+	}
+	if trust.Alias == "" || trust.KnownHostsFile == "" {
+		return fmt.Errorf("cloud SSH identity verifier returned incomplete trust")
+	}
+	if instance.TerraformOutput == nil {
+		instance.TerraformOutput = map[string]any{}
+	}
+	instance.TerraformOutput["verifiedHostKeyAlias"] = trust.Alias
+	instance.TerraformOutput["verifiedHostGeneration"] = instance.ProviderID
+	instance.TerraformOutput["verifiedKnownHostsFile"] = trust.KnownHostsFile
+	return nil
 }
 
 func New(
@@ -236,6 +274,9 @@ func (s *Provisioner) configure(
 	configurations []domain.CloudTargetConfiguration,
 ) error {
 	fingerprint := configurationFingerprint(configurations)
+	if err := s.verifyHostTrust(ctx, instance); err != nil {
+		return err
+	}
 	if current, _ := instance.TerraformOutput["configurationFingerprint"].(string); current != "" && current == fingerprint {
 		if err := s.validate(ctx, instance, target, configurations); err == nil {
 			return nil
@@ -260,6 +301,7 @@ func (s *Provisioner) configure(
 			variables[key] = value
 		}
 		err = s.configurator.Configure(ctx, ports.MachineConfigurationSpec{
+			HostKeyAlias: hostTrustString(instance, "verifiedHostKeyAlias"), KnownHostsFile: hostTrustString(instance, "verifiedKnownHostsFile"),
 			InstanceID: instance.ID, Address: instance.PublicAddress,
 			SSHUser: instance.SSHUsername, CredentialRef: instance.SSHCredentialRef,
 			PlaybookYAML: version.PlaybookYAML, Variables: variables,
@@ -306,11 +348,24 @@ func (s *Provisioner) validate(ctx context.Context, instance *domain.CloudProvis
 		if err := validateCompatibility(*version, target, assignment.Required); err != nil {
 			return err
 		}
-		if err := validator.Validate(ctx, ports.MachineConfigurationSpec{InstanceID: instance.ID, Address: instance.PublicAddress, SSHUser: instance.SSHUsername, CredentialRef: instance.SSHCredentialRef, Checks: version.ValidationChecks}); err != nil && assignment.Required {
+		if err := validator.Validate(ctx, ports.MachineConfigurationSpec{
+			HostKeyAlias:   hostTrustString(instance, "verifiedHostKeyAlias"),
+			KnownHostsFile: hostTrustString(instance, "verifiedKnownHostsFile"),
+			InstanceID:     instance.ID,
+			Address:        instance.PublicAddress,
+			SSHUser:        instance.SSHUsername,
+			CredentialRef:  instance.SSHCredentialRef,
+			Checks:         version.ValidationChecks,
+		}); err != nil && assignment.Required {
 			return err
 		}
 	}
 	return nil
+}
+
+func hostTrustString(instance *domain.CloudProvisionedInstance, key string) string {
+	value, _ := instance.TerraformOutput[key].(string)
+	return value
 }
 
 func (s *Provisioner) Configure(ctx context.Context, instanceID string) (domain.CloudProvisionedInstance, error) {
@@ -443,7 +498,11 @@ func (s *Provisioner) Stop(ctx context.Context, instanceID string) (domain.Cloud
 	if instance.Status == "stopped" {
 		return *instance, nil
 	}
-	if instance.Status != "ready" {
+	// A required configuration can fail after a real VM has been created.
+	// Suspension preserves its disk; the operation handler still enforces
+	// concurrent-operation and activity/lease lifecycle guards before calling us.
+	failedConfiguration := instance.Status == "failed" && strings.TrimSpace(instance.ProviderID) != ""
+	if instance.Status != "ready" && !failedConfiguration {
 		return *instance, fmt.Errorf("cloud instance %q cannot stop from status %q", instanceID, instance.Status)
 	}
 	if err := s.terraform.Stop(ctx, instanceID); err != nil {
@@ -459,11 +518,17 @@ func (s *Provisioner) Validate(ctx context.Context, instanceID string) (domain.C
 	if err != nil || instance == nil {
 		return domain.CloudProvisionedInstance{}, fmt.Errorf("cloud instance %q was not found", instanceID)
 	}
+	if err := s.verifyHostTrust(ctx, instance); err != nil {
+		return *instance, err
+	}
 	target, err := s.store.FindCapacityTarget(ctx, instance.CapacityTargetID)
 	if err != nil || target == nil {
 		return *instance, targetError(instance.CapacityTargetID, err)
 	}
 	if err := s.validate(ctx, instance, *target, target.MachineConfigurations); err != nil {
+		return *instance, err
+	}
+	if err := s.store.UpdateProvisionedInstance(ctx, *instance); err != nil {
 		return *instance, err
 	}
 	return *instance, nil
@@ -487,6 +552,13 @@ func (s *Provisioner) Release(ctx context.Context, capacityTargetIDs []string) e
 			instance := &instances[index]
 			if instance.CapacityTargetID != targetID || instance.Status != "ready" {
 				continue
+			}
+			// Direct releases (including console closure) must honor the same
+			// lifecycle barrier as queued infrastructure operations.
+			if guard, ok := s.store.(ports.CloudLifecycleGuard); ok {
+				if err := guard.CheckCloudLifecycle(ctx, instance.ID, ""); err != nil {
+					return fmt.Errorf("release cloud capacity: %w", err)
+				}
 			}
 			switch target.LifecyclePolicy {
 			case "destroy-after-run", "destroy-after-execution":
@@ -512,11 +584,30 @@ func billingForTarget(target domain.CloudCapacityTarget, now time.Time) *domain.
 	computeHourly := configurationNumber(target.Configuration, "pricePerHour")
 	diskGiB := configurationNumber(target.Configuration, "diskSizeGiB")
 	diskMonthly := configurationNumber(target.Configuration, "diskPricePerGiBMonth")
-	return &domain.InstanceBilling{
+	billing := &domain.InstanceBilling{
 		StartedAt: now, ComputeStartedAt: &now,
 		ComputePricePerSecond: max(0, computeHourly/3600),
 		DiskPricePerSecond:    max(0, diskGiB*diskMonthly/(730*3600)),
+		PricingStatus:         "estimated", PriceCurrency: configurationString(target.Configuration, "priceCurrency"),
+		PriceSource:     configurationString(target.Configuration, "priceSource"),
+		PriceObservedAt: configurationString(target.Configuration, "priceObservedAt"),
+		PriceRegion:     target.Region, PriceMachineType: target.ProviderMachineType,
 	}
+	if computeHourly <= 0 {
+		billing.MissingPrices = append(billing.MissingPrices, "compute")
+	}
+	if diskGiB > 0 && diskMonthly <= 0 {
+		billing.MissingPrices = append(billing.MissingPrices, "disk")
+	}
+	if len(billing.MissingPrices) > 0 {
+		billing.PricingStatus = "incomplete"
+	}
+	return billing
+}
+
+func configurationString(values map[string]any, key string) string {
+	value, _ := values[key].(string)
+	return value
 }
 
 func configurationNumber(values map[string]any, key string) float64 {

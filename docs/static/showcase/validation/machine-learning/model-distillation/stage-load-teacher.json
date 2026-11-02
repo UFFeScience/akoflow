@@ -1,0 +1,18 @@
+{
+  "dependencies": [],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:43.23964Z",
+  "finishedAtUnixNs": 1792523563234941000,
+  "inputDigest": "75dc55a6c6545bcde9fd6c272e4b0f2b3ca18c17c8d0452f6bffa555d3a2635b",
+  "result": {
+    "bias": 0.1,
+    "kind": "sigmoid",
+    "weight": 1.4
+  },
+  "showcase": "model-distillation",
+  "stage": "load-teacher",
+  "startedAt": "2026-10-20T19:12:43.195884Z",
+  "startedAtUnixNs": 1792523563234938000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

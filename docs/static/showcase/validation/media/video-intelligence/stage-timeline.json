@@ -1,0 +1,17 @@
+{
+  "dependencies": [
+    "probe",
+    "scenes",
+    "audio"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T18:31:00.9816Z",
+  "result": {
+    "commandCompleted": true,
+    "stdout": ""
+  },
+  "showcase": "video-intelligence",
+  "stage": "timeline",
+  "startedAt": "2026-10-20T18:31:00.945741Z",
+  "status": "success"
+}

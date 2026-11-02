@@ -1,0 +1,21 @@
+{
+  "artifacts": [
+    "execution.json",
+    "verification.json"
+  ],
+  "sha256": {
+    "execution.json": "dcd362555ea8686ba2a179459917e548cf33ed333d2100fa9a4cc86c3c1e1bde",
+    "verification.json": "416d7698e665e5891254dc765114bd5e66db717b72da9101150b0e6af0dfb52d"
+  },
+  "showcase": "supervised-tool-loop",
+  "stages": [
+    "build-context",
+    "propose-action",
+    "policy-check",
+    "human-approval",
+    "execute-tool",
+    "verify"
+  ],
+  "status": "success",
+  "validationMode": "local-workload"
+}

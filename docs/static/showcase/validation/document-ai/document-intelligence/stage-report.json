@@ -1,0 +1,15 @@
+{
+  "dependencies": [
+    "reconcile"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T18:31:00.408113Z",
+  "result": {
+    "commandCompleted": true,
+    "stdout": ""
+  },
+  "showcase": "document-intelligence",
+  "stage": "report",
+  "startedAt": "2026-10-20T18:31:00.372947Z",
+  "status": "success"
+}

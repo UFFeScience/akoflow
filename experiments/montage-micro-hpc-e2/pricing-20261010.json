@@ -1,0 +1,25 @@
+{
+  "issue": "AKO-140",
+  "currency": "USD",
+  "region": "us-central1",
+  "observedAt": "2026-10-10T21:57:24.147279919Z",
+  "source": "GCP Cloud Billing public SKU catalog, on-demand",
+  "machines": {
+    "e2-micro": {"pricePerHour": 0.0083764275, "billableCpuFraction": 0.25},
+    "e2-medium": {"pricePerHour": 0.03350571, "billableCpuFraction": 1}
+  },
+  "bootDisk": {
+    "type": "pd-balanced",
+    "sizeGiB": 30,
+    "pricePerGiBMonth": 0.1,
+    "skuId": "6AE1-525F-8B80",
+    "monthlyConversionHours": 730
+  },
+  "accounting": {
+    "real": "One concrete VM generation is counted once using its billable compute clock and disk lifetime. Stop pauses compute, not disk charges. Missing tariffs produce incomplete status and a null total.",
+    "basis": "Lifecycle estimate, not a provider invoice. Marginal list rates; no automatic free-tier or discount credits.",
+    "excluded": ["network-egress", "public-ipv4", "image-storage", "discounts-and-tax"],
+    "hpc": "No PlaFRIM monetary tariff was supplied; the cloud estimate does not assign a monetary cost to HPC allocation.",
+    "simulation": "The simulation task/window cost and the plan lifecycle cost currently use different retention windows; report both without treating them as equivalent to a provider invoice."
+  }
+}

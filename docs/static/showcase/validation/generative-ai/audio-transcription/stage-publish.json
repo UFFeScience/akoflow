@@ -1,0 +1,24 @@
+{
+  "dependencies": [
+    "summarize"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:46.026263Z",
+  "finishedAtUnixNs": 1792523566021333000,
+  "inputDigest": "9951b56e42169a516ac779ddc3c7c60da5f6ede6732bb1ea93bd1011b1366067",
+  "result": {
+    "counts": {
+      "data": 2,
+      "ready": 2,
+      "science": 2
+    },
+    "decodedTokens": 6,
+    "exactMatch": true
+  },
+  "showcase": "audio-transcription",
+  "stage": "publish",
+  "startedAt": "2026-10-20T19:12:45.981286Z",
+  "startedAtUnixNs": 1792523566021028000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

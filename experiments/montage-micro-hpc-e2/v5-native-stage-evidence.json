@@ -1,0 +1,46 @@
+{
+  "run": "montage-micro-hpc-e2-real-20261007-v5",
+  "measurement": "Native Docker State.StartedAt/FinishedAt read through daemon console API; preparation from transfer phase records",
+  "stages": [
+    {"activity": "mAdd18", "preparation_seconds": 488.945003, "native_command_seconds": 1.316860377, "network_bytes": 4605163608},
+    {"activity": "mAdd37", "preparation_seconds": 927.648960, "barrier_seconds": 535.706014, "merge_seconds": 391.944042, "native_command_seconds": 9.753975640, "network_bytes": 4529756266},
+    {"activity": "mAdd56", "preparation_seconds": 983.138618, "barrier_seconds": 540.045425, "merge_seconds": 443.092478, "native_command_seconds": 10.281894171, "network_bytes": 4575758268},
+    {"activity": "mViewer19", "preparation_seconds": 134.412524, "native_command_seconds": 2.511764320, "network_bytes": 1249544888},
+    {"activity": "mViewer38", "preparation_seconds": 633.867806, "native_command_seconds": 23.484506687, "network_bytes": 1230918523},
+    {"activity": "mViewer57", "preparation_seconds": 634.101561, "native_command_seconds": 23.988753783, "network_bytes": 1239729945},
+    {"activity": "mViewer58", "preparation_seconds": 991.3245203495, "barrier_seconds": 918.044581002, "merge_seconds": 73.085048784, "native_command_seconds": 5.963964158, "network_bytes": 3720193357}
+  ],
+  "interpretation": [
+    "Full-workspace preparation dominates these final stages, not the image command.",
+    "Micro fan-in merge and compression/upload consume substantial time; no isolated bandwidth benchmark was performed.",
+    "Destination single-pass verification and reserved SSH control capacity were implemented after these measurements, not active during v5.",
+    "Synchronous idle cloud stop waits delayed observation; AKO-117 was implemented after v5 and is not validated by these measurements.",
+    "Run metrics include recoveries and delayed observation, so aggregate compute is not pure command time."
+  ],
+  "corrections": [
+    {"issue": "AKO-102", "change": "Eight parallel predecessor routes per consumer"},
+    {"issue": "AKO-103", "change": "Safe Terraform stop/start updates without create/delete/replace"},
+    {"issue": "AKO-104", "change": "Verified per-generation SSH host trust"},
+    {"issue": "AKO-105", "change": "Stop failed configuration only when a physical provider instance exists"},
+    {"issue": "AKO-106", "change": "Bind workspace SSH to exact verified instance generation"},
+    {"issue": "AKO-107", "change": "Deduplicate queued infrastructure and reconcile unused operations"},
+    {"issue": "AKO-108", "change": "Batch independent exact cloud allocations"},
+    {"issue": "AKO-109", "change": "Serialize runtime control per handle; protect observation cancellation"},
+    {"issue": "AKO-110", "change": "Record transfer phase timings"},
+    {"issue": "AKO-111", "change": "Compressed full-workspace archives with integrity verification"},
+    {"issue": "AKO-112", "change": "Ready exact preserved stopped producer before recovery inspection"},
+    {"issue": "AKO-113", "change": "Native remote Docker completion timestamp", "v5_active": false},
+    {"issue": "AKO-114", "change": "Isolate Docker telemetry by actual recovery attempt", "v5_active": false},
+    {"issue": "AKO-115", "change": "Verify unique destination paths once after merge", "v5_active": false},
+    {"issue": "AKO-116", "change": "Reserve one SSH control channel from bulk transfer saturation", "v5_active": false},
+    {"issue": "AKO-117", "change": "Independent bounded idle cloud stop progress", "v5_active": false}
+  ],
+  "cleanup": {
+    "cloud_instances_destroyed": 12,
+    "remaining_non_destroyed_instances": 0,
+    "active_cloud_operations": 0,
+    "hpc_squeue_empty": true,
+    "hpc_console_evidence": "console-command-ae1f3087c643d2532a2629e4",
+    "final_png_preserved_locally": true
+  }
+}

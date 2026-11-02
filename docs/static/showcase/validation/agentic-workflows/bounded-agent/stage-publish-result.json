@@ -1,0 +1,21 @@
+{
+  "dependencies": [
+    "validate-output"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:47.474393Z",
+  "finishedAtUnixNs": 1792523567469663000,
+  "inputDigest": "dbcda11a2ed684a5173f537c9ae17d10529006b4fe53195dbfac5400dbd43784",
+  "result": {
+    "count": 8,
+    "maximum": 23,
+    "mean": 16.5,
+    "minimum": 11
+  },
+  "showcase": "bounded-agent",
+  "stage": "publish-result",
+  "startedAt": "2026-10-20T19:12:47.429025Z",
+  "startedAtUnixNs": 1792523567469420000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

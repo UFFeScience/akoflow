@@ -30,6 +30,67 @@ func TestParseOutput(t *testing.T) {
 	}
 }
 
+func TestLifecycleRejectsCreationReplacementDeletionAndMissingWorker(t *testing.T) {
+	for _, actions := range []string{`["create"]`, `["delete","create"]`, `["delete"]`, `[]`} {
+		encoded := []byte(`{"resource_changes":[{"address":"google_compute_instance.worker","mode":"managed","change":{"actions":` + actions + `}}]}`)
+		if err := validateLifecyclePlan(encoded); err == nil {
+			t.Fatalf("accepted unsafe actions %s", actions)
+		}
+	}
+	if err := validateLifecyclePlan([]byte(`{}`)); err == nil {
+		t.Fatal("accepted missing worker")
+	}
+}
+
+func TestLifecycleUsesValidatedSavedPlanAndHidesPlanPayload(t *testing.T) {
+	for _, actions := range []string{`["update"]`, `["create"]`} {
+		t.Run(actions, func(t *testing.T) {
+			root := t.TempDir()
+			workspace := filepath.Join(root, "cloud-instance-worker")
+			if err := os.Mkdir(workspace, 0700); err != nil {
+				t.Fatal(err)
+			}
+			if err := os.WriteFile(filepath.Join(workspace, "terraform.tfvars.json"), []byte(`{}`), 0600); err != nil {
+				t.Fatal(err)
+			}
+			var applied bool
+			runner := Runner{Root: root, Execute: func(_ context.Context, _ string, _ []string, args ...string) ([]byte, error) {
+				switch args[1] {
+				case "show":
+					return []byte(`{"variables":{"secret":"must-not-be-logged"},"resource_changes":[{"address":"google_compute_instance.worker","mode":"managed","change":{"actions":` + actions + `}}]}`), nil
+				case "apply":
+					applied = true
+					if !strings.HasSuffix(args[len(args)-1], ".tfplan") {
+						t.Fatal("apply must use saved plan")
+					}
+				case "output":
+					return []byte(`{"instance_id":{"value":"original"},"public_ip":{"value":"203.0.113.1"}}`), nil
+				}
+				return nil, nil
+			}}
+			_, err := runner.Start(context.Background(), "cloud-instance-worker")
+			if actions == `["create"]` {
+				if err == nil || applied {
+					t.Fatal("unsafe plan reached apply")
+				}
+			} else if err != nil || !applied {
+				t.Fatalf("safe update rejected: %v", err)
+			}
+			log, err := os.ReadFile(filepath.Join(workspace, "provision.log"))
+			if err != nil {
+				t.Fatal(err)
+			}
+			if strings.Contains(string(log), "must-not-be-logged") {
+				t.Fatal("plan payload leaked")
+			}
+			files, _ := filepath.Glob(filepath.Join(workspace, "lifecycle-*.tfplan"))
+			if len(files) != 0 {
+				t.Fatal("saved plan retained")
+			}
+		})
+	}
+}
+
 func TestGeneratedGCPModuleIsFormatted(t *testing.T) {
 	if _, err := exec.LookPath("terraform"); err != nil {
 		t.Skip("terraform is not installed")

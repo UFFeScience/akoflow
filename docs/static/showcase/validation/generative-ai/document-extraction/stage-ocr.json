@@ -1,0 +1,19 @@
+{
+  "dependencies": [
+    "ingest-documents"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:46.217094Z",
+  "finishedAtUnixNs": 1792523566212253000,
+  "inputDigest": "523128ebbdc73d926815d3ba4204fd1d7608cf694a252317c065a1749f173143",
+  "result": {
+    "digits": "123042",
+    "method": "pixel-template OCR over bundled PBM digits"
+  },
+  "showcase": "document-extraction",
+  "stage": "ocr",
+  "startedAt": "2026-10-20T19:12:46.170882Z",
+  "startedAtUnixNs": 1792523566211884000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

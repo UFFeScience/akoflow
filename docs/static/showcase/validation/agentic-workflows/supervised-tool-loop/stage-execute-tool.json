@@ -1,0 +1,26 @@
+{
+  "dependencies": [
+    "human-approval"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:48.122162Z",
+  "finishedAtUnixNs": 1792523568117632000,
+  "inputDigest": "459833c5049d21156be01d5408e8c8469de8e146c32632722c428b8f7492aca1",
+  "result": {
+    "action": "write-summary-to-outputs",
+    "approval": {
+      "actor": "smoke-profile-reviewer",
+      "decision": "approve",
+      "scope": "write-summary-to-outputs",
+      "source": "pre-recorded local smoke approval fixture"
+    },
+    "output": "tool-result.json",
+    "sha256": "fa9e6f8dc911a3c040ef062a0a5e78d9305de4384d0c8a441dfcd05833bb87c5"
+  },
+  "showcase": "supervised-tool-loop",
+  "stage": "execute-tool",
+  "startedAt": "2026-10-20T19:12:48.076364Z",
+  "startedAtUnixNs": 1792523568117130000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

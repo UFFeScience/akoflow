@@ -1,0 +1,3106 @@
+{
+  "activityCount": 7,
+  "completedActivityCount": 7,
+  "image": "ghcr.io/uffescience/akoflow-examples/showcase-ai-assisted-analysis:local-d074857f9399f4fd",
+  "imageId": "sha256:d074857f9399f4fdeb7344c3d7555a971b756f2d6c5bfbfec95ebf14ece233e2",
+  "observedAt": "2026-10-20T19:08:51Z",
+  "planId": "showcase-ai-assisted-analysis-local-6ec20be3c8-manual-plan-20261020t190838.811067000",
+  "projection": {
+    "activities": [
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment",
+        "allocatedResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "finishedAt": 1792523319.477775,
+        "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-ai-assisted-analysis-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-ai-assisted-analysis-local-6ec20be3c8-manual-plan-20261020t190838.811067000-showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment",
+        "plannedResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523319.1395044,
+        "readyAt": 1792523319.1395044,
+        "runtimeId": "showcase-ai-assisted-analysis-local",
+        "runtimeSeconds": 0.13252663612365723,
+        "startedAt": 1792523319.3452485,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+        "allocatedResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "finishedAt": 1792523320.9413757,
+        "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1502082347869873,
+          "preparationFinishedAt": 1792523320.6570525,
+          "preparationStartedAt": 1792523320.4682307,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0026192665100097656,
+          "runtimeId": "showcase-ai-assisted-analysis-local",
+          "transferElapsedSeconds": 0.18882179260253906,
+          "transferWorkSeconds": 0.18882179260253906
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-ai-assisted-analysis-local-6ec20be3c8-manual-plan-20261020t190838.811067000-showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+        "plannedResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523320.462895,
+        "readyAt": 1792523320.462895,
+        "runtimeId": "showcase-ai-assisted-analysis-local",
+        "runtimeSeconds": 0.13411498069763184,
+        "startedAt": 1792523320.8072608,
+        "status": "completed",
+        "transferBytes": 417,
+        "transferSeconds": 0.18882179260253906
+      },
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+        "allocatedResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "finishedAt": 1792523322.8785155,
+        "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14231348037719727,
+          "preparationFinishedAt": 1792523322.615128,
+          "preparationStartedAt": 1792523322.4704487,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.001129150390625,
+          "runtimeId": "showcase-ai-assisted-analysis-local",
+          "transferElapsedSeconds": 0.14467930793762207,
+          "transferWorkSeconds": 0.14467930793762207
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-ai-assisted-analysis-local-6ec20be3c8-manual-plan-20261020t190838.811067000-showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+        "plannedResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523322.4673686,
+        "readyAt": 1792523322.4673686,
+        "runtimeId": "showcase-ai-assisted-analysis-local",
+        "runtimeSeconds": 0.12107396125793457,
+        "startedAt": 1792523322.7574415,
+        "status": "completed",
+        "transferBytes": 7910,
+        "transferSeconds": 0.14467930793762207
+      },
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+        "allocatedResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "finishedAt": 1792523324.963339,
+        "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.19448208808898926,
+          "preparationFinishedAt": 1792523324.640941,
+          "preparationStartedAt": 1792523324.4789207,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.010442256927490234,
+          "runtimeId": "showcase-ai-assisted-analysis-local",
+          "transferElapsedSeconds": 0.16202020645141602,
+          "transferWorkSeconds": 0.16202020645141602
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-ai-assisted-analysis-local-6ec20be3c8-manual-plan-20261020t190838.811067000-showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+        "plannedResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523324.4647284,
+        "readyAt": 1792523324.4647284,
+        "runtimeId": "showcase-ai-assisted-analysis-local",
+        "runtimeSeconds": 0.1279160976409912,
+        "startedAt": 1792523324.835423,
+        "status": "completed",
+        "transferBytes": 18552,
+        "transferSeconds": 0.16202020645141602
+      },
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+        "allocatedResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "finishedAt": 1792523324.9665823,
+        "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.18937420845031738,
+          "preparationFinishedAt": 1792523324.6492696,
+          "preparationStartedAt": 1792523324.4899468,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.01556706428527832,
+          "runtimeId": "showcase-ai-assisted-analysis-local",
+          "transferElapsedSeconds": 0.15932273864746094,
+          "transferWorkSeconds": 0.15932273864746094
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-ai-assisted-analysis-local-6ec20be3c8-manual-plan-20261020t190838.811067000-showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+        "plannedResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523324.4636168,
+        "readyAt": 1792523324.4636168,
+        "runtimeId": "showcase-ai-assisted-analysis-local",
+        "runtimeSeconds": 0.12793850898742676,
+        "startedAt": 1792523324.8386438,
+        "status": "completed",
+        "transferBytes": 18552,
+        "transferSeconds": 0.15932273864746094
+      },
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+        "allocatedResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "finishedAt": 1792523327.1380708,
+        "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1580829620361328,
+          "preparationFinishedAt": 1792523326.8695269,
+          "preparationStartedAt": 1792523326.5167193,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0029990673065185547,
+          "runtimeId": "showcase-ai-assisted-analysis-local",
+          "transferElapsedSeconds": 0.35280752182006836,
+          "transferWorkSeconds": 0.5608973503112793
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-ai-assisted-analysis-local-6ec20be3c8-manual-plan-20261020t190838.811067000-showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+        "plannedResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523326.5111651,
+        "readyAt": 1792523326.5111651,
+        "runtimeId": "showcase-ai-assisted-analysis-local",
+        "runtimeSeconds": 0.11046099662780762,
+        "startedAt": 1792523327.0276098,
+        "status": "completed",
+        "transferBytes": 19751,
+        "transferSeconds": 0.5608973503112793
+      },
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+        "allocatedResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "finishedAt": 1792523328.816677,
+        "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.12150955200195312,
+          "preparationFinishedAt": 1792523328.5843189,
+          "preparationStartedAt": 1792523328.4673893,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0011248588562011719,
+          "runtimeId": "showcase-ai-assisted-analysis-local",
+          "transferElapsedSeconds": 0.11692953109741211,
+          "transferWorkSeconds": 0.11692953109741211
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-ai-assisted-analysis-local-6ec20be3c8-manual-plan-20261020t190838.811067000-showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+        "plannedResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523328.464202,
+        "readyAt": 1792523328.464202,
+        "runtimeId": "showcase-ai-assisted-analysis-local",
+        "runtimeSeconds": 0.11084866523742676,
+        "startedAt": 1792523328.7058284,
+        "status": "completed",
+        "transferBytes": 20703,
+        "transferSeconds": 0.11692953109741211
+      }
+    ],
+    "activityAttempts": [
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment",
+        "allocatedResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "finishedAt": 1792523319.477775,
+        "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-ai-assisted-analysis-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-ai-assisted-analysis-local-6ec20be3c8-manual-plan-20261020t190838.811067000-showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment",
+        "plannedResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523319.1395044,
+        "readyAt": 1792523319.1395044,
+        "runtimeId": "showcase-ai-assisted-analysis-local",
+        "runtimeSeconds": 0.13252663612365723,
+        "startedAt": 1792523319.3452485,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+        "allocatedResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "finishedAt": 1792523320.9413757,
+        "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1502082347869873,
+          "preparationFinishedAt": 1792523320.6570525,
+          "preparationStartedAt": 1792523320.4682307,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0026192665100097656,
+          "runtimeId": "showcase-ai-assisted-analysis-local",
+          "transferElapsedSeconds": 0.18882179260253906,
+          "transferWorkSeconds": 0.18882179260253906
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-ai-assisted-analysis-local-6ec20be3c8-manual-plan-20261020t190838.811067000-showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+        "plannedResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523320.462895,
+        "readyAt": 1792523320.462895,
+        "runtimeId": "showcase-ai-assisted-analysis-local",
+        "runtimeSeconds": 0.13411498069763184,
+        "startedAt": 1792523320.8072608,
+        "status": "completed",
+        "transferBytes": 417,
+        "transferSeconds": 0.18882179260253906
+      },
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+        "allocatedResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "finishedAt": 1792523322.8785155,
+        "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14231348037719727,
+          "preparationFinishedAt": 1792523322.615128,
+          "preparationStartedAt": 1792523322.4704487,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.001129150390625,
+          "runtimeId": "showcase-ai-assisted-analysis-local",
+          "transferElapsedSeconds": 0.14467930793762207,
+          "transferWorkSeconds": 0.14467930793762207
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-ai-assisted-analysis-local-6ec20be3c8-manual-plan-20261020t190838.811067000-showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+        "plannedResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523322.4673686,
+        "readyAt": 1792523322.4673686,
+        "runtimeId": "showcase-ai-assisted-analysis-local",
+        "runtimeSeconds": 0.12107396125793457,
+        "startedAt": 1792523322.7574415,
+        "status": "completed",
+        "transferBytes": 7910,
+        "transferSeconds": 0.14467930793762207
+      },
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+        "allocatedResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "finishedAt": 1792523324.963339,
+        "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.19448208808898926,
+          "preparationFinishedAt": 1792523324.640941,
+          "preparationStartedAt": 1792523324.4789207,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.010442256927490234,
+          "runtimeId": "showcase-ai-assisted-analysis-local",
+          "transferElapsedSeconds": 0.16202020645141602,
+          "transferWorkSeconds": 0.16202020645141602
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-ai-assisted-analysis-local-6ec20be3c8-manual-plan-20261020t190838.811067000-showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+        "plannedResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523324.4647284,
+        "readyAt": 1792523324.4647284,
+        "runtimeId": "showcase-ai-assisted-analysis-local",
+        "runtimeSeconds": 0.1279160976409912,
+        "startedAt": 1792523324.835423,
+        "status": "completed",
+        "transferBytes": 18552,
+        "transferSeconds": 0.16202020645141602
+      },
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+        "allocatedResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "finishedAt": 1792523324.9665823,
+        "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.18937420845031738,
+          "preparationFinishedAt": 1792523324.6492696,
+          "preparationStartedAt": 1792523324.4899468,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.01556706428527832,
+          "runtimeId": "showcase-ai-assisted-analysis-local",
+          "transferElapsedSeconds": 0.15932273864746094,
+          "transferWorkSeconds": 0.15932273864746094
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-ai-assisted-analysis-local-6ec20be3c8-manual-plan-20261020t190838.811067000-showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+        "plannedResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523324.4636168,
+        "readyAt": 1792523324.4636168,
+        "runtimeId": "showcase-ai-assisted-analysis-local",
+        "runtimeSeconds": 0.12793850898742676,
+        "startedAt": 1792523324.8386438,
+        "status": "completed",
+        "transferBytes": 18552,
+        "transferSeconds": 0.15932273864746094
+      },
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+        "allocatedResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "finishedAt": 1792523327.1380708,
+        "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1580829620361328,
+          "preparationFinishedAt": 1792523326.8695269,
+          "preparationStartedAt": 1792523326.5167193,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0029990673065185547,
+          "runtimeId": "showcase-ai-assisted-analysis-local",
+          "transferElapsedSeconds": 0.35280752182006836,
+          "transferWorkSeconds": 0.5608973503112793
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-ai-assisted-analysis-local-6ec20be3c8-manual-plan-20261020t190838.811067000-showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+        "plannedResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523326.5111651,
+        "readyAt": 1792523326.5111651,
+        "runtimeId": "showcase-ai-assisted-analysis-local",
+        "runtimeSeconds": 0.11046099662780762,
+        "startedAt": 1792523327.0276098,
+        "status": "completed",
+        "transferBytes": 19751,
+        "transferSeconds": 0.5608973503112793
+      },
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+        "allocatedResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "finishedAt": 1792523328.816677,
+        "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.12150955200195312,
+          "preparationFinishedAt": 1792523328.5843189,
+          "preparationStartedAt": 1792523328.4673893,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0011248588562011719,
+          "runtimeId": "showcase-ai-assisted-analysis-local",
+          "transferElapsedSeconds": 0.11692953109741211,
+          "transferWorkSeconds": 0.11692953109741211
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-ai-assisted-analysis-local-6ec20be3c8-manual-plan-20261020t190838.811067000-showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+        "plannedResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523328.464202,
+        "readyAt": 1792523328.464202,
+        "runtimeId": "showcase-ai-assisted-analysis-local",
+        "runtimeSeconds": 0.11084866523742676,
+        "startedAt": 1792523328.7058284,
+        "status": "completed",
+        "transferBytes": 20703,
+        "transferSeconds": 0.11692953109741211
+      }
+    ],
+    "artifactMaterializations": null,
+    "artifactTransferRuns": [
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+        "durationSeconds": 0.15932273864746094,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "filesTransferred": 3,
+        "finishedAt": 1792523324.6492696,
+        "id": "transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation-0",
+        "logicalBytes": 18552,
+        "planId": "transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation-0",
+        "route": {
+          "consumerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+          "filesTransferred": 3,
+          "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.069425083,
+          "sourceEnvironmentId": "showcase-ai-assisted-analysis-v1",
+          "sourceResourceId": "showcase-ai-assisted-analysis-local-docker",
+          "sshChannelWaitSeconds": 4.1599999999999997e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-ai-assisted-analysis-v1",
+          "targetResourceId": "showcase-ai-assisted-analysis-local-docker"
+        },
+        "startedAt": 1792523324.4899468,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 18552
+      },
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+        "durationSeconds": 0.14467930793762207,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "filesTransferred": 2,
+        "finishedAt": 1792523322.615128,
+        "id": "transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-measurements-0",
+        "logicalBytes": 7910,
+        "planId": "transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-measurements-0",
+        "route": {
+          "consumerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.07522000100000001,
+          "sourceEnvironmentId": "showcase-ai-assisted-analysis-v1",
+          "sourceResourceId": "showcase-ai-assisted-analysis-local-docker",
+          "sshChannelWaitSeconds": 5.009999999999999e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-ai-assisted-analysis-v1",
+          "targetResourceId": "showcase-ai-assisted-analysis-local-docker"
+        },
+        "startedAt": 1792523322.4704487,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 7910
+      },
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+        "durationSeconds": 0.11692953109741211,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "filesTransferred": 6,
+        "finishedAt": 1792523328.5843189,
+        "id": "transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-report-0",
+        "logicalBytes": 20703,
+        "planId": "transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-report-0",
+        "route": {
+          "consumerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+          "filesTransferred": 6,
+          "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.047531959,
+          "sourceEnvironmentId": "showcase-ai-assisted-analysis-v1",
+          "sourceResourceId": "showcase-ai-assisted-analysis-local-docker",
+          "sshChannelWaitSeconds": 5.01e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-ai-assisted-analysis-v1",
+          "targetResourceId": "showcase-ai-assisted-analysis-local-docker"
+        },
+        "startedAt": 1792523328.4673893,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 20703
+      },
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+        "durationSeconds": 0.18882179260253906,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523320.6570525,
+        "id": "transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-simulation-0",
+        "logicalBytes": 417,
+        "planId": "transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-simulation-0",
+        "route": {
+          "consumerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.095265167,
+          "sourceEnvironmentId": "showcase-ai-assisted-analysis-v1",
+          "sourceResourceId": "showcase-ai-assisted-analysis-local-docker",
+          "sshChannelWaitSeconds": 5.009999999999999e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-ai-assisted-analysis-v1",
+          "targetResourceId": "showcase-ai-assisted-analysis-local-docker"
+        },
+        "startedAt": 1792523320.4682307,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 417
+      },
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+        "durationSeconds": 0.16202020645141602,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "filesTransferred": 3,
+        "finishedAt": 1792523324.640941,
+        "id": "transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-statistics-0",
+        "logicalBytes": 18552,
+        "planId": "transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-statistics-0",
+        "route": {
+          "consumerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+          "filesTransferred": 3,
+          "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.07139783400000001,
+          "sourceEnvironmentId": "showcase-ai-assisted-analysis-v1",
+          "sourceResourceId": "showcase-ai-assisted-analysis-local-docker",
+          "sshChannelWaitSeconds": 5.83e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-ai-assisted-analysis-v1",
+          "targetResourceId": "showcase-ai-assisted-analysis-local-docker"
+        },
+        "startedAt": 1792523324.4789207,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 18552
+      },
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+        "durationSeconds": 0.20808982849121094,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "filesTransferred": 4,
+        "finishedAt": 1792523326.7248092,
+        "id": "transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-validate-0",
+        "logicalBytes": 19133,
+        "planId": "transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-validate-0",
+        "route": {
+          "consumerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+          "filesTransferred": 4,
+          "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.094212625,
+          "sourceEnvironmentId": "showcase-ai-assisted-analysis-v1",
+          "sourceResourceId": "showcase-ai-assisted-analysis-local-docker",
+          "sshChannelWaitSeconds": 6.249999999999999e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-ai-assisted-analysis-v1",
+          "targetResourceId": "showcase-ai-assisted-analysis-local-docker"
+        },
+        "startedAt": 1792523326.5167193,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 19133
+      },
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+        "durationSeconds": 0.35280752182006836,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523326.8695269,
+        "id": "transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-validate-1",
+        "logicalBytes": 19170,
+        "planId": "transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-validate-1",
+        "route": {
+          "consumerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.076871458,
+          "sourceEnvironmentId": "showcase-ai-assisted-analysis-v1",
+          "sourceResourceId": "showcase-ai-assisted-analysis-local-docker",
+          "sshChannelWaitSeconds": 0.000001043,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-ai-assisted-analysis-v1",
+          "targetResourceId": "showcase-ai-assisted-analysis-local-docker"
+        },
+        "startedAt": 1792523326.5167193,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 618
+      }
+    ],
+    "cloudBilling": {
+      "asOf": "2026-10-20T19:08:51.280811799Z",
+      "costBasis": "VM compute and boot-disk lifecycle at on-demand marginal rates; not a provider invoice",
+      "estimatedCost": 0,
+      "excludedCosts": [
+        "network-egress",
+        "public-ipv4",
+        "image-storage",
+        "discounts-and-tax"
+      ],
+      "instances": [],
+      "knownCost": 0,
+      "status": "estimated"
+    },
+    "dataLocations": [
+      {
+        "dataObjectInstanceId": "e943354976aacb70e1a77be8c55256de",
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "id": "33b8cfd02d592e5369cfbf7ae287f988",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-ai-assisted-analysis-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "3b659f94891e2e7a28c537af623e79a5",
+        "uri": "file:///akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation/stage-ai-interpretation.json"
+      },
+      {
+        "dataObjectInstanceId": "5bd4d209dcb417280ca46e90c1e2e0f5",
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "id": "95347d11f5cefd6a1f9b48bf7a40c9a5",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-ai-assisted-analysis-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "3b659f94891e2e7a28c537af623e79a5",
+        "uri": "file:///akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-measurements/stage-measurements.json"
+      },
+      {
+        "dataObjectInstanceId": "20ddf2a2b1a7889c2b38a87ccae4a03b",
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "id": "4fd8507f6007b31dbd6752fbd344cd92",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-ai-assisted-analysis-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "3b659f94891e2e7a28c537af623e79a5",
+        "uri": "file:///akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment/stage-prepare-experiment.json"
+      },
+      {
+        "dataObjectInstanceId": "32eb406f9947904556df45d4e4f345e6",
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "id": "90371c49ebc4609bd25b9226aadf4f0f",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-ai-assisted-analysis-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "3b659f94891e2e7a28c537af623e79a5",
+        "uri": "file:///akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-report/analysis.json"
+      },
+      {
+        "dataObjectInstanceId": "6327e92bf56d9d926a9f50364c59ec3a",
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "id": "52adeb66763d8be9824424481a1d60b6",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-ai-assisted-analysis-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "3b659f94891e2e7a28c537af623e79a5",
+        "uri": "file:///akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-report/interpretation.md"
+      },
+      {
+        "dataObjectInstanceId": "1ca8eca994e7d50782bb1f40eadea475",
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "id": "d6038ae549fb9115fe250522e4710cf7",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-ai-assisted-analysis-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "3b659f94891e2e7a28c537af623e79a5",
+        "uri": "file:///akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-report/stage-report.json"
+      },
+      {
+        "dataObjectInstanceId": "5a883477b6b72ebfcbeb2c25ce8da95c",
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "id": "cc4c90f86bf21fa04f0363266b1320e2",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-ai-assisted-analysis-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "3b659f94891e2e7a28c537af623e79a5",
+        "uri": "file:///akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-simulation/stage-simulation.json"
+      },
+      {
+        "dataObjectInstanceId": "d8dde05cfd95b70de09b5d49d7398e0f",
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "id": "7f7d00727eb171ba0d4f9762c38f7f7e",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-ai-assisted-analysis-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "3b659f94891e2e7a28c537af623e79a5",
+        "uri": "file:///akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-statistics/stage-statistics.json"
+      },
+      {
+        "dataObjectInstanceId": "c6322e3bbb4a1e0927944c4f89cfcebd",
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "id": "8a2277a695a3d6266ff5ef5bd26fb6f8",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-ai-assisted-analysis-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "3b659f94891e2e7a28c537af623e79a5",
+        "uri": "file:///akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-validate/stage-validate.json"
+      }
+    ],
+    "dataObjects": [
+      {
+        "attempt": 1,
+        "checksum": "sha256:b632491a24ce95bff5401773028177abb5eafe491bad34ec61949d4502402a73",
+        "dataObjectId": "98fe4efcdc82904c04deae5f21afb116",
+        "discovered": true,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "id": "e943354976aacb70e1a77be8c55256de",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+        "relativePath": "stage-ai-interpretation.json",
+        "sizeBytes": 618
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:f1b551ad60243000e375825372e54cc0e883a89b7e17d166a78abc6ab7c3db9b",
+        "dataObjectId": "0e4643daf2cb08bc3ffdd690c500f988",
+        "discovered": true,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "id": "5bd4d209dcb417280ca46e90c1e2e0f5",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+        "relativePath": "stage-measurements.json",
+        "sizeBytes": 10642
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+        "dataObjectId": "e9bcd8cd33cfea8ceb088f509048877c",
+        "discovered": true,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "id": "20ddf2a2b1a7889c2b38a87ccae4a03b",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment",
+        "relativePath": "stage-prepare-experiment.json",
+        "sizeBytes": 417
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:036ba9d47a509c490009c19c7eb34e60c1e11ed15e8d29df1cdb6360a76bd67c",
+        "dataObjectId": "629d80c61bde33ce44d30d0fdb0920be",
+        "discovered": true,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "id": "32eb406f9947904556df45d4e4f345e6",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+        "relativePath": "analysis.json",
+        "sizeBytes": 541
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:7378f95d9021290343a6d43bdbfa973ae9bf4c60ce6ba41c2f2192e84c392223",
+        "dataObjectId": "7c5bb1ded42131932124426cf5d7258b",
+        "discovered": true,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "id": "6327e92bf56d9d926a9f50364c59ec3a",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+        "relativePath": "interpretation.md",
+        "sizeBytes": 128
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:c6244a120b20840eb10fc4f53e9ec7b5194ed73f620a90f1e6e3f4d778b624b1",
+        "dataObjectId": "6727d0766ba8bf6eb5d0ba72332562cb",
+        "discovered": true,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "id": "1ca8eca994e7d50782bb1f40eadea475",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+        "relativePath": "stage-report.json",
+        "sizeBytes": 923
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:a0b6a9a0b78062007dcadcea9aa0737dea943bab6935ada23bd7020f14bb2ab6",
+        "dataObjectId": "cbdf0d8d4758c8f9417fb135cb4255fc",
+        "discovered": true,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "id": "5a883477b6b72ebfcbeb2c25ce8da95c",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+        "relativePath": "stage-simulation.json",
+        "sizeBytes": 7493
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:e97f985a632d3f4ecf0fefa6b0d648549ab1e80ac25ee088e63616c1a49331a7",
+        "dataObjectId": "ee8ccb3d54e0e3010c5e4482fa5d07d8",
+        "discovered": true,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "id": "d8dde05cfd95b70de09b5d49d7398e0f",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+        "relativePath": "stage-statistics.json",
+        "sizeBytes": 581
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:9c7251db8bf3506c230e4cce154af75d9b5d2486d2fdb556780ae12fcdd426e2",
+        "dataObjectId": "8fe4041441dc2dc524311752cd3953e8",
+        "discovered": true,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "id": "c6322e3bbb4a1e0927944c4f89cfcebd",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+        "relativePath": "stage-validate.json",
+        "sizeBytes": 952
+      }
+    ],
+    "dataTransfers": [
+      {
+        "bytes": 417,
+        "consumerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+        "cost": 0,
+        "durationSeconds": 0.18882179260253906,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "finishedAt": 1792523320.6570525,
+        "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-simulation:transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-simulation-0",
+        "logicalBytes": 417,
+        "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment",
+        "route": {
+          "consumerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.095265167,
+          "sourceEnvironmentId": "showcase-ai-assisted-analysis-v1",
+          "sourceResourceId": "showcase-ai-assisted-analysis-local-docker",
+          "sshChannelWaitSeconds": 5.009999999999999e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-ai-assisted-analysis-v1",
+          "targetResourceId": "showcase-ai-assisted-analysis-local-docker"
+        },
+        "sourceResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "startedAt": 1792523320.4682307,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-ai-assisted-analysis-local-docker"
+      },
+      {
+        "bytes": 7910,
+        "consumerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+        "cost": 0,
+        "durationSeconds": 0.14467930793762207,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "finishedAt": 1792523322.615128,
+        "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-measurements:transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-measurements-0",
+        "logicalBytes": 7910,
+        "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+        "route": {
+          "consumerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.07522000100000001,
+          "sourceEnvironmentId": "showcase-ai-assisted-analysis-v1",
+          "sourceResourceId": "showcase-ai-assisted-analysis-local-docker",
+          "sshChannelWaitSeconds": 5.009999999999999e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-ai-assisted-analysis-v1",
+          "targetResourceId": "showcase-ai-assisted-analysis-local-docker"
+        },
+        "sourceResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "startedAt": 1792523322.4704487,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-ai-assisted-analysis-local-docker"
+      },
+      {
+        "bytes": 18552,
+        "consumerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+        "cost": 0,
+        "durationSeconds": 0.16202020645141602,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "finishedAt": 1792523324.640941,
+        "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-statistics:transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-statistics-0",
+        "logicalBytes": 18552,
+        "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+        "route": {
+          "consumerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+          "filesTransferred": 3,
+          "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.07139783400000001,
+          "sourceEnvironmentId": "showcase-ai-assisted-analysis-v1",
+          "sourceResourceId": "showcase-ai-assisted-analysis-local-docker",
+          "sshChannelWaitSeconds": 5.83e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-ai-assisted-analysis-v1",
+          "targetResourceId": "showcase-ai-assisted-analysis-local-docker"
+        },
+        "sourceResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "startedAt": 1792523324.4789207,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-ai-assisted-analysis-local-docker"
+      },
+      {
+        "bytes": 18552,
+        "consumerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+        "cost": 0,
+        "durationSeconds": 0.15932273864746094,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "finishedAt": 1792523324.6492696,
+        "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation:transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation-0",
+        "logicalBytes": 18552,
+        "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+        "route": {
+          "consumerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+          "filesTransferred": 3,
+          "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.069425083,
+          "sourceEnvironmentId": "showcase-ai-assisted-analysis-v1",
+          "sourceResourceId": "showcase-ai-assisted-analysis-local-docker",
+          "sshChannelWaitSeconds": 4.1599999999999997e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-ai-assisted-analysis-v1",
+          "targetResourceId": "showcase-ai-assisted-analysis-local-docker"
+        },
+        "sourceResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "startedAt": 1792523324.4899468,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-ai-assisted-analysis-local-docker"
+      },
+      {
+        "bytes": 618,
+        "consumerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+        "cost": 0,
+        "durationSeconds": 0.35280752182006836,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "finishedAt": 1792523326.8695269,
+        "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-validate:transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-validate-1",
+        "logicalBytes": 19170,
+        "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+        "route": {
+          "consumerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.076871458,
+          "sourceEnvironmentId": "showcase-ai-assisted-analysis-v1",
+          "sourceResourceId": "showcase-ai-assisted-analysis-local-docker",
+          "sshChannelWaitSeconds": 0.000001043,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-ai-assisted-analysis-v1",
+          "targetResourceId": "showcase-ai-assisted-analysis-local-docker"
+        },
+        "sourceResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "startedAt": 1792523326.5167193,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-ai-assisted-analysis-local-docker"
+      },
+      {
+        "bytes": 19133,
+        "consumerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+        "cost": 0,
+        "durationSeconds": 0.20808982849121094,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "finishedAt": 1792523326.7248092,
+        "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-validate:transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-validate-0",
+        "logicalBytes": 19133,
+        "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+        "route": {
+          "consumerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+          "filesTransferred": 4,
+          "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.094212625,
+          "sourceEnvironmentId": "showcase-ai-assisted-analysis-v1",
+          "sourceResourceId": "showcase-ai-assisted-analysis-local-docker",
+          "sshChannelWaitSeconds": 6.249999999999999e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-ai-assisted-analysis-v1",
+          "targetResourceId": "showcase-ai-assisted-analysis-local-docker"
+        },
+        "sourceResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "startedAt": 1792523326.5167193,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-ai-assisted-analysis-local-docker"
+      },
+      {
+        "bytes": 20703,
+        "consumerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+        "cost": 0,
+        "durationSeconds": 0.11692953109741211,
+        "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "finishedAt": 1792523328.5843189,
+        "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-report:transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-report-0",
+        "logicalBytes": 20703,
+        "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+        "route": {
+          "consumerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+          "filesTransferred": 6,
+          "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.047531959,
+          "sourceEnvironmentId": "showcase-ai-assisted-analysis-v1",
+          "sourceResourceId": "showcase-ai-assisted-analysis-local-docker",
+          "sshChannelWaitSeconds": 5.01e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-ai-assisted-analysis-v1",
+          "targetResourceId": "showcase-ai-assisted-analysis-local-docker"
+        },
+        "sourceResourceId": "showcase-ai-assisted-analysis-local-docker",
+        "startedAt": 1792523328.4673893,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-ai-assisted-analysis-local-docker"
+      }
+    ],
+    "events": [
+      {
+        "aggregateId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.started",
+        "id": "61498a76dfff858aa3e74dee13dbe120",
+        "occurredAt": "2026-10-20T19:08:39.107311127Z",
+        "payload": {
+          "mode": "real",
+          "schedulePlanId": "showcase-ai-assisted-analysis-local-6ec20be3c8-manual-plan-20261020t190838.811067000"
+        }
+      },
+      {
+        "aggregateId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "0abac898c9cb05fc906ebb03652f8a23",
+        "occurredAt": "2026-10-20T19:08:40.381451711Z",
+        "payload": {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment",
+          "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "98febdfded42aa55346ce7c2d4da24f5",
+        "occurredAt": "2026-10-20T19:08:40.458386586Z",
+        "payload": {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment",
+          "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+          "failureReason": "",
+          "runtimeSeconds": 0.13252663612365723,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "6f3cac1cc4856ea891e4ba6b54519de5",
+        "occurredAt": "2026-10-20T19:08:42.383362337Z",
+        "payload": {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+          "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "c74270d1484c9902efe015507e4dd794",
+        "occurredAt": "2026-10-20T19:08:42.464816504Z",
+        "payload": {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+          "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+          "failureReason": "",
+          "runtimeSeconds": 0.13411498069763184,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "51623629cfe3bd5e279912b57e6c64fa",
+        "occurredAt": "2026-10-20T19:08:44.384898796Z",
+        "payload": {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+          "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "f06aa4dae919129490dc864aa56790b8",
+        "occurredAt": "2026-10-20T19:08:44.460343504Z",
+        "payload": {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+          "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+          "failureReason": "",
+          "runtimeSeconds": 0.12107396125793457,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "47462b619d6bf2dd41e0dc75bb6ff932",
+        "occurredAt": "2026-10-20T19:08:46.396446922Z",
+        "payload": {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+          "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "a41392953f2d6ce9d5a0ad0ffce9402e",
+        "occurredAt": "2026-10-20T19:08:46.402395464Z",
+        "payload": {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+          "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "cb175b10b218764ced2398fad8098be2",
+        "occurredAt": "2026-10-20T19:08:46.50459163Z",
+        "payload": {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+          "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+          "failureReason": "",
+          "runtimeSeconds": 0.1279160976409912,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "c1744deb4b4558482deb2d4486397fbd",
+        "occurredAt": "2026-10-20T19:08:46.508825005Z",
+        "payload": {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+          "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+          "failureReason": "",
+          "runtimeSeconds": 0.12793850898742676,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "08a68d9fda70127ea44e5ea0929f52d0",
+        "occurredAt": "2026-10-20T19:08:48.399048965Z",
+        "payload": {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+          "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "bc2012691e9f81a84c554f60f4e9db0c",
+        "occurredAt": "2026-10-20T19:08:48.462370381Z",
+        "payload": {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+          "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11046099662780762,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "ee351f399ad968ca1de89ed418b8e956",
+        "occurredAt": "2026-10-20T19:08:50.401230216Z",
+        "payload": {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+          "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "ce2230d3fd4d1d81852fdedacde7c6eb",
+        "occurredAt": "2026-10-20T19:08:50.478225549Z",
+        "payload": {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+          "executionRunId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11084866523742676,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.completed",
+        "id": "8b5de7da61e0265a4fe9d368812388f1",
+        "occurredAt": "2026-10-20T19:08:50.481663007Z",
+        "payload": {
+          "cost": 0,
+          "makespanSeconds": 9.471428632736206
+        }
+      }
+    ],
+    "handles": [
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+        "artifacts": {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:b632491a24ce95bff5401773028177abb5eafe491bad34ec61949d4502402a73",
+              "modifiedUnixNano": 1792523324959733000,
+              "path": "stage-ai-interpretation.json",
+              "sizeBytes": 618
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:b632491a24ce95bff5401773028177abb5eafe491bad34ec61949d4502402a73",
+              "modifiedUnixNano": 1792523324959733000,
+              "path": "stage-ai-interpretation.json",
+              "sizeBytes": 618
+            },
+            {
+              "checksum": "sha256:f1b551ad60243000e375825372e54cc0e883a89b7e17d166a78abc6ab7c3db9b",
+              "modifiedUnixNano": 1792523324604733000,
+              "path": "stage-measurements.json",
+              "sizeBytes": 10642
+            },
+            {
+              "checksum": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "modifiedUnixNano": 1792523324604733000,
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            },
+            {
+              "checksum": "sha256:a0b6a9a0b78062007dcadcea9aa0737dea943bab6935ada23bd7020f14bb2ab6",
+              "modifiedUnixNano": 1792523324604733000,
+              "path": "stage-simulation.json",
+              "sizeBytes": 7493
+            }
+          ],
+          "finishedAt": 1792523324.9665823,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:f1b551ad60243000e375825372e54cc0e883a89b7e17d166a78abc6ab7c3db9b",
+              "modifiedUnixNano": 1792523324604733000,
+              "path": "stage-measurements.json",
+              "sizeBytes": 10642
+            },
+            {
+              "checksum": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "modifiedUnixNano": 1792523324604733000,
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            },
+            {
+              "checksum": "sha256:a0b6a9a0b78062007dcadcea9aa0737dea943bab6935ada23bd7020f14bb2ab6",
+              "modifiedUnixNano": 1792523324604733000,
+              "path": "stage-simulation.json",
+              "sizeBytes": 7493
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.12793850898742676,
+              "finishedAt": 1792523324.9665823,
+              "phase": "execution",
+              "startedAt": 1792523324.8386438,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+          "runId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+          "runtime": "showcase-ai-assisted-analysis-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523324.8386438,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 4,
+            "initialFiles": 3,
+            "modifiedFiles": 0,
+            "outputBytes": 618
+          }
+        },
+        "exitCode": 0,
+        "externalId": "61adaef30509d21b98241ac7dfe139b00bc6cfdf2bf46af8ab736c0b5a9c032e",
+        "finishedAt": 1792523324.9665823,
+        "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+        "log": "{\"activity\": \"ai-interpretation\", \"status\": \"success\", \"resultKeys\": [\"fittedDecayRate\", \"halfLife\", \"method\", \"interpretation\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-ai-assisted-analysis-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523324.8386514,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+          "submittedAt": 1792523324.8386438
+        },
+        "resourceId": "showcase-ai-assisted-analysis-local-docker",
+        "runId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "runtimeId": "showcase-ai-assisted-analysis-local",
+        "startedAt": 1792523324.8386438,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+        "artifacts": {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:f1b551ad60243000e375825372e54cc0e883a89b7e17d166a78abc6ab7c3db9b",
+              "modifiedUnixNano": 1792523322872733000,
+              "path": "stage-measurements.json",
+              "sizeBytes": 10642
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:f1b551ad60243000e375825372e54cc0e883a89b7e17d166a78abc6ab7c3db9b",
+              "modifiedUnixNano": 1792523322872733000,
+              "path": "stage-measurements.json",
+              "sizeBytes": 10642
+            },
+            {
+              "checksum": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "modifiedUnixNano": 1792523322568733000,
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            },
+            {
+              "checksum": "sha256:a0b6a9a0b78062007dcadcea9aa0737dea943bab6935ada23bd7020f14bb2ab6",
+              "modifiedUnixNano": 1792523322568733000,
+              "path": "stage-simulation.json",
+              "sizeBytes": 7493
+            }
+          ],
+          "finishedAt": 1792523322.8785155,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "modifiedUnixNano": 1792523322568733000,
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            },
+            {
+              "checksum": "sha256:a0b6a9a0b78062007dcadcea9aa0737dea943bab6935ada23bd7020f14bb2ab6",
+              "modifiedUnixNano": 1792523322568733000,
+              "path": "stage-simulation.json",
+              "sizeBytes": 7493
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.12107396125793457,
+              "finishedAt": 1792523322.8785155,
+              "phase": "execution",
+              "startedAt": 1792523322.7574415,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+          "runId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+          "runtime": "showcase-ai-assisted-analysis-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523322.7574415,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 3,
+            "initialFiles": 2,
+            "modifiedFiles": 0,
+            "outputBytes": 10642
+          }
+        },
+        "exitCode": 0,
+        "externalId": "d5274f219a5eae8c328969cbb2809d3c0d3c7ac245b2e76e0e5092105ac0858b",
+        "finishedAt": 1792523322.8785155,
+        "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+        "log": "{\"activity\": \"measurements\", \"status\": \"success\", \"resultKeys\": [\"samples\", \"setup\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-ai-assisted-analysis-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523322.757449,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+          "submittedAt": 1792523322.7574415
+        },
+        "resourceId": "showcase-ai-assisted-analysis-local-docker",
+        "runId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "runtimeId": "showcase-ai-assisted-analysis-local",
+        "startedAt": 1792523322.7574415,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment",
+        "artifacts": {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "modifiedUnixNano": 1792523319471733000,
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "modifiedUnixNano": 1792523319471733000,
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            }
+          ],
+          "finishedAt": 1792523319.477775,
+          "phases": [
+            {
+              "durationSeconds": 0.13252663612365723,
+              "finishedAt": 1792523319.477775,
+              "phase": "execution",
+              "startedAt": 1792523319.3452485,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment",
+          "runId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+          "runtime": "showcase-ai-assisted-analysis-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523319.3452485,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 1,
+            "initialFiles": 0,
+            "modifiedFiles": 0,
+            "outputBytes": 417
+          }
+        },
+        "exitCode": 0,
+        "externalId": "988c96a71524ada6b3c811b588553ee5da343b629416d4d4c8060208d0d0f660",
+        "finishedAt": 1792523319.477775,
+        "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment",
+        "log": "{\"activity\": \"prepare-experiment\", \"status\": \"success\", \"resultKeys\": [\"initial\", \"decay\", \"step\", \"steps\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-ai-assisted-analysis-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523319.3452597,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment",
+          "submittedAt": 1792523319.3452485
+        },
+        "resourceId": "showcase-ai-assisted-analysis-local-docker",
+        "runId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "runtimeId": "showcase-ai-assisted-analysis-local",
+        "startedAt": 1792523319.3452485,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+        "artifacts": {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:036ba9d47a509c490009c19c7eb34e60c1e11ed15e8d29df1cdb6360a76bd67c",
+              "modifiedUnixNano": 1792523328810733000,
+              "path": "analysis.json",
+              "sizeBytes": 541
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:7378f95d9021290343a6d43bdbfa973ae9bf4c60ce6ba41c2f2192e84c392223",
+              "modifiedUnixNano": 1792523328810733000,
+              "path": "interpretation.md",
+              "sizeBytes": 128
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:c6244a120b20840eb10fc4f53e9ec7b5194ed73f620a90f1e6e3f4d778b624b1",
+              "modifiedUnixNano": 1792523328810733000,
+              "path": "stage-report.json",
+              "sizeBytes": 923
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:036ba9d47a509c490009c19c7eb34e60c1e11ed15e8d29df1cdb6360a76bd67c",
+              "modifiedUnixNano": 1792523328810733000,
+              "path": "analysis.json",
+              "sizeBytes": 541
+            },
+            {
+              "checksum": "sha256:7378f95d9021290343a6d43bdbfa973ae9bf4c60ce6ba41c2f2192e84c392223",
+              "modifiedUnixNano": 1792523328810733000,
+              "path": "interpretation.md",
+              "sizeBytes": 128
+            },
+            {
+              "checksum": "sha256:b632491a24ce95bff5401773028177abb5eafe491bad34ec61949d4502402a73",
+              "modifiedUnixNano": 1792523328560733000,
+              "path": "stage-ai-interpretation.json",
+              "sizeBytes": 618
+            },
+            {
+              "checksum": "sha256:f1b551ad60243000e375825372e54cc0e883a89b7e17d166a78abc6ab7c3db9b",
+              "modifiedUnixNano": 1792523328560733000,
+              "path": "stage-measurements.json",
+              "sizeBytes": 10642
+            },
+            {
+              "checksum": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "modifiedUnixNano": 1792523328560733000,
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            },
+            {
+              "checksum": "sha256:c6244a120b20840eb10fc4f53e9ec7b5194ed73f620a90f1e6e3f4d778b624b1",
+              "modifiedUnixNano": 1792523328810733000,
+              "path": "stage-report.json",
+              "sizeBytes": 923
+            },
+            {
+              "checksum": "sha256:a0b6a9a0b78062007dcadcea9aa0737dea943bab6935ada23bd7020f14bb2ab6",
+              "modifiedUnixNano": 1792523328560733000,
+              "path": "stage-simulation.json",
+              "sizeBytes": 7493
+            },
+            {
+              "checksum": "sha256:e97f985a632d3f4ecf0fefa6b0d648549ab1e80ac25ee088e63616c1a49331a7",
+              "modifiedUnixNano": 1792523328560733000,
+              "path": "stage-statistics.json",
+              "sizeBytes": 581
+            },
+            {
+              "checksum": "sha256:9c7251db8bf3506c230e4cce154af75d9b5d2486d2fdb556780ae12fcdd426e2",
+              "modifiedUnixNano": 1792523328560733000,
+              "path": "stage-validate.json",
+              "sizeBytes": 952
+            }
+          ],
+          "finishedAt": 1792523328.816677,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:b632491a24ce95bff5401773028177abb5eafe491bad34ec61949d4502402a73",
+              "modifiedUnixNano": 1792523328560733000,
+              "path": "stage-ai-interpretation.json",
+              "sizeBytes": 618
+            },
+            {
+              "checksum": "sha256:f1b551ad60243000e375825372e54cc0e883a89b7e17d166a78abc6ab7c3db9b",
+              "modifiedUnixNano": 1792523328560733000,
+              "path": "stage-measurements.json",
+              "sizeBytes": 10642
+            },
+            {
+              "checksum": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "modifiedUnixNano": 1792523328560733000,
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            },
+            {
+              "checksum": "sha256:a0b6a9a0b78062007dcadcea9aa0737dea943bab6935ada23bd7020f14bb2ab6",
+              "modifiedUnixNano": 1792523328560733000,
+              "path": "stage-simulation.json",
+              "sizeBytes": 7493
+            },
+            {
+              "checksum": "sha256:e97f985a632d3f4ecf0fefa6b0d648549ab1e80ac25ee088e63616c1a49331a7",
+              "modifiedUnixNano": 1792523328560733000,
+              "path": "stage-statistics.json",
+              "sizeBytes": 581
+            },
+            {
+              "checksum": "sha256:9c7251db8bf3506c230e4cce154af75d9b5d2486d2fdb556780ae12fcdd426e2",
+              "modifiedUnixNano": 1792523328560733000,
+              "path": "stage-validate.json",
+              "sizeBytes": 952
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11084866523742676,
+              "finishedAt": 1792523328.816677,
+              "phase": "execution",
+              "startedAt": 1792523328.7058284,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+          "runId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+          "runtime": "showcase-ai-assisted-analysis-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523328.7058284,
+          "summary": {
+            "createdFiles": 3,
+            "deletedFiles": 0,
+            "finalFiles": 9,
+            "initialFiles": 6,
+            "modifiedFiles": 0,
+            "outputBytes": 1592
+          }
+        },
+        "exitCode": 0,
+        "externalId": "e790b2f9d044e569d4023be31701012d987f51f73c0152706d4df479a533de04",
+        "finishedAt": 1792523328.816677,
+        "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+        "log": "{\"activity\": \"report\", \"status\": \"success\", \"resultKeys\": [\"statistics\", \"inference\", \"checksPassed\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-ai-assisted-analysis-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523328.7058358,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+          "submittedAt": 1792523328.7058284
+        },
+        "resourceId": "showcase-ai-assisted-analysis-local-docker",
+        "runId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "runtimeId": "showcase-ai-assisted-analysis-local",
+        "startedAt": 1792523328.7058284,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+        "artifacts": {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:a0b6a9a0b78062007dcadcea9aa0737dea943bab6935ada23bd7020f14bb2ab6",
+              "modifiedUnixNano": 1792523320934733000,
+              "path": "stage-simulation.json",
+              "sizeBytes": 7493
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "modifiedUnixNano": 1792523320613733000,
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            },
+            {
+              "checksum": "sha256:a0b6a9a0b78062007dcadcea9aa0737dea943bab6935ada23bd7020f14bb2ab6",
+              "modifiedUnixNano": 1792523320934733000,
+              "path": "stage-simulation.json",
+              "sizeBytes": 7493
+            }
+          ],
+          "finishedAt": 1792523320.9413757,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "modifiedUnixNano": 1792523320613733000,
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.13411498069763184,
+              "finishedAt": 1792523320.9413757,
+              "phase": "execution",
+              "startedAt": 1792523320.8072608,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+          "runId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+          "runtime": "showcase-ai-assisted-analysis-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523320.8072608,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 7493
+          }
+        },
+        "exitCode": 0,
+        "externalId": "22b124d0ed7f93eca97a04a41ae2a3ed585809dcf1ce4117424869d52bec1905",
+        "finishedAt": 1792523320.9413757,
+        "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+        "log": "{\"activity\": \"simulation\", \"status\": \"success\", \"resultKeys\": [\"samples\", \"setup\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-ai-assisted-analysis-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523320.8072655,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+          "submittedAt": 1792523320.8072608
+        },
+        "resourceId": "showcase-ai-assisted-analysis-local-docker",
+        "runId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "runtimeId": "showcase-ai-assisted-analysis-local",
+        "startedAt": 1792523320.8072608,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+        "artifacts": {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:e97f985a632d3f4ecf0fefa6b0d648549ab1e80ac25ee088e63616c1a49331a7",
+              "modifiedUnixNano": 1792523324956733000,
+              "path": "stage-statistics.json",
+              "sizeBytes": 581
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:f1b551ad60243000e375825372e54cc0e883a89b7e17d166a78abc6ab7c3db9b",
+              "modifiedUnixNano": 1792523324618733000,
+              "path": "stage-measurements.json",
+              "sizeBytes": 10642
+            },
+            {
+              "checksum": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "modifiedUnixNano": 1792523324618733000,
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            },
+            {
+              "checksum": "sha256:a0b6a9a0b78062007dcadcea9aa0737dea943bab6935ada23bd7020f14bb2ab6",
+              "modifiedUnixNano": 1792523324618733000,
+              "path": "stage-simulation.json",
+              "sizeBytes": 7493
+            },
+            {
+              "checksum": "sha256:e97f985a632d3f4ecf0fefa6b0d648549ab1e80ac25ee088e63616c1a49331a7",
+              "modifiedUnixNano": 1792523324956733000,
+              "path": "stage-statistics.json",
+              "sizeBytes": 581
+            }
+          ],
+          "finishedAt": 1792523324.963339,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:f1b551ad60243000e375825372e54cc0e883a89b7e17d166a78abc6ab7c3db9b",
+              "modifiedUnixNano": 1792523324618733000,
+              "path": "stage-measurements.json",
+              "sizeBytes": 10642
+            },
+            {
+              "checksum": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "modifiedUnixNano": 1792523324618733000,
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            },
+            {
+              "checksum": "sha256:a0b6a9a0b78062007dcadcea9aa0737dea943bab6935ada23bd7020f14bb2ab6",
+              "modifiedUnixNano": 1792523324618733000,
+              "path": "stage-simulation.json",
+              "sizeBytes": 7493
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.1279160976409912,
+              "finishedAt": 1792523324.963339,
+              "phase": "execution",
+              "startedAt": 1792523324.835423,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+          "runId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+          "runtime": "showcase-ai-assisted-analysis-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523324.835423,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 4,
+            "initialFiles": 3,
+            "modifiedFiles": 0,
+            "outputBytes": 581
+          }
+        },
+        "exitCode": 0,
+        "externalId": "17f5e4cf54c086f844c5e2f2ea45cc04ed86260291c58ab86114c9e79dda7c8f",
+        "finishedAt": 1792523324.963339,
+        "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+        "log": "{\"activity\": \"statistics\", \"status\": \"success\", \"resultKeys\": [\"meanAbsoluteError\", \"maxError\", \"count\", \"final\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-ai-assisted-analysis-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523324.8354273,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+          "submittedAt": 1792523324.835423
+        },
+        "resourceId": "showcase-ai-assisted-analysis-local-docker",
+        "runId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "runtimeId": "showcase-ai-assisted-analysis-local",
+        "startedAt": 1792523324.835423,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+        "artifacts": {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:9c7251db8bf3506c230e4cce154af75d9b5d2486d2fdb556780ae12fcdd426e2",
+              "modifiedUnixNano": 1792523327130733000,
+              "path": "stage-validate.json",
+              "sizeBytes": 952
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:b632491a24ce95bff5401773028177abb5eafe491bad34ec61949d4502402a73",
+              "modifiedUnixNano": 1792523326821733000,
+              "path": "stage-ai-interpretation.json",
+              "sizeBytes": 618
+            },
+            {
+              "checksum": "sha256:f1b551ad60243000e375825372e54cc0e883a89b7e17d166a78abc6ab7c3db9b",
+              "modifiedUnixNano": 1792523326676733000,
+              "path": "stage-measurements.json",
+              "sizeBytes": 10642
+            },
+            {
+              "checksum": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "modifiedUnixNano": 1792523326676733000,
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            },
+            {
+              "checksum": "sha256:a0b6a9a0b78062007dcadcea9aa0737dea943bab6935ada23bd7020f14bb2ab6",
+              "modifiedUnixNano": 1792523326676733000,
+              "path": "stage-simulation.json",
+              "sizeBytes": 7493
+            },
+            {
+              "checksum": "sha256:e97f985a632d3f4ecf0fefa6b0d648549ab1e80ac25ee088e63616c1a49331a7",
+              "modifiedUnixNano": 1792523326676733000,
+              "path": "stage-statistics.json",
+              "sizeBytes": 581
+            },
+            {
+              "checksum": "sha256:9c7251db8bf3506c230e4cce154af75d9b5d2486d2fdb556780ae12fcdd426e2",
+              "modifiedUnixNano": 1792523327130733000,
+              "path": "stage-validate.json",
+              "sizeBytes": 952
+            }
+          ],
+          "finishedAt": 1792523327.1380708,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:b632491a24ce95bff5401773028177abb5eafe491bad34ec61949d4502402a73",
+              "modifiedUnixNano": 1792523326821733000,
+              "path": "stage-ai-interpretation.json",
+              "sizeBytes": 618
+            },
+            {
+              "checksum": "sha256:f1b551ad60243000e375825372e54cc0e883a89b7e17d166a78abc6ab7c3db9b",
+              "modifiedUnixNano": 1792523326676733000,
+              "path": "stage-measurements.json",
+              "sizeBytes": 10642
+            },
+            {
+              "checksum": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "modifiedUnixNano": 1792523326676733000,
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            },
+            {
+              "checksum": "sha256:a0b6a9a0b78062007dcadcea9aa0737dea943bab6935ada23bd7020f14bb2ab6",
+              "modifiedUnixNano": 1792523326676733000,
+              "path": "stage-simulation.json",
+              "sizeBytes": 7493
+            },
+            {
+              "checksum": "sha256:e97f985a632d3f4ecf0fefa6b0d648549ab1e80ac25ee088e63616c1a49331a7",
+              "modifiedUnixNano": 1792523326676733000,
+              "path": "stage-statistics.json",
+              "sizeBytes": 581
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11046099662780762,
+              "finishedAt": 1792523327.1380708,
+              "phase": "execution",
+              "startedAt": 1792523327.0276098,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+          "runId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+          "runtime": "showcase-ai-assisted-analysis-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523327.0276098,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 6,
+            "initialFiles": 5,
+            "modifiedFiles": 0,
+            "outputBytes": 952
+          }
+        },
+        "exitCode": 0,
+        "externalId": "b0f310333dc16ae605824fc6c587fdc7384e20847c8722359f293d3d16f0185f",
+        "finishedAt": 1792523327.1380708,
+        "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+        "log": "{\"activity\": \"validate\", \"status\": \"success\", \"resultKeys\": [\"statistics\", \"inference\", \"checksPassed\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-ai-assisted-analysis-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523327.0276294,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+          "submittedAt": 1792523327.0276098
+        },
+        "resourceId": "showcase-ai-assisted-analysis-local-docker",
+        "runId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "runtimeId": "showcase-ai-assisted-analysis-local",
+        "startedAt": 1792523327.0276098,
+        "status": "completed"
+      }
+    ],
+    "infrastructureRuns": [],
+    "operationEvents": [],
+    "run": {
+      "activityCount": 7,
+      "breakdown": {
+        "computeSeconds": 0.864879846572876,
+        "interferenceSeconds": 0,
+        "overheadSeconds": 0,
+        "queueSeconds": 0,
+        "transferSeconds": 1.3326709270477295
+      },
+      "completedActivityCount": 7,
+      "cost": 0,
+      "finishedAt": "2026-10-20T19:08:50Z",
+      "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+      "kind": "workflow",
+      "makespanSeconds": 9.471428632736206,
+      "mode": "real",
+      "schedulePlanId": "showcase-ai-assisted-analysis-local-6ec20be3c8-manual-plan-20261020t190838.811067000",
+      "seed": 0,
+      "startedAt": "2026-10-20T19:08:39Z",
+      "status": "completed",
+      "title": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+      "transferredBytes": 85885
+    },
+    "timeline": {
+      "computeMakespanSeconds": 9.471428632736206,
+      "coveredWallSeconds": 2.710244655609131,
+      "finishedAt": 1792523330,
+      "phases": [
+        {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment",
+          "category": "resource-queue",
+          "durationSeconds": 0.20574402809143066,
+          "finishedAt": 1792523319.3452485,
+          "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523319.1395044,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment",
+          "category": "runtime",
+          "durationSeconds": 0.13252663612365723,
+          "finishedAt": 1792523319.477775,
+          "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523319.3452485,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+          "category": "resource-queue",
+          "durationSeconds": 0.005335807800292969,
+          "finishedAt": 1792523320.4682307,
+          "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-simulation:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523320.462895,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.18882179260253906,
+          "finishedAt": 1792523320.6570525,
+          "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-simulation:transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-simulation-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523320.4682307,
+          "status": "completed",
+          "transferId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-simulation:transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-simulation-0"
+        },
+        {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+          "category": "launch",
+          "durationSeconds": 0.1502082347869873,
+          "finishedAt": 1792523320.8072608,
+          "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-simulation:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523320.6570525,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+          "category": "runtime",
+          "durationSeconds": 0.13411498069763184,
+          "finishedAt": 1792523320.9413757,
+          "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-simulation:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523320.8072608,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+          "category": "resource-queue",
+          "durationSeconds": 0.003080129623413086,
+          "finishedAt": 1792523322.4704487,
+          "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-measurements:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523322.4673686,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.14467930793762207,
+          "finishedAt": 1792523322.615128,
+          "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-measurements:transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-measurements-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523322.4704487,
+          "status": "completed",
+          "transferId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-measurements:transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-measurements-0"
+        },
+        {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+          "category": "launch",
+          "durationSeconds": 0.14231348037719727,
+          "finishedAt": 1792523322.7574415,
+          "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-measurements:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523322.615128,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+          "category": "runtime",
+          "durationSeconds": 0.12107396125793457,
+          "finishedAt": 1792523322.8785155,
+          "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-measurements:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523322.7574415,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+          "category": "resource-queue",
+          "durationSeconds": 0.026329994201660156,
+          "finishedAt": 1792523324.4899468,
+          "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523324.4636168,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+          "category": "resource-queue",
+          "durationSeconds": 0.014192342758178711,
+          "finishedAt": 1792523324.4789207,
+          "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-statistics:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523324.4647284,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.16202020645141602,
+          "finishedAt": 1792523324.640941,
+          "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-statistics:transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-statistics-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523324.4789207,
+          "status": "completed",
+          "transferId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-statistics:transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-statistics-0"
+        },
+        {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.15932273864746094,
+          "finishedAt": 1792523324.6492696,
+          "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation:transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523324.4899468,
+          "status": "completed",
+          "transferId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation:transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation-0"
+        },
+        {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+          "category": "launch",
+          "durationSeconds": 0.19448208808898926,
+          "finishedAt": 1792523324.835423,
+          "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-statistics:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523324.640941,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+          "category": "launch",
+          "durationSeconds": 0.18937420845031738,
+          "finishedAt": 1792523324.8386438,
+          "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523324.6492696,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+          "category": "runtime",
+          "durationSeconds": 0.1279160976409912,
+          "finishedAt": 1792523324.963339,
+          "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-statistics:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523324.835423,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+          "category": "runtime",
+          "durationSeconds": 0.12793850898742676,
+          "finishedAt": 1792523324.9665823,
+          "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523324.8386438,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+          "category": "resource-queue",
+          "durationSeconds": 0.00555419921875,
+          "finishedAt": 1792523326.5167193,
+          "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-validate:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523326.5111651,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.20808982849121094,
+          "finishedAt": 1792523326.7248092,
+          "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-validate:transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-validate-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523326.5167193,
+          "status": "completed",
+          "transferId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-validate:transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-validate-0"
+        },
+        {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.35280752182006836,
+          "finishedAt": 1792523326.8695269,
+          "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-validate:transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-validate-1",
+          "source": "transfer-observation",
+          "startedAt": 1792523326.5167193,
+          "status": "completed",
+          "transferId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-validate:transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-validate-1"
+        },
+        {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+          "category": "launch",
+          "durationSeconds": 0.1580829620361328,
+          "finishedAt": 1792523327.0276098,
+          "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-validate:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523326.8695269,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+          "category": "runtime",
+          "durationSeconds": 0.11046099662780762,
+          "finishedAt": 1792523327.1380708,
+          "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-validate:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523327.0276098,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+          "category": "resource-queue",
+          "durationSeconds": 0.003187417984008789,
+          "finishedAt": 1792523328.4673893,
+          "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-report:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523328.464202,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.11692953109741211,
+          "finishedAt": 1792523328.5843189,
+          "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-report:transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-report-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523328.4673893,
+          "status": "completed",
+          "transferId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-report:transfer-workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-report-0"
+        },
+        {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+          "category": "launch",
+          "durationSeconds": 0.12150955200195312,
+          "finishedAt": 1792523328.7058284,
+          "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-report:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523328.5843189,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+          "category": "runtime",
+          "durationSeconds": 0.11084866523742676,
+          "finishedAt": 1792523328.816677,
+          "id": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000:showcase-ai-assisted-analysis-local-6ec20be3c8-report:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523328.7058284,
+          "status": "completed"
+        }
+      ],
+      "startedAt": 1792523319,
+      "totals": {
+        "destroySeconds": 0,
+        "executablePreparationSeconds": 0,
+        "launchSeconds": 0.9559705257415771,
+        "provisionSeconds": 0,
+        "resourceQueueSeconds": 0.2634239196777344,
+        "runtimeSeconds": 0.864879846572876,
+        "startSeconds": 0,
+        "stopSeconds": 0,
+        "validationSeconds": 0,
+        "workspaceTransferSeconds": 1.3326709270477295
+      },
+      "unclassifiedWallSeconds": 8.28975534439087,
+      "wallSeconds": 11
+    },
+    "workspaceLeases": [
+      {
+        "consumerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+        "id": "workspace-lease-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation-showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+        "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:08:46.877363131Z",
+        "runId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "workspaceId": "workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation"
+      },
+      {
+        "consumerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+        "id": "workspace-lease-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-measurements-showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+        "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:08:44.651103338Z",
+        "runId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "workspaceId": "workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-measurements"
+      },
+      {
+        "consumerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+        "id": "workspace-lease-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-measurements-showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+        "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:08:44.643242713Z",
+        "runId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "workspaceId": "workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-measurements"
+      },
+      {
+        "consumerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+        "id": "workspace-lease-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment-showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+        "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:08:40.658809961Z",
+        "runId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "workspaceId": "workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment"
+      },
+      {
+        "consumerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+        "id": "workspace-lease-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-simulation-showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+        "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:08:42.616893254Z",
+        "runId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "workspaceId": "workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-simulation"
+      },
+      {
+        "consumerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+        "id": "workspace-lease-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-statistics-showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+        "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:08:46.877363131Z",
+        "runId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "workspaceId": "workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-statistics"
+      },
+      {
+        "consumerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+        "id": "workspace-lease-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-validate-showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+        "producerActivityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:08:48.586141298Z",
+        "runId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "workspaceId": "workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-validate"
+      }
+    ],
+    "workspaces": [
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+        "createdAt": "2026-10-20T19:08:39.109256919Z",
+        "driver": "local",
+        "environmentId": "showcase-ai-assisted-analysis-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+        "fileCount": 4,
+        "id": "workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+        "inputBytes": 18552,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:b632491a24ce95bff5401773028177abb5eafe491bad34ec61949d4502402a73",
+              "path": "stage-ai-interpretation.json",
+              "sizeBytes": 618
+            },
+            {
+              "digest": "sha256:f1b551ad60243000e375825372e54cc0e883a89b7e17d166a78abc6ab7c3db9b",
+              "path": "stage-measurements.json",
+              "sizeBytes": 10642
+            },
+            {
+              "digest": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            },
+            {
+              "digest": "sha256:a0b6a9a0b78062007dcadcea9aa0737dea943bab6935ada23bd7020f14bb2ab6",
+              "path": "stage-simulation.json",
+              "sizeBytes": 7493
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:f1b551ad60243000e375825372e54cc0e883a89b7e17d166a78abc6ab7c3db9b",
+              "path": "stage-measurements.json",
+              "sizeBytes": 10642
+            },
+            {
+              "digest": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            },
+            {
+              "digest": "sha256:a0b6a9a0b78062007dcadcea9aa0737dea943bab6935ada23bd7020f14bb2ab6",
+              "path": "stage-simulation.json",
+              "sizeBytes": 7493
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:f1b551ad60243000e375825372e54cc0e883a89b7e17d166a78abc6ab7c3db9b",
+              "path": "stage-measurements.json",
+              "sizeBytes": 10642
+            },
+            {
+              "digest": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            },
+            {
+              "digest": "sha256:a0b6a9a0b78062007dcadcea9aa0737dea943bab6935ada23bd7020f14bb2ab6",
+              "path": "stage-simulation.json",
+              "sizeBytes": 7493
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:b632491a24ce95bff5401773028177abb5eafe491bad34ec61949d4502402a73",
+              "path": "stage-ai-interpretation.json",
+              "sizeBytes": 618
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation",
+        "outputBytes": 618,
+        "pinned": false,
+        "reclaimedBytes": 19170,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:08:46.883879589Z",
+        "resourceId": "showcase-ai-assisted-analysis-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "runtimeId": "showcase-ai-assisted-analysis-local",
+        "sealedAt": "2026-10-20T19:08:46.506400005Z",
+        "sizeBytes": 19170,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-ai-interpretation"
+      },
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+        "createdAt": "2026-10-20T19:08:39.109256919Z",
+        "driver": "local",
+        "environmentId": "showcase-ai-assisted-analysis-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+        "fileCount": 3,
+        "id": "workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+        "inputBytes": 7910,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:f1b551ad60243000e375825372e54cc0e883a89b7e17d166a78abc6ab7c3db9b",
+              "path": "stage-measurements.json",
+              "sizeBytes": 10642
+            },
+            {
+              "digest": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            },
+            {
+              "digest": "sha256:a0b6a9a0b78062007dcadcea9aa0737dea943bab6935ada23bd7020f14bb2ab6",
+              "path": "stage-simulation.json",
+              "sizeBytes": 7493
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            },
+            {
+              "digest": "sha256:a0b6a9a0b78062007dcadcea9aa0737dea943bab6935ada23bd7020f14bb2ab6",
+              "path": "stage-simulation.json",
+              "sizeBytes": 7493
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            },
+            {
+              "digest": "sha256:a0b6a9a0b78062007dcadcea9aa0737dea943bab6935ada23bd7020f14bb2ab6",
+              "path": "stage-simulation.json",
+              "sizeBytes": 7493
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:f1b551ad60243000e375825372e54cc0e883a89b7e17d166a78abc6ab7c3db9b",
+              "path": "stage-measurements.json",
+              "sizeBytes": 10642
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-measurements",
+        "outputBytes": 10642,
+        "pinned": false,
+        "reclaimedBytes": 18552,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:08:44.65488813Z",
+        "resourceId": "showcase-ai-assisted-analysis-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "runtimeId": "showcase-ai-assisted-analysis-local",
+        "sealedAt": "2026-10-20T19:08:44.456422546Z",
+        "sizeBytes": 18552,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-measurements"
+      },
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment",
+        "createdAt": "2026-10-20T19:08:39.109256919Z",
+        "driver": "local",
+        "environmentId": "showcase-ai-assisted-analysis-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment",
+        "fileCount": 1,
+        "id": "workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment",
+        "inputBytes": 0,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment",
+        "outputBytes": 417,
+        "pinned": false,
+        "reclaimedBytes": 417,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:08:40.662946003Z",
+        "resourceId": "showcase-ai-assisted-analysis-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "runtimeId": "showcase-ai-assisted-analysis-local",
+        "sealedAt": "2026-10-20T19:08:40.454314086Z",
+        "sizeBytes": 417,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-prepare-experiment"
+      },
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+        "createdAt": "2026-10-20T19:08:39.109256919Z",
+        "driver": "local",
+        "environmentId": "showcase-ai-assisted-analysis-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+        "fileCount": 3,
+        "id": "workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+        "inputBytes": 20703,
+        "isFinal": true,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:036ba9d47a509c490009c19c7eb34e60c1e11ed15e8d29df1cdb6360a76bd67c",
+              "path": "analysis.json",
+              "sizeBytes": 541
+            },
+            {
+              "digest": "sha256:7378f95d9021290343a6d43bdbfa973ae9bf4c60ce6ba41c2f2192e84c392223",
+              "path": "interpretation.md",
+              "sizeBytes": 128
+            },
+            {
+              "digest": "sha256:b632491a24ce95bff5401773028177abb5eafe491bad34ec61949d4502402a73",
+              "path": "stage-ai-interpretation.json",
+              "sizeBytes": 618
+            },
+            {
+              "digest": "sha256:f1b551ad60243000e375825372e54cc0e883a89b7e17d166a78abc6ab7c3db9b",
+              "path": "stage-measurements.json",
+              "sizeBytes": 10642
+            },
+            {
+              "digest": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            },
+            {
+              "digest": "sha256:c6244a120b20840eb10fc4f53e9ec7b5194ed73f620a90f1e6e3f4d778b624b1",
+              "path": "stage-report.json",
+              "sizeBytes": 923
+            },
+            {
+              "digest": "sha256:a0b6a9a0b78062007dcadcea9aa0737dea943bab6935ada23bd7020f14bb2ab6",
+              "path": "stage-simulation.json",
+              "sizeBytes": 7493
+            },
+            {
+              "digest": "sha256:e97f985a632d3f4ecf0fefa6b0d648549ab1e80ac25ee088e63616c1a49331a7",
+              "path": "stage-statistics.json",
+              "sizeBytes": 581
+            },
+            {
+              "digest": "sha256:9c7251db8bf3506c230e4cce154af75d9b5d2486d2fdb556780ae12fcdd426e2",
+              "path": "stage-validate.json",
+              "sizeBytes": 952
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:b632491a24ce95bff5401773028177abb5eafe491bad34ec61949d4502402a73",
+              "path": "stage-ai-interpretation.json",
+              "sizeBytes": 618
+            },
+            {
+              "digest": "sha256:f1b551ad60243000e375825372e54cc0e883a89b7e17d166a78abc6ab7c3db9b",
+              "path": "stage-measurements.json",
+              "sizeBytes": 10642
+            },
+            {
+              "digest": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            },
+            {
+              "digest": "sha256:a0b6a9a0b78062007dcadcea9aa0737dea943bab6935ada23bd7020f14bb2ab6",
+              "path": "stage-simulation.json",
+              "sizeBytes": 7493
+            },
+            {
+              "digest": "sha256:e97f985a632d3f4ecf0fefa6b0d648549ab1e80ac25ee088e63616c1a49331a7",
+              "path": "stage-statistics.json",
+              "sizeBytes": 581
+            },
+            {
+              "digest": "sha256:9c7251db8bf3506c230e4cce154af75d9b5d2486d2fdb556780ae12fcdd426e2",
+              "path": "stage-validate.json",
+              "sizeBytes": 952
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:b632491a24ce95bff5401773028177abb5eafe491bad34ec61949d4502402a73",
+              "path": "stage-ai-interpretation.json",
+              "sizeBytes": 618
+            },
+            {
+              "digest": "sha256:f1b551ad60243000e375825372e54cc0e883a89b7e17d166a78abc6ab7c3db9b",
+              "path": "stage-measurements.json",
+              "sizeBytes": 10642
+            },
+            {
+              "digest": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            },
+            {
+              "digest": "sha256:a0b6a9a0b78062007dcadcea9aa0737dea943bab6935ada23bd7020f14bb2ab6",
+              "path": "stage-simulation.json",
+              "sizeBytes": 7493
+            },
+            {
+              "digest": "sha256:e97f985a632d3f4ecf0fefa6b0d648549ab1e80ac25ee088e63616c1a49331a7",
+              "path": "stage-statistics.json",
+              "sizeBytes": 581
+            },
+            {
+              "digest": "sha256:9c7251db8bf3506c230e4cce154af75d9b5d2486d2fdb556780ae12fcdd426e2",
+              "path": "stage-validate.json",
+              "sizeBytes": 952
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:036ba9d47a509c490009c19c7eb34e60c1e11ed15e8d29df1cdb6360a76bd67c",
+              "path": "analysis.json",
+              "sizeBytes": 541
+            },
+            {
+              "digest": "sha256:7378f95d9021290343a6d43bdbfa973ae9bf4c60ce6ba41c2f2192e84c392223",
+              "path": "interpretation.md",
+              "sizeBytes": 128
+            },
+            {
+              "digest": "sha256:c6244a120b20840eb10fc4f53e9ec7b5194ed73f620a90f1e6e3f4d778b624b1",
+              "path": "stage-report.json",
+              "sizeBytes": 923
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-report",
+        "outputBytes": 1592,
+        "pinned": false,
+        "reclaimedBytes": 20703,
+        "releaseReason": "inherited inputs pruned",
+        "resourceId": "showcase-ai-assisted-analysis-local-docker",
+        "retention": "final",
+        "runId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "runtimeId": "showcase-ai-assisted-analysis-local",
+        "sealedAt": "2026-10-20T19:08:50.471318466Z",
+        "sizeBytes": 1592,
+        "state": "sealed",
+        "uri": "file:///akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-report"
+      },
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+        "createdAt": "2026-10-20T19:08:39.109256919Z",
+        "driver": "local",
+        "environmentId": "showcase-ai-assisted-analysis-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+        "fileCount": 2,
+        "id": "workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+        "inputBytes": 417,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            },
+            {
+              "digest": "sha256:a0b6a9a0b78062007dcadcea9aa0737dea943bab6935ada23bd7020f14bb2ab6",
+              "path": "stage-simulation.json",
+              "sizeBytes": 7493
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:a0b6a9a0b78062007dcadcea9aa0737dea943bab6935ada23bd7020f14bb2ab6",
+              "path": "stage-simulation.json",
+              "sizeBytes": 7493
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-simulation",
+        "outputBytes": 7493,
+        "pinned": false,
+        "reclaimedBytes": 7910,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:08:42.620208379Z",
+        "resourceId": "showcase-ai-assisted-analysis-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "runtimeId": "showcase-ai-assisted-analysis-local",
+        "sealedAt": "2026-10-20T19:08:42.461132795Z",
+        "sizeBytes": 7910,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-simulation"
+      },
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+        "createdAt": "2026-10-20T19:08:39.109256919Z",
+        "driver": "local",
+        "environmentId": "showcase-ai-assisted-analysis-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+        "fileCount": 4,
+        "id": "workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+        "inputBytes": 18552,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:f1b551ad60243000e375825372e54cc0e883a89b7e17d166a78abc6ab7c3db9b",
+              "path": "stage-measurements.json",
+              "sizeBytes": 10642
+            },
+            {
+              "digest": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            },
+            {
+              "digest": "sha256:a0b6a9a0b78062007dcadcea9aa0737dea943bab6935ada23bd7020f14bb2ab6",
+              "path": "stage-simulation.json",
+              "sizeBytes": 7493
+            },
+            {
+              "digest": "sha256:e97f985a632d3f4ecf0fefa6b0d648549ab1e80ac25ee088e63616c1a49331a7",
+              "path": "stage-statistics.json",
+              "sizeBytes": 581
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:f1b551ad60243000e375825372e54cc0e883a89b7e17d166a78abc6ab7c3db9b",
+              "path": "stage-measurements.json",
+              "sizeBytes": 10642
+            },
+            {
+              "digest": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            },
+            {
+              "digest": "sha256:a0b6a9a0b78062007dcadcea9aa0737dea943bab6935ada23bd7020f14bb2ab6",
+              "path": "stage-simulation.json",
+              "sizeBytes": 7493
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:f1b551ad60243000e375825372e54cc0e883a89b7e17d166a78abc6ab7c3db9b",
+              "path": "stage-measurements.json",
+              "sizeBytes": 10642
+            },
+            {
+              "digest": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            },
+            {
+              "digest": "sha256:a0b6a9a0b78062007dcadcea9aa0737dea943bab6935ada23bd7020f14bb2ab6",
+              "path": "stage-simulation.json",
+              "sizeBytes": 7493
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:e97f985a632d3f4ecf0fefa6b0d648549ab1e80ac25ee088e63616c1a49331a7",
+              "path": "stage-statistics.json",
+              "sizeBytes": 581
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-statistics",
+        "outputBytes": 581,
+        "pinned": false,
+        "reclaimedBytes": 19133,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:08:46.891492131Z",
+        "resourceId": "showcase-ai-assisted-analysis-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "runtimeId": "showcase-ai-assisted-analysis-local",
+        "sealedAt": "2026-10-20T19:08:46.500273047Z",
+        "sizeBytes": 19133,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-statistics"
+      },
+      {
+        "activityId": "showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+        "createdAt": "2026-10-20T19:08:39.109256919Z",
+        "driver": "local",
+        "environmentId": "showcase-ai-assisted-analysis-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+        "fileCount": 6,
+        "id": "workspace-showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000-showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+        "inputBytes": 19751,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:b632491a24ce95bff5401773028177abb5eafe491bad34ec61949d4502402a73",
+              "path": "stage-ai-interpretation.json",
+              "sizeBytes": 618
+            },
+            {
+              "digest": "sha256:f1b551ad60243000e375825372e54cc0e883a89b7e17d166a78abc6ab7c3db9b",
+              "path": "stage-measurements.json",
+              "sizeBytes": 10642
+            },
+            {
+              "digest": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            },
+            {
+              "digest": "sha256:a0b6a9a0b78062007dcadcea9aa0737dea943bab6935ada23bd7020f14bb2ab6",
+              "path": "stage-simulation.json",
+              "sizeBytes": 7493
+            },
+            {
+              "digest": "sha256:e97f985a632d3f4ecf0fefa6b0d648549ab1e80ac25ee088e63616c1a49331a7",
+              "path": "stage-statistics.json",
+              "sizeBytes": 581
+            },
+            {
+              "digest": "sha256:9c7251db8bf3506c230e4cce154af75d9b5d2486d2fdb556780ae12fcdd426e2",
+              "path": "stage-validate.json",
+              "sizeBytes": 952
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:b632491a24ce95bff5401773028177abb5eafe491bad34ec61949d4502402a73",
+              "path": "stage-ai-interpretation.json",
+              "sizeBytes": 618
+            },
+            {
+              "digest": "sha256:f1b551ad60243000e375825372e54cc0e883a89b7e17d166a78abc6ab7c3db9b",
+              "path": "stage-measurements.json",
+              "sizeBytes": 10642
+            },
+            {
+              "digest": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            },
+            {
+              "digest": "sha256:a0b6a9a0b78062007dcadcea9aa0737dea943bab6935ada23bd7020f14bb2ab6",
+              "path": "stage-simulation.json",
+              "sizeBytes": 7493
+            },
+            {
+              "digest": "sha256:e97f985a632d3f4ecf0fefa6b0d648549ab1e80ac25ee088e63616c1a49331a7",
+              "path": "stage-statistics.json",
+              "sizeBytes": 581
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:b632491a24ce95bff5401773028177abb5eafe491bad34ec61949d4502402a73",
+              "path": "stage-ai-interpretation.json",
+              "sizeBytes": 618
+            },
+            {
+              "digest": "sha256:f1b551ad60243000e375825372e54cc0e883a89b7e17d166a78abc6ab7c3db9b",
+              "path": "stage-measurements.json",
+              "sizeBytes": 10642
+            },
+            {
+              "digest": "sha256:a4543193d654141424c5227ea41f38e30adc136dc0ab1c80d0ef15200b95e531",
+              "path": "stage-prepare-experiment.json",
+              "sizeBytes": 417
+            },
+            {
+              "digest": "sha256:a0b6a9a0b78062007dcadcea9aa0737dea943bab6935ada23bd7020f14bb2ab6",
+              "path": "stage-simulation.json",
+              "sizeBytes": 7493
+            },
+            {
+              "digest": "sha256:e97f985a632d3f4ecf0fefa6b0d648549ab1e80ac25ee088e63616c1a49331a7",
+              "path": "stage-statistics.json",
+              "sizeBytes": 581
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:9c7251db8bf3506c230e4cce154af75d9b5d2486d2fdb556780ae12fcdd426e2",
+              "path": "stage-validate.json",
+              "sizeBytes": 952
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-validate",
+        "outputBytes": 952,
+        "pinned": false,
+        "reclaimedBytes": 20703,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:08:48.589566965Z",
+        "resourceId": "showcase-ai-assisted-analysis-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+        "runtimeId": "showcase-ai-assisted-analysis-local",
+        "sealedAt": "2026-10-20T19:08:48.459428131Z",
+        "sizeBytes": 20703,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000/showcase-ai-assisted-analysis-local-6ec20be3c8-validate"
+      }
+    ]
+  },
+  "runId": "showcase-ai-assisted-analysis-local-6ec20be3c8-run-20261020t190838.819830000",
+  "status": "completed",
+  "workflowId": "showcase-ai-assisted-analysis-local-6ec20be3c8"
+}

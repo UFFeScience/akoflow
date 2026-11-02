@@ -60,6 +60,21 @@ func TestRepositoryListsFindsAndScansStorageConfiguration(t *testing.T) {
 	}
 }
 
+func TestConcreteCloudWorkspaceStoragePersistsDownloadForeignKey(t *testing.T) {
+	r := testRepository(t)
+	ctx := context.Background()
+	storage := domain.StorageResource{ID: "cloud-workspace:vm", Type: domain.StorageSSH, Endpoint: "/akoflow/workspace",
+		BrowseRoots: []domain.StorageBrowseRoot{{Path: "/akoflow/workspace"}}, Metadata: map[string]any{"cloudInstanceId": "vm"}}
+	for i := 0; i < 2; i++ {
+		if err := r.EnsureCloudWorkspaceStorage(ctx, "environment", storage); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := r.SaveDownload(ctx, domain.DownloadRun{ID: "archive", StorageID: storage.ID, Path: "runs/run", Status: domain.DownloadQueued, Strategy: "archive", CreatedAt: time.Now(), UpdatedAt: time.Now()}); err != nil {
+		t.Fatalf("concrete storage download foreign key: %v", err)
+	}
+}
+
 func TestRepositoryPersistsDownloadLifecycle(t *testing.T) {
 	repository, ctx := testRepository(t), context.Background()
 	now := time.Now().UTC().Truncate(time.Second)

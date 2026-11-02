@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 
 	applicationexecution "github.com/UFFeScience/akoflow/internal/application/execution"
@@ -84,7 +85,11 @@ func registerExecutionHandlers(
 	}
 	verifiedArtifacts := &applicationtransfer.VerifiedArtifactCache{}
 	kubernetesTransfer := &infratransfer.KubernetesExec{BufferSize: bufferSize}
-	preparer := applicationtransfer.Coordinator{Catalog: data, WorkspaceSyncer: infratransfer.WorkspaceRsync{Resolver: resolver}, Materializer: applicationtransfer.Materializer{Resolver: resolver, Progress: data, VerifiedArtifacts: verifiedArtifacts, Connectors: []ports.TransferConnector{
+	parallelism, err := strconv.Atoi(os.Getenv("AKOFLOW_WORKSPACE_TRANSFER_PARALLELISM"))
+	if err != nil || parallelism <= 0 {
+		parallelism = 8
+	}
+	preparer := applicationtransfer.Coordinator{Catalog: data, WorkspaceSyncer: infratransfer.WorkspaceRsync{Resolver: resolver, Parallelism: parallelism}, Materializer: applicationtransfer.Materializer{Resolver: resolver, Progress: data, VerifiedArtifacts: verifiedArtifacts, Connectors: []ports.TransferConnector{
 		infratransfer.ArtifactStore{Root: artifactStoreRoot}, infratransfer.LocalFilesystem{BufferSize: bufferSize}, infratransfer.RsyncSSH{BufferSize: bufferSize}, kubernetesTransfer, infratransfer.HTTPDownload{}, infratransfer.S3Compatible{BufferSize: bufferSize}, infratransfer.GCS{},
 	}}}
 	supervisor, err := controlexecution.New(

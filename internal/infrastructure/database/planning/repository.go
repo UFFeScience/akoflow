@@ -150,11 +150,25 @@ func (r *Repository) Find(ctx context.Context, id string) (*domain.SchedulePlan,
 }
 
 func (r *Repository) List(ctx context.Context) ([]domain.SchedulePlan, error) {
+	return r.list(ctx, "")
+}
+
+func (r *Repository) ListForWorkflow(ctx context.Context, versionID string) ([]domain.SchedulePlan, error) {
+	return r.list(ctx, versionID)
+}
+
+func (r *Repository) list(ctx context.Context, versionID string) ([]domain.SchedulePlan, error) {
+	filter := ""
+	var args []any
+	if versionID != "" {
+		filter = " WHERE workflow_version_id=?"
+		args = append(args, versionID)
+	}
 	rows, err := r.db.QueryContext(ctx, `SELECT id, workflow_version_id, execution_scope_id,
 		COALESCE(network_topology_id, ''), source, algorithm, algorithm_version, objective,
 		deadline_seconds, budget, predicted_makespan_seconds, predicted_cost, predicted_feasible,
 		(SELECT COUNT(*) FROM schedule_plan_assignments a WHERE a.schedule_plan_id = schedule_plans.id)
-		FROM schedule_plans ORDER BY created_at DESC, id`)
+		FROM schedule_plans`+filter+` ORDER BY created_at DESC, id`, args...)
 	if err != nil {
 		return nil, err
 	}

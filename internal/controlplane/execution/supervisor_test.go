@@ -417,6 +417,27 @@ func TestTransferObservationsPreserveDirectWorkspaceRoute(t *testing.T) {
 	}
 }
 
+func TestTransferObservationsUseNetworkBytesForComparableTotals(t *testing.T) {
+	for _, test := range []struct {
+		name        string
+		observation domain.DataTransferRun
+		want        int64
+	}{
+		{"compressed relay two hops", domain.DataTransferRun{TransferredBytes: 1000, LogicalBytes: 1000, NetworkBytes: 600}, 600},
+		{"private peer archive", domain.DataTransferRun{TransferredBytes: 1000, LogicalBytes: 1000, NetworkBytes: 300}, 300},
+		{"same instance copy", domain.DataTransferRun{TransferredBytes: 1000, LogicalBytes: 1000, Route: domain.TransferRoute{SharedFilesystem: "ext2/ext3"}}, 0},
+		{"HPC internal copy", domain.DataTransferRun{TransferredBytes: 1000, LogicalBytes: 1000, Route: domain.TransferRoute{SharedFilesystem: "nfs"}}, 0},
+		{"legacy evidence absent", domain.DataTransferRun{TransferredBytes: 1000, LogicalBytes: 1000}, 1000},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			transfers := transferObservations("run", "consumer", "target", nil, domain.PreparationRequirement{}, []domain.DataTransferRun{test.observation}, domain.NetworkTopology{})
+			if len(transfers) != 1 || transfers[0].Bytes != test.want || transfers[0].LogicalBytes != 1000 {
+				t.Fatalf("physical total or logical evidence lost: %+v", transfers)
+			}
+		})
+	}
+}
+
 func TestSupervisorExecutesDAGInDependencyOrder(t *testing.T) {
 	store := &executionStoreFake{}
 	activities := &activityControllerFake{}
@@ -455,7 +476,7 @@ func TestSupervisorStartsTwelveActivitiesOnPlannedCapacity(t *testing.T) {
 		})
 	}
 	request.Resources[0].CPUCapacity = 12
-	controller := &activityControllerFake{minimumStartsBeforeInspect: 12}
+	controller := &activityControllerFake{}
 	service, err := New(&executionStoreFake{}, controller, &planExecutorFake{}, Config{
 		PollInterval: time.Microsecond,
 	})
@@ -488,7 +509,7 @@ func TestSupervisorBoundsStartAndInspectionConcurrency(t *testing.T) {
 		})
 	}
 	request.Resources[0].CPUCapacity = 20
-	controller := &activityControllerFake{minimumStartsBeforeInspect: 20, delay: 5 * time.Millisecond}
+	controller := &activityControllerFake{delay: 5 * time.Millisecond}
 	service, err := New(&executionStoreFake{}, controller, &planExecutorFake{}, Config{PollInterval: time.Microsecond})
 	if err != nil {
 		t.Fatal(err)
@@ -531,11 +552,11 @@ func TestInspectRunningPersistsFailureAndCancelsPeers(t *testing.T) {
 	}
 }
 
-func TestSupervisorStartsIndependentActivitiesDespitePlanOrder(t *testing.T) {
+func TestSupervisorWaitsForCompletionInPlannedLane(t *testing.T) {
 	request := requestFixture(domain.ExecutionModeReal)
 	request.Workflow.Dependencies = nil
 	request.Plan.Assignments[1].OrderOnResource = 1
-	controller := &activityControllerFake{firstInspectStarts: 2}
+	controller := &plannedCompletionController{required: map[string]string{"b": "a"}}
 	store := &executionStoreFake{}
 	service, err := New(store, controller, &planExecutorFake{}, Config{PollInterval: time.Microsecond})
 	if err != nil {
@@ -551,14 +572,9 @@ func TestSupervisorStartsIndependentActivitiesDespitePlanOrder(t *testing.T) {
 	if len(controller.started) != 2 || !started["a"] || !started["b"] {
 		t.Fatalf("start order=%v", controller.started)
 	}
-	for _, task := range store.tasks {
-		if task.ActivityID == "b" && task.Metadata["queueReason"] == "waiting for previous activity in planned lane" {
-			t.Fatal("plan order must not become a dependency")
-		}
-	}
 }
 
-func TestSupervisorStartsReadyActivityAheadOfBlockedPlanOrder(t *testing.T) {
+func TestSupervisorWaitsBehindBlockedPlanOrder(t *testing.T) {
 	request := requestFixture(domain.ExecutionModeReal)
 	producer := request.Workflow.Activities[0]
 	producer.ID, producer.Name = "c", "c"
@@ -574,7 +590,7 @@ func TestSupervisorStartsReadyActivityAheadOfBlockedPlanOrder(t *testing.T) {
 	request.RuntimeBindings = append(request.RuntimeBindings, domain.ResourceRuntimeBinding{
 		ResourceID: "other", RuntimeID: "local", Enabled: true,
 	})
-	controller := &activityControllerFake{firstInspectStarts: 2}
+	controller := &plannedCompletionController{required: map[string]string{"a": "c", "b": "a"}}
 	service, err := New(&executionStoreFake{}, controller, &planExecutorFake{}, Config{
 		PollInterval: time.Microsecond,
 	})
@@ -584,8 +600,12 @@ func TestSupervisorStartsReadyActivityAheadOfBlockedPlanOrder(t *testing.T) {
 	if _, err := service.Execute(context.Background(), request); err != nil {
 		t.Fatal(err)
 	}
-	if len(controller.started) != 3 || controller.started[0] == "a" || controller.started[1] == "a" || controller.started[2] != "a" {
-		t.Fatalf("blocked activity ran before its dependency; starts=%v", controller.started)
+	counts := map[string]int{}
+	for _, id := range controller.started {
+		counts[id]++
+	}
+	if len(controller.started) != 3 || counts["a"] != 1 || counts["b"] != 1 || counts["c"] != 1 {
+		t.Fatalf("each activity must start exactly once; starts=%v", controller.started)
 	}
 }
 
@@ -597,13 +617,16 @@ func TestSupervisorFollowsParallelPlanLanesDespiteOvercommit(t *testing.T) {
 	request.Resources[0].CPUCapacity = 1
 	request.Plan.Assignments[0].SlotID = "slot-a"
 	request.Plan.Assignments[1].SlotID = "slot-b"
-	controller := &activityControllerFake{firstInspectStarts: 2}
+	controller := &activityControllerFake{}
 	service, err := New(&executionStoreFake{}, controller, &planExecutorFake{}, Config{PollInterval: time.Microsecond})
 	if err != nil {
 		t.Fatal(err)
 	}
 	if _, err := service.Execute(context.Background(), request); err != nil {
 		t.Fatal(err)
+	}
+	if len(controller.started) != 2 {
+		t.Fatalf("started=%v, want both planned lanes", controller.started)
 	}
 }
 
@@ -668,7 +691,7 @@ func TestSupervisorQueuesAllReadyCloudTargetsBeforeWaitingForFirst(t *testing.T)
 		targets[targetID] = domain.CloudCapacityTarget{ID: targetID, EnvironmentID: "environment"}
 	}
 	allocator := &parallelPrewarmFake{want: 4}
-	activities := &activityControllerFake{}
+	activities := &activityControllerFake{delay: 20 * time.Millisecond}
 	service, err := New(&executionStoreFake{}, activities, &planExecutorFake{}, Config{
 		PollInterval: time.Microsecond,
 		Cloud:        &cloudProvisionerFake{}, CloudStore: cloudAllocationStoreFake{targets: targets}, CloudAllocator: allocator,
@@ -681,6 +704,9 @@ func TestSupervisorQueuesAllReadyCloudTargetsBeforeWaitingForFirst(t *testing.T)
 	}
 	if len(allocator.prewarmed) != 4 || len(activities.started) != 4 {
 		t.Fatalf("prewarmed=%v started=%v", allocator.prewarmed, activities.started)
+	}
+	if activities.maxStarts < 2 {
+		t.Fatalf("already-ready cloud allocations launched serially: max concurrent starts=%d", activities.maxStarts)
 	}
 }
 

@@ -3,9 +3,11 @@ package simgrid
 import (
 	"context"
 	"fmt"
-	"sort"
+	"math"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
+	domainplanning "github.com/UFFeScience/akoflow/internal/domain/planning"
+	domainworkflow "github.com/UFFeScience/akoflow/internal/domain/workflow"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/plugins/planning"
 )
 
@@ -18,6 +20,11 @@ func NewSimulationExecutor() *SimulationExecutor {
 }
 
 func (e *SimulationExecutor) Execute(ctx context.Context, request Request) (domain.ExecutionTrace, error) {
+	projected, err := domainworkflow.ProjectWorkspaceDependenciesForResourceTypes(request.Workflow, assignedResourceTypes(request))
+	if err != nil {
+		return domain.ExecutionTrace{}, fmt.Errorf("project workspace dependencies: %w", err)
+	}
+	request.Workflow = projected
 	if request.Run.Mode != domain.ExecutionModeSimulation {
 		return domain.ExecutionTrace{}, fmt.Errorf("simulation executor cannot execute mode %q", request.Run.Mode)
 	}
@@ -36,6 +43,18 @@ func (e *SimulationExecutor) Execute(ctx context.Context, request Request) (doma
 		return domain.ExecutionTrace{}, err
 	}
 	return buildTrace(request, completed, transfers), nil
+}
+
+func assignedResourceTypes(request Request) map[string]string {
+	resources := map[string]string{}
+	for _, resource := range request.Resources {
+		resources[resource.ID] = string(resource.Type)
+	}
+	assigned := map[string]string{}
+	for _, assignment := range request.Plan.Assignments {
+		assigned[assignment.ActivityID] = resources[assignment.ResourceID]
+	}
+	return assigned
 }
 
 type indexedRequest struct {
@@ -73,17 +92,7 @@ func indexRequest(request Request) indexedRequest {
 		key := dependency.ProducerActivityID + "\x00" + dependency.ConsumerActivityID
 		model.dataBytes[key] += dependency.SizeBytes
 	}
-	byLane := make(map[string][]domain.PlanAssignment)
-	for _, assignment := range request.Plan.Assignments {
-		lane := assignment.ResourceID + "\x00" + assignment.CoreID + "\x00" + assignment.SlotID
-		byLane[lane] = append(byLane[lane], assignment)
-	}
-	for _, lane := range byLane {
-		sort.Slice(lane, func(i, j int) bool { return lane[i].OrderOnResource < lane[j].OrderOnResource })
-		for i := 1; i < len(lane); i++ {
-			model.lanePrevious[lane[i].ActivityID] = lane[i-1].ActivityID
-		}
-	}
+	model.lanePrevious = domainplanning.LanePredecessors(request.Plan.Assignments)
 	return model
 }
 
@@ -122,7 +131,11 @@ func simulate(
 			if previous != "" {
 				resourceReadyAt = completed[previous].FinishedAt
 			}
-			start := max(dataReadyAt, resourceReadyAt)
+			availableAt, err := assignmentResourceAvailableAt(assignment)
+			if err != nil {
+				return nil, nil, err
+			}
+			start := max(max(dataReadyAt, resourceReadyAt), availableAt)
 			runtimeSeconds := resolveRuntime(activity, assignment, resource, model.profiles)
 			overhead := resolveAssignmentOverhead(assignment, resource)
 			finish := start + runtimeSeconds + overhead
@@ -196,6 +209,7 @@ func buildTrace(
 		tasks = append(tasks, task)
 	}
 	applyResourceActiveCosts(tasks, request.Resources)
+	applyCloudLifecycleCosts(tasks, request.Resources, request.Plan.LifecycleActions)
 	for _, task := range tasks {
 		metrics.MakespanSeconds = max(metrics.MakespanSeconds, task.FinishedAt)
 		metrics.ComputeSeconds += task.RuntimeSeconds
@@ -276,11 +290,14 @@ func allCompleted(ids []string, completed map[string]domain.TaskExecution) bool 
 }
 
 func resolveRuntime(activity domain.Activity, assignment domain.PlanAssignment, resource domain.Resource, profiles map[string]domain.ActivityResourceProfile) float64 {
+	if profile, ok := profiles[activity.ActivityTypeID+"\x00"+resource.ID]; ok && profile.UsesWorkUnits() {
+		return profile.RuntimeFor(activity)
+	}
 	if base, ok := numberMetadata(activity.Metadata, "baseRuntimeSeconds"); ok && resource.ComputeSpeedup > 0 {
 		return base / resource.ComputeSpeedup
 	}
 	if profile, ok := profiles[activity.ActivityTypeID+"\x00"+resource.ID]; ok {
-		return profile.RuntimeSeconds
+		return profile.RuntimeFor(activity)
 	}
 	// Interference-aware planning stores a slowed predicted duration. Execution
 	// must start from the resource-specific clean runtime and let the execution
@@ -379,4 +396,17 @@ func min(a, b float64) float64 {
 		return a
 	}
 	return b
+}
+
+// An absolute initial availability is separate from per-task runtime overhead.
+// Descendants reaching the resource after boot must not pay startup again.
+func assignmentResourceAvailableAt(a domain.PlanAssignment) (float64, error) {
+	if _, exists := a.Metadata["resourceAvailableAtSeconds"]; !exists {
+		return 0, nil
+	}
+	value, ok := numberMetadata(a.Metadata, "resourceAvailableAtSeconds")
+	if !ok || math.IsNaN(value) || math.IsInf(value, 0) || value < 0 {
+		return 0, fmt.Errorf("assignment %s has invalid initial resource availability", a.ID)
+	}
+	return value, nil
 }

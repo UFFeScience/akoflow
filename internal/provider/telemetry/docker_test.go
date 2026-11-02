@@ -19,6 +19,21 @@ func TestParseDockerStats(t *testing.T) {
 	}
 }
 
+func TestDockerMetricsKeepRecoveryAttemptsSeparate(t *testing.T) {
+	for _, attempt := range []int{1, 3} {
+		handle := domain.ActivityHandle{RunID: "run", ActivityID: "same-activity", Metadata: map[string]any{"executionAttempt": attempt}}
+		ObserveDocker(context.Background(), &handle, "container", func(context.Context, string, []string, []byte) ([]byte, error) {
+			return []byte(`{"CPUPerc":"50%","MemUsage":"1MiB / 1GiB","BlockIO":"0B / 0B"}`), nil
+		})
+		if len(handle.Metrics) != 1 || handle.Metrics[0].Attempt != attempt {
+			t.Fatalf("attempt %d mixed: %+v", attempt, handle.Metrics)
+		}
+	}
+	if dockerAttempt(domain.ActivityHandle{ID: "run:activity:attempt-3"}) != 3 || dockerAttempt(domain.ActivityHandle{}) != 1 {
+		t.Fatal("legacy handle attribution failed")
+	}
+}
+
 func TestObserveDockerIsBoundedAndOptional(t *testing.T) {
 	calls := 0
 	run := func(_ context.Context, _ string, _ []string, _ []byte) ([]byte, error) {

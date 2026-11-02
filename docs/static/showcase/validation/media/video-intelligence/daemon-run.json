@@ -1,0 +1,3572 @@
+{
+  "activityCount": 6,
+  "completedActivityCount": 6,
+  "image": "ghcr.io/uffescience/akoflow-examples/video-intelligence:v1",
+  "imageId": "sha256:9a17f6f4661eb6e751c27bda9ada09ed7ff0126fbd2e82291f25523692aa3223",
+  "planId": "video-intelligence-local-bb3cf6fa14-manual-plan-20261020t182639",
+  "projection": {
+    "activities": [
+      {
+        "activityId": "video-intelligence-local-bb3cf6fa14-prepare",
+        "allocatedResourceId": "video-intelligence-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "finishedAt": 1792520800.628516,
+        "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-prepare",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "video-intelligence-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "video-intelligence-local-bb3cf6fa14-manual-plan-20261020t182639-video-intelligence-local-bb3cf6fa14-prepare",
+        "plannedResourceId": "video-intelligence-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520800.136068,
+        "readyAt": 1792520800.136068,
+        "runtimeId": "video-intelligence-local",
+        "runtimeSeconds": 0.36805129051208496,
+        "startedAt": 1792520800.2604647,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "video-intelligence-local-bb3cf6fa14-probe",
+        "allocatedResourceId": "video-intelligence-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "finishedAt": 1792520801.875989,
+        "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-probe",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.17791223526000977,
+          "preparationFinishedAt": 1792520801.546128,
+          "preparationStartedAt": 1792520801.3858492,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0034923553466796875,
+          "runtimeId": "video-intelligence-local",
+          "transferElapsedSeconds": 0.1602787971496582,
+          "transferWorkSeconds": 0.1602787971496582
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "video-intelligence-local-bb3cf6fa14-manual-plan-20261020t182639-video-intelligence-local-bb3cf6fa14-probe",
+        "plannedResourceId": "video-intelligence-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520801.3775868,
+        "readyAt": 1792520801.3775868,
+        "runtimeId": "video-intelligence-local",
+        "runtimeSeconds": 0.1519486904144287,
+        "startedAt": 1792520801.7240403,
+        "status": "completed",
+        "transferBytes": 125918,
+        "transferSeconds": 0.1602787971496582
+      },
+      {
+        "activityId": "video-intelligence-local-bb3cf6fa14-scenes",
+        "allocatedResourceId": "video-intelligence-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "finishedAt": 1792520801.8936102,
+        "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-scenes",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1883838176727295,
+          "preparationFinishedAt": 1792520801.5479276,
+          "preparationStartedAt": 1792520801.3879883,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.004616737365722656,
+          "runtimeId": "video-intelligence-local",
+          "transferElapsedSeconds": 0.15993928909301758,
+          "transferWorkSeconds": 0.15993928909301758
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "video-intelligence-local-bb3cf6fa14-manual-plan-20261020t182639-video-intelligence-local-bb3cf6fa14-scenes",
+        "plannedResourceId": "video-intelligence-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520801.3790753,
+        "readyAt": 1792520801.3790753,
+        "runtimeId": "video-intelligence-local",
+        "runtimeSeconds": 0.15729880332946777,
+        "startedAt": 1792520801.7363114,
+        "status": "completed",
+        "transferBytes": 125918,
+        "transferSeconds": 0.15993928909301758
+      },
+      {
+        "activityId": "video-intelligence-local-bb3cf6fa14-audio",
+        "allocatedResourceId": "video-intelligence-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "finishedAt": 1792520801.9038975,
+        "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-audio",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.19052791595458984,
+          "preparationFinishedAt": 1792520801.5483024,
+          "preparationStartedAt": 1792520801.3900254,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.005759239196777344,
+          "runtimeId": "video-intelligence-local",
+          "transferElapsedSeconds": 0.15827703475952148,
+          "transferWorkSeconds": 0.15827703475952148
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "video-intelligence-local-bb3cf6fa14-manual-plan-20261020t182639-video-intelligence-local-bb3cf6fa14-audio",
+        "plannedResourceId": "video-intelligence-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520801.3764732,
+        "readyAt": 1792520801.3764732,
+        "runtimeId": "video-intelligence-local",
+        "runtimeSeconds": 0.16506719589233398,
+        "startedAt": 1792520801.7388303,
+        "status": "completed",
+        "transferBytes": 125918,
+        "transferSeconds": 0.15827703475952148
+      },
+      {
+        "activityId": "video-intelligence-local-bb3cf6fa14-timeline",
+        "allocatedResourceId": "video-intelligence-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "finishedAt": 1792520804.1893477,
+        "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-timeline",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13355517387390137,
+          "preparationFinishedAt": 1792520803.9640326,
+          "preparationStartedAt": 1792520803.4491963,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0030753612518310547,
+          "runtimeId": "video-intelligence-local",
+          "transferElapsedSeconds": 0.514836311340332,
+          "transferWorkSeconds": 1.1281025409698486
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "video-intelligence-local-bb3cf6fa14-manual-plan-20261020t182639-video-intelligence-local-bb3cf6fa14-timeline",
+        "plannedResourceId": "video-intelligence-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520803.4443042,
+        "readyAt": 1792520803.4443042,
+        "runtimeId": "video-intelligence-local",
+        "runtimeSeconds": 0.09175992012023926,
+        "startedAt": 1792520804.0975878,
+        "status": "completed",
+        "transferBytes": 128264,
+        "transferSeconds": 1.1281025409698486
+      },
+      {
+        "activityId": "video-intelligence-local-bb3cf6fa14-report",
+        "allocatedResourceId": "video-intelligence-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "finishedAt": 1792520805.8086889,
+        "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-report",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1393580436706543,
+          "preparationFinishedAt": 1792520805.5788002,
+          "preparationStartedAt": 1792520805.378985,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0009620189666748047,
+          "runtimeId": "video-intelligence-local",
+          "transferElapsedSeconds": 0.1998152732849121,
+          "transferWorkSeconds": 0.1998152732849121
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "video-intelligence-local-bb3cf6fa14-manual-plan-20261020t182639-video-intelligence-local-bb3cf6fa14-report",
+        "plannedResourceId": "video-intelligence-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520805.376331,
+        "readyAt": 1792520805.376331,
+        "runtimeId": "video-intelligence-local",
+        "runtimeSeconds": 0.0905306339263916,
+        "startedAt": 1792520805.7181582,
+        "status": "completed",
+        "transferBytes": 128713,
+        "transferSeconds": 0.1998152732849121
+      }
+    ],
+    "activityAttempts": [
+      {
+        "activityId": "video-intelligence-local-bb3cf6fa14-prepare",
+        "allocatedResourceId": "video-intelligence-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "finishedAt": 1792520800.628516,
+        "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-prepare",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "video-intelligence-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "video-intelligence-local-bb3cf6fa14-manual-plan-20261020t182639-video-intelligence-local-bb3cf6fa14-prepare",
+        "plannedResourceId": "video-intelligence-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520800.136068,
+        "readyAt": 1792520800.136068,
+        "runtimeId": "video-intelligence-local",
+        "runtimeSeconds": 0.36805129051208496,
+        "startedAt": 1792520800.2604647,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "video-intelligence-local-bb3cf6fa14-probe",
+        "allocatedResourceId": "video-intelligence-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "finishedAt": 1792520801.875989,
+        "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-probe",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.17791223526000977,
+          "preparationFinishedAt": 1792520801.546128,
+          "preparationStartedAt": 1792520801.3858492,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0034923553466796875,
+          "runtimeId": "video-intelligence-local",
+          "transferElapsedSeconds": 0.1602787971496582,
+          "transferWorkSeconds": 0.1602787971496582
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "video-intelligence-local-bb3cf6fa14-manual-plan-20261020t182639-video-intelligence-local-bb3cf6fa14-probe",
+        "plannedResourceId": "video-intelligence-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520801.3775868,
+        "readyAt": 1792520801.3775868,
+        "runtimeId": "video-intelligence-local",
+        "runtimeSeconds": 0.1519486904144287,
+        "startedAt": 1792520801.7240403,
+        "status": "completed",
+        "transferBytes": 125918,
+        "transferSeconds": 0.1602787971496582
+      },
+      {
+        "activityId": "video-intelligence-local-bb3cf6fa14-scenes",
+        "allocatedResourceId": "video-intelligence-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "finishedAt": 1792520801.8936102,
+        "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-scenes",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1883838176727295,
+          "preparationFinishedAt": 1792520801.5479276,
+          "preparationStartedAt": 1792520801.3879883,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.004616737365722656,
+          "runtimeId": "video-intelligence-local",
+          "transferElapsedSeconds": 0.15993928909301758,
+          "transferWorkSeconds": 0.15993928909301758
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "video-intelligence-local-bb3cf6fa14-manual-plan-20261020t182639-video-intelligence-local-bb3cf6fa14-scenes",
+        "plannedResourceId": "video-intelligence-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520801.3790753,
+        "readyAt": 1792520801.3790753,
+        "runtimeId": "video-intelligence-local",
+        "runtimeSeconds": 0.15729880332946777,
+        "startedAt": 1792520801.7363114,
+        "status": "completed",
+        "transferBytes": 125918,
+        "transferSeconds": 0.15993928909301758
+      },
+      {
+        "activityId": "video-intelligence-local-bb3cf6fa14-audio",
+        "allocatedResourceId": "video-intelligence-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "finishedAt": 1792520801.9038975,
+        "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-audio",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.19052791595458984,
+          "preparationFinishedAt": 1792520801.5483024,
+          "preparationStartedAt": 1792520801.3900254,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.005759239196777344,
+          "runtimeId": "video-intelligence-local",
+          "transferElapsedSeconds": 0.15827703475952148,
+          "transferWorkSeconds": 0.15827703475952148
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "video-intelligence-local-bb3cf6fa14-manual-plan-20261020t182639-video-intelligence-local-bb3cf6fa14-audio",
+        "plannedResourceId": "video-intelligence-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520801.3764732,
+        "readyAt": 1792520801.3764732,
+        "runtimeId": "video-intelligence-local",
+        "runtimeSeconds": 0.16506719589233398,
+        "startedAt": 1792520801.7388303,
+        "status": "completed",
+        "transferBytes": 125918,
+        "transferSeconds": 0.15827703475952148
+      },
+      {
+        "activityId": "video-intelligence-local-bb3cf6fa14-timeline",
+        "allocatedResourceId": "video-intelligence-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "finishedAt": 1792520804.1893477,
+        "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-timeline",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13355517387390137,
+          "preparationFinishedAt": 1792520803.9640326,
+          "preparationStartedAt": 1792520803.4491963,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0030753612518310547,
+          "runtimeId": "video-intelligence-local",
+          "transferElapsedSeconds": 0.514836311340332,
+          "transferWorkSeconds": 1.1281025409698486
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "video-intelligence-local-bb3cf6fa14-manual-plan-20261020t182639-video-intelligence-local-bb3cf6fa14-timeline",
+        "plannedResourceId": "video-intelligence-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520803.4443042,
+        "readyAt": 1792520803.4443042,
+        "runtimeId": "video-intelligence-local",
+        "runtimeSeconds": 0.09175992012023926,
+        "startedAt": 1792520804.0975878,
+        "status": "completed",
+        "transferBytes": 128264,
+        "transferSeconds": 1.1281025409698486
+      },
+      {
+        "activityId": "video-intelligence-local-bb3cf6fa14-report",
+        "allocatedResourceId": "video-intelligence-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "finishedAt": 1792520805.8086889,
+        "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-report",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1393580436706543,
+          "preparationFinishedAt": 1792520805.5788002,
+          "preparationStartedAt": 1792520805.378985,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0009620189666748047,
+          "runtimeId": "video-intelligence-local",
+          "transferElapsedSeconds": 0.1998152732849121,
+          "transferWorkSeconds": 0.1998152732849121
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "video-intelligence-local-bb3cf6fa14-manual-plan-20261020t182639-video-intelligence-local-bb3cf6fa14-report",
+        "plannedResourceId": "video-intelligence-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520805.376331,
+        "readyAt": 1792520805.376331,
+        "runtimeId": "video-intelligence-local",
+        "runtimeSeconds": 0.0905306339263916,
+        "startedAt": 1792520805.7181582,
+        "status": "completed",
+        "transferBytes": 128713,
+        "transferSeconds": 0.1998152732849121
+      }
+    ],
+    "artifactMaterializations": null,
+    "artifactTransferRuns": [
+      {
+        "activityId": "video-intelligence-local-bb3cf6fa14-audio",
+        "durationSeconds": 0.15827703475952148,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "filesTransferred": 5,
+        "finishedAt": 1792520801.5483024,
+        "id": "transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-audio-0",
+        "logicalBytes": 125918,
+        "planId": "transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-audio-0",
+        "route": {
+          "consumerActivityId": "video-intelligence-local-bb3cf6fa14-audio",
+          "filesTransferred": 5,
+          "producerActivityId": "video-intelligence-local-bb3cf6fa14-prepare",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.089735458,
+          "sourceEnvironmentId": "video-intelligence-v1",
+          "sourceResourceId": "video-intelligence-local-docker",
+          "sshChannelWaitSeconds": 2.92e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "video-intelligence-v1",
+          "targetResourceId": "video-intelligence-local-docker"
+        },
+        "startedAt": 1792520801.3900254,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 125918
+      },
+      {
+        "activityId": "video-intelligence-local-bb3cf6fa14-probe",
+        "durationSeconds": 0.1602787971496582,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "filesTransferred": 5,
+        "finishedAt": 1792520801.546128,
+        "id": "transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-probe-0",
+        "logicalBytes": 125918,
+        "planId": "transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-probe-0",
+        "route": {
+          "consumerActivityId": "video-intelligence-local-bb3cf6fa14-probe",
+          "filesTransferred": 5,
+          "producerActivityId": "video-intelligence-local-bb3cf6fa14-prepare",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.070432458,
+          "sourceEnvironmentId": "video-intelligence-v1",
+          "sourceResourceId": "video-intelligence-local-docker",
+          "sshChannelWaitSeconds": 3.75e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "video-intelligence-v1",
+          "targetResourceId": "video-intelligence-local-docker"
+        },
+        "startedAt": 1792520801.3858492,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 125918
+      },
+      {
+        "activityId": "video-intelligence-local-bb3cf6fa14-report",
+        "durationSeconds": 0.1998152732849121,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "filesTransferred": 12,
+        "finishedAt": 1792520805.5788002,
+        "id": "transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-report-0",
+        "logicalBytes": 128713,
+        "planId": "transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-report-0",
+        "route": {
+          "consumerActivityId": "video-intelligence-local-bb3cf6fa14-report",
+          "filesTransferred": 12,
+          "producerActivityId": "video-intelligence-local-bb3cf6fa14-timeline",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09512104199999999,
+          "sourceEnvironmentId": "video-intelligence-v1",
+          "sourceResourceId": "video-intelligence-local-docker",
+          "sshChannelWaitSeconds": 5.42e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "video-intelligence-v1",
+          "targetResourceId": "video-intelligence-local-docker"
+        },
+        "startedAt": 1792520805.378985,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 128713
+      },
+      {
+        "activityId": "video-intelligence-local-bb3cf6fa14-scenes",
+        "durationSeconds": 0.15993928909301758,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "filesTransferred": 5,
+        "finishedAt": 1792520801.5479276,
+        "id": "transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-scenes-0",
+        "logicalBytes": 125918,
+        "planId": "transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-scenes-0",
+        "route": {
+          "consumerActivityId": "video-intelligence-local-bb3cf6fa14-scenes",
+          "filesTransferred": 5,
+          "producerActivityId": "video-intelligence-local-bb3cf6fa14-prepare",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.069308417,
+          "sourceEnvironmentId": "video-intelligence-v1",
+          "sourceResourceId": "video-intelligence-local-docker",
+          "sshChannelWaitSeconds": 2.91e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "video-intelligence-v1",
+          "targetResourceId": "video-intelligence-local-docker"
+        },
+        "startedAt": 1792520801.3879883,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 125918
+      },
+      {
+        "activityId": "video-intelligence-local-bb3cf6fa14-timeline",
+        "durationSeconds": 0.24711275100708008,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "filesTransferred": 6,
+        "finishedAt": 1792520803.696309,
+        "id": "transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-timeline-0",
+        "logicalBytes": 126262,
+        "planId": "transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-timeline-0",
+        "route": {
+          "consumerActivityId": "video-intelligence-local-bb3cf6fa14-timeline",
+          "filesTransferred": 6,
+          "producerActivityId": "video-intelligence-local-bb3cf6fa14-probe",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.102898542,
+          "sourceEnvironmentId": "video-intelligence-v1",
+          "sourceResourceId": "video-intelligence-local-docker",
+          "sshChannelWaitSeconds": 4.58e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "video-intelligence-v1",
+          "targetResourceId": "video-intelligence-local-docker"
+        },
+        "startedAt": 1792520803.4491963,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 126262
+      },
+      {
+        "activityId": "video-intelligence-local-bb3cf6fa14-timeline",
+        "durationSeconds": 0.3661534786224365,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "filesTransferred": 4,
+        "finishedAt": 1792520803.8153498,
+        "id": "transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-timeline-1",
+        "logicalBytes": 127877,
+        "planId": "transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-timeline-1",
+        "route": {
+          "consumerActivityId": "video-intelligence-local-bb3cf6fa14-timeline",
+          "filesTransferred": 4,
+          "producerActivityId": "video-intelligence-local-bb3cf6fa14-scenes",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.094834375,
+          "sourceEnvironmentId": "video-intelligence-v1",
+          "sourceResourceId": "video-intelligence-local-docker",
+          "sshChannelWaitSeconds": 4.58e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "video-intelligence-v1",
+          "targetResourceId": "video-intelligence-local-docker"
+        },
+        "startedAt": 1792520803.4491963,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 1959
+      },
+      {
+        "activityId": "video-intelligence-local-bb3cf6fa14-timeline",
+        "durationSeconds": 0.514836311340332,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "filesTransferred": 1,
+        "finishedAt": 1792520803.9640326,
+        "id": "transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-timeline-2",
+        "logicalBytes": 125961,
+        "planId": "transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-timeline-2",
+        "route": {
+          "consumerActivityId": "video-intelligence-local-bb3cf6fa14-timeline",
+          "filesTransferred": 1,
+          "producerActivityId": "video-intelligence-local-bb3cf6fa14-audio",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.074598417,
+          "sourceEnvironmentId": "video-intelligence-v1",
+          "sourceResourceId": "video-intelligence-local-docker",
+          "sshChannelWaitSeconds": 5.000000000000001e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "video-intelligence-v1",
+          "targetResourceId": "video-intelligence-local-docker"
+        },
+        "startedAt": 1792520803.4491963,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 43
+      }
+    ],
+    "cloudBilling": {
+      "asOf": "2026-10-20T18:26:48.053603006Z",
+      "costBasis": "VM compute and boot-disk lifecycle at on-demand marginal rates; not a provider invoice",
+      "estimatedCost": 0,
+      "excludedCosts": [
+        "network-egress",
+        "public-ipv4",
+        "image-storage",
+        "discounts-and-tax"
+      ],
+      "instances": [],
+      "knownCost": 0,
+      "status": "estimated"
+    },
+    "dataLocations": [
+      {
+        "dataObjectInstanceId": "993d6f478fe015275171894657f75bda",
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "id": "5b1c4edc56f21f81bb6b3be353646992",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "video-intelligence-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "4f2288c4d78fb9374607afb900c63348",
+        "uri": "file:///akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-audio/audio.json"
+      },
+      {
+        "dataObjectInstanceId": "4482a0688225f108c7ccc7bae12bf786",
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "id": "b65305864b42e9cbcfbf8971ad76ea45",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "video-intelligence-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "4f2288c4d78fb9374607afb900c63348",
+        "uri": "file:///akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-prepare/concat.txt"
+      },
+      {
+        "dataObjectInstanceId": "b49bbd38d69f0cad6a601b4feae8ecc2",
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "id": "598c64fd2828936f853ba92588c0af3b",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "video-intelligence-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "4f2288c4d78fb9374607afb900c63348",
+        "uri": "file:///akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-prepare/part-1.mp4"
+      },
+      {
+        "dataObjectInstanceId": "65e0672fcac2f4bfac97a24f774f985e",
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "id": "fd192bfeaa016472c06f8f0321d1fa00",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "video-intelligence-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "4f2288c4d78fb9374607afb900c63348",
+        "uri": "file:///akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-prepare/part-2.mp4"
+      },
+      {
+        "dataObjectInstanceId": "29f8d27c7655d52063cbe05a610a6ec9",
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "id": "a3e8cfbbfba4e9e58b96828761f00f85",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "video-intelligence-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "4f2288c4d78fb9374607afb900c63348",
+        "uri": "file:///akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-prepare/part-3.mp4"
+      },
+      {
+        "dataObjectInstanceId": "26e908566b345ee056fde981164bc754",
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "id": "62437ce8fa75e9ff13a93172d672a5f0",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "video-intelligence-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "4f2288c4d78fb9374607afb900c63348",
+        "uri": "file:///akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-prepare/source.mp4"
+      },
+      {
+        "dataObjectInstanceId": "e99d97513c9a0e616d9c5f999f2d3f39",
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "id": "9835688e82cb9ee41d3e25501df8a711",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "video-intelligence-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "4f2288c4d78fb9374607afb900c63348",
+        "uri": "file:///akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-probe/probe.json"
+      },
+      {
+        "dataObjectInstanceId": "de8a07368a916789328b29e8d75b3807",
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "id": "1c9653f30d41c79b710788783b7d0eb4",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "video-intelligence-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "4f2288c4d78fb9374607afb900c63348",
+        "uri": "file:///akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-report/manifest.json"
+      },
+      {
+        "dataObjectInstanceId": "642574388a8f73e776a9f7b5be4b6357",
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "id": "de3abd40c2425f783d647e893cf8d54a",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "video-intelligence-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "4f2288c4d78fb9374607afb900c63348",
+        "uri": "file:///akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-scenes/scenes.json"
+      },
+      {
+        "dataObjectInstanceId": "1f1820da1d064932cec03e96116f957b",
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "id": "4a3c714b2ca5ffb647d1971f1ff1c395",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "video-intelligence-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "4f2288c4d78fb9374607afb900c63348",
+        "uri": "file:///akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-scenes/thumbnails/scene-001.jpg"
+      },
+      {
+        "dataObjectInstanceId": "db462776b446862e3595726eeb72b062",
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "id": "4017afb448e06da684ac65944292271a",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "video-intelligence-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "4f2288c4d78fb9374607afb900c63348",
+        "uri": "file:///akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-scenes/thumbnails/scene-002.jpg"
+      },
+      {
+        "dataObjectInstanceId": "54bc700b050a8e346863cb0340096026",
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "id": "5bf3fbd8c221f3fe1cf8832a38ab53d8",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "video-intelligence-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "4f2288c4d78fb9374607afb900c63348",
+        "uri": "file:///akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-scenes/thumbnails/scene-003.jpg"
+      },
+      {
+        "dataObjectInstanceId": "718fab6039dca7dc6b09669a0e69e95d",
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "id": "62a4346e656422760ede6e5550fdd155",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "video-intelligence-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "4f2288c4d78fb9374607afb900c63348",
+        "uri": "file:///akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-timeline/timeline.json"
+      }
+    ],
+    "dataObjects": [
+      {
+        "attempt": 1,
+        "checksum": "sha256:a10b207c04c1ad61cb2ddac20e027f69e573124e52e65852be40a2d0cb35262c",
+        "dataObjectId": "e87a159913760b7149e3afc7b53bbfd0",
+        "discovered": true,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "id": "993d6f478fe015275171894657f75bda",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "video-intelligence-local-bb3cf6fa14-audio",
+        "relativePath": "audio.json",
+        "sizeBytes": 43
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:f299fa47104d5a501fdfba89770a619286422b3368bbe1a523f60add0b1d50f8",
+        "dataObjectId": "ddc5535f36f9be38223d18a07d56c49f",
+        "discovered": true,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "id": "4482a0688225f108c7ccc7bae12bf786",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "video-intelligence-local-bb3cf6fa14-prepare",
+        "relativePath": "concat.txt",
+        "sizeBytes": 54
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:a9b177ad5951aec57d4f8c67f4f1a3840c61640023b305ad450b15a52c863f38",
+        "dataObjectId": "d1b6c5e9005cdccecf3cbb1c8edbb8cd",
+        "discovered": true,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "id": "b49bbd38d69f0cad6a601b4feae8ecc2",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "video-intelligence-local-bb3cf6fa14-prepare",
+        "relativePath": "part-1.mp4",
+        "sizeBytes": 21426
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:b719dd5cdb4af7939425bd2dca39654d766ae2a1a7c5232bd102bd17423da1d9",
+        "dataObjectId": "d4588860da787eaa34055d1cd622af9e",
+        "discovered": true,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "id": "65e0672fcac2f4bfac97a24f774f985e",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "video-intelligence-local-bb3cf6fa14-prepare",
+        "relativePath": "part-2.mp4",
+        "sizeBytes": 21438
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:35ff27465264c841ba9c0d36a1d14e41be1a245e83e86c85b3ea8a3d38043cea",
+        "dataObjectId": "f8b6ebbda94f32002a47e1685c15c85c",
+        "discovered": true,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "id": "29f8d27c7655d52063cbe05a610a6ec9",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "video-intelligence-local-bb3cf6fa14-prepare",
+        "relativePath": "part-3.mp4",
+        "sizeBytes": 21390
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:9d7ddba6686e6e97c0ec73940083559e7e76fe75e3261adbd107c6725fcb99ef",
+        "dataObjectId": "6c01c516a0aec3a3b3100d334f1b3142",
+        "discovered": true,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "id": "26e908566b345ee056fde981164bc754",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "video-intelligence-local-bb3cf6fa14-prepare",
+        "relativePath": "source.mp4",
+        "sizeBytes": 61610
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:9b9eb1a268e9bba2b60c37a4c557f25c71eebee1cb6938d1092c0b10cdb16df8",
+        "dataObjectId": "fd1be3fad6e6a77bd1280bcbe353d1e8",
+        "discovered": true,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "id": "e99d97513c9a0e616d9c5f999f2d3f39",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "video-intelligence-local-bb3cf6fa14-probe",
+        "relativePath": "probe.json",
+        "sizeBytes": 344
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:c66c4ad83cd0a929fc49921ae498e11a36b4249c8e3bd5de9f503c70400cf743",
+        "dataObjectId": "49449fad1f6a9cf1e155bc1832390284",
+        "discovered": true,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "id": "de8a07368a916789328b29e8d75b3807",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "video-intelligence-local-bb3cf6fa14-report",
+        "relativePath": "manifest.json",
+        "sizeBytes": 177
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:ea09e7ccd1d3bbaec98e27ae4ea11c06bd4c7c48cd0d10e6fe072f4a7f962f02",
+        "dataObjectId": "7fd97645378aac2ecd2f5950edddf9f8",
+        "discovered": true,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "id": "642574388a8f73e776a9f7b5be4b6357",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "video-intelligence-local-bb3cf6fa14-scenes",
+        "relativePath": "scenes.json",
+        "sizeBytes": 210
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:8612a484ce24260abd9e74df85545476b54f9ab6a55e5bc546d234e9a3de328f",
+        "dataObjectId": "621f740e5b2cde6a93a102791a072cfc",
+        "discovered": true,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "id": "1f1820da1d064932cec03e96116f957b",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "video-intelligence-local-bb3cf6fa14-scenes",
+        "relativePath": "thumbnails/scene-001.jpg",
+        "sizeBytes": 583
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:a884fa4b0590a0f56eda5329f0e82cf4b1b11b6f7958fa82162237bc3a21adfe",
+        "dataObjectId": "c78e8ca1ee2c5c9c41bd0d0cb558f1ba",
+        "discovered": true,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "id": "db462776b446862e3595726eeb72b062",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "video-intelligence-local-bb3cf6fa14-scenes",
+        "relativePath": "thumbnails/scene-002.jpg",
+        "sizeBytes": 584
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:e3376294606cb19688a67e7b1e165bbe35ea65673400116a3f4436a96562922b",
+        "dataObjectId": "0fe90d6ded856f84e829b61f64133330",
+        "discovered": true,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "id": "54bc700b050a8e346863cb0340096026",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "video-intelligence-local-bb3cf6fa14-scenes",
+        "relativePath": "thumbnails/scene-003.jpg",
+        "sizeBytes": 582
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:a95c21418d18720b10ba49e5913dc6e014cb7e45d7e83f8b0fac13c0455fa7ec",
+        "dataObjectId": "02a053c03cde2240057ec40cda9e2770",
+        "discovered": true,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "id": "718fab6039dca7dc6b09669a0e69e95d",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "video-intelligence-local-bb3cf6fa14-timeline",
+        "relativePath": "timeline.json",
+        "sizeBytes": 449
+      }
+    ],
+    "dataTransfers": [
+      {
+        "bytes": 125918,
+        "consumerActivityId": "video-intelligence-local-bb3cf6fa14-probe",
+        "cost": 0,
+        "durationSeconds": 0.1602787971496582,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "finishedAt": 1792520801.546128,
+        "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-probe:transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-probe-0",
+        "logicalBytes": 125918,
+        "producerActivityId": "video-intelligence-local-bb3cf6fa14-prepare",
+        "route": {
+          "consumerActivityId": "video-intelligence-local-bb3cf6fa14-probe",
+          "filesTransferred": 5,
+          "producerActivityId": "video-intelligence-local-bb3cf6fa14-prepare",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.070432458,
+          "sourceEnvironmentId": "video-intelligence-v1",
+          "sourceResourceId": "video-intelligence-local-docker",
+          "sshChannelWaitSeconds": 3.75e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "video-intelligence-v1",
+          "targetResourceId": "video-intelligence-local-docker"
+        },
+        "sourceResourceId": "video-intelligence-local-docker",
+        "startedAt": 1792520801.3858492,
+        "strategy": "gateway",
+        "targetResourceId": "video-intelligence-local-docker"
+      },
+      {
+        "bytes": 125918,
+        "consumerActivityId": "video-intelligence-local-bb3cf6fa14-scenes",
+        "cost": 0,
+        "durationSeconds": 0.15993928909301758,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "finishedAt": 1792520801.5479276,
+        "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-scenes:transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-scenes-0",
+        "logicalBytes": 125918,
+        "producerActivityId": "video-intelligence-local-bb3cf6fa14-prepare",
+        "route": {
+          "consumerActivityId": "video-intelligence-local-bb3cf6fa14-scenes",
+          "filesTransferred": 5,
+          "producerActivityId": "video-intelligence-local-bb3cf6fa14-prepare",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.069308417,
+          "sourceEnvironmentId": "video-intelligence-v1",
+          "sourceResourceId": "video-intelligence-local-docker",
+          "sshChannelWaitSeconds": 2.91e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "video-intelligence-v1",
+          "targetResourceId": "video-intelligence-local-docker"
+        },
+        "sourceResourceId": "video-intelligence-local-docker",
+        "startedAt": 1792520801.3879883,
+        "strategy": "gateway",
+        "targetResourceId": "video-intelligence-local-docker"
+      },
+      {
+        "bytes": 125918,
+        "consumerActivityId": "video-intelligence-local-bb3cf6fa14-audio",
+        "cost": 0,
+        "durationSeconds": 0.15827703475952148,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "finishedAt": 1792520801.5483024,
+        "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-audio:transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-audio-0",
+        "logicalBytes": 125918,
+        "producerActivityId": "video-intelligence-local-bb3cf6fa14-prepare",
+        "route": {
+          "consumerActivityId": "video-intelligence-local-bb3cf6fa14-audio",
+          "filesTransferred": 5,
+          "producerActivityId": "video-intelligence-local-bb3cf6fa14-prepare",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.089735458,
+          "sourceEnvironmentId": "video-intelligence-v1",
+          "sourceResourceId": "video-intelligence-local-docker",
+          "sshChannelWaitSeconds": 2.92e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "video-intelligence-v1",
+          "targetResourceId": "video-intelligence-local-docker"
+        },
+        "sourceResourceId": "video-intelligence-local-docker",
+        "startedAt": 1792520801.3900254,
+        "strategy": "gateway",
+        "targetResourceId": "video-intelligence-local-docker"
+      },
+      {
+        "bytes": 43,
+        "consumerActivityId": "video-intelligence-local-bb3cf6fa14-timeline",
+        "cost": 0,
+        "durationSeconds": 0.514836311340332,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "finishedAt": 1792520803.9640326,
+        "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-timeline:transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-timeline-2",
+        "logicalBytes": 125961,
+        "producerActivityId": "video-intelligence-local-bb3cf6fa14-audio",
+        "route": {
+          "consumerActivityId": "video-intelligence-local-bb3cf6fa14-timeline",
+          "filesTransferred": 1,
+          "producerActivityId": "video-intelligence-local-bb3cf6fa14-audio",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.074598417,
+          "sourceEnvironmentId": "video-intelligence-v1",
+          "sourceResourceId": "video-intelligence-local-docker",
+          "sshChannelWaitSeconds": 5.000000000000001e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "video-intelligence-v1",
+          "targetResourceId": "video-intelligence-local-docker"
+        },
+        "sourceResourceId": "video-intelligence-local-docker",
+        "startedAt": 1792520803.4491963,
+        "strategy": "gateway",
+        "targetResourceId": "video-intelligence-local-docker"
+      },
+      {
+        "bytes": 126262,
+        "consumerActivityId": "video-intelligence-local-bb3cf6fa14-timeline",
+        "cost": 0,
+        "durationSeconds": 0.24711275100708008,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "finishedAt": 1792520803.696309,
+        "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-timeline:transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-timeline-0",
+        "logicalBytes": 126262,
+        "producerActivityId": "video-intelligence-local-bb3cf6fa14-probe",
+        "route": {
+          "consumerActivityId": "video-intelligence-local-bb3cf6fa14-timeline",
+          "filesTransferred": 6,
+          "producerActivityId": "video-intelligence-local-bb3cf6fa14-probe",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.102898542,
+          "sourceEnvironmentId": "video-intelligence-v1",
+          "sourceResourceId": "video-intelligence-local-docker",
+          "sshChannelWaitSeconds": 4.58e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "video-intelligence-v1",
+          "targetResourceId": "video-intelligence-local-docker"
+        },
+        "sourceResourceId": "video-intelligence-local-docker",
+        "startedAt": 1792520803.4491963,
+        "strategy": "gateway",
+        "targetResourceId": "video-intelligence-local-docker"
+      },
+      {
+        "bytes": 1959,
+        "consumerActivityId": "video-intelligence-local-bb3cf6fa14-timeline",
+        "cost": 0,
+        "durationSeconds": 0.3661534786224365,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "finishedAt": 1792520803.8153498,
+        "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-timeline:transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-timeline-1",
+        "logicalBytes": 127877,
+        "producerActivityId": "video-intelligence-local-bb3cf6fa14-scenes",
+        "route": {
+          "consumerActivityId": "video-intelligence-local-bb3cf6fa14-timeline",
+          "filesTransferred": 4,
+          "producerActivityId": "video-intelligence-local-bb3cf6fa14-scenes",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.094834375,
+          "sourceEnvironmentId": "video-intelligence-v1",
+          "sourceResourceId": "video-intelligence-local-docker",
+          "sshChannelWaitSeconds": 4.58e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "video-intelligence-v1",
+          "targetResourceId": "video-intelligence-local-docker"
+        },
+        "sourceResourceId": "video-intelligence-local-docker",
+        "startedAt": 1792520803.4491963,
+        "strategy": "gateway",
+        "targetResourceId": "video-intelligence-local-docker"
+      },
+      {
+        "bytes": 128713,
+        "consumerActivityId": "video-intelligence-local-bb3cf6fa14-report",
+        "cost": 0,
+        "durationSeconds": 0.1998152732849121,
+        "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "finishedAt": 1792520805.5788002,
+        "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-report:transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-report-0",
+        "logicalBytes": 128713,
+        "producerActivityId": "video-intelligence-local-bb3cf6fa14-timeline",
+        "route": {
+          "consumerActivityId": "video-intelligence-local-bb3cf6fa14-report",
+          "filesTransferred": 12,
+          "producerActivityId": "video-intelligence-local-bb3cf6fa14-timeline",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09512104199999999,
+          "sourceEnvironmentId": "video-intelligence-v1",
+          "sourceResourceId": "video-intelligence-local-docker",
+          "sshChannelWaitSeconds": 5.42e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "video-intelligence-v1",
+          "targetResourceId": "video-intelligence-local-docker"
+        },
+        "sourceResourceId": "video-intelligence-local-docker",
+        "startedAt": 1792520805.378985,
+        "strategy": "gateway",
+        "targetResourceId": "video-intelligence-local-docker"
+      }
+    ],
+    "events": [
+      {
+        "aggregateId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.started",
+        "id": "293b031a68e739d2e21079a7924ed2a3",
+        "occurredAt": "2026-10-20T18:26:40.116424169Z",
+        "payload": {
+          "mode": "real",
+          "schedulePlanId": "video-intelligence-local-bb3cf6fa14-manual-plan-20261020t182639"
+        }
+      },
+      {
+        "aggregateId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-prepare",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "9bc56785935658c05a48569fca19911f",
+        "occurredAt": "2026-10-20T18:26:41.284636712Z",
+        "payload": {
+          "activityId": "video-intelligence-local-bb3cf6fa14-prepare",
+          "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-prepare",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "b00d15dcec7db4bf64c4175edef4a4a9",
+        "occurredAt": "2026-10-20T18:26:41.374733045Z",
+        "payload": {
+          "activityId": "video-intelligence-local-bb3cf6fa14-prepare",
+          "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+          "failureReason": "",
+          "runtimeSeconds": 0.36805129051208496,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-audio",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "458d68426bdc4f714abf6b590d35e185",
+        "occurredAt": "2026-10-20T18:26:43.295430713Z",
+        "payload": {
+          "activityId": "video-intelligence-local-bb3cf6fa14-audio",
+          "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-probe",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "90719ceddaa7ed58fa383e66a51568e0",
+        "occurredAt": "2026-10-20T18:26:43.299992796Z",
+        "payload": {
+          "activityId": "video-intelligence-local-bb3cf6fa14-probe",
+          "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-scenes",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "b44579e68d476dc9168fc85aa51d7569",
+        "occurredAt": "2026-10-20T18:26:43.303773129Z",
+        "payload": {
+          "activityId": "video-intelligence-local-bb3cf6fa14-scenes",
+          "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-probe",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "7d7fa18144b089e299928340882aeac8",
+        "occurredAt": "2026-10-20T18:26:43.433421379Z",
+        "payload": {
+          "activityId": "video-intelligence-local-bb3cf6fa14-probe",
+          "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+          "failureReason": "",
+          "runtimeSeconds": 0.1519486904144287,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-scenes",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "ee16ff08993c80cc4ea73cfd411e3670",
+        "occurredAt": "2026-10-20T18:26:43.438421546Z",
+        "payload": {
+          "activityId": "video-intelligence-local-bb3cf6fa14-scenes",
+          "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+          "failureReason": "",
+          "runtimeSeconds": 0.15729880332946777,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-audio",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "4863a658bf4f3653c7720824b754a1f6",
+        "occurredAt": "2026-10-20T18:26:43.442963671Z",
+        "payload": {
+          "activityId": "video-intelligence-local-bb3cf6fa14-audio",
+          "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+          "failureReason": "",
+          "runtimeSeconds": 0.16506719589233398,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-timeline",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "0bdae89197f4f86a5a061cf57d1d785b",
+        "occurredAt": "2026-10-20T18:26:45.293125422Z",
+        "payload": {
+          "activityId": "video-intelligence-local-bb3cf6fa14-timeline",
+          "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-timeline",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "818764f36926bad06e7dddc1fbabc2d0",
+        "occurredAt": "2026-10-20T18:26:45.374520797Z",
+        "payload": {
+          "activityId": "video-intelligence-local-bb3cf6fa14-timeline",
+          "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+          "failureReason": "",
+          "runtimeSeconds": 0.09175992012023926,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-report",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "6bc8351ff62848093cc7284d083bba98",
+        "occurredAt": "2026-10-20T18:26:47.293912881Z",
+        "payload": {
+          "activityId": "video-intelligence-local-bb3cf6fa14-report",
+          "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-report",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "63e8949895c9bf522469e936d4c6f1f0",
+        "occurredAt": "2026-10-20T18:26:47.365162214Z",
+        "payload": {
+          "activityId": "video-intelligence-local-bb3cf6fa14-report",
+          "executionRunId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+          "failureReason": "",
+          "runtimeSeconds": 0.0905306339263916,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.completed",
+        "id": "6397612bb05cf85e23702a5e4bb1555d",
+        "occurredAt": "2026-10-20T18:26:47.368076964Z",
+        "payload": {
+          "cost": 0,
+          "makespanSeconds": 5.548224210739136
+        }
+      }
+    ],
+    "handles": [
+      {
+        "activityId": "video-intelligence-local-bb3cf6fa14-audio",
+        "artifacts": {
+          "activityId": "video-intelligence-local-bb3cf6fa14-audio",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:a10b207c04c1ad61cb2ddac20e027f69e573124e52e65852be40a2d0cb35262c",
+              "modifiedUnixNano": 1792520801896314000,
+              "path": "audio.json",
+              "sizeBytes": 43
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:a10b207c04c1ad61cb2ddac20e027f69e573124e52e65852be40a2d0cb35262c",
+              "modifiedUnixNano": 1792520801896314000,
+              "path": "audio.json",
+              "sizeBytes": 43
+            },
+            {
+              "checksum": "sha256:f299fa47104d5a501fdfba89770a619286422b3368bbe1a523f60add0b1d50f8",
+              "modifiedUnixNano": 1792520801504314000,
+              "path": "concat.txt",
+              "sizeBytes": 54
+            },
+            {
+              "checksum": "sha256:a9b177ad5951aec57d4f8c67f4f1a3840c61640023b305ad450b15a52c863f38",
+              "modifiedUnixNano": 1792520801504314000,
+              "path": "part-1.mp4",
+              "sizeBytes": 21426
+            },
+            {
+              "checksum": "sha256:b719dd5cdb4af7939425bd2dca39654d766ae2a1a7c5232bd102bd17423da1d9",
+              "modifiedUnixNano": 1792520801504314000,
+              "path": "part-2.mp4",
+              "sizeBytes": 21438
+            },
+            {
+              "checksum": "sha256:35ff27465264c841ba9c0d36a1d14e41be1a245e83e86c85b3ea8a3d38043cea",
+              "modifiedUnixNano": 1792520801504314000,
+              "path": "part-3.mp4",
+              "sizeBytes": 21390
+            },
+            {
+              "checksum": "sha256:9d7ddba6686e6e97c0ec73940083559e7e76fe75e3261adbd107c6725fcb99ef",
+              "modifiedUnixNano": 1792520801504314000,
+              "path": "source.mp4",
+              "sizeBytes": 61610
+            }
+          ],
+          "finishedAt": 1792520801.9038975,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:f299fa47104d5a501fdfba89770a619286422b3368bbe1a523f60add0b1d50f8",
+              "modifiedUnixNano": 1792520801504314000,
+              "path": "concat.txt",
+              "sizeBytes": 54
+            },
+            {
+              "checksum": "sha256:a9b177ad5951aec57d4f8c67f4f1a3840c61640023b305ad450b15a52c863f38",
+              "modifiedUnixNano": 1792520801504314000,
+              "path": "part-1.mp4",
+              "sizeBytes": 21426
+            },
+            {
+              "checksum": "sha256:b719dd5cdb4af7939425bd2dca39654d766ae2a1a7c5232bd102bd17423da1d9",
+              "modifiedUnixNano": 1792520801504314000,
+              "path": "part-2.mp4",
+              "sizeBytes": 21438
+            },
+            {
+              "checksum": "sha256:35ff27465264c841ba9c0d36a1d14e41be1a245e83e86c85b3ea8a3d38043cea",
+              "modifiedUnixNano": 1792520801504314000,
+              "path": "part-3.mp4",
+              "sizeBytes": 21390
+            },
+            {
+              "checksum": "sha256:9d7ddba6686e6e97c0ec73940083559e7e76fe75e3261adbd107c6725fcb99ef",
+              "modifiedUnixNano": 1792520801504314000,
+              "path": "source.mp4",
+              "sizeBytes": 61610
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.16506719589233398,
+              "finishedAt": 1792520801.9038975,
+              "phase": "execution",
+              "startedAt": 1792520801.7388303,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-audio",
+          "runId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+          "runtime": "video-intelligence-local",
+          "schemaVersion": 1,
+          "startedAt": 1792520801.7388303,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 6,
+            "initialFiles": 5,
+            "modifiedFiles": 0,
+            "outputBytes": 43
+          }
+        },
+        "exitCode": 0,
+        "externalId": "9d85ad2a0e9cd1752ab324f3810bbe61548441da093c15a36e23760a12f1daf0",
+        "finishedAt": 1792520801.9038975,
+        "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-audio",
+        "log": "[AKOFLOW INFO] Activity started on runtime video-intelligence-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-audio",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792520801.738835,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-audio",
+          "submittedAt": 1792520801.7388303
+        },
+        "resourceId": "video-intelligence-local-docker",
+        "runId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "runtimeId": "video-intelligence-local",
+        "startedAt": 1792520801.7388303,
+        "status": "completed"
+      },
+      {
+        "activityId": "video-intelligence-local-bb3cf6fa14-prepare",
+        "artifacts": {
+          "activityId": "video-intelligence-local-bb3cf6fa14-prepare",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:f299fa47104d5a501fdfba89770a619286422b3368bbe1a523f60add0b1d50f8",
+              "modifiedUnixNano": 1792520800578314000,
+              "path": "concat.txt",
+              "sizeBytes": 54
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:a9b177ad5951aec57d4f8c67f4f1a3840c61640023b305ad450b15a52c863f38",
+              "modifiedUnixNano": 1792520800426314000,
+              "path": "part-1.mp4",
+              "sizeBytes": 21426
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:b719dd5cdb4af7939425bd2dca39654d766ae2a1a7c5232bd102bd17423da1d9",
+              "modifiedUnixNano": 1792520800502314000,
+              "path": "part-2.mp4",
+              "sizeBytes": 21438
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:35ff27465264c841ba9c0d36a1d14e41be1a245e83e86c85b3ea8a3d38043cea",
+              "modifiedUnixNano": 1792520800574314000,
+              "path": "part-3.mp4",
+              "sizeBytes": 21390
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:9d7ddba6686e6e97c0ec73940083559e7e76fe75e3261adbd107c6725fcb99ef",
+              "modifiedUnixNano": 1792520800620314000,
+              "path": "source.mp4",
+              "sizeBytes": 61610
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:f299fa47104d5a501fdfba89770a619286422b3368bbe1a523f60add0b1d50f8",
+              "modifiedUnixNano": 1792520800578314000,
+              "path": "concat.txt",
+              "sizeBytes": 54
+            },
+            {
+              "checksum": "sha256:a9b177ad5951aec57d4f8c67f4f1a3840c61640023b305ad450b15a52c863f38",
+              "modifiedUnixNano": 1792520800426314000,
+              "path": "part-1.mp4",
+              "sizeBytes": 21426
+            },
+            {
+              "checksum": "sha256:b719dd5cdb4af7939425bd2dca39654d766ae2a1a7c5232bd102bd17423da1d9",
+              "modifiedUnixNano": 1792520800502314000,
+              "path": "part-2.mp4",
+              "sizeBytes": 21438
+            },
+            {
+              "checksum": "sha256:35ff27465264c841ba9c0d36a1d14e41be1a245e83e86c85b3ea8a3d38043cea",
+              "modifiedUnixNano": 1792520800574314000,
+              "path": "part-3.mp4",
+              "sizeBytes": 21390
+            },
+            {
+              "checksum": "sha256:9d7ddba6686e6e97c0ec73940083559e7e76fe75e3261adbd107c6725fcb99ef",
+              "modifiedUnixNano": 1792520800620314000,
+              "path": "source.mp4",
+              "sizeBytes": 61610
+            }
+          ],
+          "finishedAt": 1792520800.628516,
+          "phases": [
+            {
+              "durationSeconds": 0.36805129051208496,
+              "finishedAt": 1792520800.628516,
+              "phase": "execution",
+              "startedAt": 1792520800.2604647,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-prepare",
+          "runId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+          "runtime": "video-intelligence-local",
+          "schemaVersion": 1,
+          "startedAt": 1792520800.2604647,
+          "summary": {
+            "createdFiles": 5,
+            "deletedFiles": 0,
+            "finalFiles": 5,
+            "initialFiles": 0,
+            "modifiedFiles": 0,
+            "outputBytes": 125918
+          }
+        },
+        "exitCode": 0,
+        "externalId": "701cbdbb1694ffe56cda07cefabc61aab6e0b0977d67a4527fb8fc359e325920",
+        "finishedAt": 1792520800.628516,
+        "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-prepare",
+        "log": "[AKOFLOW INFO] Activity started on runtime video-intelligence-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-prepare",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792520800.2604723,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-prepare",
+          "submittedAt": 1792520800.2604647
+        },
+        "resourceId": "video-intelligence-local-docker",
+        "runId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "runtimeId": "video-intelligence-local",
+        "startedAt": 1792520800.2604647,
+        "status": "completed"
+      },
+      {
+        "activityId": "video-intelligence-local-bb3cf6fa14-probe",
+        "artifacts": {
+          "activityId": "video-intelligence-local-bb3cf6fa14-probe",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:9b9eb1a268e9bba2b60c37a4c557f25c71eebee1cb6938d1092c0b10cdb16df8",
+              "modifiedUnixNano": 1792520801869314000,
+              "path": "probe.json",
+              "sizeBytes": 344
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:f299fa47104d5a501fdfba89770a619286422b3368bbe1a523f60add0b1d50f8",
+              "modifiedUnixNano": 1792520801502314000,
+              "path": "concat.txt",
+              "sizeBytes": 54
+            },
+            {
+              "checksum": "sha256:a9b177ad5951aec57d4f8c67f4f1a3840c61640023b305ad450b15a52c863f38",
+              "modifiedUnixNano": 1792520801502314000,
+              "path": "part-1.mp4",
+              "sizeBytes": 21426
+            },
+            {
+              "checksum": "sha256:b719dd5cdb4af7939425bd2dca39654d766ae2a1a7c5232bd102bd17423da1d9",
+              "modifiedUnixNano": 1792520801502314000,
+              "path": "part-2.mp4",
+              "sizeBytes": 21438
+            },
+            {
+              "checksum": "sha256:35ff27465264c841ba9c0d36a1d14e41be1a245e83e86c85b3ea8a3d38043cea",
+              "modifiedUnixNano": 1792520801502314000,
+              "path": "part-3.mp4",
+              "sizeBytes": 21390
+            },
+            {
+              "checksum": "sha256:9b9eb1a268e9bba2b60c37a4c557f25c71eebee1cb6938d1092c0b10cdb16df8",
+              "modifiedUnixNano": 1792520801869314000,
+              "path": "probe.json",
+              "sizeBytes": 344
+            },
+            {
+              "checksum": "sha256:9d7ddba6686e6e97c0ec73940083559e7e76fe75e3261adbd107c6725fcb99ef",
+              "modifiedUnixNano": 1792520801502314000,
+              "path": "source.mp4",
+              "sizeBytes": 61610
+            }
+          ],
+          "finishedAt": 1792520801.875989,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:f299fa47104d5a501fdfba89770a619286422b3368bbe1a523f60add0b1d50f8",
+              "modifiedUnixNano": 1792520801502314000,
+              "path": "concat.txt",
+              "sizeBytes": 54
+            },
+            {
+              "checksum": "sha256:a9b177ad5951aec57d4f8c67f4f1a3840c61640023b305ad450b15a52c863f38",
+              "modifiedUnixNano": 1792520801502314000,
+              "path": "part-1.mp4",
+              "sizeBytes": 21426
+            },
+            {
+              "checksum": "sha256:b719dd5cdb4af7939425bd2dca39654d766ae2a1a7c5232bd102bd17423da1d9",
+              "modifiedUnixNano": 1792520801502314000,
+              "path": "part-2.mp4",
+              "sizeBytes": 21438
+            },
+            {
+              "checksum": "sha256:35ff27465264c841ba9c0d36a1d14e41be1a245e83e86c85b3ea8a3d38043cea",
+              "modifiedUnixNano": 1792520801502314000,
+              "path": "part-3.mp4",
+              "sizeBytes": 21390
+            },
+            {
+              "checksum": "sha256:9d7ddba6686e6e97c0ec73940083559e7e76fe75e3261adbd107c6725fcb99ef",
+              "modifiedUnixNano": 1792520801502314000,
+              "path": "source.mp4",
+              "sizeBytes": 61610
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.1519486904144287,
+              "finishedAt": 1792520801.875989,
+              "phase": "execution",
+              "startedAt": 1792520801.7240403,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-probe",
+          "runId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+          "runtime": "video-intelligence-local",
+          "schemaVersion": 1,
+          "startedAt": 1792520801.7240403,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 6,
+            "initialFiles": 5,
+            "modifiedFiles": 0,
+            "outputBytes": 344
+          }
+        },
+        "exitCode": 0,
+        "externalId": "afe97cbc8616c50aebc4244441e0c541e4fb603af41360d6a37a9d3f96c71adb",
+        "finishedAt": 1792520801.875989,
+        "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-probe",
+        "log": "[AKOFLOW INFO] Activity started on runtime video-intelligence-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-probe",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792520801.724054,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-probe",
+          "submittedAt": 1792520801.7240403
+        },
+        "resourceId": "video-intelligence-local-docker",
+        "runId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "runtimeId": "video-intelligence-local",
+        "startedAt": 1792520801.7240403,
+        "status": "completed"
+      },
+      {
+        "activityId": "video-intelligence-local-bb3cf6fa14-report",
+        "artifacts": {
+          "activityId": "video-intelligence-local-bb3cf6fa14-report",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:c66c4ad83cd0a929fc49921ae498e11a36b4249c8e3bd5de9f503c70400cf743",
+              "modifiedUnixNano": 1792520805802314000,
+              "path": "manifest.json",
+              "sizeBytes": 177
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:a10b207c04c1ad61cb2ddac20e027f69e573124e52e65852be40a2d0cb35262c",
+              "modifiedUnixNano": 1792520805533314000,
+              "path": "audio.json",
+              "sizeBytes": 43
+            },
+            {
+              "checksum": "sha256:f299fa47104d5a501fdfba89770a619286422b3368bbe1a523f60add0b1d50f8",
+              "modifiedUnixNano": 1792520805533314000,
+              "path": "concat.txt",
+              "sizeBytes": 54
+            },
+            {
+              "checksum": "sha256:c66c4ad83cd0a929fc49921ae498e11a36b4249c8e3bd5de9f503c70400cf743",
+              "modifiedUnixNano": 1792520805802314000,
+              "path": "manifest.json",
+              "sizeBytes": 177
+            },
+            {
+              "checksum": "sha256:a9b177ad5951aec57d4f8c67f4f1a3840c61640023b305ad450b15a52c863f38",
+              "modifiedUnixNano": 1792520805533314000,
+              "path": "part-1.mp4",
+              "sizeBytes": 21426
+            },
+            {
+              "checksum": "sha256:b719dd5cdb4af7939425bd2dca39654d766ae2a1a7c5232bd102bd17423da1d9",
+              "modifiedUnixNano": 1792520805533314000,
+              "path": "part-2.mp4",
+              "sizeBytes": 21438
+            },
+            {
+              "checksum": "sha256:35ff27465264c841ba9c0d36a1d14e41be1a245e83e86c85b3ea8a3d38043cea",
+              "modifiedUnixNano": 1792520805533314000,
+              "path": "part-3.mp4",
+              "sizeBytes": 21390
+            },
+            {
+              "checksum": "sha256:9b9eb1a268e9bba2b60c37a4c557f25c71eebee1cb6938d1092c0b10cdb16df8",
+              "modifiedUnixNano": 1792520805533314000,
+              "path": "probe.json",
+              "sizeBytes": 344
+            },
+            {
+              "checksum": "sha256:ea09e7ccd1d3bbaec98e27ae4ea11c06bd4c7c48cd0d10e6fe072f4a7f962f02",
+              "modifiedUnixNano": 1792520805533314000,
+              "path": "scenes.json",
+              "sizeBytes": 210
+            },
+            {
+              "checksum": "sha256:9d7ddba6686e6e97c0ec73940083559e7e76fe75e3261adbd107c6725fcb99ef",
+              "modifiedUnixNano": 1792520805533314000,
+              "path": "source.mp4",
+              "sizeBytes": 61610
+            },
+            {
+              "checksum": "sha256:8612a484ce24260abd9e74df85545476b54f9ab6a55e5bc546d234e9a3de328f",
+              "modifiedUnixNano": 1792520805533314000,
+              "path": "thumbnails/scene-001.jpg",
+              "sizeBytes": 583
+            },
+            {
+              "checksum": "sha256:a884fa4b0590a0f56eda5329f0e82cf4b1b11b6f7958fa82162237bc3a21adfe",
+              "modifiedUnixNano": 1792520805533314000,
+              "path": "thumbnails/scene-002.jpg",
+              "sizeBytes": 584
+            },
+            {
+              "checksum": "sha256:e3376294606cb19688a67e7b1e165bbe35ea65673400116a3f4436a96562922b",
+              "modifiedUnixNano": 1792520805533314000,
+              "path": "thumbnails/scene-003.jpg",
+              "sizeBytes": 582
+            },
+            {
+              "checksum": "sha256:a95c21418d18720b10ba49e5913dc6e014cb7e45d7e83f8b0fac13c0455fa7ec",
+              "modifiedUnixNano": 1792520805533314000,
+              "path": "timeline.json",
+              "sizeBytes": 449
+            }
+          ],
+          "finishedAt": 1792520805.8086889,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:a10b207c04c1ad61cb2ddac20e027f69e573124e52e65852be40a2d0cb35262c",
+              "modifiedUnixNano": 1792520805533314000,
+              "path": "audio.json",
+              "sizeBytes": 43
+            },
+            {
+              "checksum": "sha256:f299fa47104d5a501fdfba89770a619286422b3368bbe1a523f60add0b1d50f8",
+              "modifiedUnixNano": 1792520805533314000,
+              "path": "concat.txt",
+              "sizeBytes": 54
+            },
+            {
+              "checksum": "sha256:a9b177ad5951aec57d4f8c67f4f1a3840c61640023b305ad450b15a52c863f38",
+              "modifiedUnixNano": 1792520805533314000,
+              "path": "part-1.mp4",
+              "sizeBytes": 21426
+            },
+            {
+              "checksum": "sha256:b719dd5cdb4af7939425bd2dca39654d766ae2a1a7c5232bd102bd17423da1d9",
+              "modifiedUnixNano": 1792520805533314000,
+              "path": "part-2.mp4",
+              "sizeBytes": 21438
+            },
+            {
+              "checksum": "sha256:35ff27465264c841ba9c0d36a1d14e41be1a245e83e86c85b3ea8a3d38043cea",
+              "modifiedUnixNano": 1792520805533314000,
+              "path": "part-3.mp4",
+              "sizeBytes": 21390
+            },
+            {
+              "checksum": "sha256:9b9eb1a268e9bba2b60c37a4c557f25c71eebee1cb6938d1092c0b10cdb16df8",
+              "modifiedUnixNano": 1792520805533314000,
+              "path": "probe.json",
+              "sizeBytes": 344
+            },
+            {
+              "checksum": "sha256:ea09e7ccd1d3bbaec98e27ae4ea11c06bd4c7c48cd0d10e6fe072f4a7f962f02",
+              "modifiedUnixNano": 1792520805533314000,
+              "path": "scenes.json",
+              "sizeBytes": 210
+            },
+            {
+              "checksum": "sha256:9d7ddba6686e6e97c0ec73940083559e7e76fe75e3261adbd107c6725fcb99ef",
+              "modifiedUnixNano": 1792520805533314000,
+              "path": "source.mp4",
+              "sizeBytes": 61610
+            },
+            {
+              "checksum": "sha256:8612a484ce24260abd9e74df85545476b54f9ab6a55e5bc546d234e9a3de328f",
+              "modifiedUnixNano": 1792520805533314000,
+              "path": "thumbnails/scene-001.jpg",
+              "sizeBytes": 583
+            },
+            {
+              "checksum": "sha256:a884fa4b0590a0f56eda5329f0e82cf4b1b11b6f7958fa82162237bc3a21adfe",
+              "modifiedUnixNano": 1792520805533314000,
+              "path": "thumbnails/scene-002.jpg",
+              "sizeBytes": 584
+            },
+            {
+              "checksum": "sha256:e3376294606cb19688a67e7b1e165bbe35ea65673400116a3f4436a96562922b",
+              "modifiedUnixNano": 1792520805533314000,
+              "path": "thumbnails/scene-003.jpg",
+              "sizeBytes": 582
+            },
+            {
+              "checksum": "sha256:a95c21418d18720b10ba49e5913dc6e014cb7e45d7e83f8b0fac13c0455fa7ec",
+              "modifiedUnixNano": 1792520805533314000,
+              "path": "timeline.json",
+              "sizeBytes": 449
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.0905306339263916,
+              "finishedAt": 1792520805.8086889,
+              "phase": "execution",
+              "startedAt": 1792520805.7181582,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-report",
+          "runId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+          "runtime": "video-intelligence-local",
+          "schemaVersion": 1,
+          "startedAt": 1792520805.7181582,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 13,
+            "initialFiles": 12,
+            "modifiedFiles": 0,
+            "outputBytes": 177
+          }
+        },
+        "exitCode": 0,
+        "externalId": "5b20afed79755bdf0c475d3b154c2ed8708575ab10299ec12167a8b2fecd406b",
+        "finishedAt": 1792520805.8086889,
+        "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-report",
+        "log": "[AKOFLOW INFO] Activity started on runtime video-intelligence-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-report",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792520805.7181659,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-report",
+          "submittedAt": 1792520805.7181582
+        },
+        "resourceId": "video-intelligence-local-docker",
+        "runId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "runtimeId": "video-intelligence-local",
+        "startedAt": 1792520805.7181582,
+        "status": "completed"
+      },
+      {
+        "activityId": "video-intelligence-local-bb3cf6fa14-scenes",
+        "artifacts": {
+          "activityId": "video-intelligence-local-bb3cf6fa14-scenes",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:ea09e7ccd1d3bbaec98e27ae4ea11c06bd4c7c48cd0d10e6fe072f4a7f962f02",
+              "modifiedUnixNano": 1792520801888314000,
+              "path": "scenes.json",
+              "sizeBytes": 210
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:8612a484ce24260abd9e74df85545476b54f9ab6a55e5bc546d234e9a3de328f",
+              "modifiedUnixNano": 1792520801879314000,
+              "path": "thumbnails/scene-001.jpg",
+              "sizeBytes": 583
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:a884fa4b0590a0f56eda5329f0e82cf4b1b11b6f7958fa82162237bc3a21adfe",
+              "modifiedUnixNano": 1792520801881314000,
+              "path": "thumbnails/scene-002.jpg",
+              "sizeBytes": 584
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:e3376294606cb19688a67e7b1e165bbe35ea65673400116a3f4436a96562922b",
+              "modifiedUnixNano": 1792520801883314000,
+              "path": "thumbnails/scene-003.jpg",
+              "sizeBytes": 582
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:f299fa47104d5a501fdfba89770a619286422b3368bbe1a523f60add0b1d50f8",
+              "modifiedUnixNano": 1792520801525314000,
+              "path": "concat.txt",
+              "sizeBytes": 54
+            },
+            {
+              "checksum": "sha256:a9b177ad5951aec57d4f8c67f4f1a3840c61640023b305ad450b15a52c863f38",
+              "modifiedUnixNano": 1792520801525314000,
+              "path": "part-1.mp4",
+              "sizeBytes": 21426
+            },
+            {
+              "checksum": "sha256:b719dd5cdb4af7939425bd2dca39654d766ae2a1a7c5232bd102bd17423da1d9",
+              "modifiedUnixNano": 1792520801525314000,
+              "path": "part-2.mp4",
+              "sizeBytes": 21438
+            },
+            {
+              "checksum": "sha256:35ff27465264c841ba9c0d36a1d14e41be1a245e83e86c85b3ea8a3d38043cea",
+              "modifiedUnixNano": 1792520801525314000,
+              "path": "part-3.mp4",
+              "sizeBytes": 21390
+            },
+            {
+              "checksum": "sha256:ea09e7ccd1d3bbaec98e27ae4ea11c06bd4c7c48cd0d10e6fe072f4a7f962f02",
+              "modifiedUnixNano": 1792520801888314000,
+              "path": "scenes.json",
+              "sizeBytes": 210
+            },
+            {
+              "checksum": "sha256:9d7ddba6686e6e97c0ec73940083559e7e76fe75e3261adbd107c6725fcb99ef",
+              "modifiedUnixNano": 1792520801525314000,
+              "path": "source.mp4",
+              "sizeBytes": 61610
+            },
+            {
+              "checksum": "sha256:8612a484ce24260abd9e74df85545476b54f9ab6a55e5bc546d234e9a3de328f",
+              "modifiedUnixNano": 1792520801879314000,
+              "path": "thumbnails/scene-001.jpg",
+              "sizeBytes": 583
+            },
+            {
+              "checksum": "sha256:a884fa4b0590a0f56eda5329f0e82cf4b1b11b6f7958fa82162237bc3a21adfe",
+              "modifiedUnixNano": 1792520801881314000,
+              "path": "thumbnails/scene-002.jpg",
+              "sizeBytes": 584
+            },
+            {
+              "checksum": "sha256:e3376294606cb19688a67e7b1e165bbe35ea65673400116a3f4436a96562922b",
+              "modifiedUnixNano": 1792520801883314000,
+              "path": "thumbnails/scene-003.jpg",
+              "sizeBytes": 582
+            }
+          ],
+          "finishedAt": 1792520801.8936102,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:f299fa47104d5a501fdfba89770a619286422b3368bbe1a523f60add0b1d50f8",
+              "modifiedUnixNano": 1792520801525314000,
+              "path": "concat.txt",
+              "sizeBytes": 54
+            },
+            {
+              "checksum": "sha256:a9b177ad5951aec57d4f8c67f4f1a3840c61640023b305ad450b15a52c863f38",
+              "modifiedUnixNano": 1792520801525314000,
+              "path": "part-1.mp4",
+              "sizeBytes": 21426
+            },
+            {
+              "checksum": "sha256:b719dd5cdb4af7939425bd2dca39654d766ae2a1a7c5232bd102bd17423da1d9",
+              "modifiedUnixNano": 1792520801525314000,
+              "path": "part-2.mp4",
+              "sizeBytes": 21438
+            },
+            {
+              "checksum": "sha256:35ff27465264c841ba9c0d36a1d14e41be1a245e83e86c85b3ea8a3d38043cea",
+              "modifiedUnixNano": 1792520801525314000,
+              "path": "part-3.mp4",
+              "sizeBytes": 21390
+            },
+            {
+              "checksum": "sha256:9d7ddba6686e6e97c0ec73940083559e7e76fe75e3261adbd107c6725fcb99ef",
+              "modifiedUnixNano": 1792520801525314000,
+              "path": "source.mp4",
+              "sizeBytes": 61610
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.15729880332946777,
+              "finishedAt": 1792520801.8936102,
+              "phase": "execution",
+              "startedAt": 1792520801.7363114,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-scenes",
+          "runId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+          "runtime": "video-intelligence-local",
+          "schemaVersion": 1,
+          "startedAt": 1792520801.7363114,
+          "summary": {
+            "createdFiles": 4,
+            "deletedFiles": 0,
+            "finalFiles": 9,
+            "initialFiles": 5,
+            "modifiedFiles": 0,
+            "outputBytes": 1959
+          }
+        },
+        "exitCode": 0,
+        "externalId": "4572cadb40838ede98686ff6c6d9de3744e42783a89bc363a6ca695de1612712",
+        "finishedAt": 1792520801.8936102,
+        "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-scenes",
+        "log": "[AKOFLOW INFO] Activity started on runtime video-intelligence-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-scenes",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792520801.7363188,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-scenes",
+          "submittedAt": 1792520801.7363114
+        },
+        "resourceId": "video-intelligence-local-docker",
+        "runId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "runtimeId": "video-intelligence-local",
+        "startedAt": 1792520801.7363114,
+        "status": "completed"
+      },
+      {
+        "activityId": "video-intelligence-local-bb3cf6fa14-timeline",
+        "artifacts": {
+          "activityId": "video-intelligence-local-bb3cf6fa14-timeline",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:a95c21418d18720b10ba49e5913dc6e014cb7e45d7e83f8b0fac13c0455fa7ec",
+              "modifiedUnixNano": 1792520804184314000,
+              "path": "timeline.json",
+              "sizeBytes": 449
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:a10b207c04c1ad61cb2ddac20e027f69e573124e52e65852be40a2d0cb35262c",
+              "modifiedUnixNano": 1792520803919314000,
+              "path": "audio.json",
+              "sizeBytes": 43
+            },
+            {
+              "checksum": "sha256:f299fa47104d5a501fdfba89770a619286422b3368bbe1a523f60add0b1d50f8",
+              "modifiedUnixNano": 1792520803644314000,
+              "path": "concat.txt",
+              "sizeBytes": 54
+            },
+            {
+              "checksum": "sha256:a9b177ad5951aec57d4f8c67f4f1a3840c61640023b305ad450b15a52c863f38",
+              "modifiedUnixNano": 1792520803644314000,
+              "path": "part-1.mp4",
+              "sizeBytes": 21426
+            },
+            {
+              "checksum": "sha256:b719dd5cdb4af7939425bd2dca39654d766ae2a1a7c5232bd102bd17423da1d9",
+              "modifiedUnixNano": 1792520803644314000,
+              "path": "part-2.mp4",
+              "sizeBytes": 21438
+            },
+            {
+              "checksum": "sha256:35ff27465264c841ba9c0d36a1d14e41be1a245e83e86c85b3ea8a3d38043cea",
+              "modifiedUnixNano": 1792520803644314000,
+              "path": "part-3.mp4",
+              "sizeBytes": 21390
+            },
+            {
+              "checksum": "sha256:9b9eb1a268e9bba2b60c37a4c557f25c71eebee1cb6938d1092c0b10cdb16df8",
+              "modifiedUnixNano": 1792520803644314000,
+              "path": "probe.json",
+              "sizeBytes": 344
+            },
+            {
+              "checksum": "sha256:ea09e7ccd1d3bbaec98e27ae4ea11c06bd4c7c48cd0d10e6fe072f4a7f962f02",
+              "modifiedUnixNano": 1792520803769314000,
+              "path": "scenes.json",
+              "sizeBytes": 210
+            },
+            {
+              "checksum": "sha256:9d7ddba6686e6e97c0ec73940083559e7e76fe75e3261adbd107c6725fcb99ef",
+              "modifiedUnixNano": 1792520803644314000,
+              "path": "source.mp4",
+              "sizeBytes": 61610
+            },
+            {
+              "checksum": "sha256:8612a484ce24260abd9e74df85545476b54f9ab6a55e5bc546d234e9a3de328f",
+              "modifiedUnixNano": 1792520803769314000,
+              "path": "thumbnails/scene-001.jpg",
+              "sizeBytes": 583
+            },
+            {
+              "checksum": "sha256:a884fa4b0590a0f56eda5329f0e82cf4b1b11b6f7958fa82162237bc3a21adfe",
+              "modifiedUnixNano": 1792520803769314000,
+              "path": "thumbnails/scene-002.jpg",
+              "sizeBytes": 584
+            },
+            {
+              "checksum": "sha256:e3376294606cb19688a67e7b1e165bbe35ea65673400116a3f4436a96562922b",
+              "modifiedUnixNano": 1792520803769314000,
+              "path": "thumbnails/scene-003.jpg",
+              "sizeBytes": 582
+            },
+            {
+              "checksum": "sha256:a95c21418d18720b10ba49e5913dc6e014cb7e45d7e83f8b0fac13c0455fa7ec",
+              "modifiedUnixNano": 1792520804184314000,
+              "path": "timeline.json",
+              "sizeBytes": 449
+            }
+          ],
+          "finishedAt": 1792520804.1893477,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:a10b207c04c1ad61cb2ddac20e027f69e573124e52e65852be40a2d0cb35262c",
+              "modifiedUnixNano": 1792520803919314000,
+              "path": "audio.json",
+              "sizeBytes": 43
+            },
+            {
+              "checksum": "sha256:f299fa47104d5a501fdfba89770a619286422b3368bbe1a523f60add0b1d50f8",
+              "modifiedUnixNano": 1792520803644314000,
+              "path": "concat.txt",
+              "sizeBytes": 54
+            },
+            {
+              "checksum": "sha256:a9b177ad5951aec57d4f8c67f4f1a3840c61640023b305ad450b15a52c863f38",
+              "modifiedUnixNano": 1792520803644314000,
+              "path": "part-1.mp4",
+              "sizeBytes": 21426
+            },
+            {
+              "checksum": "sha256:b719dd5cdb4af7939425bd2dca39654d766ae2a1a7c5232bd102bd17423da1d9",
+              "modifiedUnixNano": 1792520803644314000,
+              "path": "part-2.mp4",
+              "sizeBytes": 21438
+            },
+            {
+              "checksum": "sha256:35ff27465264c841ba9c0d36a1d14e41be1a245e83e86c85b3ea8a3d38043cea",
+              "modifiedUnixNano": 1792520803644314000,
+              "path": "part-3.mp4",
+              "sizeBytes": 21390
+            },
+            {
+              "checksum": "sha256:9b9eb1a268e9bba2b60c37a4c557f25c71eebee1cb6938d1092c0b10cdb16df8",
+              "modifiedUnixNano": 1792520803644314000,
+              "path": "probe.json",
+              "sizeBytes": 344
+            },
+            {
+              "checksum": "sha256:ea09e7ccd1d3bbaec98e27ae4ea11c06bd4c7c48cd0d10e6fe072f4a7f962f02",
+              "modifiedUnixNano": 1792520803769314000,
+              "path": "scenes.json",
+              "sizeBytes": 210
+            },
+            {
+              "checksum": "sha256:9d7ddba6686e6e97c0ec73940083559e7e76fe75e3261adbd107c6725fcb99ef",
+              "modifiedUnixNano": 1792520803644314000,
+              "path": "source.mp4",
+              "sizeBytes": 61610
+            },
+            {
+              "checksum": "sha256:8612a484ce24260abd9e74df85545476b54f9ab6a55e5bc546d234e9a3de328f",
+              "modifiedUnixNano": 1792520803769314000,
+              "path": "thumbnails/scene-001.jpg",
+              "sizeBytes": 583
+            },
+            {
+              "checksum": "sha256:a884fa4b0590a0f56eda5329f0e82cf4b1b11b6f7958fa82162237bc3a21adfe",
+              "modifiedUnixNano": 1792520803769314000,
+              "path": "thumbnails/scene-002.jpg",
+              "sizeBytes": 584
+            },
+            {
+              "checksum": "sha256:e3376294606cb19688a67e7b1e165bbe35ea65673400116a3f4436a96562922b",
+              "modifiedUnixNano": 1792520803769314000,
+              "path": "thumbnails/scene-003.jpg",
+              "sizeBytes": 582
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.09175992012023926,
+              "finishedAt": 1792520804.1893477,
+              "phase": "execution",
+              "startedAt": 1792520804.0975878,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-timeline",
+          "runId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+          "runtime": "video-intelligence-local",
+          "schemaVersion": 1,
+          "startedAt": 1792520804.0975878,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 12,
+            "initialFiles": 11,
+            "modifiedFiles": 0,
+            "outputBytes": 449
+          }
+        },
+        "exitCode": 0,
+        "externalId": "e43fb7f96fbb998ba7dc254986691114951afab0feccbbb76847d420e70b431b",
+        "finishedAt": 1792520804.1893477,
+        "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-timeline",
+        "log": "[AKOFLOW INFO] Activity started on runtime video-intelligence-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-timeline",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792520804.0975926,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-timeline",
+          "submittedAt": 1792520804.0975878
+        },
+        "resourceId": "video-intelligence-local-docker",
+        "runId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "runtimeId": "video-intelligence-local",
+        "startedAt": 1792520804.0975878,
+        "status": "completed"
+      }
+    ],
+    "infrastructureRuns": [],
+    "operationEvents": [],
+    "run": {
+      "activityCount": 6,
+      "breakdown": {
+        "computeSeconds": 1.0246565341949463,
+        "interferenceSeconds": 0,
+        "overheadSeconds": 0,
+        "queueSeconds": 0,
+        "transferSeconds": 1.806412935256958
+      },
+      "completedActivityCount": 6,
+      "cost": 0,
+      "finishedAt": "2026-10-20T18:26:47Z",
+      "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+      "kind": "workflow",
+      "makespanSeconds": 5.548224210739136,
+      "mode": "real",
+      "schedulePlanId": "video-intelligence-local-bb3cf6fa14-manual-plan-20261020t182639",
+      "seed": 0,
+      "startedAt": "2026-10-20T18:26:40Z",
+      "status": "completed",
+      "title": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+      "transferredBytes": 634731
+    },
+    "timeline": {
+      "computeMakespanSeconds": 5.548224210739136,
+      "coveredWallSeconds": 2.1972734928131104,
+      "finishedAt": 1792520807,
+      "phases": [
+        {
+          "activityId": "video-intelligence-local-bb3cf6fa14-prepare",
+          "category": "resource-queue",
+          "durationSeconds": 0.12439656257629395,
+          "finishedAt": 1792520800.2604647,
+          "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-prepare:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792520800.136068,
+          "status": "completed"
+        },
+        {
+          "activityId": "video-intelligence-local-bb3cf6fa14-prepare",
+          "category": "runtime",
+          "durationSeconds": 0.36805129051208496,
+          "finishedAt": 1792520800.628516,
+          "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-prepare:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792520800.2604647,
+          "status": "completed"
+        },
+        {
+          "activityId": "video-intelligence-local-bb3cf6fa14-audio",
+          "category": "resource-queue",
+          "durationSeconds": 0.013552188873291016,
+          "finishedAt": 1792520801.3900254,
+          "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-audio:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792520801.3764732,
+          "status": "completed"
+        },
+        {
+          "activityId": "video-intelligence-local-bb3cf6fa14-probe",
+          "category": "resource-queue",
+          "durationSeconds": 0.008262395858764648,
+          "finishedAt": 1792520801.3858492,
+          "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-probe:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792520801.3775868,
+          "status": "completed"
+        },
+        {
+          "activityId": "video-intelligence-local-bb3cf6fa14-scenes",
+          "category": "resource-queue",
+          "durationSeconds": 0.008913040161132812,
+          "finishedAt": 1792520801.3879883,
+          "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-scenes:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792520801.3790753,
+          "status": "completed"
+        },
+        {
+          "activityId": "video-intelligence-local-bb3cf6fa14-probe",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.1602787971496582,
+          "finishedAt": 1792520801.546128,
+          "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-probe:transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-probe-0",
+          "source": "transfer-observation",
+          "startedAt": 1792520801.3858492,
+          "status": "completed",
+          "transferId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-probe:transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-probe-0"
+        },
+        {
+          "activityId": "video-intelligence-local-bb3cf6fa14-scenes",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.15993928909301758,
+          "finishedAt": 1792520801.5479276,
+          "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-scenes:transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-scenes-0",
+          "source": "transfer-observation",
+          "startedAt": 1792520801.3879883,
+          "status": "completed",
+          "transferId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-scenes:transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-scenes-0"
+        },
+        {
+          "activityId": "video-intelligence-local-bb3cf6fa14-audio",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.15827703475952148,
+          "finishedAt": 1792520801.5483024,
+          "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-audio:transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-audio-0",
+          "source": "transfer-observation",
+          "startedAt": 1792520801.3900254,
+          "status": "completed",
+          "transferId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-audio:transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-audio-0"
+        },
+        {
+          "activityId": "video-intelligence-local-bb3cf6fa14-probe",
+          "category": "launch",
+          "durationSeconds": 0.17791223526000977,
+          "finishedAt": 1792520801.7240403,
+          "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-probe:launch",
+          "source": "task-metadata",
+          "startedAt": 1792520801.546128,
+          "status": "completed"
+        },
+        {
+          "activityId": "video-intelligence-local-bb3cf6fa14-scenes",
+          "category": "launch",
+          "durationSeconds": 0.1883838176727295,
+          "finishedAt": 1792520801.7363114,
+          "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-scenes:launch",
+          "source": "task-metadata",
+          "startedAt": 1792520801.5479276,
+          "status": "completed"
+        },
+        {
+          "activityId": "video-intelligence-local-bb3cf6fa14-audio",
+          "category": "launch",
+          "durationSeconds": 0.19052791595458984,
+          "finishedAt": 1792520801.7388303,
+          "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-audio:launch",
+          "source": "task-metadata",
+          "startedAt": 1792520801.5483024,
+          "status": "completed"
+        },
+        {
+          "activityId": "video-intelligence-local-bb3cf6fa14-probe",
+          "category": "runtime",
+          "durationSeconds": 0.1519486904144287,
+          "finishedAt": 1792520801.875989,
+          "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-probe:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792520801.7240403,
+          "status": "completed"
+        },
+        {
+          "activityId": "video-intelligence-local-bb3cf6fa14-scenes",
+          "category": "runtime",
+          "durationSeconds": 0.15729880332946777,
+          "finishedAt": 1792520801.8936102,
+          "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-scenes:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792520801.7363114,
+          "status": "completed"
+        },
+        {
+          "activityId": "video-intelligence-local-bb3cf6fa14-audio",
+          "category": "runtime",
+          "durationSeconds": 0.16506719589233398,
+          "finishedAt": 1792520801.9038975,
+          "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-audio:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792520801.7388303,
+          "status": "completed"
+        },
+        {
+          "activityId": "video-intelligence-local-bb3cf6fa14-timeline",
+          "category": "resource-queue",
+          "durationSeconds": 0.004892110824584961,
+          "finishedAt": 1792520803.4491963,
+          "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-timeline:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792520803.4443042,
+          "status": "completed"
+        },
+        {
+          "activityId": "video-intelligence-local-bb3cf6fa14-timeline",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.24711275100708008,
+          "finishedAt": 1792520803.696309,
+          "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-timeline:transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-timeline-0",
+          "source": "transfer-observation",
+          "startedAt": 1792520803.4491963,
+          "status": "completed",
+          "transferId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-timeline:transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-timeline-0"
+        },
+        {
+          "activityId": "video-intelligence-local-bb3cf6fa14-timeline",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.3661534786224365,
+          "finishedAt": 1792520803.8153498,
+          "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-timeline:transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-timeline-1",
+          "source": "transfer-observation",
+          "startedAt": 1792520803.4491963,
+          "status": "completed",
+          "transferId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-timeline:transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-timeline-1"
+        },
+        {
+          "activityId": "video-intelligence-local-bb3cf6fa14-timeline",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.514836311340332,
+          "finishedAt": 1792520803.9640326,
+          "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-timeline:transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-timeline-2",
+          "source": "transfer-observation",
+          "startedAt": 1792520803.4491963,
+          "status": "completed",
+          "transferId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-timeline:transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-timeline-2"
+        },
+        {
+          "activityId": "video-intelligence-local-bb3cf6fa14-timeline",
+          "category": "launch",
+          "durationSeconds": 0.13355517387390137,
+          "finishedAt": 1792520804.0975878,
+          "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-timeline:launch",
+          "source": "task-metadata",
+          "startedAt": 1792520803.9640326,
+          "status": "completed"
+        },
+        {
+          "activityId": "video-intelligence-local-bb3cf6fa14-timeline",
+          "category": "runtime",
+          "durationSeconds": 0.09175992012023926,
+          "finishedAt": 1792520804.1893477,
+          "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-timeline:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792520804.0975878,
+          "status": "completed"
+        },
+        {
+          "activityId": "video-intelligence-local-bb3cf6fa14-report",
+          "category": "resource-queue",
+          "durationSeconds": 0.002653837203979492,
+          "finishedAt": 1792520805.378985,
+          "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-report:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792520805.376331,
+          "status": "completed"
+        },
+        {
+          "activityId": "video-intelligence-local-bb3cf6fa14-report",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.1998152732849121,
+          "finishedAt": 1792520805.5788002,
+          "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-report:transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-report-0",
+          "source": "transfer-observation",
+          "startedAt": 1792520805.378985,
+          "status": "completed",
+          "transferId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-report:transfer-workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-report-0"
+        },
+        {
+          "activityId": "video-intelligence-local-bb3cf6fa14-report",
+          "category": "launch",
+          "durationSeconds": 0.1393580436706543,
+          "finishedAt": 1792520805.7181582,
+          "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-report:launch",
+          "source": "task-metadata",
+          "startedAt": 1792520805.5788002,
+          "status": "completed"
+        },
+        {
+          "activityId": "video-intelligence-local-bb3cf6fa14-report",
+          "category": "runtime",
+          "durationSeconds": 0.0905306339263916,
+          "finishedAt": 1792520805.8086889,
+          "id": "video-intelligence-local-bb3cf6fa14-run-20261020t182639:video-intelligence-local-bb3cf6fa14-report:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792520805.7181582,
+          "status": "completed"
+        }
+      ],
+      "startedAt": 1792520800,
+      "totals": {
+        "destroySeconds": 0,
+        "executablePreparationSeconds": 0,
+        "launchSeconds": 0.8297371864318848,
+        "provisionSeconds": 0,
+        "resourceQueueSeconds": 0.16267013549804688,
+        "runtimeSeconds": 1.0246565341949463,
+        "startSeconds": 0,
+        "stopSeconds": 0,
+        "validationSeconds": 0,
+        "workspaceTransferSeconds": 1.806412935256958
+      },
+      "unclassifiedWallSeconds": 4.80272650718689,
+      "wallSeconds": 7
+    },
+    "workspaceLeases": [
+      {
+        "consumerActivityId": "video-intelligence-local-bb3cf6fa14-timeline",
+        "id": "workspace-lease-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-audio-video-intelligence-local-bb3cf6fa14-timeline",
+        "producerActivityId": "video-intelligence-local-bb3cf6fa14-audio",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T18:26:43.968003796Z",
+        "runId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "workspaceId": "workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-audio"
+      },
+      {
+        "consumerActivityId": "video-intelligence-local-bb3cf6fa14-audio",
+        "id": "workspace-lease-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-prepare-video-intelligence-local-bb3cf6fa14-audio",
+        "producerActivityId": "video-intelligence-local-bb3cf6fa14-prepare",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T18:26:41.551607503Z",
+        "runId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "workspaceId": "workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-prepare"
+      },
+      {
+        "consumerActivityId": "video-intelligence-local-bb3cf6fa14-probe",
+        "id": "workspace-lease-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-prepare-video-intelligence-local-bb3cf6fa14-probe",
+        "producerActivityId": "video-intelligence-local-bb3cf6fa14-prepare",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T18:26:41.550651753Z",
+        "runId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "workspaceId": "workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-prepare"
+      },
+      {
+        "consumerActivityId": "video-intelligence-local-bb3cf6fa14-scenes",
+        "id": "workspace-lease-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-prepare-video-intelligence-local-bb3cf6fa14-scenes",
+        "producerActivityId": "video-intelligence-local-bb3cf6fa14-prepare",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T18:26:41.551675503Z",
+        "runId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "workspaceId": "workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-prepare"
+      },
+      {
+        "consumerActivityId": "video-intelligence-local-bb3cf6fa14-timeline",
+        "id": "workspace-lease-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-probe-video-intelligence-local-bb3cf6fa14-timeline",
+        "producerActivityId": "video-intelligence-local-bb3cf6fa14-probe",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T18:26:43.968003796Z",
+        "runId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "workspaceId": "workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-probe"
+      },
+      {
+        "consumerActivityId": "video-intelligence-local-bb3cf6fa14-timeline",
+        "id": "workspace-lease-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-scenes-video-intelligence-local-bb3cf6fa14-timeline",
+        "producerActivityId": "video-intelligence-local-bb3cf6fa14-scenes",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T18:26:43.968003796Z",
+        "runId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "workspaceId": "workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-scenes"
+      },
+      {
+        "consumerActivityId": "video-intelligence-local-bb3cf6fa14-report",
+        "id": "workspace-lease-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-timeline-video-intelligence-local-bb3cf6fa14-report",
+        "producerActivityId": "video-intelligence-local-bb3cf6fa14-timeline",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T18:26:45.582539255Z",
+        "runId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "workspaceId": "workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-timeline"
+      }
+    ],
+    "workspaces": [
+      {
+        "activityId": "video-intelligence-local-bb3cf6fa14-audio",
+        "createdAt": "2026-10-20T18:26:40.118530586Z",
+        "driver": "local",
+        "environmentId": "video-intelligence-v1",
+        "executionPath": "/akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-audio",
+        "fileCount": 6,
+        "id": "workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-audio",
+        "inputBytes": 125918,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:a10b207c04c1ad61cb2ddac20e027f69e573124e52e65852be40a2d0cb35262c",
+              "path": "audio.json",
+              "sizeBytes": 43
+            },
+            {
+              "digest": "sha256:f299fa47104d5a501fdfba89770a619286422b3368bbe1a523f60add0b1d50f8",
+              "path": "concat.txt",
+              "sizeBytes": 54
+            },
+            {
+              "digest": "sha256:a9b177ad5951aec57d4f8c67f4f1a3840c61640023b305ad450b15a52c863f38",
+              "path": "part-1.mp4",
+              "sizeBytes": 21426
+            },
+            {
+              "digest": "sha256:b719dd5cdb4af7939425bd2dca39654d766ae2a1a7c5232bd102bd17423da1d9",
+              "path": "part-2.mp4",
+              "sizeBytes": 21438
+            },
+            {
+              "digest": "sha256:35ff27465264c841ba9c0d36a1d14e41be1a245e83e86c85b3ea8a3d38043cea",
+              "path": "part-3.mp4",
+              "sizeBytes": 21390
+            },
+            {
+              "digest": "sha256:9d7ddba6686e6e97c0ec73940083559e7e76fe75e3261adbd107c6725fcb99ef",
+              "path": "source.mp4",
+              "sizeBytes": 61610
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:f299fa47104d5a501fdfba89770a619286422b3368bbe1a523f60add0b1d50f8",
+              "path": "concat.txt",
+              "sizeBytes": 54
+            },
+            {
+              "digest": "sha256:a9b177ad5951aec57d4f8c67f4f1a3840c61640023b305ad450b15a52c863f38",
+              "path": "part-1.mp4",
+              "sizeBytes": 21426
+            },
+            {
+              "digest": "sha256:b719dd5cdb4af7939425bd2dca39654d766ae2a1a7c5232bd102bd17423da1d9",
+              "path": "part-2.mp4",
+              "sizeBytes": 21438
+            },
+            {
+              "digest": "sha256:35ff27465264c841ba9c0d36a1d14e41be1a245e83e86c85b3ea8a3d38043cea",
+              "path": "part-3.mp4",
+              "sizeBytes": 21390
+            },
+            {
+              "digest": "sha256:9d7ddba6686e6e97c0ec73940083559e7e76fe75e3261adbd107c6725fcb99ef",
+              "path": "source.mp4",
+              "sizeBytes": 61610
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:f299fa47104d5a501fdfba89770a619286422b3368bbe1a523f60add0b1d50f8",
+              "path": "concat.txt",
+              "sizeBytes": 54
+            },
+            {
+              "digest": "sha256:a9b177ad5951aec57d4f8c67f4f1a3840c61640023b305ad450b15a52c863f38",
+              "path": "part-1.mp4",
+              "sizeBytes": 21426
+            },
+            {
+              "digest": "sha256:b719dd5cdb4af7939425bd2dca39654d766ae2a1a7c5232bd102bd17423da1d9",
+              "path": "part-2.mp4",
+              "sizeBytes": 21438
+            },
+            {
+              "digest": "sha256:35ff27465264c841ba9c0d36a1d14e41be1a245e83e86c85b3ea8a3d38043cea",
+              "path": "part-3.mp4",
+              "sizeBytes": 21390
+            },
+            {
+              "digest": "sha256:9d7ddba6686e6e97c0ec73940083559e7e76fe75e3261adbd107c6725fcb99ef",
+              "path": "source.mp4",
+              "sizeBytes": 61610
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:a10b207c04c1ad61cb2ddac20e027f69e573124e52e65852be40a2d0cb35262c",
+              "path": "audio.json",
+              "sizeBytes": 43
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-audio",
+        "outputBytes": 43,
+        "pinned": false,
+        "reclaimedBytes": 125961,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T18:26:43.972539713Z",
+        "resourceId": "video-intelligence-local-docker",
+        "retention": "intermediate",
+        "runId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "runtimeId": "video-intelligence-local",
+        "sealedAt": "2026-10-20T18:26:43.440369796Z",
+        "sizeBytes": 125961,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-audio"
+      },
+      {
+        "activityId": "video-intelligence-local-bb3cf6fa14-prepare",
+        "createdAt": "2026-10-20T18:26:40.118530586Z",
+        "driver": "local",
+        "environmentId": "video-intelligence-v1",
+        "executionPath": "/akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-prepare",
+        "fileCount": 5,
+        "id": "workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-prepare",
+        "inputBytes": 0,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:f299fa47104d5a501fdfba89770a619286422b3368bbe1a523f60add0b1d50f8",
+              "path": "concat.txt",
+              "sizeBytes": 54
+            },
+            {
+              "digest": "sha256:a9b177ad5951aec57d4f8c67f4f1a3840c61640023b305ad450b15a52c863f38",
+              "path": "part-1.mp4",
+              "sizeBytes": 21426
+            },
+            {
+              "digest": "sha256:b719dd5cdb4af7939425bd2dca39654d766ae2a1a7c5232bd102bd17423da1d9",
+              "path": "part-2.mp4",
+              "sizeBytes": 21438
+            },
+            {
+              "digest": "sha256:35ff27465264c841ba9c0d36a1d14e41be1a245e83e86c85b3ea8a3d38043cea",
+              "path": "part-3.mp4",
+              "sizeBytes": 21390
+            },
+            {
+              "digest": "sha256:9d7ddba6686e6e97c0ec73940083559e7e76fe75e3261adbd107c6725fcb99ef",
+              "path": "source.mp4",
+              "sizeBytes": 61610
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:f299fa47104d5a501fdfba89770a619286422b3368bbe1a523f60add0b1d50f8",
+              "path": "concat.txt",
+              "sizeBytes": 54
+            },
+            {
+              "digest": "sha256:a9b177ad5951aec57d4f8c67f4f1a3840c61640023b305ad450b15a52c863f38",
+              "path": "part-1.mp4",
+              "sizeBytes": 21426
+            },
+            {
+              "digest": "sha256:b719dd5cdb4af7939425bd2dca39654d766ae2a1a7c5232bd102bd17423da1d9",
+              "path": "part-2.mp4",
+              "sizeBytes": 21438
+            },
+            {
+              "digest": "sha256:35ff27465264c841ba9c0d36a1d14e41be1a245e83e86c85b3ea8a3d38043cea",
+              "path": "part-3.mp4",
+              "sizeBytes": 21390
+            },
+            {
+              "digest": "sha256:9d7ddba6686e6e97c0ec73940083559e7e76fe75e3261adbd107c6725fcb99ef",
+              "path": "source.mp4",
+              "sizeBytes": 61610
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-prepare",
+        "outputBytes": 125918,
+        "pinned": false,
+        "reclaimedBytes": 0,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T18:26:41.561528378Z",
+        "resourceId": "video-intelligence-local-docker",
+        "retention": "intermediate",
+        "runId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "runtimeId": "video-intelligence-local",
+        "sealedAt": "2026-10-20T18:26:41.37143942Z",
+        "sizeBytes": 125918,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-prepare"
+      },
+      {
+        "activityId": "video-intelligence-local-bb3cf6fa14-probe",
+        "createdAt": "2026-10-20T18:26:40.118530586Z",
+        "driver": "local",
+        "environmentId": "video-intelligence-v1",
+        "executionPath": "/akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-probe",
+        "fileCount": 6,
+        "id": "workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-probe",
+        "inputBytes": 125918,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:f299fa47104d5a501fdfba89770a619286422b3368bbe1a523f60add0b1d50f8",
+              "path": "concat.txt",
+              "sizeBytes": 54
+            },
+            {
+              "digest": "sha256:a9b177ad5951aec57d4f8c67f4f1a3840c61640023b305ad450b15a52c863f38",
+              "path": "part-1.mp4",
+              "sizeBytes": 21426
+            },
+            {
+              "digest": "sha256:b719dd5cdb4af7939425bd2dca39654d766ae2a1a7c5232bd102bd17423da1d9",
+              "path": "part-2.mp4",
+              "sizeBytes": 21438
+            },
+            {
+              "digest": "sha256:35ff27465264c841ba9c0d36a1d14e41be1a245e83e86c85b3ea8a3d38043cea",
+              "path": "part-3.mp4",
+              "sizeBytes": 21390
+            },
+            {
+              "digest": "sha256:9b9eb1a268e9bba2b60c37a4c557f25c71eebee1cb6938d1092c0b10cdb16df8",
+              "path": "probe.json",
+              "sizeBytes": 344
+            },
+            {
+              "digest": "sha256:9d7ddba6686e6e97c0ec73940083559e7e76fe75e3261adbd107c6725fcb99ef",
+              "path": "source.mp4",
+              "sizeBytes": 61610
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:f299fa47104d5a501fdfba89770a619286422b3368bbe1a523f60add0b1d50f8",
+              "path": "concat.txt",
+              "sizeBytes": 54
+            },
+            {
+              "digest": "sha256:a9b177ad5951aec57d4f8c67f4f1a3840c61640023b305ad450b15a52c863f38",
+              "path": "part-1.mp4",
+              "sizeBytes": 21426
+            },
+            {
+              "digest": "sha256:b719dd5cdb4af7939425bd2dca39654d766ae2a1a7c5232bd102bd17423da1d9",
+              "path": "part-2.mp4",
+              "sizeBytes": 21438
+            },
+            {
+              "digest": "sha256:35ff27465264c841ba9c0d36a1d14e41be1a245e83e86c85b3ea8a3d38043cea",
+              "path": "part-3.mp4",
+              "sizeBytes": 21390
+            },
+            {
+              "digest": "sha256:9d7ddba6686e6e97c0ec73940083559e7e76fe75e3261adbd107c6725fcb99ef",
+              "path": "source.mp4",
+              "sizeBytes": 61610
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:f299fa47104d5a501fdfba89770a619286422b3368bbe1a523f60add0b1d50f8",
+              "path": "concat.txt",
+              "sizeBytes": 54
+            },
+            {
+              "digest": "sha256:a9b177ad5951aec57d4f8c67f4f1a3840c61640023b305ad450b15a52c863f38",
+              "path": "part-1.mp4",
+              "sizeBytes": 21426
+            },
+            {
+              "digest": "sha256:b719dd5cdb4af7939425bd2dca39654d766ae2a1a7c5232bd102bd17423da1d9",
+              "path": "part-2.mp4",
+              "sizeBytes": 21438
+            },
+            {
+              "digest": "sha256:35ff27465264c841ba9c0d36a1d14e41be1a245e83e86c85b3ea8a3d38043cea",
+              "path": "part-3.mp4",
+              "sizeBytes": 21390
+            },
+            {
+              "digest": "sha256:9d7ddba6686e6e97c0ec73940083559e7e76fe75e3261adbd107c6725fcb99ef",
+              "path": "source.mp4",
+              "sizeBytes": 61610
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:9b9eb1a268e9bba2b60c37a4c557f25c71eebee1cb6938d1092c0b10cdb16df8",
+              "path": "probe.json",
+              "sizeBytes": 344
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-probe",
+        "outputBytes": 344,
+        "pinned": false,
+        "reclaimedBytes": 126262,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T18:26:43.977109588Z",
+        "resourceId": "video-intelligence-local-docker",
+        "retention": "intermediate",
+        "runId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "runtimeId": "video-intelligence-local",
+        "sealedAt": "2026-10-20T18:26:43.429550796Z",
+        "sizeBytes": 126262,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-probe"
+      },
+      {
+        "activityId": "video-intelligence-local-bb3cf6fa14-report",
+        "createdAt": "2026-10-20T18:26:40.118530586Z",
+        "driver": "local",
+        "environmentId": "video-intelligence-v1",
+        "executionPath": "/akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-report",
+        "fileCount": 1,
+        "id": "workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-report",
+        "inputBytes": 128713,
+        "isFinal": true,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:a10b207c04c1ad61cb2ddac20e027f69e573124e52e65852be40a2d0cb35262c",
+              "path": "audio.json",
+              "sizeBytes": 43
+            },
+            {
+              "digest": "sha256:f299fa47104d5a501fdfba89770a619286422b3368bbe1a523f60add0b1d50f8",
+              "path": "concat.txt",
+              "sizeBytes": 54
+            },
+            {
+              "digest": "sha256:c66c4ad83cd0a929fc49921ae498e11a36b4249c8e3bd5de9f503c70400cf743",
+              "path": "manifest.json",
+              "sizeBytes": 177
+            },
+            {
+              "digest": "sha256:a9b177ad5951aec57d4f8c67f4f1a3840c61640023b305ad450b15a52c863f38",
+              "path": "part-1.mp4",
+              "sizeBytes": 21426
+            },
+            {
+              "digest": "sha256:b719dd5cdb4af7939425bd2dca39654d766ae2a1a7c5232bd102bd17423da1d9",
+              "path": "part-2.mp4",
+              "sizeBytes": 21438
+            },
+            {
+              "digest": "sha256:35ff27465264c841ba9c0d36a1d14e41be1a245e83e86c85b3ea8a3d38043cea",
+              "path": "part-3.mp4",
+              "sizeBytes": 21390
+            },
+            {
+              "digest": "sha256:9b9eb1a268e9bba2b60c37a4c557f25c71eebee1cb6938d1092c0b10cdb16df8",
+              "path": "probe.json",
+              "sizeBytes": 344
+            },
+            {
+              "digest": "sha256:ea09e7ccd1d3bbaec98e27ae4ea11c06bd4c7c48cd0d10e6fe072f4a7f962f02",
+              "path": "scenes.json",
+              "sizeBytes": 210
+            },
+            {
+              "digest": "sha256:9d7ddba6686e6e97c0ec73940083559e7e76fe75e3261adbd107c6725fcb99ef",
+              "path": "source.mp4",
+              "sizeBytes": 61610
+            },
+            {
+              "digest": "sha256:8612a484ce24260abd9e74df85545476b54f9ab6a55e5bc546d234e9a3de328f",
+              "path": "thumbnails/scene-001.jpg",
+              "sizeBytes": 583
+            },
+            {
+              "digest": "sha256:a884fa4b0590a0f56eda5329f0e82cf4b1b11b6f7958fa82162237bc3a21adfe",
+              "path": "thumbnails/scene-002.jpg",
+              "sizeBytes": 584
+            },
+            {
+              "digest": "sha256:e3376294606cb19688a67e7b1e165bbe35ea65673400116a3f4436a96562922b",
+              "path": "thumbnails/scene-003.jpg",
+              "sizeBytes": 582
+            },
+            {
+              "digest": "sha256:a95c21418d18720b10ba49e5913dc6e014cb7e45d7e83f8b0fac13c0455fa7ec",
+              "path": "timeline.json",
+              "sizeBytes": 449
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:a10b207c04c1ad61cb2ddac20e027f69e573124e52e65852be40a2d0cb35262c",
+              "path": "audio.json",
+              "sizeBytes": 43
+            },
+            {
+              "digest": "sha256:f299fa47104d5a501fdfba89770a619286422b3368bbe1a523f60add0b1d50f8",
+              "path": "concat.txt",
+              "sizeBytes": 54
+            },
+            {
+              "digest": "sha256:a9b177ad5951aec57d4f8c67f4f1a3840c61640023b305ad450b15a52c863f38",
+              "path": "part-1.mp4",
+              "sizeBytes": 21426
+            },
+            {
+              "digest": "sha256:b719dd5cdb4af7939425bd2dca39654d766ae2a1a7c5232bd102bd17423da1d9",
+              "path": "part-2.mp4",
+              "sizeBytes": 21438
+            },
+            {
+              "digest": "sha256:35ff27465264c841ba9c0d36a1d14e41be1a245e83e86c85b3ea8a3d38043cea",
+              "path": "part-3.mp4",
+              "sizeBytes": 21390
+            },
+            {
+              "digest": "sha256:9b9eb1a268e9bba2b60c37a4c557f25c71eebee1cb6938d1092c0b10cdb16df8",
+              "path": "probe.json",
+              "sizeBytes": 344
+            },
+            {
+              "digest": "sha256:ea09e7ccd1d3bbaec98e27ae4ea11c06bd4c7c48cd0d10e6fe072f4a7f962f02",
+              "path": "scenes.json",
+              "sizeBytes": 210
+            },
+            {
+              "digest": "sha256:9d7ddba6686e6e97c0ec73940083559e7e76fe75e3261adbd107c6725fcb99ef",
+              "path": "source.mp4",
+              "sizeBytes": 61610
+            },
+            {
+              "digest": "sha256:8612a484ce24260abd9e74df85545476b54f9ab6a55e5bc546d234e9a3de328f",
+              "path": "thumbnails/scene-001.jpg",
+              "sizeBytes": 583
+            },
+            {
+              "digest": "sha256:a884fa4b0590a0f56eda5329f0e82cf4b1b11b6f7958fa82162237bc3a21adfe",
+              "path": "thumbnails/scene-002.jpg",
+              "sizeBytes": 584
+            },
+            {
+              "digest": "sha256:e3376294606cb19688a67e7b1e165bbe35ea65673400116a3f4436a96562922b",
+              "path": "thumbnails/scene-003.jpg",
+              "sizeBytes": 582
+            },
+            {
+              "digest": "sha256:a95c21418d18720b10ba49e5913dc6e014cb7e45d7e83f8b0fac13c0455fa7ec",
+              "path": "timeline.json",
+              "sizeBytes": 449
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:a10b207c04c1ad61cb2ddac20e027f69e573124e52e65852be40a2d0cb35262c",
+              "path": "audio.json",
+              "sizeBytes": 43
+            },
+            {
+              "digest": "sha256:f299fa47104d5a501fdfba89770a619286422b3368bbe1a523f60add0b1d50f8",
+              "path": "concat.txt",
+              "sizeBytes": 54
+            },
+            {
+              "digest": "sha256:a9b177ad5951aec57d4f8c67f4f1a3840c61640023b305ad450b15a52c863f38",
+              "path": "part-1.mp4",
+              "sizeBytes": 21426
+            },
+            {
+              "digest": "sha256:b719dd5cdb4af7939425bd2dca39654d766ae2a1a7c5232bd102bd17423da1d9",
+              "path": "part-2.mp4",
+              "sizeBytes": 21438
+            },
+            {
+              "digest": "sha256:35ff27465264c841ba9c0d36a1d14e41be1a245e83e86c85b3ea8a3d38043cea",
+              "path": "part-3.mp4",
+              "sizeBytes": 21390
+            },
+            {
+              "digest": "sha256:9b9eb1a268e9bba2b60c37a4c557f25c71eebee1cb6938d1092c0b10cdb16df8",
+              "path": "probe.json",
+              "sizeBytes": 344
+            },
+            {
+              "digest": "sha256:ea09e7ccd1d3bbaec98e27ae4ea11c06bd4c7c48cd0d10e6fe072f4a7f962f02",
+              "path": "scenes.json",
+              "sizeBytes": 210
+            },
+            {
+              "digest": "sha256:9d7ddba6686e6e97c0ec73940083559e7e76fe75e3261adbd107c6725fcb99ef",
+              "path": "source.mp4",
+              "sizeBytes": 61610
+            },
+            {
+              "digest": "sha256:8612a484ce24260abd9e74df85545476b54f9ab6a55e5bc546d234e9a3de328f",
+              "path": "thumbnails/scene-001.jpg",
+              "sizeBytes": 583
+            },
+            {
+              "digest": "sha256:a884fa4b0590a0f56eda5329f0e82cf4b1b11b6f7958fa82162237bc3a21adfe",
+              "path": "thumbnails/scene-002.jpg",
+              "sizeBytes": 584
+            },
+            {
+              "digest": "sha256:e3376294606cb19688a67e7b1e165bbe35ea65673400116a3f4436a96562922b",
+              "path": "thumbnails/scene-003.jpg",
+              "sizeBytes": 582
+            },
+            {
+              "digest": "sha256:a95c21418d18720b10ba49e5913dc6e014cb7e45d7e83f8b0fac13c0455fa7ec",
+              "path": "timeline.json",
+              "sizeBytes": 449
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:c66c4ad83cd0a929fc49921ae498e11a36b4249c8e3bd5de9f503c70400cf743",
+              "path": "manifest.json",
+              "sizeBytes": 177
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-report",
+        "outputBytes": 177,
+        "pinned": false,
+        "reclaimedBytes": 128713,
+        "releaseReason": "inherited inputs pruned",
+        "resourceId": "video-intelligence-local-docker",
+        "retention": "final",
+        "runId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "runtimeId": "video-intelligence-local",
+        "sealedAt": "2026-10-20T18:26:47.360480631Z",
+        "sizeBytes": 177,
+        "state": "sealed",
+        "uri": "file:///akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-report"
+      },
+      {
+        "activityId": "video-intelligence-local-bb3cf6fa14-scenes",
+        "createdAt": "2026-10-20T18:26:40.118530586Z",
+        "driver": "local",
+        "environmentId": "video-intelligence-v1",
+        "executionPath": "/akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-scenes",
+        "fileCount": 9,
+        "id": "workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-scenes",
+        "inputBytes": 125918,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:f299fa47104d5a501fdfba89770a619286422b3368bbe1a523f60add0b1d50f8",
+              "path": "concat.txt",
+              "sizeBytes": 54
+            },
+            {
+              "digest": "sha256:a9b177ad5951aec57d4f8c67f4f1a3840c61640023b305ad450b15a52c863f38",
+              "path": "part-1.mp4",
+              "sizeBytes": 21426
+            },
+            {
+              "digest": "sha256:b719dd5cdb4af7939425bd2dca39654d766ae2a1a7c5232bd102bd17423da1d9",
+              "path": "part-2.mp4",
+              "sizeBytes": 21438
+            },
+            {
+              "digest": "sha256:35ff27465264c841ba9c0d36a1d14e41be1a245e83e86c85b3ea8a3d38043cea",
+              "path": "part-3.mp4",
+              "sizeBytes": 21390
+            },
+            {
+              "digest": "sha256:ea09e7ccd1d3bbaec98e27ae4ea11c06bd4c7c48cd0d10e6fe072f4a7f962f02",
+              "path": "scenes.json",
+              "sizeBytes": 210
+            },
+            {
+              "digest": "sha256:9d7ddba6686e6e97c0ec73940083559e7e76fe75e3261adbd107c6725fcb99ef",
+              "path": "source.mp4",
+              "sizeBytes": 61610
+            },
+            {
+              "digest": "sha256:8612a484ce24260abd9e74df85545476b54f9ab6a55e5bc546d234e9a3de328f",
+              "path": "thumbnails/scene-001.jpg",
+              "sizeBytes": 583
+            },
+            {
+              "digest": "sha256:a884fa4b0590a0f56eda5329f0e82cf4b1b11b6f7958fa82162237bc3a21adfe",
+              "path": "thumbnails/scene-002.jpg",
+              "sizeBytes": 584
+            },
+            {
+              "digest": "sha256:e3376294606cb19688a67e7b1e165bbe35ea65673400116a3f4436a96562922b",
+              "path": "thumbnails/scene-003.jpg",
+              "sizeBytes": 582
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:f299fa47104d5a501fdfba89770a619286422b3368bbe1a523f60add0b1d50f8",
+              "path": "concat.txt",
+              "sizeBytes": 54
+            },
+            {
+              "digest": "sha256:a9b177ad5951aec57d4f8c67f4f1a3840c61640023b305ad450b15a52c863f38",
+              "path": "part-1.mp4",
+              "sizeBytes": 21426
+            },
+            {
+              "digest": "sha256:b719dd5cdb4af7939425bd2dca39654d766ae2a1a7c5232bd102bd17423da1d9",
+              "path": "part-2.mp4",
+              "sizeBytes": 21438
+            },
+            {
+              "digest": "sha256:35ff27465264c841ba9c0d36a1d14e41be1a245e83e86c85b3ea8a3d38043cea",
+              "path": "part-3.mp4",
+              "sizeBytes": 21390
+            },
+            {
+              "digest": "sha256:9d7ddba6686e6e97c0ec73940083559e7e76fe75e3261adbd107c6725fcb99ef",
+              "path": "source.mp4",
+              "sizeBytes": 61610
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:f299fa47104d5a501fdfba89770a619286422b3368bbe1a523f60add0b1d50f8",
+              "path": "concat.txt",
+              "sizeBytes": 54
+            },
+            {
+              "digest": "sha256:a9b177ad5951aec57d4f8c67f4f1a3840c61640023b305ad450b15a52c863f38",
+              "path": "part-1.mp4",
+              "sizeBytes": 21426
+            },
+            {
+              "digest": "sha256:b719dd5cdb4af7939425bd2dca39654d766ae2a1a7c5232bd102bd17423da1d9",
+              "path": "part-2.mp4",
+              "sizeBytes": 21438
+            },
+            {
+              "digest": "sha256:35ff27465264c841ba9c0d36a1d14e41be1a245e83e86c85b3ea8a3d38043cea",
+              "path": "part-3.mp4",
+              "sizeBytes": 21390
+            },
+            {
+              "digest": "sha256:9d7ddba6686e6e97c0ec73940083559e7e76fe75e3261adbd107c6725fcb99ef",
+              "path": "source.mp4",
+              "sizeBytes": 61610
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:ea09e7ccd1d3bbaec98e27ae4ea11c06bd4c7c48cd0d10e6fe072f4a7f962f02",
+              "path": "scenes.json",
+              "sizeBytes": 210
+            },
+            {
+              "digest": "sha256:8612a484ce24260abd9e74df85545476b54f9ab6a55e5bc546d234e9a3de328f",
+              "path": "thumbnails/scene-001.jpg",
+              "sizeBytes": 583
+            },
+            {
+              "digest": "sha256:a884fa4b0590a0f56eda5329f0e82cf4b1b11b6f7958fa82162237bc3a21adfe",
+              "path": "thumbnails/scene-002.jpg",
+              "sizeBytes": 584
+            },
+            {
+              "digest": "sha256:e3376294606cb19688a67e7b1e165bbe35ea65673400116a3f4436a96562922b",
+              "path": "thumbnails/scene-003.jpg",
+              "sizeBytes": 582
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-scenes",
+        "outputBytes": 1959,
+        "pinned": false,
+        "reclaimedBytes": 127877,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T18:26:43.981593046Z",
+        "resourceId": "video-intelligence-local-docker",
+        "retention": "intermediate",
+        "runId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "runtimeId": "video-intelligence-local",
+        "sealedAt": "2026-10-20T18:26:43.435543963Z",
+        "sizeBytes": 127877,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-scenes"
+      },
+      {
+        "activityId": "video-intelligence-local-bb3cf6fa14-timeline",
+        "createdAt": "2026-10-20T18:26:40.118530586Z",
+        "driver": "local",
+        "environmentId": "video-intelligence-v1",
+        "executionPath": "/akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-timeline",
+        "fileCount": 12,
+        "id": "workspace-video-intelligence-local-bb3cf6fa14-run-20261020t182639-video-intelligence-local-bb3cf6fa14-timeline",
+        "inputBytes": 128264,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:a10b207c04c1ad61cb2ddac20e027f69e573124e52e65852be40a2d0cb35262c",
+              "path": "audio.json",
+              "sizeBytes": 43
+            },
+            {
+              "digest": "sha256:f299fa47104d5a501fdfba89770a619286422b3368bbe1a523f60add0b1d50f8",
+              "path": "concat.txt",
+              "sizeBytes": 54
+            },
+            {
+              "digest": "sha256:a9b177ad5951aec57d4f8c67f4f1a3840c61640023b305ad450b15a52c863f38",
+              "path": "part-1.mp4",
+              "sizeBytes": 21426
+            },
+            {
+              "digest": "sha256:b719dd5cdb4af7939425bd2dca39654d766ae2a1a7c5232bd102bd17423da1d9",
+              "path": "part-2.mp4",
+              "sizeBytes": 21438
+            },
+            {
+              "digest": "sha256:35ff27465264c841ba9c0d36a1d14e41be1a245e83e86c85b3ea8a3d38043cea",
+              "path": "part-3.mp4",
+              "sizeBytes": 21390
+            },
+            {
+              "digest": "sha256:9b9eb1a268e9bba2b60c37a4c557f25c71eebee1cb6938d1092c0b10cdb16df8",
+              "path": "probe.json",
+              "sizeBytes": 344
+            },
+            {
+              "digest": "sha256:ea09e7ccd1d3bbaec98e27ae4ea11c06bd4c7c48cd0d10e6fe072f4a7f962f02",
+              "path": "scenes.json",
+              "sizeBytes": 210
+            },
+            {
+              "digest": "sha256:9d7ddba6686e6e97c0ec73940083559e7e76fe75e3261adbd107c6725fcb99ef",
+              "path": "source.mp4",
+              "sizeBytes": 61610
+            },
+            {
+              "digest": "sha256:8612a484ce24260abd9e74df85545476b54f9ab6a55e5bc546d234e9a3de328f",
+              "path": "thumbnails/scene-001.jpg",
+              "sizeBytes": 583
+            },
+            {
+              "digest": "sha256:a884fa4b0590a0f56eda5329f0e82cf4b1b11b6f7958fa82162237bc3a21adfe",
+              "path": "thumbnails/scene-002.jpg",
+              "sizeBytes": 584
+            },
+            {
+              "digest": "sha256:e3376294606cb19688a67e7b1e165bbe35ea65673400116a3f4436a96562922b",
+              "path": "thumbnails/scene-003.jpg",
+              "sizeBytes": 582
+            },
+            {
+              "digest": "sha256:a95c21418d18720b10ba49e5913dc6e014cb7e45d7e83f8b0fac13c0455fa7ec",
+              "path": "timeline.json",
+              "sizeBytes": 449
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:a10b207c04c1ad61cb2ddac20e027f69e573124e52e65852be40a2d0cb35262c",
+              "path": "audio.json",
+              "sizeBytes": 43
+            },
+            {
+              "digest": "sha256:f299fa47104d5a501fdfba89770a619286422b3368bbe1a523f60add0b1d50f8",
+              "path": "concat.txt",
+              "sizeBytes": 54
+            },
+            {
+              "digest": "sha256:a9b177ad5951aec57d4f8c67f4f1a3840c61640023b305ad450b15a52c863f38",
+              "path": "part-1.mp4",
+              "sizeBytes": 21426
+            },
+            {
+              "digest": "sha256:b719dd5cdb4af7939425bd2dca39654d766ae2a1a7c5232bd102bd17423da1d9",
+              "path": "part-2.mp4",
+              "sizeBytes": 21438
+            },
+            {
+              "digest": "sha256:35ff27465264c841ba9c0d36a1d14e41be1a245e83e86c85b3ea8a3d38043cea",
+              "path": "part-3.mp4",
+              "sizeBytes": 21390
+            },
+            {
+              "digest": "sha256:9b9eb1a268e9bba2b60c37a4c557f25c71eebee1cb6938d1092c0b10cdb16df8",
+              "path": "probe.json",
+              "sizeBytes": 344
+            },
+            {
+              "digest": "sha256:ea09e7ccd1d3bbaec98e27ae4ea11c06bd4c7c48cd0d10e6fe072f4a7f962f02",
+              "path": "scenes.json",
+              "sizeBytes": 210
+            },
+            {
+              "digest": "sha256:9d7ddba6686e6e97c0ec73940083559e7e76fe75e3261adbd107c6725fcb99ef",
+              "path": "source.mp4",
+              "sizeBytes": 61610
+            },
+            {
+              "digest": "sha256:8612a484ce24260abd9e74df85545476b54f9ab6a55e5bc546d234e9a3de328f",
+              "path": "thumbnails/scene-001.jpg",
+              "sizeBytes": 583
+            },
+            {
+              "digest": "sha256:a884fa4b0590a0f56eda5329f0e82cf4b1b11b6f7958fa82162237bc3a21adfe",
+              "path": "thumbnails/scene-002.jpg",
+              "sizeBytes": 584
+            },
+            {
+              "digest": "sha256:e3376294606cb19688a67e7b1e165bbe35ea65673400116a3f4436a96562922b",
+              "path": "thumbnails/scene-003.jpg",
+              "sizeBytes": 582
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:a10b207c04c1ad61cb2ddac20e027f69e573124e52e65852be40a2d0cb35262c",
+              "path": "audio.json",
+              "sizeBytes": 43
+            },
+            {
+              "digest": "sha256:f299fa47104d5a501fdfba89770a619286422b3368bbe1a523f60add0b1d50f8",
+              "path": "concat.txt",
+              "sizeBytes": 54
+            },
+            {
+              "digest": "sha256:a9b177ad5951aec57d4f8c67f4f1a3840c61640023b305ad450b15a52c863f38",
+              "path": "part-1.mp4",
+              "sizeBytes": 21426
+            },
+            {
+              "digest": "sha256:b719dd5cdb4af7939425bd2dca39654d766ae2a1a7c5232bd102bd17423da1d9",
+              "path": "part-2.mp4",
+              "sizeBytes": 21438
+            },
+            {
+              "digest": "sha256:35ff27465264c841ba9c0d36a1d14e41be1a245e83e86c85b3ea8a3d38043cea",
+              "path": "part-3.mp4",
+              "sizeBytes": 21390
+            },
+            {
+              "digest": "sha256:9b9eb1a268e9bba2b60c37a4c557f25c71eebee1cb6938d1092c0b10cdb16df8",
+              "path": "probe.json",
+              "sizeBytes": 344
+            },
+            {
+              "digest": "sha256:ea09e7ccd1d3bbaec98e27ae4ea11c06bd4c7c48cd0d10e6fe072f4a7f962f02",
+              "path": "scenes.json",
+              "sizeBytes": 210
+            },
+            {
+              "digest": "sha256:9d7ddba6686e6e97c0ec73940083559e7e76fe75e3261adbd107c6725fcb99ef",
+              "path": "source.mp4",
+              "sizeBytes": 61610
+            },
+            {
+              "digest": "sha256:8612a484ce24260abd9e74df85545476b54f9ab6a55e5bc546d234e9a3de328f",
+              "path": "thumbnails/scene-001.jpg",
+              "sizeBytes": 583
+            },
+            {
+              "digest": "sha256:a884fa4b0590a0f56eda5329f0e82cf4b1b11b6f7958fa82162237bc3a21adfe",
+              "path": "thumbnails/scene-002.jpg",
+              "sizeBytes": 584
+            },
+            {
+              "digest": "sha256:e3376294606cb19688a67e7b1e165bbe35ea65673400116a3f4436a96562922b",
+              "path": "thumbnails/scene-003.jpg",
+              "sizeBytes": 582
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:a95c21418d18720b10ba49e5913dc6e014cb7e45d7e83f8b0fac13c0455fa7ec",
+              "path": "timeline.json",
+              "sizeBytes": 449
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-timeline",
+        "outputBytes": 449,
+        "pinned": false,
+        "reclaimedBytes": 128713,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T18:26:45.59003863Z",
+        "resourceId": "video-intelligence-local-docker",
+        "retention": "intermediate",
+        "runId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+        "runtimeId": "video-intelligence-local",
+        "sealedAt": "2026-10-20T18:26:45.370193339Z",
+        "sizeBytes": 128713,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/video-intelligence-local-bb3cf6fa14-run-20261020t182639/video-intelligence-local-bb3cf6fa14-timeline"
+      }
+    ]
+  },
+  "runId": "video-intelligence-local-bb3cf6fa14-run-20261020t182639",
+  "status": "completed",
+  "workflowId": "video-intelligence-local-bb3cf6fa14"
+}

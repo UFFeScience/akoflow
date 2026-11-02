@@ -1,0 +1,37 @@
+{
+  "cases": [
+    {
+      "activitySpanAbsoluteErrorPercent": 34.07792708738425,
+      "activitySpanAbsoluteErrorSeconds": 1776.4271936984433,
+      "activitySpanSeconds": 3436.4109849362003,
+      "case": "behavior-only",
+      "engineEndSeconds": 3436.4109849362003,
+      "sameTraceCalibration": false,
+      "source": "outputs/simulation-fidelity-20261101/behavior-only/result.json",
+      "sourceSHA256": "7e84d586db84f332bc24196b0db4bc8c5c12fdfffdd802c4c6c08e0168285328"
+    },
+    {
+      "activitySpanAbsoluteErrorPercent": 16.856036443472398,
+      "activitySpanAbsoluteErrorSeconds": 878.6779031298984,
+      "activitySpanSeconds": 4334.160275504745,
+      "case": "hpc-calibrated",
+      "engineEndSeconds": 4347.031454246223,
+      "sameTraceCalibration": true,
+      "source": "outputs/simulation-fidelity-20261101/hpc-calibrated/result.json",
+      "sourceSHA256": "5f384d3fbcc960d24d6fc2a72cf0705b71f4c23d17a9172508255e274cf5b064"
+    },
+    {
+      "activitySpanAbsoluteErrorPercent": 3.3922079237450045,
+      "activitySpanAbsoluteErrorSeconds": 176.83030974764915,
+      "activitySpanSeconds": 5389.668488382293,
+      "case": "all-calibrated",
+      "engineEndSeconds": 5405.0163518847,
+      "sameTraceCalibration": true,
+      "source": "outputs/simulation-fidelity-20261101/all-calibrated/result.json",
+      "sourceSHA256": "30e1ce9862d5d8b473412d79d79f37688e06fe2cd993421497666da032597111"
+    }
+  ],
+  "independentValidation": false,
+  "originalSimulationSeconds": 3007.1380910688645,
+  "realActivitySpanSeconds": 5212.838178634644
+}

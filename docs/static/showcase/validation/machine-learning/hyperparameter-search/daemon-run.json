@@ -1,0 +1,2653 @@
+{
+  "activityCount": 6,
+  "completedActivityCount": 6,
+  "image": "ghcr.io/uffescience/akoflow-examples/showcase-hyperparameter-search:local-2b1f1374f335029b",
+  "imageId": "sha256:2b1f1374f335029bba22b46c1a57b0bc3c835236bc55f9cfb7721e0edb3845c9",
+  "observedAt": "2026-10-20T19:10:03Z",
+  "planId": "showcase-hyperparameter-search-local-b881811497-manual-plan-20261020t190955.469894000",
+  "projection": {
+    "activities": [
+      {
+        "activityId": "showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+        "allocatedResourceId": "showcase-hyperparameter-search-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "finishedAt": 1792523395.863602,
+        "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-hyperparameter-search-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-hyperparameter-search-local-b881811497-manual-plan-20261020t190955.469894000-showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+        "plannedResourceId": "showcase-hyperparameter-search-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523395.631684,
+        "readyAt": 1792523395.631684,
+        "runtimeId": "showcase-hyperparameter-search-local",
+        "runtimeSeconds": 0.11407995223999023,
+        "startedAt": 1792523395.749522,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-hyperparameter-search-local-b881811497-trial-2",
+        "allocatedResourceId": "showcase-hyperparameter-search-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "finishedAt": 1792523397.253686,
+        "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-2",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13227438926696777,
+          "preparationFinishedAt": 1792523396.9989192,
+          "preparationStartedAt": 1792523396.8409305,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.004217863082885742,
+          "runtimeId": "showcase-hyperparameter-search-local",
+          "transferElapsedSeconds": 0.1579887866973877,
+          "transferWorkSeconds": 0.1579887866973877
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-hyperparameter-search-local-b881811497-manual-plan-20261020t190955.469894000-showcase-hyperparameter-search-local-b881811497-trial-2",
+        "plannedResourceId": "showcase-hyperparameter-search-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523396.832826,
+        "readyAt": 1792523396.832826,
+        "runtimeId": "showcase-hyperparameter-search-local",
+        "runtimeSeconds": 0.12249231338500977,
+        "startedAt": 1792523397.1311936,
+        "status": "completed",
+        "transferBytes": 3836,
+        "transferSeconds": 0.1579887866973877
+      },
+      {
+        "activityId": "showcase-hyperparameter-search-local-b881811497-trial-1",
+        "allocatedResourceId": "showcase-hyperparameter-search-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "finishedAt": 1792523397.303329,
+        "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-1",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.16945958137512207,
+          "preparationFinishedAt": 1792523397.0192606,
+          "preparationStartedAt": 1792523396.8378673,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0018947124481201172,
+          "runtimeId": "showcase-hyperparameter-search-local",
+          "transferElapsedSeconds": 0.18139338493347168,
+          "transferWorkSeconds": 0.18139338493347168
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-hyperparameter-search-local-b881811497-manual-plan-20261020t190955.469894000-showcase-hyperparameter-search-local-b881811497-trial-1",
+        "plannedResourceId": "showcase-hyperparameter-search-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523396.83186,
+        "readyAt": 1792523396.83186,
+        "runtimeId": "showcase-hyperparameter-search-local",
+        "runtimeSeconds": 0.1146087646484375,
+        "startedAt": 1792523397.1887202,
+        "status": "completed",
+        "transferBytes": 3836,
+        "transferSeconds": 0.18139338493347168
+      },
+      {
+        "activityId": "showcase-hyperparameter-search-local-b881811497-trial-n",
+        "allocatedResourceId": "showcase-hyperparameter-search-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "finishedAt": 1792523397.3221345,
+        "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-n",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.17885899543762207,
+          "preparationFinishedAt": 1792523397.0192642,
+          "preparationStartedAt": 1792523396.8430865,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0031490325927734375,
+          "runtimeId": "showcase-hyperparameter-search-local",
+          "transferElapsedSeconds": 0.1761777400970459,
+          "transferWorkSeconds": 0.1761777400970459
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-hyperparameter-search-local-b881811497-manual-plan-20261020t190955.469894000-showcase-hyperparameter-search-local-b881811497-trial-n",
+        "plannedResourceId": "showcase-hyperparameter-search-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523396.8338518,
+        "readyAt": 1792523396.8338518,
+        "runtimeId": "showcase-hyperparameter-search-local",
+        "runtimeSeconds": 0.12401127815246582,
+        "startedAt": 1792523397.1981232,
+        "status": "completed",
+        "transferBytes": 3836,
+        "transferSeconds": 0.1761777400970459
+      },
+      {
+        "activityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+        "allocatedResourceId": "showcase-hyperparameter-search-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "finishedAt": 1792523399.7792141,
+        "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-compare-trials",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1818690299987793,
+          "preparationFinishedAt": 1792523399.4823256,
+          "preparationStartedAt": 1792523398.9349575,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.003383636474609375,
+          "runtimeId": "showcase-hyperparameter-search-local",
+          "transferElapsedSeconds": 0.547368049621582,
+          "transferWorkSeconds": 1.1902742385864258
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-hyperparameter-search-local-b881811497-manual-plan-20261020t190955.469894000-showcase-hyperparameter-search-local-b881811497-compare-trials",
+        "plannedResourceId": "showcase-hyperparameter-search-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523398.92946,
+        "readyAt": 1792523398.92946,
+        "runtimeId": "showcase-hyperparameter-search-local",
+        "runtimeSeconds": 0.11501955986022949,
+        "startedAt": 1792523399.6641946,
+        "status": "completed",
+        "transferBytes": 5504,
+        "transferSeconds": 1.1902742385864258
+      },
+      {
+        "activityId": "showcase-hyperparameter-search-local-b881811497-register-best",
+        "allocatedResourceId": "showcase-hyperparameter-search-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "finishedAt": 1792523401.2836306,
+        "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-register-best",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13737773895263672,
+          "preparationFinishedAt": 1792523401.0361078,
+          "preparationStartedAt": 1792523400.8539162,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0017309188842773438,
+          "runtimeId": "showcase-hyperparameter-search-local",
+          "transferElapsedSeconds": 0.1821916103363037,
+          "transferWorkSeconds": 0.1821916103363037
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-hyperparameter-search-local-b881811497-manual-plan-20261020t190955.469894000-showcase-hyperparameter-search-local-b881811497-register-best",
+        "plannedResourceId": "showcase-hyperparameter-search-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523400.8501415,
+        "readyAt": 1792523400.8501415,
+        "runtimeId": "showcase-hyperparameter-search-local",
+        "runtimeSeconds": 0.11014509201049805,
+        "startedAt": 1792523401.1734855,
+        "status": "completed",
+        "transferBytes": 7027,
+        "transferSeconds": 0.1821916103363037
+      }
+    ],
+    "activityAttempts": [
+      {
+        "activityId": "showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+        "allocatedResourceId": "showcase-hyperparameter-search-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "finishedAt": 1792523395.863602,
+        "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-hyperparameter-search-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-hyperparameter-search-local-b881811497-manual-plan-20261020t190955.469894000-showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+        "plannedResourceId": "showcase-hyperparameter-search-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523395.631684,
+        "readyAt": 1792523395.631684,
+        "runtimeId": "showcase-hyperparameter-search-local",
+        "runtimeSeconds": 0.11407995223999023,
+        "startedAt": 1792523395.749522,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-hyperparameter-search-local-b881811497-trial-2",
+        "allocatedResourceId": "showcase-hyperparameter-search-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "finishedAt": 1792523397.253686,
+        "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-2",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13227438926696777,
+          "preparationFinishedAt": 1792523396.9989192,
+          "preparationStartedAt": 1792523396.8409305,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.004217863082885742,
+          "runtimeId": "showcase-hyperparameter-search-local",
+          "transferElapsedSeconds": 0.1579887866973877,
+          "transferWorkSeconds": 0.1579887866973877
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-hyperparameter-search-local-b881811497-manual-plan-20261020t190955.469894000-showcase-hyperparameter-search-local-b881811497-trial-2",
+        "plannedResourceId": "showcase-hyperparameter-search-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523396.832826,
+        "readyAt": 1792523396.832826,
+        "runtimeId": "showcase-hyperparameter-search-local",
+        "runtimeSeconds": 0.12249231338500977,
+        "startedAt": 1792523397.1311936,
+        "status": "completed",
+        "transferBytes": 3836,
+        "transferSeconds": 0.1579887866973877
+      },
+      {
+        "activityId": "showcase-hyperparameter-search-local-b881811497-trial-1",
+        "allocatedResourceId": "showcase-hyperparameter-search-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "finishedAt": 1792523397.303329,
+        "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-1",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.16945958137512207,
+          "preparationFinishedAt": 1792523397.0192606,
+          "preparationStartedAt": 1792523396.8378673,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0018947124481201172,
+          "runtimeId": "showcase-hyperparameter-search-local",
+          "transferElapsedSeconds": 0.18139338493347168,
+          "transferWorkSeconds": 0.18139338493347168
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-hyperparameter-search-local-b881811497-manual-plan-20261020t190955.469894000-showcase-hyperparameter-search-local-b881811497-trial-1",
+        "plannedResourceId": "showcase-hyperparameter-search-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523396.83186,
+        "readyAt": 1792523396.83186,
+        "runtimeId": "showcase-hyperparameter-search-local",
+        "runtimeSeconds": 0.1146087646484375,
+        "startedAt": 1792523397.1887202,
+        "status": "completed",
+        "transferBytes": 3836,
+        "transferSeconds": 0.18139338493347168
+      },
+      {
+        "activityId": "showcase-hyperparameter-search-local-b881811497-trial-n",
+        "allocatedResourceId": "showcase-hyperparameter-search-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "finishedAt": 1792523397.3221345,
+        "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-n",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.17885899543762207,
+          "preparationFinishedAt": 1792523397.0192642,
+          "preparationStartedAt": 1792523396.8430865,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0031490325927734375,
+          "runtimeId": "showcase-hyperparameter-search-local",
+          "transferElapsedSeconds": 0.1761777400970459,
+          "transferWorkSeconds": 0.1761777400970459
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-hyperparameter-search-local-b881811497-manual-plan-20261020t190955.469894000-showcase-hyperparameter-search-local-b881811497-trial-n",
+        "plannedResourceId": "showcase-hyperparameter-search-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523396.8338518,
+        "readyAt": 1792523396.8338518,
+        "runtimeId": "showcase-hyperparameter-search-local",
+        "runtimeSeconds": 0.12401127815246582,
+        "startedAt": 1792523397.1981232,
+        "status": "completed",
+        "transferBytes": 3836,
+        "transferSeconds": 0.1761777400970459
+      },
+      {
+        "activityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+        "allocatedResourceId": "showcase-hyperparameter-search-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "finishedAt": 1792523399.7792141,
+        "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-compare-trials",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1818690299987793,
+          "preparationFinishedAt": 1792523399.4823256,
+          "preparationStartedAt": 1792523398.9349575,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.003383636474609375,
+          "runtimeId": "showcase-hyperparameter-search-local",
+          "transferElapsedSeconds": 0.547368049621582,
+          "transferWorkSeconds": 1.1902742385864258
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-hyperparameter-search-local-b881811497-manual-plan-20261020t190955.469894000-showcase-hyperparameter-search-local-b881811497-compare-trials",
+        "plannedResourceId": "showcase-hyperparameter-search-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523398.92946,
+        "readyAt": 1792523398.92946,
+        "runtimeId": "showcase-hyperparameter-search-local",
+        "runtimeSeconds": 0.11501955986022949,
+        "startedAt": 1792523399.6641946,
+        "status": "completed",
+        "transferBytes": 5504,
+        "transferSeconds": 1.1902742385864258
+      },
+      {
+        "activityId": "showcase-hyperparameter-search-local-b881811497-register-best",
+        "allocatedResourceId": "showcase-hyperparameter-search-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "finishedAt": 1792523401.2836306,
+        "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-register-best",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13737773895263672,
+          "preparationFinishedAt": 1792523401.0361078,
+          "preparationStartedAt": 1792523400.8539162,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0017309188842773438,
+          "runtimeId": "showcase-hyperparameter-search-local",
+          "transferElapsedSeconds": 0.1821916103363037,
+          "transferWorkSeconds": 0.1821916103363037
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-hyperparameter-search-local-b881811497-manual-plan-20261020t190955.469894000-showcase-hyperparameter-search-local-b881811497-register-best",
+        "plannedResourceId": "showcase-hyperparameter-search-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523400.8501415,
+        "readyAt": 1792523400.8501415,
+        "runtimeId": "showcase-hyperparameter-search-local",
+        "runtimeSeconds": 0.11014509201049805,
+        "startedAt": 1792523401.1734855,
+        "status": "completed",
+        "transferBytes": 7027,
+        "transferSeconds": 0.1821916103363037
+      }
+    ],
+    "artifactMaterializations": null,
+    "artifactTransferRuns": [
+      {
+        "activityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+        "durationSeconds": 0.2504410743713379,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "filesTransferred": 2,
+        "finishedAt": 1792523399.1853986,
+        "id": "transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-compare-trials-0",
+        "logicalBytes": 4392,
+        "planId": "transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-compare-trials-0",
+        "route": {
+          "consumerActivityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-hyperparameter-search-local-b881811497-trial-1",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.073188292,
+          "sourceEnvironmentId": "showcase-hyperparameter-search-v1",
+          "sourceResourceId": "showcase-hyperparameter-search-local-docker",
+          "sshChannelWaitSeconds": 5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-hyperparameter-search-v1",
+          "targetResourceId": "showcase-hyperparameter-search-local-docker"
+        },
+        "startedAt": 1792523398.9349575,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 4392
+      },
+      {
+        "activityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+        "durationSeconds": 0.39246511459350586,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523399.3274226,
+        "id": "transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-compare-trials-1",
+        "logicalBytes": 4392,
+        "planId": "transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-compare-trials-1",
+        "route": {
+          "consumerActivityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-hyperparameter-search-local-b881811497-trial-2",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.098013708,
+          "sourceEnvironmentId": "showcase-hyperparameter-search-v1",
+          "sourceResourceId": "showcase-hyperparameter-search-local-docker",
+          "sshChannelWaitSeconds": 5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-hyperparameter-search-v1",
+          "targetResourceId": "showcase-hyperparameter-search-local-docker"
+        },
+        "startedAt": 1792523398.9349575,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 556
+      },
+      {
+        "activityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+        "durationSeconds": 0.547368049621582,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523399.4823256,
+        "id": "transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-compare-trials-2",
+        "logicalBytes": 4392,
+        "planId": "transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-compare-trials-2",
+        "route": {
+          "consumerActivityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-hyperparameter-search-local-b881811497-trial-n",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.102815417,
+          "sourceEnvironmentId": "showcase-hyperparameter-search-v1",
+          "sourceResourceId": "showcase-hyperparameter-search-local-docker",
+          "sshChannelWaitSeconds": 5.84e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-hyperparameter-search-v1",
+          "targetResourceId": "showcase-hyperparameter-search-local-docker"
+        },
+        "startedAt": 1792523398.9349575,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 556
+      },
+      {
+        "activityId": "showcase-hyperparameter-search-local-b881811497-register-best",
+        "durationSeconds": 0.1821916103363037,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "filesTransferred": 6,
+        "finishedAt": 1792523401.0361078,
+        "id": "transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-register-best-0",
+        "logicalBytes": 7027,
+        "planId": "transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-register-best-0",
+        "route": {
+          "consumerActivityId": "showcase-hyperparameter-search-local-b881811497-register-best",
+          "filesTransferred": 6,
+          "producerActivityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09084220800000001,
+          "sourceEnvironmentId": "showcase-hyperparameter-search-v1",
+          "sourceResourceId": "showcase-hyperparameter-search-local-docker",
+          "sshChannelWaitSeconds": 2.91e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-hyperparameter-search-v1",
+          "targetResourceId": "showcase-hyperparameter-search-local-docker"
+        },
+        "startedAt": 1792523400.8539162,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 7027
+      },
+      {
+        "activityId": "showcase-hyperparameter-search-local-b881811497-trial-1",
+        "durationSeconds": 0.18139338493347168,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523397.0192606,
+        "id": "transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-trial-1-0",
+        "logicalBytes": 3836,
+        "planId": "transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-trial-1-0",
+        "route": {
+          "consumerActivityId": "showcase-hyperparameter-search-local-b881811497-trial-1",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.08839366700000001,
+          "sourceEnvironmentId": "showcase-hyperparameter-search-v1",
+          "sourceResourceId": "showcase-hyperparameter-search-local-docker",
+          "sshChannelWaitSeconds": 3.3300000000000003e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-hyperparameter-search-v1",
+          "targetResourceId": "showcase-hyperparameter-search-local-docker"
+        },
+        "startedAt": 1792523396.8378673,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 3836
+      },
+      {
+        "activityId": "showcase-hyperparameter-search-local-b881811497-trial-2",
+        "durationSeconds": 0.1579887866973877,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523396.9989192,
+        "id": "transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-trial-2-0",
+        "logicalBytes": 3836,
+        "planId": "transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-trial-2-0",
+        "route": {
+          "consumerActivityId": "showcase-hyperparameter-search-local-b881811497-trial-2",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.08995800000000001,
+          "sourceEnvironmentId": "showcase-hyperparameter-search-v1",
+          "sourceResourceId": "showcase-hyperparameter-search-local-docker",
+          "sshChannelWaitSeconds": 4.16e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-hyperparameter-search-v1",
+          "targetResourceId": "showcase-hyperparameter-search-local-docker"
+        },
+        "startedAt": 1792523396.8409305,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 3836
+      },
+      {
+        "activityId": "showcase-hyperparameter-search-local-b881811497-trial-n",
+        "durationSeconds": 0.1761777400970459,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523397.0192642,
+        "id": "transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-trial-n-0",
+        "logicalBytes": 3836,
+        "planId": "transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-trial-n-0",
+        "route": {
+          "consumerActivityId": "showcase-hyperparameter-search-local-b881811497-trial-n",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.087874959,
+          "sourceEnvironmentId": "showcase-hyperparameter-search-v1",
+          "sourceResourceId": "showcase-hyperparameter-search-local-docker",
+          "sshChannelWaitSeconds": 3.75e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-hyperparameter-search-v1",
+          "targetResourceId": "showcase-hyperparameter-search-local-docker"
+        },
+        "startedAt": 1792523396.8430865,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 3836
+      }
+    ],
+    "cloudBilling": {
+      "asOf": "2026-10-20T19:10:03.74443568Z",
+      "costBasis": "VM compute and boot-disk lifecycle at on-demand marginal rates; not a provider invoice",
+      "estimatedCost": 0,
+      "excludedCosts": [
+        "network-egress",
+        "public-ipv4",
+        "image-storage",
+        "discounts-and-tax"
+      ],
+      "instances": [],
+      "knownCost": 0,
+      "status": "estimated"
+    },
+    "dataLocations": [
+      {
+        "dataObjectInstanceId": "e0bd1a4b4232ac9e1069488d2329efc4",
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "id": "8ea89fe732fcb8e5af1ae1ee135c6495",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-hyperparameter-search-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "c0ad47189955c7bf82d06385b7f67dad",
+        "uri": "file:///akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-compare-trials/leaderboard.csv"
+      },
+      {
+        "dataObjectInstanceId": "135e683755193db85c3f2d34260b75de",
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "id": "6978970f81ec3dbbc4782e061a5b9df8",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-hyperparameter-search-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "c0ad47189955c7bf82d06385b7f67dad",
+        "uri": "file:///akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-compare-trials/stage-compare-trials.json"
+      },
+      {
+        "dataObjectInstanceId": "3a918439d3981837df3a77f84e8218af",
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "id": "7ac5a05809562c17306ce44a596e1c39",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-hyperparameter-search-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "c0ad47189955c7bf82d06385b7f67dad",
+        "uri": "file:///akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-prepare-dataset/stage-prepare-dataset.json"
+      },
+      {
+        "dataObjectInstanceId": "9415ba5cec0b3356f1dafb5af8770add",
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "id": "2ada4b31d2bcf336b301da0085145829",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-hyperparameter-search-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "c0ad47189955c7bf82d06385b7f67dad",
+        "uri": "file:///akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-register-best/best-model.pkl"
+      },
+      {
+        "dataObjectInstanceId": "ea43b716b9ae28fd680ecfa58ddf709d",
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "id": "66d992f0fc9b454c4dfceed4c9878ea6",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-hyperparameter-search-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "c0ad47189955c7bf82d06385b7f67dad",
+        "uri": "file:///akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-register-best/stage-register-best.json"
+      },
+      {
+        "dataObjectInstanceId": "4cb55a74c7efbcd4ae2deb8845a18405",
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "id": "d1e9c3b5e0706d502c2d601727c406eb",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-hyperparameter-search-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "c0ad47189955c7bf82d06385b7f67dad",
+        "uri": "file:///akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-trial-1/stage-trial-1.json"
+      },
+      {
+        "dataObjectInstanceId": "ce4c611c5dd0f1f28377ac40dbc0d1fe",
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "id": "0ba91194d9ec77c1631a43ac07564688",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-hyperparameter-search-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "c0ad47189955c7bf82d06385b7f67dad",
+        "uri": "file:///akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-trial-2/stage-trial-2.json"
+      },
+      {
+        "dataObjectInstanceId": "6fb23d9a76b69d99f83433e09c00db79",
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "id": "b753ded3a8742a981ebf45f71ca9fea2",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-hyperparameter-search-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "c0ad47189955c7bf82d06385b7f67dad",
+        "uri": "file:///akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-trial-n/stage-trial-n.json"
+      }
+    ],
+    "dataObjects": [
+      {
+        "attempt": 1,
+        "checksum": "sha256:7238859d70c7d46b6bb741532d136944607366926a82a0147679636ad85ad119",
+        "dataObjectId": "827a2539713a75884c19afd8f9643dd2",
+        "discovered": true,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "id": "e0bd1a4b4232ac9e1069488d2329efc4",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+        "relativePath": "leaderboard.csv",
+        "sizeBytes": 148
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:3f99abad38a9d238c97b69ee6465314c9b42873cb386d56bee2387d601ec6d3f",
+        "dataObjectId": "4bfcb0a2348253c9f09cd97a3dab9330",
+        "discovered": true,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "id": "135e683755193db85c3f2d34260b75de",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+        "relativePath": "stage-compare-trials.json",
+        "sizeBytes": 1375
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:f8775fffbe91de468c5d5b3f8ee3244c643f72973267379d7e6577e69b77d614",
+        "dataObjectId": "1e4391c4b157edf2a2dfc60e0fefa99a",
+        "discovered": true,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "id": "3a918439d3981837df3a77f84e8218af",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+        "relativePath": "stage-prepare-dataset.json",
+        "sizeBytes": 3836
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:097dc66eeba3b2c26b6b36456c5ab7ae9514c593c723f0d6a60c709752feb9e7",
+        "dataObjectId": "77998dcda5a7abb3e55463e3344ee144",
+        "discovered": true,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "id": "9415ba5cec0b3356f1dafb5af8770add",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-hyperparameter-search-local-b881811497-register-best",
+        "relativePath": "best-model.pkl",
+        "sizeBytes": 50
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:7ff3d3e5e2559bb3169eda27df2dafd7c51b16ef36718e13acc93498bc583b6f",
+        "dataObjectId": "ce5316203a8dfc2acdcb2178d436fd25",
+        "discovered": true,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "id": "ea43b716b9ae28fd680ecfa58ddf709d",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-hyperparameter-search-local-b881811497-register-best",
+        "relativePath": "stage-register-best.json",
+        "sizeBytes": 561
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:35ce75077159fefe4a1de7efd1075af4bfeb894fed1e2fafaed40c79417f9ca0",
+        "dataObjectId": "244d7f7d8be0e722733a4c402e06549e",
+        "discovered": true,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "id": "4cb55a74c7efbcd4ae2deb8845a18405",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-hyperparameter-search-local-b881811497-trial-1",
+        "relativePath": "stage-trial-1.json",
+        "sizeBytes": 556
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:d5e20457b107c84df0f07d3ad3e149515dacd7f39d7d85b40418b79d27c28096",
+        "dataObjectId": "3e1f4c0a2f90d3bd4b6ee55d5d0d8ae7",
+        "discovered": true,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "id": "ce4c611c5dd0f1f28377ac40dbc0d1fe",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-hyperparameter-search-local-b881811497-trial-2",
+        "relativePath": "stage-trial-2.json",
+        "sizeBytes": 556
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:7f7bf5d09a261baa9e3d8c44855d110a5c7899a00fb5566f0e7134847d80b666",
+        "dataObjectId": "ada70eb09e4c26ded533c6a73f57dade",
+        "discovered": true,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "id": "6fb23d9a76b69d99f83433e09c00db79",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-hyperparameter-search-local-b881811497-trial-n",
+        "relativePath": "stage-trial-n.json",
+        "sizeBytes": 556
+      }
+    ],
+    "dataTransfers": [
+      {
+        "bytes": 3836,
+        "consumerActivityId": "showcase-hyperparameter-search-local-b881811497-trial-1",
+        "cost": 0,
+        "durationSeconds": 0.18139338493347168,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "finishedAt": 1792523397.0192606,
+        "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-1:transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-trial-1-0",
+        "logicalBytes": 3836,
+        "producerActivityId": "showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+        "route": {
+          "consumerActivityId": "showcase-hyperparameter-search-local-b881811497-trial-1",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.08839366700000001,
+          "sourceEnvironmentId": "showcase-hyperparameter-search-v1",
+          "sourceResourceId": "showcase-hyperparameter-search-local-docker",
+          "sshChannelWaitSeconds": 3.3300000000000003e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-hyperparameter-search-v1",
+          "targetResourceId": "showcase-hyperparameter-search-local-docker"
+        },
+        "sourceResourceId": "showcase-hyperparameter-search-local-docker",
+        "startedAt": 1792523396.8378673,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-hyperparameter-search-local-docker"
+      },
+      {
+        "bytes": 3836,
+        "consumerActivityId": "showcase-hyperparameter-search-local-b881811497-trial-2",
+        "cost": 0,
+        "durationSeconds": 0.1579887866973877,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "finishedAt": 1792523396.9989192,
+        "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-2:transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-trial-2-0",
+        "logicalBytes": 3836,
+        "producerActivityId": "showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+        "route": {
+          "consumerActivityId": "showcase-hyperparameter-search-local-b881811497-trial-2",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.08995800000000001,
+          "sourceEnvironmentId": "showcase-hyperparameter-search-v1",
+          "sourceResourceId": "showcase-hyperparameter-search-local-docker",
+          "sshChannelWaitSeconds": 4.16e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-hyperparameter-search-v1",
+          "targetResourceId": "showcase-hyperparameter-search-local-docker"
+        },
+        "sourceResourceId": "showcase-hyperparameter-search-local-docker",
+        "startedAt": 1792523396.8409305,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-hyperparameter-search-local-docker"
+      },
+      {
+        "bytes": 3836,
+        "consumerActivityId": "showcase-hyperparameter-search-local-b881811497-trial-n",
+        "cost": 0,
+        "durationSeconds": 0.1761777400970459,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "finishedAt": 1792523397.0192642,
+        "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-n:transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-trial-n-0",
+        "logicalBytes": 3836,
+        "producerActivityId": "showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+        "route": {
+          "consumerActivityId": "showcase-hyperparameter-search-local-b881811497-trial-n",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.087874959,
+          "sourceEnvironmentId": "showcase-hyperparameter-search-v1",
+          "sourceResourceId": "showcase-hyperparameter-search-local-docker",
+          "sshChannelWaitSeconds": 3.75e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-hyperparameter-search-v1",
+          "targetResourceId": "showcase-hyperparameter-search-local-docker"
+        },
+        "sourceResourceId": "showcase-hyperparameter-search-local-docker",
+        "startedAt": 1792523396.8430865,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-hyperparameter-search-local-docker"
+      },
+      {
+        "bytes": 4392,
+        "consumerActivityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+        "cost": 0,
+        "durationSeconds": 0.2504410743713379,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "finishedAt": 1792523399.1853986,
+        "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-compare-trials:transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-compare-trials-0",
+        "logicalBytes": 4392,
+        "producerActivityId": "showcase-hyperparameter-search-local-b881811497-trial-1",
+        "route": {
+          "consumerActivityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-hyperparameter-search-local-b881811497-trial-1",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.073188292,
+          "sourceEnvironmentId": "showcase-hyperparameter-search-v1",
+          "sourceResourceId": "showcase-hyperparameter-search-local-docker",
+          "sshChannelWaitSeconds": 5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-hyperparameter-search-v1",
+          "targetResourceId": "showcase-hyperparameter-search-local-docker"
+        },
+        "sourceResourceId": "showcase-hyperparameter-search-local-docker",
+        "startedAt": 1792523398.9349575,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-hyperparameter-search-local-docker"
+      },
+      {
+        "bytes": 556,
+        "consumerActivityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+        "cost": 0,
+        "durationSeconds": 0.39246511459350586,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "finishedAt": 1792523399.3274226,
+        "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-compare-trials:transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-compare-trials-1",
+        "logicalBytes": 4392,
+        "producerActivityId": "showcase-hyperparameter-search-local-b881811497-trial-2",
+        "route": {
+          "consumerActivityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-hyperparameter-search-local-b881811497-trial-2",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.098013708,
+          "sourceEnvironmentId": "showcase-hyperparameter-search-v1",
+          "sourceResourceId": "showcase-hyperparameter-search-local-docker",
+          "sshChannelWaitSeconds": 5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-hyperparameter-search-v1",
+          "targetResourceId": "showcase-hyperparameter-search-local-docker"
+        },
+        "sourceResourceId": "showcase-hyperparameter-search-local-docker",
+        "startedAt": 1792523398.9349575,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-hyperparameter-search-local-docker"
+      },
+      {
+        "bytes": 556,
+        "consumerActivityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+        "cost": 0,
+        "durationSeconds": 0.547368049621582,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "finishedAt": 1792523399.4823256,
+        "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-compare-trials:transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-compare-trials-2",
+        "logicalBytes": 4392,
+        "producerActivityId": "showcase-hyperparameter-search-local-b881811497-trial-n",
+        "route": {
+          "consumerActivityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-hyperparameter-search-local-b881811497-trial-n",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.102815417,
+          "sourceEnvironmentId": "showcase-hyperparameter-search-v1",
+          "sourceResourceId": "showcase-hyperparameter-search-local-docker",
+          "sshChannelWaitSeconds": 5.84e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-hyperparameter-search-v1",
+          "targetResourceId": "showcase-hyperparameter-search-local-docker"
+        },
+        "sourceResourceId": "showcase-hyperparameter-search-local-docker",
+        "startedAt": 1792523398.9349575,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-hyperparameter-search-local-docker"
+      },
+      {
+        "bytes": 7027,
+        "consumerActivityId": "showcase-hyperparameter-search-local-b881811497-register-best",
+        "cost": 0,
+        "durationSeconds": 0.1821916103363037,
+        "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "finishedAt": 1792523401.0361078,
+        "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-register-best:transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-register-best-0",
+        "logicalBytes": 7027,
+        "producerActivityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+        "route": {
+          "consumerActivityId": "showcase-hyperparameter-search-local-b881811497-register-best",
+          "filesTransferred": 6,
+          "producerActivityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09084220800000001,
+          "sourceEnvironmentId": "showcase-hyperparameter-search-v1",
+          "sourceResourceId": "showcase-hyperparameter-search-local-docker",
+          "sshChannelWaitSeconds": 2.91e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-hyperparameter-search-v1",
+          "targetResourceId": "showcase-hyperparameter-search-local-docker"
+        },
+        "sourceResourceId": "showcase-hyperparameter-search-local-docker",
+        "startedAt": 1792523400.8539162,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-hyperparameter-search-local-docker"
+      }
+    ],
+    "events": [
+      {
+        "aggregateId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.started",
+        "id": "84582cffac89fc87e62c40918c64a61c",
+        "occurredAt": "2026-10-20T19:09:55.607549385Z",
+        "payload": {
+          "mode": "real",
+          "schedulePlanId": "showcase-hyperparameter-search-local-b881811497-manual-plan-20261020t190955.469894000"
+        }
+      },
+      {
+        "aggregateId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "17f4993d9c6835b7abec9e0e40773c08",
+        "occurredAt": "2026-10-20T19:09:56.774265719Z",
+        "payload": {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+          "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "36e286def10f09571ce367d10e3ee5ec",
+        "occurredAt": "2026-10-20T19:09:56.83025351Z",
+        "payload": {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+          "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11407995223999023,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-1",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "9461d7d49cfa00c5f6e60fa05132152c",
+        "occurredAt": "2026-10-20T19:09:58.77360922Z",
+        "payload": {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-trial-1",
+          "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-1",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "fac5b4b274a7b5435b3856a64bf1b065",
+        "occurredAt": "2026-10-20T19:09:58.835558011Z",
+        "payload": {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-trial-1",
+          "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+          "failureReason": "",
+          "runtimeSeconds": 0.1146087646484375,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-2",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "8129feb59f4635dd88ae517d2dffb437",
+        "occurredAt": "2026-10-20T19:09:58.838194178Z",
+        "payload": {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-trial-2",
+          "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-n",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "74fcc7f898560beeb531e51271c0ee88",
+        "occurredAt": "2026-10-20T19:09:58.840401136Z",
+        "payload": {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-trial-n",
+          "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-n",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "51184c79aaa41700536c341febaba5a0",
+        "occurredAt": "2026-10-20T19:09:58.925096303Z",
+        "payload": {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-trial-n",
+          "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+          "failureReason": "",
+          "runtimeSeconds": 0.12401127815246582,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-2",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "6260817f95274eaa5eac35c82c582cb0",
+        "occurredAt": "2026-10-20T19:09:58.928065553Z",
+        "payload": {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-trial-2",
+          "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+          "failureReason": "",
+          "runtimeSeconds": 0.12249231338500977,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-compare-trials",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "68aee3ea363238d9b9cc7f8c2c3b5aba",
+        "occurredAt": "2026-10-20T19:10:00.781325762Z",
+        "payload": {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+          "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-compare-trials",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "18930ab3d6d49722737467bcaa4cd554",
+        "occurredAt": "2026-10-20T19:10:00.848247762Z",
+        "payload": {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+          "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11501955986022949,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-register-best",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "b120acbdd569aeeda36377c300033a8d",
+        "occurredAt": "2026-10-20T19:10:02.784507222Z",
+        "payload": {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-register-best",
+          "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-register-best",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "52cd2f2064057367aecbe08ebf74e9bb",
+        "occurredAt": "2026-10-20T19:10:02.848718305Z",
+        "payload": {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-register-best",
+          "executionRunId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11014509201049805,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.completed",
+        "id": "4116c1cf4ee836f20fab2271a4fdea18",
+        "occurredAt": "2026-10-20T19:10:02.852316847Z",
+        "payload": {
+          "cost": 0,
+          "makespanSeconds": 5.534108638763428
+        }
+      }
+    ],
+    "handles": [
+      {
+        "activityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+        "artifacts": {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:7238859d70c7d46b6bb741532d136944607366926a82a0147679636ad85ad119",
+              "modifiedUnixNano": 1792523399773110000,
+              "path": "leaderboard.csv",
+              "sizeBytes": 148
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:3f99abad38a9d238c97b69ee6465314c9b42873cb386d56bee2387d601ec6d3f",
+              "modifiedUnixNano": 1792523399773110000,
+              "path": "stage-compare-trials.json",
+              "sizeBytes": 1375
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:7238859d70c7d46b6bb741532d136944607366926a82a0147679636ad85ad119",
+              "modifiedUnixNano": 1792523399773110000,
+              "path": "leaderboard.csv",
+              "sizeBytes": 148
+            },
+            {
+              "checksum": "sha256:3f99abad38a9d238c97b69ee6465314c9b42873cb386d56bee2387d601ec6d3f",
+              "modifiedUnixNano": 1792523399773110000,
+              "path": "stage-compare-trials.json",
+              "sizeBytes": 1375
+            },
+            {
+              "checksum": "sha256:f8775fffbe91de468c5d5b3f8ee3244c643f72973267379d7e6577e69b77d614",
+              "modifiedUnixNano": 1792523399162110000,
+              "path": "stage-prepare-dataset.json",
+              "sizeBytes": 3836
+            },
+            {
+              "checksum": "sha256:35ce75077159fefe4a1de7efd1075af4bfeb894fed1e2fafaed40c79417f9ca0",
+              "modifiedUnixNano": 1792523399162110000,
+              "path": "stage-trial-1.json",
+              "sizeBytes": 556
+            },
+            {
+              "checksum": "sha256:d5e20457b107c84df0f07d3ad3e149515dacd7f39d7d85b40418b79d27c28096",
+              "modifiedUnixNano": 1792523399279110000,
+              "path": "stage-trial-2.json",
+              "sizeBytes": 556
+            },
+            {
+              "checksum": "sha256:7f7bf5d09a261baa9e3d8c44855d110a5c7899a00fb5566f0e7134847d80b666",
+              "modifiedUnixNano": 1792523399436110000,
+              "path": "stage-trial-n.json",
+              "sizeBytes": 556
+            }
+          ],
+          "finishedAt": 1792523399.7792141,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:f8775fffbe91de468c5d5b3f8ee3244c643f72973267379d7e6577e69b77d614",
+              "modifiedUnixNano": 1792523399162110000,
+              "path": "stage-prepare-dataset.json",
+              "sizeBytes": 3836
+            },
+            {
+              "checksum": "sha256:35ce75077159fefe4a1de7efd1075af4bfeb894fed1e2fafaed40c79417f9ca0",
+              "modifiedUnixNano": 1792523399162110000,
+              "path": "stage-trial-1.json",
+              "sizeBytes": 556
+            },
+            {
+              "checksum": "sha256:d5e20457b107c84df0f07d3ad3e149515dacd7f39d7d85b40418b79d27c28096",
+              "modifiedUnixNano": 1792523399279110000,
+              "path": "stage-trial-2.json",
+              "sizeBytes": 556
+            },
+            {
+              "checksum": "sha256:7f7bf5d09a261baa9e3d8c44855d110a5c7899a00fb5566f0e7134847d80b666",
+              "modifiedUnixNano": 1792523399436110000,
+              "path": "stage-trial-n.json",
+              "sizeBytes": 556
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11501955986022949,
+              "finishedAt": 1792523399.7792141,
+              "phase": "execution",
+              "startedAt": 1792523399.6641946,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-compare-trials",
+          "runId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+          "runtime": "showcase-hyperparameter-search-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523399.6641946,
+          "summary": {
+            "createdFiles": 2,
+            "deletedFiles": 0,
+            "finalFiles": 6,
+            "initialFiles": 4,
+            "modifiedFiles": 0,
+            "outputBytes": 1523
+          }
+        },
+        "exitCode": 0,
+        "externalId": "b07b3639130b766558378b81a7cce12ce17599f0bbf800f1eea57a92671f7cc2",
+        "finishedAt": 1792523399.7792141,
+        "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-compare-trials",
+        "log": "{\"activity\": \"compare-trials\", \"status\": \"success\", \"resultKeys\": [\"trials\", \"best\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-hyperparameter-search-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-compare-trials",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523399.6641994,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-compare-trials",
+          "submittedAt": 1792523399.6641946
+        },
+        "resourceId": "showcase-hyperparameter-search-local-docker",
+        "runId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "runtimeId": "showcase-hyperparameter-search-local",
+        "startedAt": 1792523399.6641946,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+        "artifacts": {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:f8775fffbe91de468c5d5b3f8ee3244c643f72973267379d7e6577e69b77d614",
+              "modifiedUnixNano": 1792523395856110000,
+              "path": "stage-prepare-dataset.json",
+              "sizeBytes": 3836
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:f8775fffbe91de468c5d5b3f8ee3244c643f72973267379d7e6577e69b77d614",
+              "modifiedUnixNano": 1792523395856110000,
+              "path": "stage-prepare-dataset.json",
+              "sizeBytes": 3836
+            }
+          ],
+          "finishedAt": 1792523395.863602,
+          "phases": [
+            {
+              "durationSeconds": 0.11407995223999023,
+              "finishedAt": 1792523395.863602,
+              "phase": "execution",
+              "startedAt": 1792523395.749522,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+          "runId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+          "runtime": "showcase-hyperparameter-search-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523395.749522,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 1,
+            "initialFiles": 0,
+            "modifiedFiles": 0,
+            "outputBytes": 3836
+          }
+        },
+        "exitCode": 0,
+        "externalId": "313c63ee84198e50be33bc93bd6af67583cc4dca2004f06bc1096e6c911cf710",
+        "finishedAt": 1792523395.863602,
+        "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+        "log": "{\"activity\": \"prepare-dataset\", \"status\": \"success\", \"resultKeys\": [\"training\", \"validation\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-hyperparameter-search-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523395.7495399,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+          "submittedAt": 1792523395.749522
+        },
+        "resourceId": "showcase-hyperparameter-search-local-docker",
+        "runId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "runtimeId": "showcase-hyperparameter-search-local",
+        "startedAt": 1792523395.749522,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-hyperparameter-search-local-b881811497-register-best",
+        "artifacts": {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-register-best",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:097dc66eeba3b2c26b6b36456c5ab7ae9514c593c723f0d6a60c709752feb9e7",
+              "modifiedUnixNano": 1792523401278110000,
+              "path": "best-model.pkl",
+              "sizeBytes": 50
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:7ff3d3e5e2559bb3169eda27df2dafd7c51b16ef36718e13acc93498bc583b6f",
+              "modifiedUnixNano": 1792523401278110000,
+              "path": "stage-register-best.json",
+              "sizeBytes": 561
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:097dc66eeba3b2c26b6b36456c5ab7ae9514c593c723f0d6a60c709752feb9e7",
+              "modifiedUnixNano": 1792523401278110000,
+              "path": "best-model.pkl",
+              "sizeBytes": 50
+            },
+            {
+              "checksum": "sha256:7238859d70c7d46b6bb741532d136944607366926a82a0147679636ad85ad119",
+              "modifiedUnixNano": 1792523400990110000,
+              "path": "leaderboard.csv",
+              "sizeBytes": 148
+            },
+            {
+              "checksum": "sha256:3f99abad38a9d238c97b69ee6465314c9b42873cb386d56bee2387d601ec6d3f",
+              "modifiedUnixNano": 1792523400990110000,
+              "path": "stage-compare-trials.json",
+              "sizeBytes": 1375
+            },
+            {
+              "checksum": "sha256:f8775fffbe91de468c5d5b3f8ee3244c643f72973267379d7e6577e69b77d614",
+              "modifiedUnixNano": 1792523400990110000,
+              "path": "stage-prepare-dataset.json",
+              "sizeBytes": 3836
+            },
+            {
+              "checksum": "sha256:7ff3d3e5e2559bb3169eda27df2dafd7c51b16ef36718e13acc93498bc583b6f",
+              "modifiedUnixNano": 1792523401278110000,
+              "path": "stage-register-best.json",
+              "sizeBytes": 561
+            },
+            {
+              "checksum": "sha256:35ce75077159fefe4a1de7efd1075af4bfeb894fed1e2fafaed40c79417f9ca0",
+              "modifiedUnixNano": 1792523400990110000,
+              "path": "stage-trial-1.json",
+              "sizeBytes": 556
+            },
+            {
+              "checksum": "sha256:d5e20457b107c84df0f07d3ad3e149515dacd7f39d7d85b40418b79d27c28096",
+              "modifiedUnixNano": 1792523400990110000,
+              "path": "stage-trial-2.json",
+              "sizeBytes": 556
+            },
+            {
+              "checksum": "sha256:7f7bf5d09a261baa9e3d8c44855d110a5c7899a00fb5566f0e7134847d80b666",
+              "modifiedUnixNano": 1792523400990110000,
+              "path": "stage-trial-n.json",
+              "sizeBytes": 556
+            }
+          ],
+          "finishedAt": 1792523401.2836306,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:7238859d70c7d46b6bb741532d136944607366926a82a0147679636ad85ad119",
+              "modifiedUnixNano": 1792523400990110000,
+              "path": "leaderboard.csv",
+              "sizeBytes": 148
+            },
+            {
+              "checksum": "sha256:3f99abad38a9d238c97b69ee6465314c9b42873cb386d56bee2387d601ec6d3f",
+              "modifiedUnixNano": 1792523400990110000,
+              "path": "stage-compare-trials.json",
+              "sizeBytes": 1375
+            },
+            {
+              "checksum": "sha256:f8775fffbe91de468c5d5b3f8ee3244c643f72973267379d7e6577e69b77d614",
+              "modifiedUnixNano": 1792523400990110000,
+              "path": "stage-prepare-dataset.json",
+              "sizeBytes": 3836
+            },
+            {
+              "checksum": "sha256:35ce75077159fefe4a1de7efd1075af4bfeb894fed1e2fafaed40c79417f9ca0",
+              "modifiedUnixNano": 1792523400990110000,
+              "path": "stage-trial-1.json",
+              "sizeBytes": 556
+            },
+            {
+              "checksum": "sha256:d5e20457b107c84df0f07d3ad3e149515dacd7f39d7d85b40418b79d27c28096",
+              "modifiedUnixNano": 1792523400990110000,
+              "path": "stage-trial-2.json",
+              "sizeBytes": 556
+            },
+            {
+              "checksum": "sha256:7f7bf5d09a261baa9e3d8c44855d110a5c7899a00fb5566f0e7134847d80b666",
+              "modifiedUnixNano": 1792523400990110000,
+              "path": "stage-trial-n.json",
+              "sizeBytes": 556
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11014509201049805,
+              "finishedAt": 1792523401.2836306,
+              "phase": "execution",
+              "startedAt": 1792523401.1734855,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-register-best",
+          "runId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+          "runtime": "showcase-hyperparameter-search-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523401.1734855,
+          "summary": {
+            "createdFiles": 2,
+            "deletedFiles": 0,
+            "finalFiles": 8,
+            "initialFiles": 6,
+            "modifiedFiles": 0,
+            "outputBytes": 611
+          }
+        },
+        "exitCode": 0,
+        "externalId": "f217ff747d0842efdcb90d78a1f7fc9947c49c52842fbd5aacf75faa14f2fec5",
+        "finishedAt": 1792523401.2836306,
+        "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-register-best",
+        "log": "{\"activity\": \"register-best\", \"status\": \"success\", \"resultKeys\": [\"candidate\", \"model\", \"rmse\", \"learningRate\", \"epochs\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-hyperparameter-search-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-register-best",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523401.1735313,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-register-best",
+          "submittedAt": 1792523401.1734855
+        },
+        "resourceId": "showcase-hyperparameter-search-local-docker",
+        "runId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "runtimeId": "showcase-hyperparameter-search-local",
+        "startedAt": 1792523401.1734855,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-hyperparameter-search-local-b881811497-trial-1",
+        "artifacts": {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-trial-1",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:35ce75077159fefe4a1de7efd1075af4bfeb894fed1e2fafaed40c79417f9ca0",
+              "modifiedUnixNano": 1792523397298110000,
+              "path": "stage-trial-1.json",
+              "sizeBytes": 556
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:f8775fffbe91de468c5d5b3f8ee3244c643f72973267379d7e6577e69b77d614",
+              "modifiedUnixNano": 1792523396976110000,
+              "path": "stage-prepare-dataset.json",
+              "sizeBytes": 3836
+            },
+            {
+              "checksum": "sha256:35ce75077159fefe4a1de7efd1075af4bfeb894fed1e2fafaed40c79417f9ca0",
+              "modifiedUnixNano": 1792523397298110000,
+              "path": "stage-trial-1.json",
+              "sizeBytes": 556
+            }
+          ],
+          "finishedAt": 1792523397.303329,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:f8775fffbe91de468c5d5b3f8ee3244c643f72973267379d7e6577e69b77d614",
+              "modifiedUnixNano": 1792523396976110000,
+              "path": "stage-prepare-dataset.json",
+              "sizeBytes": 3836
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.1146087646484375,
+              "finishedAt": 1792523397.303329,
+              "phase": "execution",
+              "startedAt": 1792523397.1887202,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-trial-1",
+          "runId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+          "runtime": "showcase-hyperparameter-search-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523397.1887202,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 556
+          }
+        },
+        "exitCode": 0,
+        "externalId": "d464fabb1b4d3e83bcf3f8588201192f234f7e9e875ee00d49d0f6e3e9a6716e",
+        "finishedAt": 1792523397.303329,
+        "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-1",
+        "log": "{\"activity\": \"trial-1\", \"status\": \"success\", \"resultKeys\": [\"candidate\", \"model\", \"rmse\", \"learningRate\", \"epochs\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-hyperparameter-search-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-trial-1",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523397.1887245,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-trial-1",
+          "submittedAt": 1792523397.1887202
+        },
+        "resourceId": "showcase-hyperparameter-search-local-docker",
+        "runId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "runtimeId": "showcase-hyperparameter-search-local",
+        "startedAt": 1792523397.1887202,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-hyperparameter-search-local-b881811497-trial-2",
+        "artifacts": {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-trial-2",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:d5e20457b107c84df0f07d3ad3e149515dacd7f39d7d85b40418b79d27c28096",
+              "modifiedUnixNano": 1792523397248110000,
+              "path": "stage-trial-2.json",
+              "sizeBytes": 556
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:f8775fffbe91de468c5d5b3f8ee3244c643f72973267379d7e6577e69b77d614",
+              "modifiedUnixNano": 1792523396955110000,
+              "path": "stage-prepare-dataset.json",
+              "sizeBytes": 3836
+            },
+            {
+              "checksum": "sha256:d5e20457b107c84df0f07d3ad3e149515dacd7f39d7d85b40418b79d27c28096",
+              "modifiedUnixNano": 1792523397248110000,
+              "path": "stage-trial-2.json",
+              "sizeBytes": 556
+            }
+          ],
+          "finishedAt": 1792523397.253686,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:f8775fffbe91de468c5d5b3f8ee3244c643f72973267379d7e6577e69b77d614",
+              "modifiedUnixNano": 1792523396955110000,
+              "path": "stage-prepare-dataset.json",
+              "sizeBytes": 3836
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.12249231338500977,
+              "finishedAt": 1792523397.253686,
+              "phase": "execution",
+              "startedAt": 1792523397.1311936,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-trial-2",
+          "runId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+          "runtime": "showcase-hyperparameter-search-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523397.1311936,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 556
+          }
+        },
+        "exitCode": 0,
+        "externalId": "67a98d04aedf00eba3900863482c5fe0ead9d79af7aa6efaad39ef1b29c2a427",
+        "finishedAt": 1792523397.253686,
+        "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-2",
+        "log": "{\"activity\": \"trial-2\", \"status\": \"success\", \"resultKeys\": [\"candidate\", \"model\", \"rmse\", \"learningRate\", \"epochs\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-hyperparameter-search-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-trial-2",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523397.131199,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-trial-2",
+          "submittedAt": 1792523397.1311936
+        },
+        "resourceId": "showcase-hyperparameter-search-local-docker",
+        "runId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "runtimeId": "showcase-hyperparameter-search-local",
+        "startedAt": 1792523397.1311936,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-hyperparameter-search-local-b881811497-trial-n",
+        "artifacts": {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-trial-n",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:7f7bf5d09a261baa9e3d8c44855d110a5c7899a00fb5566f0e7134847d80b666",
+              "modifiedUnixNano": 1792523397316110000,
+              "path": "stage-trial-n.json",
+              "sizeBytes": 556
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:f8775fffbe91de468c5d5b3f8ee3244c643f72973267379d7e6577e69b77d614",
+              "modifiedUnixNano": 1792523396976110000,
+              "path": "stage-prepare-dataset.json",
+              "sizeBytes": 3836
+            },
+            {
+              "checksum": "sha256:7f7bf5d09a261baa9e3d8c44855d110a5c7899a00fb5566f0e7134847d80b666",
+              "modifiedUnixNano": 1792523397316110000,
+              "path": "stage-trial-n.json",
+              "sizeBytes": 556
+            }
+          ],
+          "finishedAt": 1792523397.3221345,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:f8775fffbe91de468c5d5b3f8ee3244c643f72973267379d7e6577e69b77d614",
+              "modifiedUnixNano": 1792523396976110000,
+              "path": "stage-prepare-dataset.json",
+              "sizeBytes": 3836
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.12401127815246582,
+              "finishedAt": 1792523397.3221345,
+              "phase": "execution",
+              "startedAt": 1792523397.1981232,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-trial-n",
+          "runId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+          "runtime": "showcase-hyperparameter-search-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523397.1981232,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 556
+          }
+        },
+        "exitCode": 0,
+        "externalId": "3979c9807da9765edc60c50c624d7946b433d3ce24504313ae1cc279cdf80a11",
+        "finishedAt": 1792523397.3221345,
+        "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-n",
+        "log": "{\"activity\": \"trial-n\", \"status\": \"success\", \"resultKeys\": [\"candidate\", \"model\", \"rmse\", \"learningRate\", \"epochs\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-hyperparameter-search-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-trial-n",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523397.1981304,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-trial-n",
+          "submittedAt": 1792523397.1981232
+        },
+        "resourceId": "showcase-hyperparameter-search-local-docker",
+        "runId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "runtimeId": "showcase-hyperparameter-search-local",
+        "startedAt": 1792523397.1981232,
+        "status": "completed"
+      }
+    ],
+    "infrastructureRuns": [],
+    "operationEvents": [],
+    "run": {
+      "activityCount": 6,
+      "breakdown": {
+        "computeSeconds": 0.7003569602966309,
+        "interferenceSeconds": 0,
+        "overheadSeconds": 0,
+        "queueSeconds": 0,
+        "transferSeconds": 1.8880257606506348
+      },
+      "completedActivityCount": 6,
+      "cost": 0,
+      "finishedAt": "2026-10-20T19:10:02Z",
+      "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+      "kind": "workflow",
+      "makespanSeconds": 5.534108638763428,
+      "mode": "real",
+      "schedulePlanId": "showcase-hyperparameter-search-local-b881811497-manual-plan-20261020t190955.469894000",
+      "seed": 0,
+      "startedAt": "2026-10-20T19:09:55Z",
+      "status": "completed",
+      "title": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+      "transferredBytes": 24039
+    },
+    "timeline": {
+      "computeMakespanSeconds": 5.534108638763428,
+      "coveredWallSeconds": 2.0054354667663574,
+      "finishedAt": 1792523402,
+      "phases": [
+        {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+          "category": "resource-queue",
+          "durationSeconds": 0.11783790588378906,
+          "finishedAt": 1792523395.749522,
+          "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-prepare-dataset:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523395.631684,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+          "category": "runtime",
+          "durationSeconds": 0.11407995223999023,
+          "finishedAt": 1792523395.863602,
+          "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-prepare-dataset:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523395.749522,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-trial-1",
+          "category": "resource-queue",
+          "durationSeconds": 0.006007194519042969,
+          "finishedAt": 1792523396.8378673,
+          "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-1:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523396.83186,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-trial-2",
+          "category": "resource-queue",
+          "durationSeconds": 0.008104562759399414,
+          "finishedAt": 1792523396.8409305,
+          "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-2:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523396.832826,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-trial-n",
+          "category": "resource-queue",
+          "durationSeconds": 0.00923466682434082,
+          "finishedAt": 1792523396.8430865,
+          "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-n:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523396.8338518,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-trial-1",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.18139338493347168,
+          "finishedAt": 1792523397.0192606,
+          "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-1:transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-trial-1-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523396.8378673,
+          "status": "completed",
+          "transferId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-1:transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-trial-1-0"
+        },
+        {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-trial-2",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.1579887866973877,
+          "finishedAt": 1792523396.9989192,
+          "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-2:transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-trial-2-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523396.8409305,
+          "status": "completed",
+          "transferId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-2:transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-trial-2-0"
+        },
+        {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-trial-n",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.1761777400970459,
+          "finishedAt": 1792523397.0192642,
+          "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-n:transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-trial-n-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523396.8430865,
+          "status": "completed",
+          "transferId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-n:transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-trial-n-0"
+        },
+        {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-trial-2",
+          "category": "launch",
+          "durationSeconds": 0.13227438926696777,
+          "finishedAt": 1792523397.1311936,
+          "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-2:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523396.9989192,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-trial-1",
+          "category": "launch",
+          "durationSeconds": 0.16945958137512207,
+          "finishedAt": 1792523397.1887202,
+          "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-1:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523397.0192606,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-trial-n",
+          "category": "launch",
+          "durationSeconds": 0.17885899543762207,
+          "finishedAt": 1792523397.1981232,
+          "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-n:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523397.0192642,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-trial-2",
+          "category": "runtime",
+          "durationSeconds": 0.12249231338500977,
+          "finishedAt": 1792523397.253686,
+          "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-2:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523397.1311936,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-trial-1",
+          "category": "runtime",
+          "durationSeconds": 0.1146087646484375,
+          "finishedAt": 1792523397.303329,
+          "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-1:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523397.1887202,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-trial-n",
+          "category": "runtime",
+          "durationSeconds": 0.12401127815246582,
+          "finishedAt": 1792523397.3221345,
+          "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-trial-n:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523397.1981232,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+          "category": "resource-queue",
+          "durationSeconds": 0.005497455596923828,
+          "finishedAt": 1792523398.9349575,
+          "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-compare-trials:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523398.92946,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.2504410743713379,
+          "finishedAt": 1792523399.1853986,
+          "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-compare-trials:transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-compare-trials-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523398.9349575,
+          "status": "completed",
+          "transferId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-compare-trials:transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-compare-trials-0"
+        },
+        {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.39246511459350586,
+          "finishedAt": 1792523399.3274226,
+          "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-compare-trials:transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-compare-trials-1",
+          "source": "transfer-observation",
+          "startedAt": 1792523398.9349575,
+          "status": "completed",
+          "transferId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-compare-trials:transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-compare-trials-1"
+        },
+        {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.547368049621582,
+          "finishedAt": 1792523399.4823256,
+          "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-compare-trials:transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-compare-trials-2",
+          "source": "transfer-observation",
+          "startedAt": 1792523398.9349575,
+          "status": "completed",
+          "transferId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-compare-trials:transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-compare-trials-2"
+        },
+        {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+          "category": "launch",
+          "durationSeconds": 0.1818690299987793,
+          "finishedAt": 1792523399.6641946,
+          "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-compare-trials:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523399.4823256,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+          "category": "runtime",
+          "durationSeconds": 0.11501955986022949,
+          "finishedAt": 1792523399.7792141,
+          "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-compare-trials:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523399.6641946,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-register-best",
+          "category": "resource-queue",
+          "durationSeconds": 0.0037746429443359375,
+          "finishedAt": 1792523400.8539162,
+          "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-register-best:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523400.8501415,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-register-best",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.1821916103363037,
+          "finishedAt": 1792523401.0361078,
+          "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-register-best:transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-register-best-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523400.8539162,
+          "status": "completed",
+          "transferId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-register-best:transfer-workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-register-best-0"
+        },
+        {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-register-best",
+          "category": "launch",
+          "durationSeconds": 0.13737773895263672,
+          "finishedAt": 1792523401.1734855,
+          "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-register-best:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523401.0361078,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-hyperparameter-search-local-b881811497-register-best",
+          "category": "runtime",
+          "durationSeconds": 0.11014509201049805,
+          "finishedAt": 1792523401.2836306,
+          "id": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000:showcase-hyperparameter-search-local-b881811497-register-best:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523401.1734855,
+          "status": "completed"
+        }
+      ],
+      "startedAt": 1792523395,
+      "totals": {
+        "destroySeconds": 0,
+        "executablePreparationSeconds": 0,
+        "launchSeconds": 0.7998397350311279,
+        "provisionSeconds": 0,
+        "resourceQueueSeconds": 0.15045642852783203,
+        "runtimeSeconds": 0.7003569602966309,
+        "startSeconds": 0,
+        "stopSeconds": 0,
+        "validationSeconds": 0,
+        "workspaceTransferSeconds": 1.8880257606506348
+      },
+      "unclassifiedWallSeconds": 4.994564533233643,
+      "wallSeconds": 7
+    },
+    "workspaceLeases": [
+      {
+        "consumerActivityId": "showcase-hyperparameter-search-local-b881811497-register-best",
+        "id": "workspace-lease-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-compare-trials-showcase-hyperparameter-search-local-b881811497-register-best",
+        "producerActivityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:10:01.038841221Z",
+        "runId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "workspaceId": "workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-compare-trials"
+      },
+      {
+        "consumerActivityId": "showcase-hyperparameter-search-local-b881811497-trial-1",
+        "id": "workspace-lease-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-prepare-dataset-showcase-hyperparameter-search-local-b881811497-trial-1",
+        "producerActivityId": "showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:09:57.021721885Z",
+        "runId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "workspaceId": "workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-prepare-dataset"
+      },
+      {
+        "consumerActivityId": "showcase-hyperparameter-search-local-b881811497-trial-2",
+        "id": "workspace-lease-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-prepare-dataset-showcase-hyperparameter-search-local-b881811497-trial-2",
+        "producerActivityId": "showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:09:57.000693427Z",
+        "runId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "workspaceId": "workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-prepare-dataset"
+      },
+      {
+        "consumerActivityId": "showcase-hyperparameter-search-local-b881811497-trial-n",
+        "id": "workspace-lease-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-prepare-dataset-showcase-hyperparameter-search-local-b881811497-trial-n",
+        "producerActivityId": "showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:09:57.021778635Z",
+        "runId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "workspaceId": "workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-prepare-dataset"
+      },
+      {
+        "consumerActivityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+        "id": "workspace-lease-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-trial-1-showcase-hyperparameter-search-local-b881811497-compare-trials",
+        "producerActivityId": "showcase-hyperparameter-search-local-b881811497-trial-1",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:09:59.491752345Z",
+        "runId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "workspaceId": "workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-trial-1"
+      },
+      {
+        "consumerActivityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+        "id": "workspace-lease-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-trial-2-showcase-hyperparameter-search-local-b881811497-compare-trials",
+        "producerActivityId": "showcase-hyperparameter-search-local-b881811497-trial-2",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:09:59.491752345Z",
+        "runId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "workspaceId": "workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-trial-2"
+      },
+      {
+        "consumerActivityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+        "id": "workspace-lease-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-trial-n-showcase-hyperparameter-search-local-b881811497-compare-trials",
+        "producerActivityId": "showcase-hyperparameter-search-local-b881811497-trial-n",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:09:59.491752345Z",
+        "runId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "workspaceId": "workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-trial-n"
+      }
+    ],
+    "workspaces": [
+      {
+        "activityId": "showcase-hyperparameter-search-local-b881811497-compare-trials",
+        "createdAt": "2026-10-20T19:09:55.610190968Z",
+        "driver": "local",
+        "environmentId": "showcase-hyperparameter-search-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-compare-trials",
+        "fileCount": 6,
+        "id": "workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-compare-trials",
+        "inputBytes": 5504,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:7238859d70c7d46b6bb741532d136944607366926a82a0147679636ad85ad119",
+              "path": "leaderboard.csv",
+              "sizeBytes": 148
+            },
+            {
+              "digest": "sha256:3f99abad38a9d238c97b69ee6465314c9b42873cb386d56bee2387d601ec6d3f",
+              "path": "stage-compare-trials.json",
+              "sizeBytes": 1375
+            },
+            {
+              "digest": "sha256:f8775fffbe91de468c5d5b3f8ee3244c643f72973267379d7e6577e69b77d614",
+              "path": "stage-prepare-dataset.json",
+              "sizeBytes": 3836
+            },
+            {
+              "digest": "sha256:35ce75077159fefe4a1de7efd1075af4bfeb894fed1e2fafaed40c79417f9ca0",
+              "path": "stage-trial-1.json",
+              "sizeBytes": 556
+            },
+            {
+              "digest": "sha256:d5e20457b107c84df0f07d3ad3e149515dacd7f39d7d85b40418b79d27c28096",
+              "path": "stage-trial-2.json",
+              "sizeBytes": 556
+            },
+            {
+              "digest": "sha256:7f7bf5d09a261baa9e3d8c44855d110a5c7899a00fb5566f0e7134847d80b666",
+              "path": "stage-trial-n.json",
+              "sizeBytes": 556
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:f8775fffbe91de468c5d5b3f8ee3244c643f72973267379d7e6577e69b77d614",
+              "path": "stage-prepare-dataset.json",
+              "sizeBytes": 3836
+            },
+            {
+              "digest": "sha256:35ce75077159fefe4a1de7efd1075af4bfeb894fed1e2fafaed40c79417f9ca0",
+              "path": "stage-trial-1.json",
+              "sizeBytes": 556
+            },
+            {
+              "digest": "sha256:d5e20457b107c84df0f07d3ad3e149515dacd7f39d7d85b40418b79d27c28096",
+              "path": "stage-trial-2.json",
+              "sizeBytes": 556
+            },
+            {
+              "digest": "sha256:7f7bf5d09a261baa9e3d8c44855d110a5c7899a00fb5566f0e7134847d80b666",
+              "path": "stage-trial-n.json",
+              "sizeBytes": 556
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:f8775fffbe91de468c5d5b3f8ee3244c643f72973267379d7e6577e69b77d614",
+              "path": "stage-prepare-dataset.json",
+              "sizeBytes": 3836
+            },
+            {
+              "digest": "sha256:35ce75077159fefe4a1de7efd1075af4bfeb894fed1e2fafaed40c79417f9ca0",
+              "path": "stage-trial-1.json",
+              "sizeBytes": 556
+            },
+            {
+              "digest": "sha256:d5e20457b107c84df0f07d3ad3e149515dacd7f39d7d85b40418b79d27c28096",
+              "path": "stage-trial-2.json",
+              "sizeBytes": 556
+            },
+            {
+              "digest": "sha256:7f7bf5d09a261baa9e3d8c44855d110a5c7899a00fb5566f0e7134847d80b666",
+              "path": "stage-trial-n.json",
+              "sizeBytes": 556
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:7238859d70c7d46b6bb741532d136944607366926a82a0147679636ad85ad119",
+              "path": "leaderboard.csv",
+              "sizeBytes": 148
+            },
+            {
+              "digest": "sha256:3f99abad38a9d238c97b69ee6465314c9b42873cb386d56bee2387d601ec6d3f",
+              "path": "stage-compare-trials.json",
+              "sizeBytes": 1375
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-compare-trials",
+        "outputBytes": 1523,
+        "pinned": false,
+        "reclaimedBytes": 7027,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:10:01.047340721Z",
+        "resourceId": "showcase-hyperparameter-search-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "runtimeId": "showcase-hyperparameter-search-local",
+        "sealedAt": "2026-10-20T19:10:00.845093971Z",
+        "sizeBytes": 7027,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-compare-trials"
+      },
+      {
+        "activityId": "showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+        "createdAt": "2026-10-20T19:09:55.610190968Z",
+        "driver": "local",
+        "environmentId": "showcase-hyperparameter-search-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+        "fileCount": 1,
+        "id": "workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+        "inputBytes": 0,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:f8775fffbe91de468c5d5b3f8ee3244c643f72973267379d7e6577e69b77d614",
+              "path": "stage-prepare-dataset.json",
+              "sizeBytes": 3836
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:f8775fffbe91de468c5d5b3f8ee3244c643f72973267379d7e6577e69b77d614",
+              "path": "stage-prepare-dataset.json",
+              "sizeBytes": 3836
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-prepare-dataset",
+        "outputBytes": 3836,
+        "pinned": false,
+        "reclaimedBytes": 0,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:09:57.030279635Z",
+        "resourceId": "showcase-hyperparameter-search-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "runtimeId": "showcase-hyperparameter-search-local",
+        "sealedAt": "2026-10-20T19:09:56.827304927Z",
+        "sizeBytes": 3836,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-prepare-dataset"
+      },
+      {
+        "activityId": "showcase-hyperparameter-search-local-b881811497-register-best",
+        "createdAt": "2026-10-20T19:09:55.610190968Z",
+        "driver": "local",
+        "environmentId": "showcase-hyperparameter-search-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-register-best",
+        "fileCount": 2,
+        "id": "workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-register-best",
+        "inputBytes": 7027,
+        "isFinal": true,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:097dc66eeba3b2c26b6b36456c5ab7ae9514c593c723f0d6a60c709752feb9e7",
+              "path": "best-model.pkl",
+              "sizeBytes": 50
+            },
+            {
+              "digest": "sha256:7238859d70c7d46b6bb741532d136944607366926a82a0147679636ad85ad119",
+              "path": "leaderboard.csv",
+              "sizeBytes": 148
+            },
+            {
+              "digest": "sha256:3f99abad38a9d238c97b69ee6465314c9b42873cb386d56bee2387d601ec6d3f",
+              "path": "stage-compare-trials.json",
+              "sizeBytes": 1375
+            },
+            {
+              "digest": "sha256:f8775fffbe91de468c5d5b3f8ee3244c643f72973267379d7e6577e69b77d614",
+              "path": "stage-prepare-dataset.json",
+              "sizeBytes": 3836
+            },
+            {
+              "digest": "sha256:7ff3d3e5e2559bb3169eda27df2dafd7c51b16ef36718e13acc93498bc583b6f",
+              "path": "stage-register-best.json",
+              "sizeBytes": 561
+            },
+            {
+              "digest": "sha256:35ce75077159fefe4a1de7efd1075af4bfeb894fed1e2fafaed40c79417f9ca0",
+              "path": "stage-trial-1.json",
+              "sizeBytes": 556
+            },
+            {
+              "digest": "sha256:d5e20457b107c84df0f07d3ad3e149515dacd7f39d7d85b40418b79d27c28096",
+              "path": "stage-trial-2.json",
+              "sizeBytes": 556
+            },
+            {
+              "digest": "sha256:7f7bf5d09a261baa9e3d8c44855d110a5c7899a00fb5566f0e7134847d80b666",
+              "path": "stage-trial-n.json",
+              "sizeBytes": 556
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:7238859d70c7d46b6bb741532d136944607366926a82a0147679636ad85ad119",
+              "path": "leaderboard.csv",
+              "sizeBytes": 148
+            },
+            {
+              "digest": "sha256:3f99abad38a9d238c97b69ee6465314c9b42873cb386d56bee2387d601ec6d3f",
+              "path": "stage-compare-trials.json",
+              "sizeBytes": 1375
+            },
+            {
+              "digest": "sha256:f8775fffbe91de468c5d5b3f8ee3244c643f72973267379d7e6577e69b77d614",
+              "path": "stage-prepare-dataset.json",
+              "sizeBytes": 3836
+            },
+            {
+              "digest": "sha256:35ce75077159fefe4a1de7efd1075af4bfeb894fed1e2fafaed40c79417f9ca0",
+              "path": "stage-trial-1.json",
+              "sizeBytes": 556
+            },
+            {
+              "digest": "sha256:d5e20457b107c84df0f07d3ad3e149515dacd7f39d7d85b40418b79d27c28096",
+              "path": "stage-trial-2.json",
+              "sizeBytes": 556
+            },
+            {
+              "digest": "sha256:7f7bf5d09a261baa9e3d8c44855d110a5c7899a00fb5566f0e7134847d80b666",
+              "path": "stage-trial-n.json",
+              "sizeBytes": 556
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:7238859d70c7d46b6bb741532d136944607366926a82a0147679636ad85ad119",
+              "path": "leaderboard.csv",
+              "sizeBytes": 148
+            },
+            {
+              "digest": "sha256:3f99abad38a9d238c97b69ee6465314c9b42873cb386d56bee2387d601ec6d3f",
+              "path": "stage-compare-trials.json",
+              "sizeBytes": 1375
+            },
+            {
+              "digest": "sha256:f8775fffbe91de468c5d5b3f8ee3244c643f72973267379d7e6577e69b77d614",
+              "path": "stage-prepare-dataset.json",
+              "sizeBytes": 3836
+            },
+            {
+              "digest": "sha256:35ce75077159fefe4a1de7efd1075af4bfeb894fed1e2fafaed40c79417f9ca0",
+              "path": "stage-trial-1.json",
+              "sizeBytes": 556
+            },
+            {
+              "digest": "sha256:d5e20457b107c84df0f07d3ad3e149515dacd7f39d7d85b40418b79d27c28096",
+              "path": "stage-trial-2.json",
+              "sizeBytes": 556
+            },
+            {
+              "digest": "sha256:7f7bf5d09a261baa9e3d8c44855d110a5c7899a00fb5566f0e7134847d80b666",
+              "path": "stage-trial-n.json",
+              "sizeBytes": 556
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:097dc66eeba3b2c26b6b36456c5ab7ae9514c593c723f0d6a60c709752feb9e7",
+              "path": "best-model.pkl",
+              "sizeBytes": 50
+            },
+            {
+              "digest": "sha256:7ff3d3e5e2559bb3169eda27df2dafd7c51b16ef36718e13acc93498bc583b6f",
+              "path": "stage-register-best.json",
+              "sizeBytes": 561
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-register-best",
+        "outputBytes": 611,
+        "pinned": false,
+        "reclaimedBytes": 7027,
+        "releaseReason": "inherited inputs pruned",
+        "resourceId": "showcase-hyperparameter-search-local-docker",
+        "retention": "final",
+        "runId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "runtimeId": "showcase-hyperparameter-search-local",
+        "sealedAt": "2026-10-20T19:10:02.844581138Z",
+        "sizeBytes": 611,
+        "state": "sealed",
+        "uri": "file:///akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-register-best"
+      },
+      {
+        "activityId": "showcase-hyperparameter-search-local-b881811497-trial-1",
+        "createdAt": "2026-10-20T19:09:55.610190968Z",
+        "driver": "local",
+        "environmentId": "showcase-hyperparameter-search-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-trial-1",
+        "fileCount": 2,
+        "id": "workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-trial-1",
+        "inputBytes": 3836,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:f8775fffbe91de468c5d5b3f8ee3244c643f72973267379d7e6577e69b77d614",
+              "path": "stage-prepare-dataset.json",
+              "sizeBytes": 3836
+            },
+            {
+              "digest": "sha256:35ce75077159fefe4a1de7efd1075af4bfeb894fed1e2fafaed40c79417f9ca0",
+              "path": "stage-trial-1.json",
+              "sizeBytes": 556
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:f8775fffbe91de468c5d5b3f8ee3244c643f72973267379d7e6577e69b77d614",
+              "path": "stage-prepare-dataset.json",
+              "sizeBytes": 3836
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:f8775fffbe91de468c5d5b3f8ee3244c643f72973267379d7e6577e69b77d614",
+              "path": "stage-prepare-dataset.json",
+              "sizeBytes": 3836
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:35ce75077159fefe4a1de7efd1075af4bfeb894fed1e2fafaed40c79417f9ca0",
+              "path": "stage-trial-1.json",
+              "sizeBytes": 556
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-trial-1",
+        "outputBytes": 556,
+        "pinned": false,
+        "reclaimedBytes": 4392,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:09:59.500064928Z",
+        "resourceId": "showcase-hyperparameter-search-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "runtimeId": "showcase-hyperparameter-search-local",
+        "sealedAt": "2026-10-20T19:09:58.832766511Z",
+        "sizeBytes": 4392,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-trial-1"
+      },
+      {
+        "activityId": "showcase-hyperparameter-search-local-b881811497-trial-2",
+        "createdAt": "2026-10-20T19:09:55.610190968Z",
+        "driver": "local",
+        "environmentId": "showcase-hyperparameter-search-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-trial-2",
+        "fileCount": 2,
+        "id": "workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-trial-2",
+        "inputBytes": 3836,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:f8775fffbe91de468c5d5b3f8ee3244c643f72973267379d7e6577e69b77d614",
+              "path": "stage-prepare-dataset.json",
+              "sizeBytes": 3836
+            },
+            {
+              "digest": "sha256:d5e20457b107c84df0f07d3ad3e149515dacd7f39d7d85b40418b79d27c28096",
+              "path": "stage-trial-2.json",
+              "sizeBytes": 556
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:f8775fffbe91de468c5d5b3f8ee3244c643f72973267379d7e6577e69b77d614",
+              "path": "stage-prepare-dataset.json",
+              "sizeBytes": 3836
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:f8775fffbe91de468c5d5b3f8ee3244c643f72973267379d7e6577e69b77d614",
+              "path": "stage-prepare-dataset.json",
+              "sizeBytes": 3836
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:d5e20457b107c84df0f07d3ad3e149515dacd7f39d7d85b40418b79d27c28096",
+              "path": "stage-trial-2.json",
+              "sizeBytes": 556
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-trial-2",
+        "outputBytes": 556,
+        "pinned": false,
+        "reclaimedBytes": 4392,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:09:59.507734928Z",
+        "resourceId": "showcase-hyperparameter-search-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "runtimeId": "showcase-hyperparameter-search-local",
+        "sealedAt": "2026-10-20T19:09:58.926489845Z",
+        "sizeBytes": 4392,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-trial-2"
+      },
+      {
+        "activityId": "showcase-hyperparameter-search-local-b881811497-trial-n",
+        "createdAt": "2026-10-20T19:09:55.610190968Z",
+        "driver": "local",
+        "environmentId": "showcase-hyperparameter-search-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-trial-n",
+        "fileCount": 2,
+        "id": "workspace-showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000-showcase-hyperparameter-search-local-b881811497-trial-n",
+        "inputBytes": 3836,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:f8775fffbe91de468c5d5b3f8ee3244c643f72973267379d7e6577e69b77d614",
+              "path": "stage-prepare-dataset.json",
+              "sizeBytes": 3836
+            },
+            {
+              "digest": "sha256:7f7bf5d09a261baa9e3d8c44855d110a5c7899a00fb5566f0e7134847d80b666",
+              "path": "stage-trial-n.json",
+              "sizeBytes": 556
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:f8775fffbe91de468c5d5b3f8ee3244c643f72973267379d7e6577e69b77d614",
+              "path": "stage-prepare-dataset.json",
+              "sizeBytes": 3836
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:f8775fffbe91de468c5d5b3f8ee3244c643f72973267379d7e6577e69b77d614",
+              "path": "stage-prepare-dataset.json",
+              "sizeBytes": 3836
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:7f7bf5d09a261baa9e3d8c44855d110a5c7899a00fb5566f0e7134847d80b666",
+              "path": "stage-trial-n.json",
+              "sizeBytes": 556
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-trial-n",
+        "outputBytes": 556,
+        "pinned": false,
+        "reclaimedBytes": 4392,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:09:59.514104262Z",
+        "resourceId": "showcase-hyperparameter-search-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+        "runtimeId": "showcase-hyperparameter-search-local",
+        "sealedAt": "2026-10-20T19:09:58.921562386Z",
+        "sizeBytes": 4392,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000/showcase-hyperparameter-search-local-b881811497-trial-n"
+      }
+    ]
+  },
+  "runId": "showcase-hyperparameter-search-local-b881811497-run-20261020t190955.472942000",
+  "status": "completed",
+  "workflowId": "showcase-hyperparameter-search-local-b881811497"
+}

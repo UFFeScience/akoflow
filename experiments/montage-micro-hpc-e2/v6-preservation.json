@@ -1,0 +1,12 @@
+{
+  "issue": "AKO-121",
+  "runId": "montage-micro-hpc-e2-real-20261008-v6",
+  "export": "Whole run workspace archives via daemon console API, bounded 4 MiB chunks",
+  "validation": "Remote and local SHA-256 match; complete tar listing succeeds",
+  "archives": [
+    {"target": "montage-gcp-e2-medium-1", "bytes": 280542634, "sha256": "2471390d50a0632ea79b5cb8aecab1b3c53fb0d7b9f660ed4520ab2d59ba26f7"},
+    {"target": "montage-gcp-e2-medium-2", "bytes": 278595230, "sha256": "0ddf5f376174c85f91732a76fb34d9edcb78c5bc4f39c9eafc9301491edf4d12"},
+    {"target": "montage-gcp-fog-e2-micro-04", "bytes": 288542219, "sha256": "6416577b8358e49fba59ae60703cf55b8448dbcb694f19a5ab5d1a6a770d3998"}
+  ],
+  "limitations": ["Archives stay in ignored local storage, not Git", "Previously automatically destroyed micro10 is not covered by these archives"]
+}

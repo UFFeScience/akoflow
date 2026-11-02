@@ -1,0 +1,3128 @@
+{
+  "activityCount": 7,
+  "completedActivityCount": 7,
+  "image": "ghcr.io/uffescience/akoflow-examples/showcase-batch-inference:local-bf08445da17789e2",
+  "imageId": "sha256:bf08445da17789e2ef4cff4795178131e305d8263a0af516780b18a6ec3fba24",
+  "observedAt": "2026-10-20T19:09:41Z",
+  "planId": "showcase-batch-inference-local-db2bb7c2e2-manual-plan-20261020t190931.407428000",
+  "projection": {
+    "activities": [
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-load-model",
+        "allocatedResourceId": "showcase-batch-inference-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "finishedAt": 1792523371.8795776,
+        "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-load-model",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-batch-inference-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-batch-inference-local-db2bb7c2e2-manual-plan-20261020t190931.407428000-showcase-batch-inference-local-db2bb7c2e2-load-model",
+        "plannedResourceId": "showcase-batch-inference-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523371.6387124,
+        "readyAt": 1792523371.6387124,
+        "runtimeId": "showcase-batch-inference-local",
+        "runtimeSeconds": 0.11617112159729004,
+        "startedAt": 1792523371.7634065,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-partition-input",
+        "allocatedResourceId": "showcase-batch-inference-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "finishedAt": 1792523373.2640338,
+        "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-partition-input",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13686704635620117,
+          "preparationFinishedAt": 1792523373.0166082,
+          "preparationStartedAt": 1792523372.876482,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0015196800231933594,
+          "runtimeId": "showcase-batch-inference-local",
+          "transferElapsedSeconds": 0.14012622833251953,
+          "transferWorkSeconds": 0.14012622833251953
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-batch-inference-local-db2bb7c2e2-manual-plan-20261020t190931.407428000-showcase-batch-inference-local-db2bb7c2e2-partition-input",
+        "plannedResourceId": "showcase-batch-inference-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523372.8728364,
+        "readyAt": 1792523372.8728364,
+        "runtimeId": "showcase-batch-inference-local",
+        "runtimeSeconds": 0.11055850982666016,
+        "startedAt": 1792523373.1534753,
+        "status": "completed",
+        "transferBytes": 1131,
+        "transferSeconds": 0.14012622833251953
+      },
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+        "allocatedResourceId": "showcase-batch-inference-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "finishedAt": 1792523375.3861318,
+        "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.22404694557189941,
+          "preparationFinishedAt": 1792523375.030066,
+          "preparationStartedAt": 1792523374.8681672,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.001260519027709961,
+          "runtimeId": "showcase-batch-inference-local",
+          "transferElapsedSeconds": 0.16189885139465332,
+          "transferWorkSeconds": 0.16189885139465332
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-batch-inference-local-db2bb7c2e2-manual-plan-20261020t190931.407428000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+        "plannedResourceId": "showcase-batch-inference-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523374.8629613,
+        "readyAt": 1792523374.8629613,
+        "runtimeId": "showcase-batch-inference-local",
+        "runtimeSeconds": 0.1320188045501709,
+        "startedAt": 1792523375.254113,
+        "status": "completed",
+        "transferBytes": 4658,
+        "transferSeconds": 0.16189885139465332
+      },
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+        "allocatedResourceId": "showcase-batch-inference-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "finishedAt": 1792523375.3915417,
+        "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.21266484260559082,
+          "preparationFinishedAt": 1792523375.0511181,
+          "preparationStartedAt": 1792523374.8711097,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.005042552947998047,
+          "runtimeId": "showcase-batch-inference-local",
+          "transferElapsedSeconds": 0.1800084114074707,
+          "transferWorkSeconds": 0.1800084114074707
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-batch-inference-local-db2bb7c2e2-manual-plan-20261020t190931.407428000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+        "plannedResourceId": "showcase-batch-inference-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523374.8598373,
+        "readyAt": 1792523374.8598373,
+        "runtimeId": "showcase-batch-inference-local",
+        "runtimeSeconds": 0.12775874137878418,
+        "startedAt": 1792523375.263783,
+        "status": "completed",
+        "transferBytes": 4658,
+        "transferSeconds": 0.1800084114074707
+      },
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+        "allocatedResourceId": "showcase-batch-inference-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "finishedAt": 1792523375.4029438,
+        "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.24531292915344238,
+          "preparationFinishedAt": 1792523375.0296986,
+          "preparationStartedAt": 1792523374.8697128,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0036687850952148438,
+          "runtimeId": "showcase-batch-inference-local",
+          "transferElapsedSeconds": 0.15998578071594238,
+          "transferWorkSeconds": 0.15998578071594238
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-batch-inference-local-db2bb7c2e2-manual-plan-20261020t190931.407428000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+        "plannedResourceId": "showcase-batch-inference-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523374.8586457,
+        "readyAt": 1792523374.8586457,
+        "runtimeId": "showcase-batch-inference-local",
+        "runtimeSeconds": 0.12793231010437012,
+        "startedAt": 1792523375.2750115,
+        "status": "completed",
+        "transferBytes": 4658,
+        "transferSeconds": 0.15998578071594238
+      },
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+        "allocatedResourceId": "showcase-batch-inference-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "finishedAt": 1792523377.6996143,
+        "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1493518352508545,
+          "preparationFinishedAt": 1792523377.4388607,
+          "preparationStartedAt": 1792523376.94897,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0034639835357666016,
+          "runtimeId": "showcase-batch-inference-local",
+          "transferElapsedSeconds": 0.48989057540893555,
+          "transferWorkSeconds": 1.1456599235534668
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-batch-inference-local-db2bb7c2e2-manual-plan-20261020t190931.407428000-showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+        "plannedResourceId": "showcase-batch-inference-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523376.943455,
+        "readyAt": 1792523376.943455,
+        "runtimeId": "showcase-batch-inference-local",
+        "runtimeSeconds": 0.11140179634094238,
+        "startedAt": 1792523377.5882125,
+        "status": "completed",
+        "transferBytes": 11980,
+        "transferSeconds": 1.1456599235534668
+      },
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-publish",
+        "allocatedResourceId": "showcase-batch-inference-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "finishedAt": 1792523379.3415387,
+        "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-publish",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14674830436706543,
+          "preparationFinishedAt": 1792523379.0808468,
+          "preparationStartedAt": 1792523378.891379,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0015964508056640625,
+          "runtimeId": "showcase-batch-inference-local",
+          "transferElapsedSeconds": 0.1894676685333252,
+          "transferWorkSeconds": 0.1894676685333252
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-batch-inference-local-db2bb7c2e2-manual-plan-20261020t190931.407428000-showcase-batch-inference-local-db2bb7c2e2-publish",
+        "plannedResourceId": "showcase-batch-inference-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523378.8876884,
+        "readyAt": 1792523378.8876884,
+        "runtimeId": "showcase-batch-inference-local",
+        "runtimeSeconds": 0.11394357681274414,
+        "startedAt": 1792523379.227595,
+        "status": "completed",
+        "transferBytes": 18572,
+        "transferSeconds": 0.1894676685333252
+      }
+    ],
+    "activityAttempts": [
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-load-model",
+        "allocatedResourceId": "showcase-batch-inference-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "finishedAt": 1792523371.8795776,
+        "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-load-model",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-batch-inference-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-batch-inference-local-db2bb7c2e2-manual-plan-20261020t190931.407428000-showcase-batch-inference-local-db2bb7c2e2-load-model",
+        "plannedResourceId": "showcase-batch-inference-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523371.6387124,
+        "readyAt": 1792523371.6387124,
+        "runtimeId": "showcase-batch-inference-local",
+        "runtimeSeconds": 0.11617112159729004,
+        "startedAt": 1792523371.7634065,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-partition-input",
+        "allocatedResourceId": "showcase-batch-inference-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "finishedAt": 1792523373.2640338,
+        "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-partition-input",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13686704635620117,
+          "preparationFinishedAt": 1792523373.0166082,
+          "preparationStartedAt": 1792523372.876482,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0015196800231933594,
+          "runtimeId": "showcase-batch-inference-local",
+          "transferElapsedSeconds": 0.14012622833251953,
+          "transferWorkSeconds": 0.14012622833251953
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-batch-inference-local-db2bb7c2e2-manual-plan-20261020t190931.407428000-showcase-batch-inference-local-db2bb7c2e2-partition-input",
+        "plannedResourceId": "showcase-batch-inference-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523372.8728364,
+        "readyAt": 1792523372.8728364,
+        "runtimeId": "showcase-batch-inference-local",
+        "runtimeSeconds": 0.11055850982666016,
+        "startedAt": 1792523373.1534753,
+        "status": "completed",
+        "transferBytes": 1131,
+        "transferSeconds": 0.14012622833251953
+      },
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+        "allocatedResourceId": "showcase-batch-inference-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "finishedAt": 1792523375.3861318,
+        "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.22404694557189941,
+          "preparationFinishedAt": 1792523375.030066,
+          "preparationStartedAt": 1792523374.8681672,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.001260519027709961,
+          "runtimeId": "showcase-batch-inference-local",
+          "transferElapsedSeconds": 0.16189885139465332,
+          "transferWorkSeconds": 0.16189885139465332
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-batch-inference-local-db2bb7c2e2-manual-plan-20261020t190931.407428000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+        "plannedResourceId": "showcase-batch-inference-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523374.8629613,
+        "readyAt": 1792523374.8629613,
+        "runtimeId": "showcase-batch-inference-local",
+        "runtimeSeconds": 0.1320188045501709,
+        "startedAt": 1792523375.254113,
+        "status": "completed",
+        "transferBytes": 4658,
+        "transferSeconds": 0.16189885139465332
+      },
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+        "allocatedResourceId": "showcase-batch-inference-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "finishedAt": 1792523375.3915417,
+        "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.21266484260559082,
+          "preparationFinishedAt": 1792523375.0511181,
+          "preparationStartedAt": 1792523374.8711097,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.005042552947998047,
+          "runtimeId": "showcase-batch-inference-local",
+          "transferElapsedSeconds": 0.1800084114074707,
+          "transferWorkSeconds": 0.1800084114074707
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-batch-inference-local-db2bb7c2e2-manual-plan-20261020t190931.407428000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+        "plannedResourceId": "showcase-batch-inference-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523374.8598373,
+        "readyAt": 1792523374.8598373,
+        "runtimeId": "showcase-batch-inference-local",
+        "runtimeSeconds": 0.12775874137878418,
+        "startedAt": 1792523375.263783,
+        "status": "completed",
+        "transferBytes": 4658,
+        "transferSeconds": 0.1800084114074707
+      },
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+        "allocatedResourceId": "showcase-batch-inference-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "finishedAt": 1792523375.4029438,
+        "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.24531292915344238,
+          "preparationFinishedAt": 1792523375.0296986,
+          "preparationStartedAt": 1792523374.8697128,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0036687850952148438,
+          "runtimeId": "showcase-batch-inference-local",
+          "transferElapsedSeconds": 0.15998578071594238,
+          "transferWorkSeconds": 0.15998578071594238
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-batch-inference-local-db2bb7c2e2-manual-plan-20261020t190931.407428000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+        "plannedResourceId": "showcase-batch-inference-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523374.8586457,
+        "readyAt": 1792523374.8586457,
+        "runtimeId": "showcase-batch-inference-local",
+        "runtimeSeconds": 0.12793231010437012,
+        "startedAt": 1792523375.2750115,
+        "status": "completed",
+        "transferBytes": 4658,
+        "transferSeconds": 0.15998578071594238
+      },
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+        "allocatedResourceId": "showcase-batch-inference-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "finishedAt": 1792523377.6996143,
+        "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1493518352508545,
+          "preparationFinishedAt": 1792523377.4388607,
+          "preparationStartedAt": 1792523376.94897,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0034639835357666016,
+          "runtimeId": "showcase-batch-inference-local",
+          "transferElapsedSeconds": 0.48989057540893555,
+          "transferWorkSeconds": 1.1456599235534668
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-batch-inference-local-db2bb7c2e2-manual-plan-20261020t190931.407428000-showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+        "plannedResourceId": "showcase-batch-inference-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523376.943455,
+        "readyAt": 1792523376.943455,
+        "runtimeId": "showcase-batch-inference-local",
+        "runtimeSeconds": 0.11140179634094238,
+        "startedAt": 1792523377.5882125,
+        "status": "completed",
+        "transferBytes": 11980,
+        "transferSeconds": 1.1456599235534668
+      },
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-publish",
+        "allocatedResourceId": "showcase-batch-inference-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "finishedAt": 1792523379.3415387,
+        "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-publish",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14674830436706543,
+          "preparationFinishedAt": 1792523379.0808468,
+          "preparationStartedAt": 1792523378.891379,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0015964508056640625,
+          "runtimeId": "showcase-batch-inference-local",
+          "transferElapsedSeconds": 0.1894676685333252,
+          "transferWorkSeconds": 0.1894676685333252
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-batch-inference-local-db2bb7c2e2-manual-plan-20261020t190931.407428000-showcase-batch-inference-local-db2bb7c2e2-publish",
+        "plannedResourceId": "showcase-batch-inference-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523378.8876884,
+        "readyAt": 1792523378.8876884,
+        "runtimeId": "showcase-batch-inference-local",
+        "runtimeSeconds": 0.11394357681274414,
+        "startedAt": 1792523379.227595,
+        "status": "completed",
+        "transferBytes": 18572,
+        "transferSeconds": 0.1894676685333252
+      }
+    ],
+    "artifactMaterializations": null,
+    "artifactTransferRuns": [
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+        "durationSeconds": 0.15998578071594238,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "filesTransferred": 2,
+        "finishedAt": 1792523375.0296986,
+        "id": "transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-a-0",
+        "logicalBytes": 4658,
+        "planId": "transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-a-0",
+        "route": {
+          "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-partition-input",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.091162333,
+          "sourceEnvironmentId": "showcase-batch-inference-v1",
+          "sourceResourceId": "showcase-batch-inference-local-docker",
+          "sshChannelWaitSeconds": 3.75e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-batch-inference-v1",
+          "targetResourceId": "showcase-batch-inference-local-docker"
+        },
+        "startedAt": 1792523374.8697128,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 4658
+      },
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+        "durationSeconds": 0.1800084114074707,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "filesTransferred": 2,
+        "finishedAt": 1792523375.0511181,
+        "id": "transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-b-0",
+        "logicalBytes": 4658,
+        "planId": "transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-b-0",
+        "route": {
+          "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-partition-input",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.08932475100000001,
+          "sourceEnvironmentId": "showcase-batch-inference-v1",
+          "sourceResourceId": "showcase-batch-inference-local-docker",
+          "sshChannelWaitSeconds": 3.75e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-batch-inference-v1",
+          "targetResourceId": "showcase-batch-inference-local-docker"
+        },
+        "startedAt": 1792523374.8711097,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 4658
+      },
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+        "durationSeconds": 0.16189885139465332,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "filesTransferred": 2,
+        "finishedAt": 1792523375.030066,
+        "id": "transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-n-0",
+        "logicalBytes": 4658,
+        "planId": "transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-n-0",
+        "route": {
+          "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-partition-input",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.092955542,
+          "sourceEnvironmentId": "showcase-batch-inference-v1",
+          "sourceResourceId": "showcase-batch-inference-local-docker",
+          "sshChannelWaitSeconds": 2.51e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-batch-inference-v1",
+          "targetResourceId": "showcase-batch-inference-local-docker"
+        },
+        "startedAt": 1792523374.8681672,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 4658
+      },
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+        "durationSeconds": 0.2585132122039795,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "filesTransferred": 3,
+        "finishedAt": 1792523377.2074833,
+        "id": "transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-merge-predictions-0",
+        "logicalBytes": 7165,
+        "planId": "transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-merge-predictions-0",
+        "route": {
+          "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+          "filesTransferred": 3,
+          "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.072552459,
+          "sourceEnvironmentId": "showcase-batch-inference-v1",
+          "sourceResourceId": "showcase-batch-inference-local-docker",
+          "sshChannelWaitSeconds": 4.58e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-batch-inference-v1",
+          "targetResourceId": "showcase-batch-inference-local-docker"
+        },
+        "startedAt": 1792523376.94897,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 7165
+      },
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+        "durationSeconds": 0.39725613594055176,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523377.3462262,
+        "id": "transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-merge-predictions-1",
+        "logicalBytes": 7065,
+        "planId": "transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-merge-predictions-1",
+        "route": {
+          "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09267825,
+          "sourceEnvironmentId": "showcase-batch-inference-v1",
+          "sourceResourceId": "showcase-batch-inference-local-docker",
+          "sshChannelWaitSeconds": 4.17e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-batch-inference-v1",
+          "targetResourceId": "showcase-batch-inference-local-docker"
+        },
+        "startedAt": 1792523376.94897,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 2407
+      },
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+        "durationSeconds": 0.48989057540893555,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523377.4388607,
+        "id": "transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-merge-predictions-2",
+        "logicalBytes": 7066,
+        "planId": "transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-merge-predictions-2",
+        "route": {
+          "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.069117916,
+          "sourceEnvironmentId": "showcase-batch-inference-v1",
+          "sourceResourceId": "showcase-batch-inference-local-docker",
+          "sshChannelWaitSeconds": 2.92e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-batch-inference-v1",
+          "targetResourceId": "showcase-batch-inference-local-docker"
+        },
+        "startedAt": 1792523376.94897,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 2408
+      },
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-partition-input",
+        "durationSeconds": 0.14012622833251953,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523373.0166082,
+        "id": "transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-partition-input-0",
+        "logicalBytes": 1131,
+        "planId": "transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-partition-input-0",
+        "route": {
+          "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-partition-input",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-load-model",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.068956709,
+          "sourceEnvironmentId": "showcase-batch-inference-v1",
+          "sourceResourceId": "showcase-batch-inference-local-docker",
+          "sshChannelWaitSeconds": 6.660000000000001e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-batch-inference-v1",
+          "targetResourceId": "showcase-batch-inference-local-docker"
+        },
+        "startedAt": 1792523372.876482,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 1131
+      },
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-publish",
+        "durationSeconds": 0.1894676685333252,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "filesTransferred": 6,
+        "finishedAt": 1792523379.0808468,
+        "id": "transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-publish-0",
+        "logicalBytes": 18572,
+        "planId": "transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-publish-0",
+        "route": {
+          "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-publish",
+          "filesTransferred": 6,
+          "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.096909582,
+          "sourceEnvironmentId": "showcase-batch-inference-v1",
+          "sourceResourceId": "showcase-batch-inference-local-docker",
+          "sshChannelWaitSeconds": 6.660000000000001e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-batch-inference-v1",
+          "targetResourceId": "showcase-batch-inference-local-docker"
+        },
+        "startedAt": 1792523378.891379,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 18572
+      }
+    ],
+    "cloudBilling": {
+      "asOf": "2026-10-20T19:09:41.70462592Z",
+      "costBasis": "VM compute and boot-disk lifecycle at on-demand marginal rates; not a provider invoice",
+      "estimatedCost": 0,
+      "excludedCosts": [
+        "network-egress",
+        "public-ipv4",
+        "image-storage",
+        "discounts-and-tax"
+      ],
+      "instances": [],
+      "knownCost": 0,
+      "status": "estimated"
+    },
+    "dataLocations": [
+      {
+        "dataObjectInstanceId": "10a308fc1a207cb1c9bf3696212c1333",
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "id": "eae0e8764970809a75538498b0c8629d",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-batch-inference-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "d9a55f336f75b2e73ba144ac8e86c407",
+        "uri": "file:///akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-infer-shard-a/stage-infer-shard-a.json"
+      },
+      {
+        "dataObjectInstanceId": "6d048793df07580d61eefb8c85a5125a",
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "id": "daef1c46b57dadd4230b04bb5abfbb17",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-batch-inference-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "d9a55f336f75b2e73ba144ac8e86c407",
+        "uri": "file:///akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-infer-shard-b/stage-infer-shard-b.json"
+      },
+      {
+        "dataObjectInstanceId": "294b673a7e7b08b87ea04ca6f0202418",
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "id": "738ee2c2ddb448463b0839c50b6f1c59",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-batch-inference-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "d9a55f336f75b2e73ba144ac8e86c407",
+        "uri": "file:///akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-infer-shard-n/stage-infer-shard-n.json"
+      },
+      {
+        "dataObjectInstanceId": "cd87e4b6d0df8a43ae14fc3ad22d9d47",
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "id": "7231458870f136cff8829230600faa88",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-batch-inference-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "d9a55f336f75b2e73ba144ac8e86c407",
+        "uri": "file:///akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-load-model/stage-load-model.json"
+      },
+      {
+        "dataObjectInstanceId": "e6fdb9eddc52acfeff5d9d10d3103c18",
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "id": "2adea2f60a29c995904ac6317a5b7b00",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-batch-inference-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "d9a55f336f75b2e73ba144ac8e86c407",
+        "uri": "file:///akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-merge-predictions/stage-merge-predictions.json"
+      },
+      {
+        "dataObjectInstanceId": "ec287c441648362301e5963bc37f9ff8",
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "id": "960cc641ab8d6bd62b711b61464d8af6",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-batch-inference-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "d9a55f336f75b2e73ba144ac8e86c407",
+        "uri": "file:///akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-partition-input/stage-partition-input.json"
+      },
+      {
+        "dataObjectInstanceId": "1796ca4224eeffa9e42c96fa60654a9e",
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "id": "f43907d72ff2e00ca97fea03ab59756d",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-batch-inference-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "d9a55f336f75b2e73ba144ac8e86c407",
+        "uri": "file:///akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-publish/batch-summary.json"
+      },
+      {
+        "dataObjectInstanceId": "ae769010703eea2c950b5d4823fabca8",
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "id": "65def2cbaaba614357eecba1de73903f",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-batch-inference-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "d9a55f336f75b2e73ba144ac8e86c407",
+        "uri": "file:///akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-publish/predictions.jsonl"
+      },
+      {
+        "dataObjectInstanceId": "ac09278958f2931fe6373e0e5091d46a",
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "id": "c440493ad4cdd2e76ef6a07c8f40dd5b",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-batch-inference-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "d9a55f336f75b2e73ba144ac8e86c407",
+        "uri": "file:///akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-publish/stage-publish.json"
+      }
+    ],
+    "dataObjects": [
+      {
+        "attempt": 1,
+        "checksum": "sha256:713394d957bf9323057ec3bf68d6ab4fc15293ab3b5d79ac2ba314b467846431",
+        "dataObjectId": "2a1cc68680d9a476b6e494a649871904",
+        "discovered": true,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "id": "10a308fc1a207cb1c9bf3696212c1333",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+        "relativePath": "stage-infer-shard-a.json",
+        "sizeBytes": 2507
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:291cdc839b47366b86f5e79819dde4de5d511eb6d15ccb90224077549bfa7b75",
+        "dataObjectId": "eff23074671dcb83cefb7d41d4e551bd",
+        "discovered": true,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "id": "6d048793df07580d61eefb8c85a5125a",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+        "relativePath": "stage-infer-shard-b.json",
+        "sizeBytes": 2407
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:e5b3a0235700e281433af4d2c7fa24093562f1c40d7815ca7c4dc972f12298e9",
+        "dataObjectId": "79fcf121bac65024759a91463a85ac20",
+        "discovered": true,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "id": "294b673a7e7b08b87ea04ca6f0202418",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+        "relativePath": "stage-infer-shard-n.json",
+        "sizeBytes": 2408
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+        "dataObjectId": "0b532757adf471cb31da424ded8e5e57",
+        "discovered": true,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "id": "cd87e4b6d0df8a43ae14fc3ad22d9d47",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-load-model",
+        "relativePath": "stage-load-model.json",
+        "sizeBytes": 1131
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:978a1e274b9c2d544f4cc2324cf24329f8ddf8d7128cc777696375857d95a823",
+        "dataObjectId": "63ea5f4799c6b13bda4e778112497bb2",
+        "discovered": true,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "id": "e6fdb9eddc52acfeff5d9d10d3103c18",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+        "relativePath": "stage-merge-predictions.json",
+        "sizeBytes": 6592
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:a84c0f2dfea068521dd7420db679ea3995dde41e299d5a87eea1dea08b6b7c91",
+        "dataObjectId": "ff60ee89ac55dbc134b07be19a3c8580",
+        "discovered": true,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "id": "ec287c441648362301e5963bc37f9ff8",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-partition-input",
+        "relativePath": "stage-partition-input.json",
+        "sizeBytes": 3527
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:512f062bba2a7586c40861225ec3b592b68b8b2b6eedc40daf68d1f8f5960275",
+        "dataObjectId": "e506b9ffd8be4d86aac372f557a5da43",
+        "discovered": true,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "id": "1796ca4224eeffa9e42c96fa60654a9e",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-publish",
+        "relativePath": "batch-summary.json",
+        "sizeBytes": 82
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:f7227670dbf8e7a126d678897bc8b7869b0b3bbd56770949b6a8f8c79b8d422a",
+        "dataObjectId": "13473fb38a5a14b3ac0a51c115ecf4e2",
+        "discovered": true,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "id": "ae769010703eea2c950b5d4823fabca8",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-publish",
+        "relativePath": "predictions.jsonl",
+        "sizeBytes": 3782
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:fc07f7713586f0622cc06d6f1afc2f2316d40522620643d53e5cc971b4a89a03",
+        "dataObjectId": "372828c8933b5c9ae45b549d1f358022",
+        "discovered": true,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "id": "ac09278958f2931fe6373e0e5091d46a",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-publish",
+        "relativePath": "stage-publish.json",
+        "sizeBytes": 441
+      }
+    ],
+    "dataTransfers": [
+      {
+        "bytes": 1131,
+        "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-partition-input",
+        "cost": 0,
+        "durationSeconds": 0.14012622833251953,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "finishedAt": 1792523373.0166082,
+        "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-partition-input:transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-partition-input-0",
+        "logicalBytes": 1131,
+        "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-load-model",
+        "route": {
+          "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-partition-input",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-load-model",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.068956709,
+          "sourceEnvironmentId": "showcase-batch-inference-v1",
+          "sourceResourceId": "showcase-batch-inference-local-docker",
+          "sshChannelWaitSeconds": 6.660000000000001e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-batch-inference-v1",
+          "targetResourceId": "showcase-batch-inference-local-docker"
+        },
+        "sourceResourceId": "showcase-batch-inference-local-docker",
+        "startedAt": 1792523372.876482,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-batch-inference-local-docker"
+      },
+      {
+        "bytes": 4658,
+        "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+        "cost": 0,
+        "durationSeconds": 0.16189885139465332,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "finishedAt": 1792523375.030066,
+        "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-n:transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-n-0",
+        "logicalBytes": 4658,
+        "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-partition-input",
+        "route": {
+          "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-partition-input",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.092955542,
+          "sourceEnvironmentId": "showcase-batch-inference-v1",
+          "sourceResourceId": "showcase-batch-inference-local-docker",
+          "sshChannelWaitSeconds": 2.51e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-batch-inference-v1",
+          "targetResourceId": "showcase-batch-inference-local-docker"
+        },
+        "sourceResourceId": "showcase-batch-inference-local-docker",
+        "startedAt": 1792523374.8681672,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-batch-inference-local-docker"
+      },
+      {
+        "bytes": 4658,
+        "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+        "cost": 0,
+        "durationSeconds": 0.15998578071594238,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "finishedAt": 1792523375.0296986,
+        "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-a:transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-a-0",
+        "logicalBytes": 4658,
+        "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-partition-input",
+        "route": {
+          "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-partition-input",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.091162333,
+          "sourceEnvironmentId": "showcase-batch-inference-v1",
+          "sourceResourceId": "showcase-batch-inference-local-docker",
+          "sshChannelWaitSeconds": 3.75e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-batch-inference-v1",
+          "targetResourceId": "showcase-batch-inference-local-docker"
+        },
+        "sourceResourceId": "showcase-batch-inference-local-docker",
+        "startedAt": 1792523374.8697128,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-batch-inference-local-docker"
+      },
+      {
+        "bytes": 4658,
+        "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+        "cost": 0,
+        "durationSeconds": 0.1800084114074707,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "finishedAt": 1792523375.0511181,
+        "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-b:transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-b-0",
+        "logicalBytes": 4658,
+        "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-partition-input",
+        "route": {
+          "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-partition-input",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.08932475100000001,
+          "sourceEnvironmentId": "showcase-batch-inference-v1",
+          "sourceResourceId": "showcase-batch-inference-local-docker",
+          "sshChannelWaitSeconds": 3.75e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-batch-inference-v1",
+          "targetResourceId": "showcase-batch-inference-local-docker"
+        },
+        "sourceResourceId": "showcase-batch-inference-local-docker",
+        "startedAt": 1792523374.8711097,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-batch-inference-local-docker"
+      },
+      {
+        "bytes": 7165,
+        "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+        "cost": 0,
+        "durationSeconds": 0.2585132122039795,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "finishedAt": 1792523377.2074833,
+        "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-merge-predictions:transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-merge-predictions-0",
+        "logicalBytes": 7165,
+        "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+        "route": {
+          "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+          "filesTransferred": 3,
+          "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.072552459,
+          "sourceEnvironmentId": "showcase-batch-inference-v1",
+          "sourceResourceId": "showcase-batch-inference-local-docker",
+          "sshChannelWaitSeconds": 4.58e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-batch-inference-v1",
+          "targetResourceId": "showcase-batch-inference-local-docker"
+        },
+        "sourceResourceId": "showcase-batch-inference-local-docker",
+        "startedAt": 1792523376.94897,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-batch-inference-local-docker"
+      },
+      {
+        "bytes": 2407,
+        "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+        "cost": 0,
+        "durationSeconds": 0.39725613594055176,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "finishedAt": 1792523377.3462262,
+        "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-merge-predictions:transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-merge-predictions-1",
+        "logicalBytes": 7065,
+        "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+        "route": {
+          "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09267825,
+          "sourceEnvironmentId": "showcase-batch-inference-v1",
+          "sourceResourceId": "showcase-batch-inference-local-docker",
+          "sshChannelWaitSeconds": 4.17e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-batch-inference-v1",
+          "targetResourceId": "showcase-batch-inference-local-docker"
+        },
+        "sourceResourceId": "showcase-batch-inference-local-docker",
+        "startedAt": 1792523376.94897,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-batch-inference-local-docker"
+      },
+      {
+        "bytes": 2408,
+        "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+        "cost": 0,
+        "durationSeconds": 0.48989057540893555,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "finishedAt": 1792523377.4388607,
+        "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-merge-predictions:transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-merge-predictions-2",
+        "logicalBytes": 7066,
+        "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+        "route": {
+          "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.069117916,
+          "sourceEnvironmentId": "showcase-batch-inference-v1",
+          "sourceResourceId": "showcase-batch-inference-local-docker",
+          "sshChannelWaitSeconds": 2.92e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-batch-inference-v1",
+          "targetResourceId": "showcase-batch-inference-local-docker"
+        },
+        "sourceResourceId": "showcase-batch-inference-local-docker",
+        "startedAt": 1792523376.94897,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-batch-inference-local-docker"
+      },
+      {
+        "bytes": 18572,
+        "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-publish",
+        "cost": 0,
+        "durationSeconds": 0.1894676685333252,
+        "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "finishedAt": 1792523379.0808468,
+        "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-publish:transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-publish-0",
+        "logicalBytes": 18572,
+        "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+        "route": {
+          "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-publish",
+          "filesTransferred": 6,
+          "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.096909582,
+          "sourceEnvironmentId": "showcase-batch-inference-v1",
+          "sourceResourceId": "showcase-batch-inference-local-docker",
+          "sshChannelWaitSeconds": 6.660000000000001e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-batch-inference-v1",
+          "targetResourceId": "showcase-batch-inference-local-docker"
+        },
+        "sourceResourceId": "showcase-batch-inference-local-docker",
+        "startedAt": 1792523378.891379,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-batch-inference-local-docker"
+      }
+    ],
+    "events": [
+      {
+        "aggregateId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.started",
+        "id": "529d1e5ca9777eb1387a7595b8a6be32",
+        "occurredAt": "2026-10-20T19:09:31.606354679Z",
+        "payload": {
+          "mode": "real",
+          "schedulePlanId": "showcase-batch-inference-local-db2bb7c2e2-manual-plan-20261020t190931.407428000"
+        }
+      },
+      {
+        "aggregateId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-load-model",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "af52ef897638846a9fce72b9a058e654",
+        "occurredAt": "2026-10-20T19:09:32.792181347Z",
+        "payload": {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-load-model",
+          "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-load-model",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "b57be45fa439043ad616bdc76a0c79ac",
+        "occurredAt": "2026-10-20T19:09:32.871475972Z",
+        "payload": {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-load-model",
+          "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11617112159729004,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-partition-input",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "2aa690d4f90d8a82e3eeb4ce64d1a764",
+        "occurredAt": "2026-10-20T19:09:34.789563667Z",
+        "payload": {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-partition-input",
+          "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-partition-input",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "5a68c9306068da20433bce45a51ba3b9",
+        "occurredAt": "2026-10-20T19:09:34.857313542Z",
+        "payload": {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-partition-input",
+          "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11055850982666016,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "4b48fbdda78e85d2d5d14560e82c9275",
+        "occurredAt": "2026-10-20T19:09:36.811456292Z",
+        "payload": {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+          "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "a60b76cdf9b8afd37df7da15123b94a0",
+        "occurredAt": "2026-10-20T19:09:36.814546584Z",
+        "payload": {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+          "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "d56632265d4f3593dd407c65b35df5e9",
+        "occurredAt": "2026-10-20T19:09:36.817482209Z",
+        "payload": {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+          "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "67189bbc979f5b2c6eeabb88017d94f0",
+        "occurredAt": "2026-10-20T19:09:36.934072293Z",
+        "payload": {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+          "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+          "failureReason": "",
+          "runtimeSeconds": 0.12775874137878418,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "bcc8b138bd227c9af91f04d49c7777a7",
+        "occurredAt": "2026-10-20T19:09:36.937695543Z",
+        "payload": {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+          "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+          "failureReason": "",
+          "runtimeSeconds": 0.1320188045501709,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "c2c9fe62c0f7a30d70db520569b2b6ed",
+        "occurredAt": "2026-10-20T19:09:36.941831334Z",
+        "payload": {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+          "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+          "failureReason": "",
+          "runtimeSeconds": 0.12793231010437012,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "348b5f7c35c86729a3df0d36c3cd6887",
+        "occurredAt": "2026-10-20T19:09:38.810655377Z",
+        "payload": {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+          "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "629aaf060d6755dbb29ce854c751cb9d",
+        "occurredAt": "2026-10-20T19:09:38.885825627Z",
+        "payload": {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+          "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11140179634094238,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-publish",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "3436be122cc8383cb0b79d88f7dc872f",
+        "occurredAt": "2026-10-20T19:09:40.813366711Z",
+        "payload": {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-publish",
+          "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-publish",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "619af3dc10a7d2b57aa1206ea938e67d",
+        "occurredAt": "2026-10-20T19:09:40.896155711Z",
+        "payload": {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-publish",
+          "executionRunId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11394357681274414,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.completed",
+        "id": "532c0b7ece3da706552d177f43f302bb",
+        "occurredAt": "2026-10-20T19:09:40.898771669Z",
+        "payload": {
+          "cost": 0,
+          "makespanSeconds": 7.578132152557373
+        }
+      }
+    ],
+    "handles": [
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+        "artifacts": {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:713394d957bf9323057ec3bf68d6ab4fc15293ab3b5d79ac2ba314b467846431",
+              "modifiedUnixNano": 1792523375395110000,
+              "path": "stage-infer-shard-a.json",
+              "sizeBytes": 2507
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:713394d957bf9323057ec3bf68d6ab4fc15293ab3b5d79ac2ba314b467846431",
+              "modifiedUnixNano": 1792523375395110000,
+              "path": "stage-infer-shard-a.json",
+              "sizeBytes": 2507
+            },
+            {
+              "checksum": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "modifiedUnixNano": 1792523374985110000,
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            },
+            {
+              "checksum": "sha256:a84c0f2dfea068521dd7420db679ea3995dde41e299d5a87eea1dea08b6b7c91",
+              "modifiedUnixNano": 1792523374985110000,
+              "path": "stage-partition-input.json",
+              "sizeBytes": 3527
+            }
+          ],
+          "finishedAt": 1792523375.4029438,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "modifiedUnixNano": 1792523374985110000,
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            },
+            {
+              "checksum": "sha256:a84c0f2dfea068521dd7420db679ea3995dde41e299d5a87eea1dea08b6b7c91",
+              "modifiedUnixNano": 1792523374985110000,
+              "path": "stage-partition-input.json",
+              "sizeBytes": 3527
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.12793231010437012,
+              "finishedAt": 1792523375.4029438,
+              "phase": "execution",
+              "startedAt": 1792523375.2750115,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+          "runId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+          "runtime": "showcase-batch-inference-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523375.2750115,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 3,
+            "initialFiles": 2,
+            "modifiedFiles": 0,
+            "outputBytes": 2507
+          }
+        },
+        "exitCode": 0,
+        "externalId": "46429ec144776fa5da16aa45c2838e5c5ccff8a98acbc2aef0f05d28c2fe65fb",
+        "finishedAt": 1792523375.4029438,
+        "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+        "log": "{\"activity\": \"infer-shard-a\", \"status\": \"success\", \"resultKeys\": [\"predictions\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-batch-inference-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523375.275019,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+          "submittedAt": 1792523375.2750115
+        },
+        "resourceId": "showcase-batch-inference-local-docker",
+        "runId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "runtimeId": "showcase-batch-inference-local",
+        "startedAt": 1792523375.2750115,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+        "artifacts": {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:291cdc839b47366b86f5e79819dde4de5d511eb6d15ccb90224077549bfa7b75",
+              "modifiedUnixNano": 1792523375385110000,
+              "path": "stage-infer-shard-b.json",
+              "sizeBytes": 2407
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:291cdc839b47366b86f5e79819dde4de5d511eb6d15ccb90224077549bfa7b75",
+              "modifiedUnixNano": 1792523375385110000,
+              "path": "stage-infer-shard-b.json",
+              "sizeBytes": 2407
+            },
+            {
+              "checksum": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "modifiedUnixNano": 1792523375007110000,
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            },
+            {
+              "checksum": "sha256:a84c0f2dfea068521dd7420db679ea3995dde41e299d5a87eea1dea08b6b7c91",
+              "modifiedUnixNano": 1792523375007110000,
+              "path": "stage-partition-input.json",
+              "sizeBytes": 3527
+            }
+          ],
+          "finishedAt": 1792523375.3915417,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "modifiedUnixNano": 1792523375007110000,
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            },
+            {
+              "checksum": "sha256:a84c0f2dfea068521dd7420db679ea3995dde41e299d5a87eea1dea08b6b7c91",
+              "modifiedUnixNano": 1792523375007110000,
+              "path": "stage-partition-input.json",
+              "sizeBytes": 3527
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.12775874137878418,
+              "finishedAt": 1792523375.3915417,
+              "phase": "execution",
+              "startedAt": 1792523375.263783,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+          "runId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+          "runtime": "showcase-batch-inference-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523375.263783,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 3,
+            "initialFiles": 2,
+            "modifiedFiles": 0,
+            "outputBytes": 2407
+          }
+        },
+        "exitCode": 0,
+        "externalId": "b6c62dd9bbbc06582adb6602401b0f787a110788153110404c1d395b9737336b",
+        "finishedAt": 1792523375.3915417,
+        "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+        "log": "{\"activity\": \"infer-shard-b\", \"status\": \"success\", \"resultKeys\": [\"predictions\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-batch-inference-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523375.2637885,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+          "submittedAt": 1792523375.263783
+        },
+        "resourceId": "showcase-batch-inference-local-docker",
+        "runId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "runtimeId": "showcase-batch-inference-local",
+        "startedAt": 1792523375.263783,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+        "artifacts": {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:e5b3a0235700e281433af4d2c7fa24093562f1c40d7815ca7c4dc972f12298e9",
+              "modifiedUnixNano": 1792523375379110000,
+              "path": "stage-infer-shard-n.json",
+              "sizeBytes": 2408
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:e5b3a0235700e281433af4d2c7fa24093562f1c40d7815ca7c4dc972f12298e9",
+              "modifiedUnixNano": 1792523375379110000,
+              "path": "stage-infer-shard-n.json",
+              "sizeBytes": 2408
+            },
+            {
+              "checksum": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "modifiedUnixNano": 1792523374985110000,
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            },
+            {
+              "checksum": "sha256:a84c0f2dfea068521dd7420db679ea3995dde41e299d5a87eea1dea08b6b7c91",
+              "modifiedUnixNano": 1792523374985110000,
+              "path": "stage-partition-input.json",
+              "sizeBytes": 3527
+            }
+          ],
+          "finishedAt": 1792523375.3861318,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "modifiedUnixNano": 1792523374985110000,
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            },
+            {
+              "checksum": "sha256:a84c0f2dfea068521dd7420db679ea3995dde41e299d5a87eea1dea08b6b7c91",
+              "modifiedUnixNano": 1792523374985110000,
+              "path": "stage-partition-input.json",
+              "sizeBytes": 3527
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.1320188045501709,
+              "finishedAt": 1792523375.3861318,
+              "phase": "execution",
+              "startedAt": 1792523375.254113,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+          "runId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+          "runtime": "showcase-batch-inference-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523375.254113,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 3,
+            "initialFiles": 2,
+            "modifiedFiles": 0,
+            "outputBytes": 2408
+          }
+        },
+        "exitCode": 0,
+        "externalId": "78416a857f1fe683804968619e20bb46a42523e3156bad66b1cb84e7ccefe466",
+        "finishedAt": 1792523375.3861318,
+        "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+        "log": "{\"activity\": \"infer-shard-n\", \"status\": \"success\", \"resultKeys\": [\"predictions\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-batch-inference-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523375.2541268,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+          "submittedAt": 1792523375.254113
+        },
+        "resourceId": "showcase-batch-inference-local-docker",
+        "runId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "runtimeId": "showcase-batch-inference-local",
+        "startedAt": 1792523375.254113,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-load-model",
+        "artifacts": {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-load-model",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "modifiedUnixNano": 1792523371872414000,
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "modifiedUnixNano": 1792523371872414000,
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            }
+          ],
+          "finishedAt": 1792523371.8795776,
+          "phases": [
+            {
+              "durationSeconds": 0.11617112159729004,
+              "finishedAt": 1792523371.8795776,
+              "phase": "execution",
+              "startedAt": 1792523371.7634065,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-load-model",
+          "runId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+          "runtime": "showcase-batch-inference-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523371.7634065,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 1,
+            "initialFiles": 0,
+            "modifiedFiles": 0,
+            "outputBytes": 1131
+          }
+        },
+        "exitCode": 0,
+        "externalId": "4363994f9ae696d03164d5bfa8c7c93e79063c17b200a1a4eb481b3c35b7aba8",
+        "finishedAt": 1792523371.8795776,
+        "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-load-model",
+        "log": "{\"activity\": \"load-model\", \"status\": \"success\", \"resultKeys\": [\"model\", \"inputs\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-batch-inference-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-load-model",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523371.7634172,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-load-model",
+          "submittedAt": 1792523371.7634065
+        },
+        "resourceId": "showcase-batch-inference-local-docker",
+        "runId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "runtimeId": "showcase-batch-inference-local",
+        "startedAt": 1792523371.7634065,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+        "artifacts": {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:978a1e274b9c2d544f4cc2324cf24329f8ddf8d7128cc777696375857d95a823",
+              "modifiedUnixNano": 1792523377694110000,
+              "path": "stage-merge-predictions.json",
+              "sizeBytes": 6592
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:713394d957bf9323057ec3bf68d6ab4fc15293ab3b5d79ac2ba314b467846431",
+              "modifiedUnixNano": 1792523377161110000,
+              "path": "stage-infer-shard-a.json",
+              "sizeBytes": 2507
+            },
+            {
+              "checksum": "sha256:291cdc839b47366b86f5e79819dde4de5d511eb6d15ccb90224077549bfa7b75",
+              "modifiedUnixNano": 1792523377303110000,
+              "path": "stage-infer-shard-b.json",
+              "sizeBytes": 2407
+            },
+            {
+              "checksum": "sha256:e5b3a0235700e281433af4d2c7fa24093562f1c40d7815ca7c4dc972f12298e9",
+              "modifiedUnixNano": 1792523377416110000,
+              "path": "stage-infer-shard-n.json",
+              "sizeBytes": 2408
+            },
+            {
+              "checksum": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "modifiedUnixNano": 1792523377161110000,
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            },
+            {
+              "checksum": "sha256:978a1e274b9c2d544f4cc2324cf24329f8ddf8d7128cc777696375857d95a823",
+              "modifiedUnixNano": 1792523377694110000,
+              "path": "stage-merge-predictions.json",
+              "sizeBytes": 6592
+            },
+            {
+              "checksum": "sha256:a84c0f2dfea068521dd7420db679ea3995dde41e299d5a87eea1dea08b6b7c91",
+              "modifiedUnixNano": 1792523377161110000,
+              "path": "stage-partition-input.json",
+              "sizeBytes": 3527
+            }
+          ],
+          "finishedAt": 1792523377.6996143,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:713394d957bf9323057ec3bf68d6ab4fc15293ab3b5d79ac2ba314b467846431",
+              "modifiedUnixNano": 1792523377161110000,
+              "path": "stage-infer-shard-a.json",
+              "sizeBytes": 2507
+            },
+            {
+              "checksum": "sha256:291cdc839b47366b86f5e79819dde4de5d511eb6d15ccb90224077549bfa7b75",
+              "modifiedUnixNano": 1792523377303110000,
+              "path": "stage-infer-shard-b.json",
+              "sizeBytes": 2407
+            },
+            {
+              "checksum": "sha256:e5b3a0235700e281433af4d2c7fa24093562f1c40d7815ca7c4dc972f12298e9",
+              "modifiedUnixNano": 1792523377416110000,
+              "path": "stage-infer-shard-n.json",
+              "sizeBytes": 2408
+            },
+            {
+              "checksum": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "modifiedUnixNano": 1792523377161110000,
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            },
+            {
+              "checksum": "sha256:a84c0f2dfea068521dd7420db679ea3995dde41e299d5a87eea1dea08b6b7c91",
+              "modifiedUnixNano": 1792523377161110000,
+              "path": "stage-partition-input.json",
+              "sizeBytes": 3527
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11140179634094238,
+              "finishedAt": 1792523377.6996143,
+              "phase": "execution",
+              "startedAt": 1792523377.5882125,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+          "runId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+          "runtime": "showcase-batch-inference-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523377.5882125,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 6,
+            "initialFiles": 5,
+            "modifiedFiles": 0,
+            "outputBytes": 6592
+          }
+        },
+        "exitCode": 0,
+        "externalId": "643d437add9354297208fa515a5abda6ab192f8be03346d52160cead68befae1",
+        "finishedAt": 1792523377.6996143,
+        "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+        "log": "{\"activity\": \"merge-predictions\", \"status\": \"success\", \"resultKeys\": [\"predictions\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-batch-inference-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523377.5882196,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+          "submittedAt": 1792523377.5882125
+        },
+        "resourceId": "showcase-batch-inference-local-docker",
+        "runId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "runtimeId": "showcase-batch-inference-local",
+        "startedAt": 1792523377.5882125,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-partition-input",
+        "artifacts": {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-partition-input",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:a84c0f2dfea068521dd7420db679ea3995dde41e299d5a87eea1dea08b6b7c91",
+              "modifiedUnixNano": 1792523373258414000,
+              "path": "stage-partition-input.json",
+              "sizeBytes": 3527
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "modifiedUnixNano": 1792523372993414000,
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            },
+            {
+              "checksum": "sha256:a84c0f2dfea068521dd7420db679ea3995dde41e299d5a87eea1dea08b6b7c91",
+              "modifiedUnixNano": 1792523373258414000,
+              "path": "stage-partition-input.json",
+              "sizeBytes": 3527
+            }
+          ],
+          "finishedAt": 1792523373.2640338,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "modifiedUnixNano": 1792523372993414000,
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11055850982666016,
+              "finishedAt": 1792523373.2640338,
+              "phase": "execution",
+              "startedAt": 1792523373.1534753,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-partition-input",
+          "runId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+          "runtime": "showcase-batch-inference-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523373.1534753,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 3527
+          }
+        },
+        "exitCode": 0,
+        "externalId": "ca99b72e7367c4233486dd47c8a9e9b527116b7781fd8f39f498fbb5616a0faa",
+        "finishedAt": 1792523373.2640338,
+        "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-partition-input",
+        "log": "{\"activity\": \"partition-input\", \"status\": \"success\", \"resultKeys\": [\"model\", \"shards\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-batch-inference-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-partition-input",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523373.153483,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-partition-input",
+          "submittedAt": 1792523373.1534753
+        },
+        "resourceId": "showcase-batch-inference-local-docker",
+        "runId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "runtimeId": "showcase-batch-inference-local",
+        "startedAt": 1792523373.1534753,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-publish",
+        "artifacts": {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-publish",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:512f062bba2a7586c40861225ec3b592b68b8b2b6eedc40daf68d1f8f5960275",
+              "modifiedUnixNano": 1792523379335110000,
+              "path": "batch-summary.json",
+              "sizeBytes": 82
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:f7227670dbf8e7a126d678897bc8b7869b0b3bbd56770949b6a8f8c79b8d422a",
+              "modifiedUnixNano": 1792523379335110000,
+              "path": "predictions.jsonl",
+              "sizeBytes": 3782
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:fc07f7713586f0622cc06d6f1afc2f2316d40522620643d53e5cc971b4a89a03",
+              "modifiedUnixNano": 1792523379335110000,
+              "path": "stage-publish.json",
+              "sizeBytes": 441
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:512f062bba2a7586c40861225ec3b592b68b8b2b6eedc40daf68d1f8f5960275",
+              "modifiedUnixNano": 1792523379335110000,
+              "path": "batch-summary.json",
+              "sizeBytes": 82
+            },
+            {
+              "checksum": "sha256:f7227670dbf8e7a126d678897bc8b7869b0b3bbd56770949b6a8f8c79b8d422a",
+              "modifiedUnixNano": 1792523379335110000,
+              "path": "predictions.jsonl",
+              "sizeBytes": 3782
+            },
+            {
+              "checksum": "sha256:713394d957bf9323057ec3bf68d6ab4fc15293ab3b5d79ac2ba314b467846431",
+              "modifiedUnixNano": 1792523379032110000,
+              "path": "stage-infer-shard-a.json",
+              "sizeBytes": 2507
+            },
+            {
+              "checksum": "sha256:291cdc839b47366b86f5e79819dde4de5d511eb6d15ccb90224077549bfa7b75",
+              "modifiedUnixNano": 1792523379032110000,
+              "path": "stage-infer-shard-b.json",
+              "sizeBytes": 2407
+            },
+            {
+              "checksum": "sha256:e5b3a0235700e281433af4d2c7fa24093562f1c40d7815ca7c4dc972f12298e9",
+              "modifiedUnixNano": 1792523379032110000,
+              "path": "stage-infer-shard-n.json",
+              "sizeBytes": 2408
+            },
+            {
+              "checksum": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "modifiedUnixNano": 1792523379032110000,
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            },
+            {
+              "checksum": "sha256:978a1e274b9c2d544f4cc2324cf24329f8ddf8d7128cc777696375857d95a823",
+              "modifiedUnixNano": 1792523379032110000,
+              "path": "stage-merge-predictions.json",
+              "sizeBytes": 6592
+            },
+            {
+              "checksum": "sha256:a84c0f2dfea068521dd7420db679ea3995dde41e299d5a87eea1dea08b6b7c91",
+              "modifiedUnixNano": 1792523379032110000,
+              "path": "stage-partition-input.json",
+              "sizeBytes": 3527
+            },
+            {
+              "checksum": "sha256:fc07f7713586f0622cc06d6f1afc2f2316d40522620643d53e5cc971b4a89a03",
+              "modifiedUnixNano": 1792523379335110000,
+              "path": "stage-publish.json",
+              "sizeBytes": 441
+            }
+          ],
+          "finishedAt": 1792523379.3415387,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:713394d957bf9323057ec3bf68d6ab4fc15293ab3b5d79ac2ba314b467846431",
+              "modifiedUnixNano": 1792523379032110000,
+              "path": "stage-infer-shard-a.json",
+              "sizeBytes": 2507
+            },
+            {
+              "checksum": "sha256:291cdc839b47366b86f5e79819dde4de5d511eb6d15ccb90224077549bfa7b75",
+              "modifiedUnixNano": 1792523379032110000,
+              "path": "stage-infer-shard-b.json",
+              "sizeBytes": 2407
+            },
+            {
+              "checksum": "sha256:e5b3a0235700e281433af4d2c7fa24093562f1c40d7815ca7c4dc972f12298e9",
+              "modifiedUnixNano": 1792523379032110000,
+              "path": "stage-infer-shard-n.json",
+              "sizeBytes": 2408
+            },
+            {
+              "checksum": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "modifiedUnixNano": 1792523379032110000,
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            },
+            {
+              "checksum": "sha256:978a1e274b9c2d544f4cc2324cf24329f8ddf8d7128cc777696375857d95a823",
+              "modifiedUnixNano": 1792523379032110000,
+              "path": "stage-merge-predictions.json",
+              "sizeBytes": 6592
+            },
+            {
+              "checksum": "sha256:a84c0f2dfea068521dd7420db679ea3995dde41e299d5a87eea1dea08b6b7c91",
+              "modifiedUnixNano": 1792523379032110000,
+              "path": "stage-partition-input.json",
+              "sizeBytes": 3527
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11394357681274414,
+              "finishedAt": 1792523379.3415387,
+              "phase": "execution",
+              "startedAt": 1792523379.227595,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-publish",
+          "runId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+          "runtime": "showcase-batch-inference-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523379.227595,
+          "summary": {
+            "createdFiles": 3,
+            "deletedFiles": 0,
+            "finalFiles": 9,
+            "initialFiles": 6,
+            "modifiedFiles": 0,
+            "outputBytes": 4305
+          }
+        },
+        "exitCode": 0,
+        "externalId": "51a709cd95e70993cc1975a2be949a8a72d8c1b2b6f33a033871f7fba38de194",
+        "finishedAt": 1792523379.3415387,
+        "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-publish",
+        "log": "{\"activity\": \"publish\", \"status\": \"success\", \"resultKeys\": [\"rows\", \"minimum\", \"maximum\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-batch-inference-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-publish",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523379.2276,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-publish",
+          "submittedAt": 1792523379.227595
+        },
+        "resourceId": "showcase-batch-inference-local-docker",
+        "runId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "runtimeId": "showcase-batch-inference-local",
+        "startedAt": 1792523379.227595,
+        "status": "completed"
+      }
+    ],
+    "infrastructureRuns": [],
+    "operationEvents": [],
+    "run": {
+      "activityCount": 7,
+      "breakdown": {
+        "computeSeconds": 0.8397848606109619,
+        "interferenceSeconds": 0,
+        "overheadSeconds": 0,
+        "queueSeconds": 0,
+        "transferSeconds": 1.977146863937378
+      },
+      "completedActivityCount": 7,
+      "cost": 0,
+      "finishedAt": "2026-10-20T19:09:40Z",
+      "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+      "kind": "workflow",
+      "makespanSeconds": 7.578132152557373,
+      "mode": "real",
+      "schedulePlanId": "showcase-batch-inference-local-db2bb7c2e2-manual-plan-20261020t190931.407428000",
+      "seed": 0,
+      "startedAt": "2026-10-20T19:09:31Z",
+      "status": "completed",
+      "title": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+      "transferredBytes": 45657
+    },
+    "timeline": {
+      "computeMakespanSeconds": 7.578132152557373,
+      "coveredWallSeconds": 2.3863704204559326,
+      "finishedAt": 1792523380,
+      "phases": [
+        {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-load-model",
+          "category": "resource-queue",
+          "durationSeconds": 0.1246941089630127,
+          "finishedAt": 1792523371.7634065,
+          "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-load-model:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523371.6387124,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-load-model",
+          "category": "runtime",
+          "durationSeconds": 0.11617112159729004,
+          "finishedAt": 1792523371.8795776,
+          "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-load-model:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523371.7634065,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-partition-input",
+          "category": "resource-queue",
+          "durationSeconds": 0.003645658493041992,
+          "finishedAt": 1792523372.876482,
+          "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-partition-input:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523372.8728364,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-partition-input",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.14012622833251953,
+          "finishedAt": 1792523373.0166082,
+          "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-partition-input:transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-partition-input-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523372.876482,
+          "status": "completed",
+          "transferId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-partition-input:transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-partition-input-0"
+        },
+        {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-partition-input",
+          "category": "launch",
+          "durationSeconds": 0.13686704635620117,
+          "finishedAt": 1792523373.1534753,
+          "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-partition-input:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523373.0166082,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-partition-input",
+          "category": "runtime",
+          "durationSeconds": 0.11055850982666016,
+          "finishedAt": 1792523373.2640338,
+          "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-partition-input:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523373.1534753,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+          "category": "resource-queue",
+          "durationSeconds": 0.01106715202331543,
+          "finishedAt": 1792523374.8697128,
+          "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-a:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523374.8586457,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+          "category": "resource-queue",
+          "durationSeconds": 0.011272430419921875,
+          "finishedAt": 1792523374.8711097,
+          "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-b:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523374.8598373,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+          "category": "resource-queue",
+          "durationSeconds": 0.005205869674682617,
+          "finishedAt": 1792523374.8681672,
+          "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-n:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523374.8629613,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.16189885139465332,
+          "finishedAt": 1792523375.030066,
+          "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-n:transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-n-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523374.8681672,
+          "status": "completed",
+          "transferId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-n:transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-n-0"
+        },
+        {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.15998578071594238,
+          "finishedAt": 1792523375.0296986,
+          "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-a:transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-a-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523374.8697128,
+          "status": "completed",
+          "transferId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-a:transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-a-0"
+        },
+        {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.1800084114074707,
+          "finishedAt": 1792523375.0511181,
+          "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-b:transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-b-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523374.8711097,
+          "status": "completed",
+          "transferId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-b:transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-b-0"
+        },
+        {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+          "category": "launch",
+          "durationSeconds": 0.24531292915344238,
+          "finishedAt": 1792523375.2750115,
+          "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-a:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523375.0296986,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+          "category": "launch",
+          "durationSeconds": 0.22404694557189941,
+          "finishedAt": 1792523375.254113,
+          "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-n:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523375.030066,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+          "category": "launch",
+          "durationSeconds": 0.21266484260559082,
+          "finishedAt": 1792523375.263783,
+          "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-b:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523375.0511181,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+          "category": "runtime",
+          "durationSeconds": 0.1320188045501709,
+          "finishedAt": 1792523375.3861318,
+          "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-n:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523375.254113,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+          "category": "runtime",
+          "durationSeconds": 0.12775874137878418,
+          "finishedAt": 1792523375.3915417,
+          "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-b:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523375.263783,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+          "category": "runtime",
+          "durationSeconds": 0.12793231010437012,
+          "finishedAt": 1792523375.4029438,
+          "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-infer-shard-a:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523375.2750115,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+          "category": "resource-queue",
+          "durationSeconds": 0.005515098571777344,
+          "finishedAt": 1792523376.94897,
+          "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-merge-predictions:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523376.943455,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.2585132122039795,
+          "finishedAt": 1792523377.2074833,
+          "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-merge-predictions:transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-merge-predictions-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523376.94897,
+          "status": "completed",
+          "transferId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-merge-predictions:transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-merge-predictions-0"
+        },
+        {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.39725613594055176,
+          "finishedAt": 1792523377.3462262,
+          "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-merge-predictions:transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-merge-predictions-1",
+          "source": "transfer-observation",
+          "startedAt": 1792523376.94897,
+          "status": "completed",
+          "transferId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-merge-predictions:transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-merge-predictions-1"
+        },
+        {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.48989057540893555,
+          "finishedAt": 1792523377.4388607,
+          "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-merge-predictions:transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-merge-predictions-2",
+          "source": "transfer-observation",
+          "startedAt": 1792523376.94897,
+          "status": "completed",
+          "transferId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-merge-predictions:transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-merge-predictions-2"
+        },
+        {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+          "category": "launch",
+          "durationSeconds": 0.1493518352508545,
+          "finishedAt": 1792523377.5882125,
+          "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-merge-predictions:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523377.4388607,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+          "category": "runtime",
+          "durationSeconds": 0.11140179634094238,
+          "finishedAt": 1792523377.6996143,
+          "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-merge-predictions:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523377.5882125,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-publish",
+          "category": "resource-queue",
+          "durationSeconds": 0.0036907196044921875,
+          "finishedAt": 1792523378.891379,
+          "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-publish:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523378.8876884,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-publish",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.1894676685333252,
+          "finishedAt": 1792523379.0808468,
+          "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-publish:transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-publish-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523378.891379,
+          "status": "completed",
+          "transferId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-publish:transfer-workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-publish-0"
+        },
+        {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-publish",
+          "category": "launch",
+          "durationSeconds": 0.14674830436706543,
+          "finishedAt": 1792523379.227595,
+          "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-publish:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523379.0808468,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-batch-inference-local-db2bb7c2e2-publish",
+          "category": "runtime",
+          "durationSeconds": 0.11394357681274414,
+          "finishedAt": 1792523379.3415387,
+          "id": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000:showcase-batch-inference-local-db2bb7c2e2-publish:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523379.227595,
+          "status": "completed"
+        }
+      ],
+      "startedAt": 1792523371,
+      "totals": {
+        "destroySeconds": 0,
+        "executablePreparationSeconds": 0,
+        "launchSeconds": 1.1149919033050537,
+        "provisionSeconds": 0,
+        "resourceQueueSeconds": 0.16509103775024414,
+        "runtimeSeconds": 0.8397848606109619,
+        "startSeconds": 0,
+        "stopSeconds": 0,
+        "validationSeconds": 0,
+        "workspaceTransferSeconds": 1.977146863937378
+      },
+      "unclassifiedWallSeconds": 6.613629579544067,
+      "wallSeconds": 9
+    },
+    "workspaceLeases": [
+      {
+        "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+        "id": "workspace-lease-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-a-showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+        "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:09:37.442935001Z",
+        "runId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "workspaceId": "workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-a"
+      },
+      {
+        "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+        "id": "workspace-lease-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-b-showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+        "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:09:37.442935001Z",
+        "runId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "workspaceId": "workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-b"
+      },
+      {
+        "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+        "id": "workspace-lease-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-n-showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+        "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:09:37.442935001Z",
+        "runId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "workspaceId": "workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-n"
+      },
+      {
+        "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-partition-input",
+        "id": "workspace-lease-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-load-model-showcase-batch-inference-local-db2bb7c2e2-partition-input",
+        "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-load-model",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:09:33.01955618Z",
+        "runId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "workspaceId": "workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-load-model"
+      },
+      {
+        "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-publish",
+        "id": "workspace-lease-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-merge-predictions-showcase-batch-inference-local-db2bb7c2e2-publish",
+        "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:09:39.086205627Z",
+        "runId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "workspaceId": "workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-merge-predictions"
+      },
+      {
+        "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+        "id": "workspace-lease-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-partition-input-showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+        "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-partition-input",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:09:35.033259208Z",
+        "runId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "workspaceId": "workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-partition-input"
+      },
+      {
+        "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+        "id": "workspace-lease-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-partition-input-showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+        "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-partition-input",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:09:35.052602667Z",
+        "runId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "workspaceId": "workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-partition-input"
+      },
+      {
+        "consumerActivityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+        "id": "workspace-lease-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-partition-input-showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+        "producerActivityId": "showcase-batch-inference-local-db2bb7c2e2-partition-input",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:09:35.033367292Z",
+        "runId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "workspaceId": "workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-partition-input"
+      }
+    ],
+    "workspaces": [
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+        "createdAt": "2026-10-20T19:09:31.608853554Z",
+        "driver": "local",
+        "environmentId": "showcase-batch-inference-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+        "fileCount": 3,
+        "id": "workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+        "inputBytes": 4658,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:713394d957bf9323057ec3bf68d6ab4fc15293ab3b5d79ac2ba314b467846431",
+              "path": "stage-infer-shard-a.json",
+              "sizeBytes": 2507
+            },
+            {
+              "digest": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            },
+            {
+              "digest": "sha256:a84c0f2dfea068521dd7420db679ea3995dde41e299d5a87eea1dea08b6b7c91",
+              "path": "stage-partition-input.json",
+              "sizeBytes": 3527
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            },
+            {
+              "digest": "sha256:a84c0f2dfea068521dd7420db679ea3995dde41e299d5a87eea1dea08b6b7c91",
+              "path": "stage-partition-input.json",
+              "sizeBytes": 3527
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            },
+            {
+              "digest": "sha256:a84c0f2dfea068521dd7420db679ea3995dde41e299d5a87eea1dea08b6b7c91",
+              "path": "stage-partition-input.json",
+              "sizeBytes": 3527
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:713394d957bf9323057ec3bf68d6ab4fc15293ab3b5d79ac2ba314b467846431",
+              "path": "stage-infer-shard-a.json",
+              "sizeBytes": 2507
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-infer-shard-a",
+        "outputBytes": 2507,
+        "pinned": false,
+        "reclaimedBytes": 7165,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:09:37.447055668Z",
+        "resourceId": "showcase-batch-inference-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "runtimeId": "showcase-batch-inference-local",
+        "sealedAt": "2026-10-20T19:09:36.939389334Z",
+        "sizeBytes": 7165,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-infer-shard-a"
+      },
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+        "createdAt": "2026-10-20T19:09:31.608853554Z",
+        "driver": "local",
+        "environmentId": "showcase-batch-inference-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+        "fileCount": 3,
+        "id": "workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+        "inputBytes": 4658,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:291cdc839b47366b86f5e79819dde4de5d511eb6d15ccb90224077549bfa7b75",
+              "path": "stage-infer-shard-b.json",
+              "sizeBytes": 2407
+            },
+            {
+              "digest": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            },
+            {
+              "digest": "sha256:a84c0f2dfea068521dd7420db679ea3995dde41e299d5a87eea1dea08b6b7c91",
+              "path": "stage-partition-input.json",
+              "sizeBytes": 3527
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            },
+            {
+              "digest": "sha256:a84c0f2dfea068521dd7420db679ea3995dde41e299d5a87eea1dea08b6b7c91",
+              "path": "stage-partition-input.json",
+              "sizeBytes": 3527
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            },
+            {
+              "digest": "sha256:a84c0f2dfea068521dd7420db679ea3995dde41e299d5a87eea1dea08b6b7c91",
+              "path": "stage-partition-input.json",
+              "sizeBytes": 3527
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:291cdc839b47366b86f5e79819dde4de5d511eb6d15ccb90224077549bfa7b75",
+              "path": "stage-infer-shard-b.json",
+              "sizeBytes": 2407
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-infer-shard-b",
+        "outputBytes": 2407,
+        "pinned": false,
+        "reclaimedBytes": 7065,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:09:37.451216376Z",
+        "resourceId": "showcase-batch-inference-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "runtimeId": "showcase-batch-inference-local",
+        "sealedAt": "2026-10-20T19:09:36.928859626Z",
+        "sizeBytes": 7065,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-infer-shard-b"
+      },
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+        "createdAt": "2026-10-20T19:09:31.608853554Z",
+        "driver": "local",
+        "environmentId": "showcase-batch-inference-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+        "fileCount": 3,
+        "id": "workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+        "inputBytes": 4658,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:e5b3a0235700e281433af4d2c7fa24093562f1c40d7815ca7c4dc972f12298e9",
+              "path": "stage-infer-shard-n.json",
+              "sizeBytes": 2408
+            },
+            {
+              "digest": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            },
+            {
+              "digest": "sha256:a84c0f2dfea068521dd7420db679ea3995dde41e299d5a87eea1dea08b6b7c91",
+              "path": "stage-partition-input.json",
+              "sizeBytes": 3527
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            },
+            {
+              "digest": "sha256:a84c0f2dfea068521dd7420db679ea3995dde41e299d5a87eea1dea08b6b7c91",
+              "path": "stage-partition-input.json",
+              "sizeBytes": 3527
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            },
+            {
+              "digest": "sha256:a84c0f2dfea068521dd7420db679ea3995dde41e299d5a87eea1dea08b6b7c91",
+              "path": "stage-partition-input.json",
+              "sizeBytes": 3527
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:e5b3a0235700e281433af4d2c7fa24093562f1c40d7815ca7c4dc972f12298e9",
+              "path": "stage-infer-shard-n.json",
+              "sizeBytes": 2408
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-infer-shard-n",
+        "outputBytes": 2408,
+        "pinned": false,
+        "reclaimedBytes": 7066,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:09:37.455749334Z",
+        "resourceId": "showcase-batch-inference-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "runtimeId": "showcase-batch-inference-local",
+        "sealedAt": "2026-10-20T19:09:36.935717084Z",
+        "sizeBytes": 7066,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-infer-shard-n"
+      },
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-load-model",
+        "createdAt": "2026-10-20T19:09:31.608853554Z",
+        "driver": "local",
+        "environmentId": "showcase-batch-inference-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-load-model",
+        "fileCount": 1,
+        "id": "workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-load-model",
+        "inputBytes": 0,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-load-model",
+        "outputBytes": 1131,
+        "pinned": false,
+        "reclaimedBytes": 1131,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:09:33.026035138Z",
+        "resourceId": "showcase-batch-inference-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "runtimeId": "showcase-batch-inference-local",
+        "sealedAt": "2026-10-20T19:09:32.867857513Z",
+        "sizeBytes": 1131,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-load-model"
+      },
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+        "createdAt": "2026-10-20T19:09:31.608853554Z",
+        "driver": "local",
+        "environmentId": "showcase-batch-inference-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+        "fileCount": 6,
+        "id": "workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+        "inputBytes": 11980,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:713394d957bf9323057ec3bf68d6ab4fc15293ab3b5d79ac2ba314b467846431",
+              "path": "stage-infer-shard-a.json",
+              "sizeBytes": 2507
+            },
+            {
+              "digest": "sha256:291cdc839b47366b86f5e79819dde4de5d511eb6d15ccb90224077549bfa7b75",
+              "path": "stage-infer-shard-b.json",
+              "sizeBytes": 2407
+            },
+            {
+              "digest": "sha256:e5b3a0235700e281433af4d2c7fa24093562f1c40d7815ca7c4dc972f12298e9",
+              "path": "stage-infer-shard-n.json",
+              "sizeBytes": 2408
+            },
+            {
+              "digest": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            },
+            {
+              "digest": "sha256:978a1e274b9c2d544f4cc2324cf24329f8ddf8d7128cc777696375857d95a823",
+              "path": "stage-merge-predictions.json",
+              "sizeBytes": 6592
+            },
+            {
+              "digest": "sha256:a84c0f2dfea068521dd7420db679ea3995dde41e299d5a87eea1dea08b6b7c91",
+              "path": "stage-partition-input.json",
+              "sizeBytes": 3527
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:713394d957bf9323057ec3bf68d6ab4fc15293ab3b5d79ac2ba314b467846431",
+              "path": "stage-infer-shard-a.json",
+              "sizeBytes": 2507
+            },
+            {
+              "digest": "sha256:291cdc839b47366b86f5e79819dde4de5d511eb6d15ccb90224077549bfa7b75",
+              "path": "stage-infer-shard-b.json",
+              "sizeBytes": 2407
+            },
+            {
+              "digest": "sha256:e5b3a0235700e281433af4d2c7fa24093562f1c40d7815ca7c4dc972f12298e9",
+              "path": "stage-infer-shard-n.json",
+              "sizeBytes": 2408
+            },
+            {
+              "digest": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            },
+            {
+              "digest": "sha256:a84c0f2dfea068521dd7420db679ea3995dde41e299d5a87eea1dea08b6b7c91",
+              "path": "stage-partition-input.json",
+              "sizeBytes": 3527
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:713394d957bf9323057ec3bf68d6ab4fc15293ab3b5d79ac2ba314b467846431",
+              "path": "stage-infer-shard-a.json",
+              "sizeBytes": 2507
+            },
+            {
+              "digest": "sha256:291cdc839b47366b86f5e79819dde4de5d511eb6d15ccb90224077549bfa7b75",
+              "path": "stage-infer-shard-b.json",
+              "sizeBytes": 2407
+            },
+            {
+              "digest": "sha256:e5b3a0235700e281433af4d2c7fa24093562f1c40d7815ca7c4dc972f12298e9",
+              "path": "stage-infer-shard-n.json",
+              "sizeBytes": 2408
+            },
+            {
+              "digest": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            },
+            {
+              "digest": "sha256:a84c0f2dfea068521dd7420db679ea3995dde41e299d5a87eea1dea08b6b7c91",
+              "path": "stage-partition-input.json",
+              "sizeBytes": 3527
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:978a1e274b9c2d544f4cc2324cf24329f8ddf8d7128cc777696375857d95a823",
+              "path": "stage-merge-predictions.json",
+              "sizeBytes": 6592
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-merge-predictions",
+        "outputBytes": 6592,
+        "pinned": false,
+        "reclaimedBytes": 18572,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:09:39.09336421Z",
+        "resourceId": "showcase-batch-inference-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "runtimeId": "showcase-batch-inference-local",
+        "sealedAt": "2026-10-20T19:09:38.88273221Z",
+        "sizeBytes": 18572,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-merge-predictions"
+      },
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-partition-input",
+        "createdAt": "2026-10-20T19:09:31.608853554Z",
+        "driver": "local",
+        "environmentId": "showcase-batch-inference-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-partition-input",
+        "fileCount": 2,
+        "id": "workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-partition-input",
+        "inputBytes": 1131,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            },
+            {
+              "digest": "sha256:a84c0f2dfea068521dd7420db679ea3995dde41e299d5a87eea1dea08b6b7c91",
+              "path": "stage-partition-input.json",
+              "sizeBytes": 3527
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:a84c0f2dfea068521dd7420db679ea3995dde41e299d5a87eea1dea08b6b7c91",
+              "path": "stage-partition-input.json",
+              "sizeBytes": 3527
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-partition-input",
+        "outputBytes": 3527,
+        "pinned": false,
+        "reclaimedBytes": 4658,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:09:35.0570615Z",
+        "resourceId": "showcase-batch-inference-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "runtimeId": "showcase-batch-inference-local",
+        "sealedAt": "2026-10-20T19:09:34.853967458Z",
+        "sizeBytes": 4658,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-partition-input"
+      },
+      {
+        "activityId": "showcase-batch-inference-local-db2bb7c2e2-publish",
+        "createdAt": "2026-10-20T19:09:31.608853554Z",
+        "driver": "local",
+        "environmentId": "showcase-batch-inference-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-publish",
+        "fileCount": 3,
+        "id": "workspace-showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000-showcase-batch-inference-local-db2bb7c2e2-publish",
+        "inputBytes": 18572,
+        "isFinal": true,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:512f062bba2a7586c40861225ec3b592b68b8b2b6eedc40daf68d1f8f5960275",
+              "path": "batch-summary.json",
+              "sizeBytes": 82
+            },
+            {
+              "digest": "sha256:f7227670dbf8e7a126d678897bc8b7869b0b3bbd56770949b6a8f8c79b8d422a",
+              "path": "predictions.jsonl",
+              "sizeBytes": 3782
+            },
+            {
+              "digest": "sha256:713394d957bf9323057ec3bf68d6ab4fc15293ab3b5d79ac2ba314b467846431",
+              "path": "stage-infer-shard-a.json",
+              "sizeBytes": 2507
+            },
+            {
+              "digest": "sha256:291cdc839b47366b86f5e79819dde4de5d511eb6d15ccb90224077549bfa7b75",
+              "path": "stage-infer-shard-b.json",
+              "sizeBytes": 2407
+            },
+            {
+              "digest": "sha256:e5b3a0235700e281433af4d2c7fa24093562f1c40d7815ca7c4dc972f12298e9",
+              "path": "stage-infer-shard-n.json",
+              "sizeBytes": 2408
+            },
+            {
+              "digest": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            },
+            {
+              "digest": "sha256:978a1e274b9c2d544f4cc2324cf24329f8ddf8d7128cc777696375857d95a823",
+              "path": "stage-merge-predictions.json",
+              "sizeBytes": 6592
+            },
+            {
+              "digest": "sha256:a84c0f2dfea068521dd7420db679ea3995dde41e299d5a87eea1dea08b6b7c91",
+              "path": "stage-partition-input.json",
+              "sizeBytes": 3527
+            },
+            {
+              "digest": "sha256:fc07f7713586f0622cc06d6f1afc2f2316d40522620643d53e5cc971b4a89a03",
+              "path": "stage-publish.json",
+              "sizeBytes": 441
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:713394d957bf9323057ec3bf68d6ab4fc15293ab3b5d79ac2ba314b467846431",
+              "path": "stage-infer-shard-a.json",
+              "sizeBytes": 2507
+            },
+            {
+              "digest": "sha256:291cdc839b47366b86f5e79819dde4de5d511eb6d15ccb90224077549bfa7b75",
+              "path": "stage-infer-shard-b.json",
+              "sizeBytes": 2407
+            },
+            {
+              "digest": "sha256:e5b3a0235700e281433af4d2c7fa24093562f1c40d7815ca7c4dc972f12298e9",
+              "path": "stage-infer-shard-n.json",
+              "sizeBytes": 2408
+            },
+            {
+              "digest": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            },
+            {
+              "digest": "sha256:978a1e274b9c2d544f4cc2324cf24329f8ddf8d7128cc777696375857d95a823",
+              "path": "stage-merge-predictions.json",
+              "sizeBytes": 6592
+            },
+            {
+              "digest": "sha256:a84c0f2dfea068521dd7420db679ea3995dde41e299d5a87eea1dea08b6b7c91",
+              "path": "stage-partition-input.json",
+              "sizeBytes": 3527
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:713394d957bf9323057ec3bf68d6ab4fc15293ab3b5d79ac2ba314b467846431",
+              "path": "stage-infer-shard-a.json",
+              "sizeBytes": 2507
+            },
+            {
+              "digest": "sha256:291cdc839b47366b86f5e79819dde4de5d511eb6d15ccb90224077549bfa7b75",
+              "path": "stage-infer-shard-b.json",
+              "sizeBytes": 2407
+            },
+            {
+              "digest": "sha256:e5b3a0235700e281433af4d2c7fa24093562f1c40d7815ca7c4dc972f12298e9",
+              "path": "stage-infer-shard-n.json",
+              "sizeBytes": 2408
+            },
+            {
+              "digest": "sha256:bc21dcb962845949c26e24144d961b906dd8871e6d3f48a73bb908cf3414f90a",
+              "path": "stage-load-model.json",
+              "sizeBytes": 1131
+            },
+            {
+              "digest": "sha256:978a1e274b9c2d544f4cc2324cf24329f8ddf8d7128cc777696375857d95a823",
+              "path": "stage-merge-predictions.json",
+              "sizeBytes": 6592
+            },
+            {
+              "digest": "sha256:a84c0f2dfea068521dd7420db679ea3995dde41e299d5a87eea1dea08b6b7c91",
+              "path": "stage-partition-input.json",
+              "sizeBytes": 3527
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:512f062bba2a7586c40861225ec3b592b68b8b2b6eedc40daf68d1f8f5960275",
+              "path": "batch-summary.json",
+              "sizeBytes": 82
+            },
+            {
+              "digest": "sha256:f7227670dbf8e7a126d678897bc8b7869b0b3bbd56770949b6a8f8c79b8d422a",
+              "path": "predictions.jsonl",
+              "sizeBytes": 3782
+            },
+            {
+              "digest": "sha256:fc07f7713586f0622cc06d6f1afc2f2316d40522620643d53e5cc971b4a89a03",
+              "path": "stage-publish.json",
+              "sizeBytes": 441
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-publish",
+        "outputBytes": 4305,
+        "pinned": false,
+        "reclaimedBytes": 18572,
+        "releaseReason": "inherited inputs pruned",
+        "resourceId": "showcase-batch-inference-local-docker",
+        "retention": "final",
+        "runId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+        "runtimeId": "showcase-batch-inference-local",
+        "sealedAt": "2026-10-20T19:09:40.891040794Z",
+        "sizeBytes": 4305,
+        "state": "sealed",
+        "uri": "file:///akoflow/workspace/runs/showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000/showcase-batch-inference-local-db2bb7c2e2-publish"
+      }
+    ]
+  },
+  "runId": "showcase-batch-inference-local-db2bb7c2e2-run-20261020t190931.412001000",
+  "status": "completed",
+  "workflowId": "showcase-batch-inference-local-db2bb7c2e2"
+}

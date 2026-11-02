@@ -2,6 +2,7 @@ package slurm
 
 import (
 	"context"
+	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
 	"os"
@@ -23,6 +24,38 @@ type executorFake struct {
 }
 
 type failingStatusExecutor struct{}
+
+type lostSubmissionExecutor struct {
+	jobName          string
+	cancelled        []string
+	cleanupCancelled bool
+}
+
+func (f *lostSubmissionExecutor) Run(ctx context.Context, name string, args []string, input []byte) ([]byte, error) {
+	switch name {
+	case "sbatch":
+		return nil, context.Canceled
+	case "squeue":
+		f.cleanupCancelled = ctx.Err() != nil
+		return []byte("123|" + f.jobName + "\n456|another-attempt\n"), nil
+	case "scancel":
+		f.cancelled = append(f.cancelled, args...)
+		return nil, nil
+	}
+	return nil, fmt.Errorf("unexpected command %s", name)
+}
+
+func TestLostSubmissionCancelsOnlyExactAttemptWithFreshContext(t *testing.T) {
+	execution := domain.ActivityExecutionContext{Run: domain.ExecutionRun{ID: "run"}, Activity: domain.Activity{ID: "analysis", Command: domain.ActivityCommand{Entrypoint: "true"}}, Attempt: 2}
+	f := &lostSubmissionExecutor{jobName: fmt.Sprintf("akoflow-%x", sha256.Sum256([]byte(execution.HandleID())))}
+	a := NewWithConfig(f, Config{ScriptDirectory: t.TempDir(), SubmitFromStdin: true})
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	_, err := a.Start(ctx, execution)
+	if err == nil || f.cleanupCancelled || len(f.cancelled) != 1 || f.cancelled[0] != "123" {
+		t.Fatalf("err=%v cleanupCancelled=%v cancelled=%v", err, f.cleanupCancelled, f.cancelled)
+	}
+}
 
 func (failingStatusExecutor) Run(_ context.Context, name string, _ []string, _ []byte) ([]byte, error) {
 	return nil, fmt.Errorf("%s unavailable", name)
@@ -384,6 +417,76 @@ func TestSentinelAndScontrolStatusParsing(t *testing.T) {
 	}
 }
 
+func TestAtomicTerminalInspectionSkipsAccountingButLegacyDoesNot(t *testing.T) {
+	for _, atomic := range []bool{false, true} {
+		t.Run(fmt.Sprint(atomic), func(t *testing.T) {
+			dir := t.TempDir()
+			sentinel := filepath.Join(dir, "job.status")
+			payload := "state=completed\nexit_code=0\nstarted_at=100\nfinished_at=104\n"
+			if atomic {
+				payload += "publication_complete=1\n"
+			}
+			if err := os.WriteFile(sentinel, []byte(payload), 0600); err != nil {
+				t.Fatal(err)
+			}
+			marker := filepath.Join(dir, "accounting-called")
+			// The shell fixture is portable to hosts without GNU coreutils.
+			if err := os.WriteFile(filepath.Join(dir, "timeout"), []byte("#!/bin/sh\nshift\nexec \"$@\"\n"), 0700); err != nil {
+				t.Fatal(err)
+			}
+			for _, name := range []string{"sacct", "squeue", "scontrol"} {
+				if err := os.WriteFile(filepath.Join(dir, name), []byte("#!/bin/sh\nprintf called >> '"+marker+"'\n"), 0700); err != nil {
+					t.Fatal(err)
+				}
+			}
+			cmd := exec.Command("sh", "-s", "--", "", "", sentinel, "1")
+			cmd.Env = append(os.Environ(), "PATH="+dir+":"+os.Getenv("PATH"))
+			cmd.Stdin = strings.NewReader(slurmInspectionScript)
+			out, err := cmd.CombinedOutput()
+			if err != nil {
+				t.Fatalf("%s: %v", out, err)
+			}
+			sections := inspectionSections(string(out))
+			observed, found := applySentinelStatus(domain.ActivityHandle{}, sections["SENTINEL"])
+			if !found || observed.Status != domain.HandleCompleted || observed.FinishedAt != 104 {
+				t.Fatalf("lost completed sentinel: %+v", observed)
+			}
+			_, err = os.Stat(marker)
+			if atomic && !os.IsNotExist(err) {
+				t.Fatal("atomic terminal sentinel queried accounting")
+			}
+			if !atomic && err != nil {
+				t.Fatal("legacy sentinel skipped bounded accounting")
+			}
+		})
+	}
+}
+
+type deadlineInspectionExecutor struct{ deadline time.Time }
+
+func (e *deadlineInspectionExecutor) Run(ctx context.Context, _ string, _ []string, _ []byte) ([]byte, error) {
+	e.deadline, _ = ctx.Deadline()
+	return nil, context.DeadlineExceeded
+}
+
+func TestInspectionDeadlineDoesNotTurnTimeoutIntoTerminalStatus(t *testing.T) {
+	executor := &deadlineInspectionExecutor{}
+	before := time.Now()
+	handle, err := New(executor, "").Inspect(context.Background(), domain.ActivityHandle{Status: domain.HandleRunning})
+	if err != nil || handle.Status != domain.HandleRunning || handle.Metadata["statusQueryWarning"] == nil {
+		t.Fatalf("timeout changed state: %+v %v", handle, err)
+	}
+	if executor.deadline.IsZero() || executor.deadline.Sub(before) > 31*time.Second {
+		t.Fatal("inspection not bounded")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	_, _ = New(executor, "").Inspect(ctx, handle)
+	if executor.deadline.Sub(time.Now()) > time.Second {
+		t.Fatal("inspection extended caller deadline")
+	}
+}
+
 func TestSentinelRecordsContainerStartupTiming(t *testing.T) {
 	executor := &executorFake{output: []byte("state=completed\nexit_code=0\nstarted_at=100\nallocated_node=bora017\ncontainer_started_at=103.25\n")}
 	handle, found := New(executor, "").sentinelStatus(context.Background(), domain.ActivityHandle{
@@ -425,5 +528,26 @@ func TestConnectionProberChecksSlurmThroughSSH(t *testing.T) {
 	})
 	if !health.Healthy || executor.name != "ssh" || !strings.Contains(health.Message, "cpu") {
 		t.Fatalf("health=%+v command=%s", health, executor.name)
+	}
+}
+
+func TestBatchRootWorkspaceUsesSelectedSharedFilesystem(t *testing.T) {
+	executor := &executorFake{output: []byte("12345\n")}
+	adapter := NewWithConfig(executor, Config{ScriptDirectory: t.TempDir(), SubmitFromStdin: true})
+	execution := domain.ActivityExecutionContext{Run: domain.ExecutionRun{ID: "run"},
+		Activity: domain.Activity{ID: "root",
+			Command: domain.ActivityCommand{Entrypoint: "true"}},
+		Resource: domain.Resource{ID: "diablo",
+			Metadata: map[string]any{"homeDirectory": "/beegfs/scientist"}}}
+	handle, e := adapter.Start(context.Background(), execution)
+	if e != nil {
+		t.Fatal(e)
+	}
+	want := "/beegfs/scientist/akoflow-workspaces/run/root"
+	if handle.Metadata["artifactObservationRoot"] != want {
+		t.Fatalf("root=%v", handle.Metadata["artifactObservationRoot"])
+	}
+	if !strings.Contains(string(executor.input), want) {
+		t.Fatalf("batch script does not use selected workspace: %s", executor.input)
 	}
 }

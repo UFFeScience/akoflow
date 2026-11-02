@@ -1,0 +1,32 @@
+{
+  "issue": "AKO-127",
+  "runId": "montage-micro-hpc-e2-real-20261008-single-lane-v1",
+  "consumerActivityId": "montage-58-fog-hpc-e2-20261006-mdifffitid0000006",
+  "consumerAttempt": 3,
+  "consumerStatus": "completed",
+  "consumerExitCode": 0,
+  "source": "Daemon execution-runs API, observed 2026-10-08",
+  "contract": "Whole-workspace synchronization with authenticated private peer archive transfer, archive integrity/member validation and joint content-conflict merge barrier",
+  "dependencies": [
+    {"index": 0, "status": "completed", "serverPayloadBytes": 0, "compressedArchiveBytes": 142937977, "privateUploadSeconds": 3.824271002},
+    {"index": 1, "status": "completed", "serverPayloadBytes": 0, "compressedArchiveBytes": 145087096, "privateUploadSeconds": 4.433083919}
+  ],
+  "jointPreparationSeconds": 24.184386094,
+  "jointMergeVerificationSeconds": 7.900701004,
+  "transferFinishedAtUnixSeconds": 1791451595.735822,
+  "consumerStartedAtUnixSeconds": 1791451609.2905407,
+  "consumerFinishedAtUnixSeconds": 1791451632.0402796,
+  "executionBarrierVerified": true,
+  "previousGatewayAttempt": {
+    "uploadSeconds": [139.627520438, 139.690869231],
+    "jointPreparationSeconds": 162.541874742,
+    "jointMergeVerificationSeconds": 8.674259296
+  },
+  "limitations": [
+    "Recovered execution; destination files may reuse valid materialization from an earlier preparation. This is not a controlled cold-workspace benchmark.",
+    "Joint preparation and merge durations are shared barriers and must each be counted once, not once per dependency.",
+    "Server payload bytes exclude control-plane SSH traffic. Archive bytes still traverse the cloud private network.",
+    "Consumer timestamps measure the observed task interval, not independently verified native Docker compute duration.",
+    "This validates a transfer path and consumer barrier, not completion of the entire 58-activity campaign."
+  ]
+}

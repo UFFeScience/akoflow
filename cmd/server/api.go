@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -23,6 +24,7 @@ import (
 	databaseprovenance "github.com/UFFeScience/akoflow/internal/infrastructure/database/provenance"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/instancearchive"
 	planningplugin "github.com/UFFeScience/akoflow/internal/infrastructure/plugins/planning"
+	"github.com/UFFeScience/akoflow/internal/mcpcontrol"
 	"github.com/UFFeScience/akoflow/internal/provider"
 	ansiblecloud "github.com/UFFeScience/akoflow/internal/provider/cloud/ansible"
 	gcpcloud "github.com/UFFeScience/akoflow/internal/provider/cloud/gcp"
@@ -48,7 +50,7 @@ func buildCloudProvisioner(
 		sshKeys,
 		terraformcloud.Runner{Root: settings.TerraformWorkspace, Binary: settings.TerraformBinary},
 		ansiblecloud.Runner{Root: settings.TerraformWorkspace, Binary: settings.AnsiblePlaybookBinary},
-	)
+	).WithHostTrustVerifier(gcpcloud.HostVerifier{Catalog: gcpcloud.New(nil), Root: filepath.Join("storage", "credentials", "ssh", "cloud-generations")})
 }
 
 func buildAPI(
@@ -75,7 +77,7 @@ func buildAPI(
 		}
 		browsers[domain.StorageLocal], browsers[domain.StoragePVC], browsers[domain.StorageNFS], browsers[domain.StorageLustre] = fs, fs, fs, fs
 	}
-	ssh := sshfilesystem.New(storage.environments, provider.OSCommandExecutor{})
+	ssh := sshfilesystem.New(storage.environments, provider.OSCommandExecutor{}).WithCloudStore(storage.cloud)
 	browsers[domain.StorageSSH] = ssh
 	manager := appbuild.Manager{Root: settings.ArtifactStoreRoot, MaxBytes: settings.BuildContextMaxBytes, Catalog: storage.data}
 	manager.Executor = appbuild.Executor{Catalog: storage.data, Contexts: manager, Runner: provider.OSCommandExecutor{}, Buildctl: settings.Buildctl, Apptainer: settings.Apptainer, ArtifactStoreRoot: settings.ArtifactStoreRoot}
@@ -118,7 +120,7 @@ func buildAPI(
 		Audit:               storage.audit,
 		Console:             console,
 		Terminal:            terminal,
-		Storage:             appstorage.NewBrowserCoordinator(storage.storage, browsers),
+		Storage:             appstorage.NewBrowserCoordinator(appstorage.CloudWorkspaceCatalog{Catalog: storage.storage, Cloud: storage.cloud}, browsers),
 		Build:               manager,
 		Planning:            planning,
 		PlanningStore:       storage.plans,
@@ -132,6 +134,9 @@ func buildAPI(
 		ReadOnly:            storage.readOnly,
 		Restart:             restart,
 		FactoryReset: func(_ context.Context) error {
+			if err := mcpcontrol.ScheduleReset(mcpcontrol.StateDirectory(settings.MCPStateDirectory, instancearchive.ResolveDatabasePath())); err != nil {
+				return fmt.Errorf("schedule MCP credential reset: %w", err)
+			}
 			if err := database.ScheduleFactoryReset(instancearchive.ResolveDatabasePath()); err != nil {
 				return err
 			}

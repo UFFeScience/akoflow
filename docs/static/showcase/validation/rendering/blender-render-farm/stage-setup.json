@@ -1,0 +1,13 @@
+{
+  "dependencies": [],
+  "executionMode": "local-container",
+  "finishedAt": "2026-10-20T19:23:21.470878Z",
+  "result": {
+    "commandCompleted": true,
+    "stdout": "Blender 4.0.2\nInfo: Total files 0 | Changed 0 | Failed 0\nInfo: Saved \"scene.blend\"\n\nBlender quit"
+  },
+  "showcase": "blender-render-farm",
+  "stage": "setup",
+  "startedAt": "2026-10-20T19:23:20.56479Z",
+  "status": "success"
+}

@@ -18,6 +18,9 @@ type OSCommandExecutor struct{}
 
 func (OSCommandExecutor) Run(ctx context.Context, name string, args []string, input []byte) ([]byte, error) {
 	command := exec.CommandContext(ctx, name, args...)
+	// ProxyCommand grandchildren can retain stdout/stderr after ssh exits or
+	// is cancelled. Bound pipe draining without limiting a live command's work.
+	command.WaitDelay = 2 * time.Second
 	command.Stdin = bytes.NewReader(input)
 	output, err := command.CombinedOutput()
 	if err != nil {

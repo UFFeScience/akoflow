@@ -1,0 +1,34 @@
+{
+  "artifactSha256": {
+    "evaluation.json": "72503f755174bf5a879c018e77afd65ed0abf3910274d135da13bfc164689b78",
+    "index.json": "782f5127e3d4f2b75c985f1b2d515bfb5d8719712b5b00e41fd8421b1e5c3f8f"
+  },
+  "completedActivities": 8,
+  "dependencyWaves": [
+    [
+      "collect-documents"
+    ],
+    [
+      "clean"
+    ],
+    [
+      "chunk"
+    ],
+    [
+      "embed"
+    ],
+    [
+      "build-index"
+    ],
+    [
+      "retrieval-tests",
+      "answer-tests"
+    ],
+    [
+      "publish"
+    ]
+  ],
+  "executionMode": "local-process",
+  "mode": "local-workload",
+  "schedulingPolicy": "ready activities with bounded concurrency"
+}

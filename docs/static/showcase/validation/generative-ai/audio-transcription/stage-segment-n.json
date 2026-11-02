@@ -1,0 +1,24 @@
+{
+  "dependencies": [
+    "segment"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:45.887258Z",
+  "finishedAtUnixNs": 1792523565882210000,
+  "inputDigest": "9951b56e42169a516ac779ddc3c7c60da5f6ede6732bb1ea93bd1011b1366067",
+  "result": {
+    "audio": "segment-n.wav",
+    "tokens": [
+      "data",
+      "science",
+      "ready"
+    ],
+    "transcript": "data science ready"
+  },
+  "showcase": "audio-transcription",
+  "stage": "segment-n",
+  "startedAt": "2026-10-20T19:12:45.840834Z",
+  "startedAtUnixNs": 1792523565881054000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

@@ -1,0 +1,2961 @@
+{
+  "activityCount": 6,
+  "completedActivityCount": 6,
+  "image": "ghcr.io/uffescience/akoflow-examples/showcase-training-with-mlflow:local-15903c29132e7968",
+  "imageId": "sha256:15903c29132e79681ae2964a94664bc1d8aec9cb3ee32d3a3d82ad62a4ef66c8",
+  "observedAt": "2026-10-20T19:13:15Z",
+  "planId": "showcase-training-with-mlflow-local-48fb3dd5e7-manual-plan-20261020t191305.433100000",
+  "projection": {
+    "activities": [
+      {
+        "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data",
+        "allocatedResourceId": "showcase-training-with-mlflow-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "finishedAt": 1792523585.8065217,
+        "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-training-with-mlflow-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-training-with-mlflow-local-48fb3dd5e7-manual-plan-20261020t191305.433100000-showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data",
+        "plannedResourceId": "showcase-training-with-mlflow-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523585.630478,
+        "readyAt": 1792523585.630478,
+        "runtimeId": "showcase-training-with-mlflow-local",
+        "runtimeSeconds": 0.023839950561523438,
+        "startedAt": 1792523585.7826817,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+        "allocatedResourceId": "showcase-training-with-mlflow-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "finishedAt": 1792523587.2596686,
+        "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13126015663146973,
+          "preparationFinishedAt": 1792523587.101525,
+          "preparationStartedAt": 1792523586.908273,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0014607906341552734,
+          "runtimeId": "showcase-training-with-mlflow-local",
+          "transferElapsedSeconds": 0.1932520866394043,
+          "transferWorkSeconds": 0.1932520866394043
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-training-with-mlflow-local-48fb3dd5e7-manual-plan-20261020t191305.433100000-showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+        "plannedResourceId": "showcase-training-with-mlflow-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523586.9048362,
+        "readyAt": 1792523586.9048362,
+        "runtimeId": "showcase-training-with-mlflow-local",
+        "runtimeSeconds": 0.026883363723754883,
+        "startedAt": 1792523587.2327852,
+        "status": "completed",
+        "transferBytes": 3858,
+        "transferSeconds": 0.1932520866394043
+      },
+      {
+        "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-train",
+        "allocatedResourceId": "showcase-training-with-mlflow-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "finishedAt": 1792523589.2506588,
+        "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-train",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1498115062713623,
+          "preparationFinishedAt": 1792523589.076605,
+          "preparationStartedAt": 1792523588.9039848,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0014331340789794922,
+          "runtimeId": "showcase-training-with-mlflow-local",
+          "transferElapsedSeconds": 0.17262029647827148,
+          "transferWorkSeconds": 0.17262029647827148
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-training-with-mlflow-local-48fb3dd5e7-manual-plan-20261020t191305.433100000-showcase-training-with-mlflow-local-48fb3dd5e7-train",
+        "plannedResourceId": "showcase-training-with-mlflow-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523588.90021,
+        "readyAt": 1792523588.90021,
+        "runtimeId": "showcase-training-with-mlflow-local",
+        "runtimeSeconds": 0.024242162704467773,
+        "startedAt": 1792523589.2264166,
+        "status": "completed",
+        "transferBytes": 7707,
+        "transferSeconds": 0.17262029647827148
+      },
+      {
+        "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+        "allocatedResourceId": "showcase-training-with-mlflow-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "finishedAt": 1792523591.2181473,
+        "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1502230167388916,
+          "preparationFinishedAt": 1792523591.0450382,
+          "preparationStartedAt": 1792523590.9031558,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0018177032470703125,
+          "runtimeId": "showcase-training-with-mlflow-local",
+          "transferElapsedSeconds": 0.14188241958618164,
+          "transferWorkSeconds": 0.14188241958618164
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-training-with-mlflow-local-48fb3dd5e7-manual-plan-20261020t191305.433100000-showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+        "plannedResourceId": "showcase-training-with-mlflow-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523590.8994334,
+        "readyAt": 1792523590.8994334,
+        "runtimeId": "showcase-training-with-mlflow-local",
+        "runtimeSeconds": 0.022886037826538086,
+        "startedAt": 1792523591.1952612,
+        "status": "completed",
+        "transferBytes": 11691,
+        "transferSeconds": 0.14188241958618164
+      },
+      {
+        "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+        "allocatedResourceId": "showcase-training-with-mlflow-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "finishedAt": 1792523594.8345978,
+        "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.19385099411010742,
+          "preparationFinishedAt": 1792523593.0828104,
+          "preparationStartedAt": 1792523592.901372,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0024886131286621094,
+          "runtimeId": "showcase-training-with-mlflow-local",
+          "transferElapsedSeconds": 0.18143844604492188,
+          "transferWorkSeconds": 0.18143844604492188
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-training-with-mlflow-local-48fb3dd5e7-manual-plan-20261020t191305.433100000-showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+        "plannedResourceId": "showcase-training-with-mlflow-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523592.8948872,
+        "readyAt": 1792523592.8948872,
+        "runtimeId": "showcase-training-with-mlflow-local",
+        "runtimeSeconds": 1.557936429977417,
+        "startedAt": 1792523593.2766614,
+        "status": "completed",
+        "transferBytes": 15976,
+        "transferSeconds": 0.18143844604492188
+      },
+      {
+        "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+        "allocatedResourceId": "showcase-training-with-mlflow-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "finishedAt": 1792523593.3098478,
+        "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.20302510261535645,
+          "preparationFinishedAt": 1792523593.083601,
+          "preparationStartedAt": 1792523592.9001584,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.002281665802001953,
+          "runtimeId": "showcase-training-with-mlflow-local",
+          "transferElapsedSeconds": 0.1834425926208496,
+          "transferWorkSeconds": 0.1834425926208496
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-training-with-mlflow-local-48fb3dd5e7-manual-plan-20261020t191305.433100000-showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+        "plannedResourceId": "showcase-training-with-mlflow-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523592.8959227,
+        "readyAt": 1792523592.8959227,
+        "runtimeId": "showcase-training-with-mlflow-local",
+        "runtimeSeconds": 0.023221731185913086,
+        "startedAt": 1792523593.286626,
+        "status": "completed",
+        "transferBytes": 15976,
+        "transferSeconds": 0.1834425926208496
+      }
+    ],
+    "activityAttempts": [
+      {
+        "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data",
+        "allocatedResourceId": "showcase-training-with-mlflow-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "finishedAt": 1792523585.8065217,
+        "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-training-with-mlflow-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-training-with-mlflow-local-48fb3dd5e7-manual-plan-20261020t191305.433100000-showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data",
+        "plannedResourceId": "showcase-training-with-mlflow-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523585.630478,
+        "readyAt": 1792523585.630478,
+        "runtimeId": "showcase-training-with-mlflow-local",
+        "runtimeSeconds": 0.023839950561523438,
+        "startedAt": 1792523585.7826817,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+        "allocatedResourceId": "showcase-training-with-mlflow-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "finishedAt": 1792523587.2596686,
+        "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13126015663146973,
+          "preparationFinishedAt": 1792523587.101525,
+          "preparationStartedAt": 1792523586.908273,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0014607906341552734,
+          "runtimeId": "showcase-training-with-mlflow-local",
+          "transferElapsedSeconds": 0.1932520866394043,
+          "transferWorkSeconds": 0.1932520866394043
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-training-with-mlflow-local-48fb3dd5e7-manual-plan-20261020t191305.433100000-showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+        "plannedResourceId": "showcase-training-with-mlflow-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523586.9048362,
+        "readyAt": 1792523586.9048362,
+        "runtimeId": "showcase-training-with-mlflow-local",
+        "runtimeSeconds": 0.026883363723754883,
+        "startedAt": 1792523587.2327852,
+        "status": "completed",
+        "transferBytes": 3858,
+        "transferSeconds": 0.1932520866394043
+      },
+      {
+        "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-train",
+        "allocatedResourceId": "showcase-training-with-mlflow-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "finishedAt": 1792523589.2506588,
+        "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-train",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1498115062713623,
+          "preparationFinishedAt": 1792523589.076605,
+          "preparationStartedAt": 1792523588.9039848,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0014331340789794922,
+          "runtimeId": "showcase-training-with-mlflow-local",
+          "transferElapsedSeconds": 0.17262029647827148,
+          "transferWorkSeconds": 0.17262029647827148
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-training-with-mlflow-local-48fb3dd5e7-manual-plan-20261020t191305.433100000-showcase-training-with-mlflow-local-48fb3dd5e7-train",
+        "plannedResourceId": "showcase-training-with-mlflow-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523588.90021,
+        "readyAt": 1792523588.90021,
+        "runtimeId": "showcase-training-with-mlflow-local",
+        "runtimeSeconds": 0.024242162704467773,
+        "startedAt": 1792523589.2264166,
+        "status": "completed",
+        "transferBytes": 7707,
+        "transferSeconds": 0.17262029647827148
+      },
+      {
+        "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+        "allocatedResourceId": "showcase-training-with-mlflow-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "finishedAt": 1792523591.2181473,
+        "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1502230167388916,
+          "preparationFinishedAt": 1792523591.0450382,
+          "preparationStartedAt": 1792523590.9031558,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0018177032470703125,
+          "runtimeId": "showcase-training-with-mlflow-local",
+          "transferElapsedSeconds": 0.14188241958618164,
+          "transferWorkSeconds": 0.14188241958618164
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-training-with-mlflow-local-48fb3dd5e7-manual-plan-20261020t191305.433100000-showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+        "plannedResourceId": "showcase-training-with-mlflow-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523590.8994334,
+        "readyAt": 1792523590.8994334,
+        "runtimeId": "showcase-training-with-mlflow-local",
+        "runtimeSeconds": 0.022886037826538086,
+        "startedAt": 1792523591.1952612,
+        "status": "completed",
+        "transferBytes": 11691,
+        "transferSeconds": 0.14188241958618164
+      },
+      {
+        "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+        "allocatedResourceId": "showcase-training-with-mlflow-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "finishedAt": 1792523594.8345978,
+        "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.19385099411010742,
+          "preparationFinishedAt": 1792523593.0828104,
+          "preparationStartedAt": 1792523592.901372,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0024886131286621094,
+          "runtimeId": "showcase-training-with-mlflow-local",
+          "transferElapsedSeconds": 0.18143844604492188,
+          "transferWorkSeconds": 0.18143844604492188
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-training-with-mlflow-local-48fb3dd5e7-manual-plan-20261020t191305.433100000-showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+        "plannedResourceId": "showcase-training-with-mlflow-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523592.8948872,
+        "readyAt": 1792523592.8948872,
+        "runtimeId": "showcase-training-with-mlflow-local",
+        "runtimeSeconds": 1.557936429977417,
+        "startedAt": 1792523593.2766614,
+        "status": "completed",
+        "transferBytes": 15976,
+        "transferSeconds": 0.18143844604492188
+      },
+      {
+        "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+        "allocatedResourceId": "showcase-training-with-mlflow-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "finishedAt": 1792523593.3098478,
+        "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.20302510261535645,
+          "preparationFinishedAt": 1792523593.083601,
+          "preparationStartedAt": 1792523592.9001584,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.002281665802001953,
+          "runtimeId": "showcase-training-with-mlflow-local",
+          "transferElapsedSeconds": 0.1834425926208496,
+          "transferWorkSeconds": 0.1834425926208496
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-training-with-mlflow-local-48fb3dd5e7-manual-plan-20261020t191305.433100000-showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+        "plannedResourceId": "showcase-training-with-mlflow-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523592.8959227,
+        "readyAt": 1792523592.8959227,
+        "runtimeId": "showcase-training-with-mlflow-local",
+        "runtimeSeconds": 0.023221731185913086,
+        "startedAt": 1792523593.286626,
+        "status": "completed",
+        "transferBytes": 15976,
+        "transferSeconds": 0.1834425926208496
+      }
+    ],
+    "artifactMaterializations": null,
+    "artifactTransferRuns": [
+      {
+        "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+        "durationSeconds": 0.14188241958618164,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "filesTransferred": 4,
+        "finishedAt": 1792523591.0450382,
+        "id": "transfer-workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-evaluate-0",
+        "logicalBytes": 11691,
+        "planId": "transfer-workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-evaluate-0",
+        "route": {
+          "consumerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+          "filesTransferred": 4,
+          "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-train",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.072583166,
+          "sourceEnvironmentId": "showcase-training-with-mlflow-v1",
+          "sourceResourceId": "showcase-training-with-mlflow-local-docker",
+          "sshChannelWaitSeconds": 5.84e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-training-with-mlflow-v1",
+          "targetResourceId": "showcase-training-with-mlflow-local-docker"
+        },
+        "startedAt": 1792523590.9031558,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 11691
+      },
+      {
+        "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+        "durationSeconds": 0.18143844604492188,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "filesTransferred": 7,
+        "finishedAt": 1792523593.0828104,
+        "id": "transfer-workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run-0",
+        "logicalBytes": 15976,
+        "planId": "transfer-workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run-0",
+        "route": {
+          "consumerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+          "filesTransferred": 7,
+          "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.091279,
+          "sourceEnvironmentId": "showcase-training-with-mlflow-v1",
+          "sourceResourceId": "showcase-training-with-mlflow-local-docker",
+          "sshChannelWaitSeconds": 3.75e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-training-with-mlflow-v1",
+          "targetResourceId": "showcase-training-with-mlflow-local-docker"
+        },
+        "startedAt": 1792523592.901372,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 15976
+      },
+      {
+        "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+        "durationSeconds": 0.1834425926208496,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "filesTransferred": 7,
+        "finishedAt": 1792523593.083601,
+        "id": "transfer-workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-register-model-0",
+        "logicalBytes": 15976,
+        "planId": "transfer-workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-register-model-0",
+        "route": {
+          "consumerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+          "filesTransferred": 7,
+          "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09240158300000001,
+          "sourceEnvironmentId": "showcase-training-with-mlflow-v1",
+          "sourceResourceId": "showcase-training-with-mlflow-local-docker",
+          "sshChannelWaitSeconds": 4.16e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-training-with-mlflow-v1",
+          "targetResourceId": "showcase-training-with-mlflow-local-docker"
+        },
+        "startedAt": 1792523592.9001584,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 15976
+      },
+      {
+        "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-train",
+        "durationSeconds": 0.17262029647827148,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "filesTransferred": 2,
+        "finishedAt": 1792523589.076605,
+        "id": "transfer-workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-train-0",
+        "logicalBytes": 7707,
+        "planId": "transfer-workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-train-0",
+        "route": {
+          "consumerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-train",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.098135959,
+          "sourceEnvironmentId": "showcase-training-with-mlflow-v1",
+          "sourceResourceId": "showcase-training-with-mlflow-local-docker",
+          "sshChannelWaitSeconds": 4.17e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-training-with-mlflow-v1",
+          "targetResourceId": "showcase-training-with-mlflow-local-docker"
+        },
+        "startedAt": 1792523588.9039848,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 7707
+      },
+      {
+        "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+        "durationSeconds": 0.1932520866394043,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523587.101525,
+        "id": "transfer-workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-validate-0",
+        "logicalBytes": 3858,
+        "planId": "transfer-workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-validate-0",
+        "route": {
+          "consumerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.096279958,
+          "sourceEnvironmentId": "showcase-training-with-mlflow-v1",
+          "sourceResourceId": "showcase-training-with-mlflow-local-docker",
+          "sshChannelWaitSeconds": 4.99e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-training-with-mlflow-v1",
+          "targetResourceId": "showcase-training-with-mlflow-local-docker"
+        },
+        "startedAt": 1792523586.908273,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 3858
+      }
+    ],
+    "cloudBilling": {
+      "asOf": "2026-10-20T19:13:15.872949713Z",
+      "costBasis": "VM compute and boot-disk lifecycle at on-demand marginal rates; not a provider invoice",
+      "estimatedCost": 0,
+      "excludedCosts": [
+        "network-egress",
+        "public-ipv4",
+        "image-storage",
+        "discounts-and-tax"
+      ],
+      "instances": [],
+      "knownCost": 0,
+      "status": "estimated"
+    },
+    "dataLocations": [
+      {
+        "dataObjectInstanceId": "63f415cf61986ae9f6cdb2f428972952",
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "id": "1c19b4945fb6577152f7399f8d9a4c75",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-training-with-mlflow-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "04bdfbbfdb16d1908a48483ba3cee727",
+        "uri": "file:///akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-evaluate/metrics.json"
+      },
+      {
+        "dataObjectInstanceId": "a07ee547d4a74e316de580ed43832ec0",
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "id": "9b7abf4f4d436496300a11805fe42e94",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-training-with-mlflow-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "04bdfbbfdb16d1908a48483ba3cee727",
+        "uri": "file:///akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-evaluate/report.html"
+      },
+      {
+        "dataObjectInstanceId": "8e4d707dbec92e855146011273588bdd",
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "id": "79d8882bb83331e31c11d177fc6ac3eb",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-training-with-mlflow-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "04bdfbbfdb16d1908a48483ba3cee727",
+        "uri": "file:///akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-evaluate/stage-evaluate.json"
+      },
+      {
+        "dataObjectInstanceId": "58a7b1d4b5b1176bbd730e466b214bf1",
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "id": "645210a9dcbe322a27c9860a8e670233",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-training-with-mlflow-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "04bdfbbfdb16d1908a48483ba3cee727",
+        "uri": "file:///akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data/stage-ingest-data.json"
+      },
+      {
+        "dataObjectInstanceId": "ad35de9620e403d68c0c931d17703357",
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "id": "b3d096c8416d3e4cb75f4fcfaf36977d",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-training-with-mlflow-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "04bdfbbfdb16d1908a48483ba3cee727",
+        "uri": "file:///akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run/mlflow-artifacts/2309c100b36a43eb9940116be130aa10/artifacts/model.pkl"
+      },
+      {
+        "dataObjectInstanceId": "61cc6864f67e1e60a3a31b0ba5b3ce48",
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "id": "e83ecd7afb55ec4afba08063e2277819",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-training-with-mlflow-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "04bdfbbfdb16d1908a48483ba3cee727",
+        "uri": "file:///akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run/mlflow-run.json"
+      },
+      {
+        "dataObjectInstanceId": "4d53d69f518c07320472e5bcec5a1f13",
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "id": "ef56066bb42dfdebd358a48a74c536e7",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-training-with-mlflow-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "04bdfbbfdb16d1908a48483ba3cee727",
+        "uri": "file:///akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run/mlflow.db"
+      },
+      {
+        "dataObjectInstanceId": "4d6c86e7ed96f3550f872f6fc576b0fb",
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "id": "17bc07392494b04ef9dc74bffcd03175",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-training-with-mlflow-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "04bdfbbfdb16d1908a48483ba3cee727",
+        "uri": "file:///akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run/stage-log-mlflow-run.json"
+      },
+      {
+        "dataObjectInstanceId": "b66a19be540dd1caa73d08f2ff80e4c0",
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "id": "8058ec387333beaf005d18fae6bb1fcd",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-training-with-mlflow-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "04bdfbbfdb16d1908a48483ba3cee727",
+        "uri": "file:///akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-register-model/registry.json"
+      },
+      {
+        "dataObjectInstanceId": "929c332e235306362ee3420a81359176",
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "id": "47f9c4c9fe4513920d86991356a6ab8b",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-training-with-mlflow-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "04bdfbbfdb16d1908a48483ba3cee727",
+        "uri": "file:///akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-register-model/stage-register-model.json"
+      },
+      {
+        "dataObjectInstanceId": "de6aa8f1f95ee1a90f5947b4992c3edf",
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "id": "7ce1e41648d0ad2b2e7fab0237112ad4",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-training-with-mlflow-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "04bdfbbfdb16d1908a48483ba3cee727",
+        "uri": "file:///akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-train/model.pkl"
+      },
+      {
+        "dataObjectInstanceId": "b228ac7b17870d03a169712f95af5d8b",
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "id": "7cfea31147c816379550291ba295edec",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-training-with-mlflow-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "04bdfbbfdb16d1908a48483ba3cee727",
+        "uri": "file:///akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-train/stage-train.json"
+      },
+      {
+        "dataObjectInstanceId": "478c65c9890bc58d3513b2106017d93d",
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "id": "14b9536a9976f9b52807e96454755ad0",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-training-with-mlflow-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "04bdfbbfdb16d1908a48483ba3cee727",
+        "uri": "file:///akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-validate/stage-validate.json"
+      }
+    ],
+    "dataObjects": [
+      {
+        "attempt": 1,
+        "checksum": "sha256:affc08aaf27b78332c1606617d53176d23f9bd657d19b3defe96d78bb1d01fda",
+        "dataObjectId": "83ceba5990e29aaeb991cfa898768db7",
+        "discovered": true,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "id": "63f415cf61986ae9f6cdb2f428972952",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+        "relativePath": "metrics.json",
+        "sizeBytes": 57
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:50d70a9690c9a8ef4435c3288f5b0d465be9602733baef4ef04e3be18e668af2",
+        "dataObjectId": "ff8791e2a0fa9bb9864a91c82c1963c0",
+        "discovered": true,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "id": "a07ee547d4a74e316de580ed43832ec0",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+        "relativePath": "report.html",
+        "sizeBytes": 209
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:2a6885c7eec0691f4a01f2af25530565b995ae63d86cec7f139dff30ab3c56fd",
+        "dataObjectId": "3c003dffbf1d44a54486af1f70df18df",
+        "discovered": true,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "id": "8e4d707dbec92e855146011273588bdd",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+        "relativePath": "stage-evaluate.json",
+        "sizeBytes": 4019
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:63f8a44654453355a512d28d73e72dce716ca55f1f3534181eca46b015e129ec",
+        "dataObjectId": "06664d1005957135a4d7d6f030ea6f1c",
+        "discovered": true,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "id": "58a7b1d4b5b1176bbd730e466b214bf1",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data",
+        "relativePath": "stage-ingest-data.json",
+        "sizeBytes": 3858
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:1007173c15042e83d0cecd4caac8dc84905739e62e9d91e9e9f9a2568a2b7c1f",
+        "dataObjectId": "471188438008b98379dce4e4a721e4ba",
+        "discovered": true,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "id": "ad35de9620e403d68c0c931d17703357",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+        "relativePath": "mlflow-artifacts/2309c100b36a43eb9940116be130aa10/artifacts/model.pkl",
+        "sizeBytes": 50
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:a1605a2eb6bcd219277425b33cb2a1b170e3a44d4b5fd1e56510e8713167d9f2",
+        "dataObjectId": "7130f765b9d12b3d2abff6aa39597a0a",
+        "discovered": true,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "id": "61cc6864f67e1e60a3a31b0ba5b3ce48",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+        "relativePath": "mlflow-run.json",
+        "sizeBytes": 157
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:1ff72bd8773c3671ca19905bce96c0bead19f2c5da5294734e68f6f0938f6ef8",
+        "dataObjectId": "43e4ad29c6455384df715469d935deb3",
+        "discovered": true,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "id": "4d53d69f518c07320472e5bcec5a1f13",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+        "relativePath": "mlflow.db",
+        "sizeBytes": 954368
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:b33891bad5be2c6f5fd334d0faa563c3d0e3cccd3bc6390f1de7f555139d7197",
+        "dataObjectId": "8dfa18f69ef5bc9a095bd78c2eec7434",
+        "discovered": true,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "id": "4d6c86e7ed96f3550f872f6fc576b0fb",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+        "relativePath": "stage-log-mlflow-run.json",
+        "sizeBytes": 525
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:628fe9998a0fc0aee79935d2bfd5fe01c2d7a41602d73cf4c22a8969c405f7c3",
+        "dataObjectId": "4d6848b1435ea877d1908e2198fb9ecd",
+        "discovered": true,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "id": "b66a19be540dd1caa73d08f2ff80e4c0",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+        "relativePath": "registry.json",
+        "sizeBytes": 226
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:c5268a50349a0a350ef390d3f1f9ac2fc8ee780f0aae28e136a82b9b9c16fe1b",
+        "dataObjectId": "58049bd4b0846e52ffd5882ace1bb4aa",
+        "discovered": true,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "id": "929c332e235306362ee3420a81359176",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+        "relativePath": "stage-register-model.json",
+        "sizeBytes": 596
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:1007173c15042e83d0cecd4caac8dc84905739e62e9d91e9e9f9a2568a2b7c1f",
+        "dataObjectId": "80e51c4298a3398f32efce7fac93fe87",
+        "discovered": true,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "id": "de6aa8f1f95ee1a90f5947b4992c3edf",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-train",
+        "relativePath": "model.pkl",
+        "sizeBytes": 50
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:f1c4c7bb22fb6cc61918f85ff29c8bf50e9703fbc11b53b802b2a1e7b23c77f1",
+        "dataObjectId": "59ebe5b10ff84702fd3d8346b6451f3e",
+        "discovered": true,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "id": "b228ac7b17870d03a169712f95af5d8b",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-train",
+        "relativePath": "stage-train.json",
+        "sizeBytes": 3934
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:79201e845eee427ef716d14c2e7e6b3a73256a02e555c41319061263c5805a1b",
+        "dataObjectId": "8c9a35e172cab105db0f4ea8661aafe9",
+        "discovered": true,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "id": "478c65c9890bc58d3513b2106017d93d",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+        "relativePath": "stage-validate.json",
+        "sizeBytes": 3849
+      }
+    ],
+    "dataTransfers": [
+      {
+        "bytes": 3858,
+        "consumerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+        "cost": 0,
+        "durationSeconds": 0.1932520866394043,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "finishedAt": 1792523587.101525,
+        "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-validate:transfer-workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-validate-0",
+        "logicalBytes": 3858,
+        "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data",
+        "route": {
+          "consumerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.096279958,
+          "sourceEnvironmentId": "showcase-training-with-mlflow-v1",
+          "sourceResourceId": "showcase-training-with-mlflow-local-docker",
+          "sshChannelWaitSeconds": 4.99e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-training-with-mlflow-v1",
+          "targetResourceId": "showcase-training-with-mlflow-local-docker"
+        },
+        "sourceResourceId": "showcase-training-with-mlflow-local-docker",
+        "startedAt": 1792523586.908273,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-training-with-mlflow-local-docker"
+      },
+      {
+        "bytes": 7707,
+        "consumerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-train",
+        "cost": 0,
+        "durationSeconds": 0.17262029647827148,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "finishedAt": 1792523589.076605,
+        "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-train:transfer-workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-train-0",
+        "logicalBytes": 7707,
+        "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+        "route": {
+          "consumerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-train",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.098135959,
+          "sourceEnvironmentId": "showcase-training-with-mlflow-v1",
+          "sourceResourceId": "showcase-training-with-mlflow-local-docker",
+          "sshChannelWaitSeconds": 4.17e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-training-with-mlflow-v1",
+          "targetResourceId": "showcase-training-with-mlflow-local-docker"
+        },
+        "sourceResourceId": "showcase-training-with-mlflow-local-docker",
+        "startedAt": 1792523588.9039848,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-training-with-mlflow-local-docker"
+      },
+      {
+        "bytes": 11691,
+        "consumerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+        "cost": 0,
+        "durationSeconds": 0.14188241958618164,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "finishedAt": 1792523591.0450382,
+        "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-evaluate:transfer-workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-evaluate-0",
+        "logicalBytes": 11691,
+        "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-train",
+        "route": {
+          "consumerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+          "filesTransferred": 4,
+          "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-train",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.072583166,
+          "sourceEnvironmentId": "showcase-training-with-mlflow-v1",
+          "sourceResourceId": "showcase-training-with-mlflow-local-docker",
+          "sshChannelWaitSeconds": 5.84e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-training-with-mlflow-v1",
+          "targetResourceId": "showcase-training-with-mlflow-local-docker"
+        },
+        "sourceResourceId": "showcase-training-with-mlflow-local-docker",
+        "startedAt": 1792523590.9031558,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-training-with-mlflow-local-docker"
+      },
+      {
+        "bytes": 15976,
+        "consumerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+        "cost": 0,
+        "durationSeconds": 0.1834425926208496,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "finishedAt": 1792523593.083601,
+        "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-register-model:transfer-workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-register-model-0",
+        "logicalBytes": 15976,
+        "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+        "route": {
+          "consumerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+          "filesTransferred": 7,
+          "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09240158300000001,
+          "sourceEnvironmentId": "showcase-training-with-mlflow-v1",
+          "sourceResourceId": "showcase-training-with-mlflow-local-docker",
+          "sshChannelWaitSeconds": 4.16e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-training-with-mlflow-v1",
+          "targetResourceId": "showcase-training-with-mlflow-local-docker"
+        },
+        "sourceResourceId": "showcase-training-with-mlflow-local-docker",
+        "startedAt": 1792523592.9001584,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-training-with-mlflow-local-docker"
+      },
+      {
+        "bytes": 15976,
+        "consumerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+        "cost": 0,
+        "durationSeconds": 0.18143844604492188,
+        "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "finishedAt": 1792523593.0828104,
+        "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run:transfer-workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run-0",
+        "logicalBytes": 15976,
+        "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+        "route": {
+          "consumerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+          "filesTransferred": 7,
+          "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.091279,
+          "sourceEnvironmentId": "showcase-training-with-mlflow-v1",
+          "sourceResourceId": "showcase-training-with-mlflow-local-docker",
+          "sshChannelWaitSeconds": 3.75e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-training-with-mlflow-v1",
+          "targetResourceId": "showcase-training-with-mlflow-local-docker"
+        },
+        "sourceResourceId": "showcase-training-with-mlflow-local-docker",
+        "startedAt": 1792523592.901372,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-training-with-mlflow-local-docker"
+      }
+    ],
+    "events": [
+      {
+        "aggregateId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.started",
+        "id": "cfee748396b6dca2fd71315d60880683",
+        "occurredAt": "2026-10-20T19:13:05.60801825Z",
+        "payload": {
+          "mode": "real",
+          "schedulePlanId": "showcase-training-with-mlflow-local-48fb3dd5e7-manual-plan-20261020t191305.433100000"
+        }
+      },
+      {
+        "aggregateId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "bd6d2c5c1380979dbe1642c30e022000",
+        "occurredAt": "2026-10-20T19:13:06.817980626Z",
+        "payload": {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data",
+          "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "96ff791ee5f45876d0d998c7332ee2a1",
+        "occurredAt": "2026-10-20T19:13:06.902833334Z",
+        "payload": {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data",
+          "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+          "failureReason": "",
+          "runtimeSeconds": 0.023839950561523438,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "7ddc42b8205cea948650b0e2db83855b",
+        "occurredAt": "2026-10-20T19:13:08.819126002Z",
+        "payload": {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+          "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "1eeba56a2fcfd0162ae16c57f1989689",
+        "occurredAt": "2026-10-20T19:13:08.898515043Z",
+        "payload": {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+          "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+          "failureReason": "",
+          "runtimeSeconds": 0.026883363723754883,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-train",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "bdfad0a6bc51d187ebd52c39c91c2a94",
+        "occurredAt": "2026-10-20T19:13:10.815039794Z",
+        "payload": {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-train",
+          "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-train",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "e1850c8f3fcf2f5bdd3b0f4578132f33",
+        "occurredAt": "2026-10-20T19:13:10.897279544Z",
+        "payload": {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-train",
+          "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+          "failureReason": "",
+          "runtimeSeconds": 0.024242162704467773,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "61858795eb59badb878f6f0d2a28e415",
+        "occurredAt": "2026-10-20T19:13:12.818389629Z",
+        "payload": {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+          "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "8edb91a2fe17bea1070bf66563c1121c",
+        "occurredAt": "2026-10-20T19:13:12.89332442Z",
+        "payload": {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+          "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+          "failureReason": "",
+          "runtimeSeconds": 0.022886037826538086,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "583d7b96c30d91db75044ff0798fe6a1",
+        "occurredAt": "2026-10-20T19:13:14.825357921Z",
+        "payload": {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+          "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "cdc56f008e48cad76f0db7a865b91860",
+        "occurredAt": "2026-10-20T19:13:14.828738255Z",
+        "payload": {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+          "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "6d84d463949cae9e8320625f07a739f9",
+        "occurredAt": "2026-10-20T19:13:14.967088088Z",
+        "payload": {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+          "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+          "failureReason": "",
+          "runtimeSeconds": 0.023221731185913086,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "b6433fbcb4e9f558e79011b45a85a5db",
+        "occurredAt": "2026-10-20T19:13:14.972913046Z",
+        "payload": {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+          "executionRunId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+          "failureReason": "",
+          "runtimeSeconds": 1.557936429977417,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.completed",
+        "id": "30fbe9d1f46edda434e12e61bd90bec6",
+        "occurredAt": "2026-10-20T19:13:14.97731588Z",
+        "payload": {
+          "cost": 0,
+          "makespanSeconds": 9.051916122436523
+        }
+      }
+    ],
+    "handles": [
+      {
+        "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+        "artifacts": {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:affc08aaf27b78332c1606617d53176d23f9bd657d19b3defe96d78bb1d01fda",
+              "modifiedUnixNano": 1792523591212619000,
+              "path": "metrics.json",
+              "sizeBytes": 57
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:50d70a9690c9a8ef4435c3288f5b0d465be9602733baef4ef04e3be18e668af2",
+              "modifiedUnixNano": 1792523591212619000,
+              "path": "report.html",
+              "sizeBytes": 209
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:2a6885c7eec0691f4a01f2af25530565b995ae63d86cec7f139dff30ab3c56fd",
+              "modifiedUnixNano": 1792523591212619000,
+              "path": "stage-evaluate.json",
+              "sizeBytes": 4019
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:affc08aaf27b78332c1606617d53176d23f9bd657d19b3defe96d78bb1d01fda",
+              "modifiedUnixNano": 1792523591212619000,
+              "path": "metrics.json",
+              "sizeBytes": 57
+            },
+            {
+              "checksum": "sha256:1007173c15042e83d0cecd4caac8dc84905739e62e9d91e9e9f9a2568a2b7c1f",
+              "modifiedUnixNano": 1792523591001619000,
+              "path": "model.pkl",
+              "sizeBytes": 50
+            },
+            {
+              "checksum": "sha256:50d70a9690c9a8ef4435c3288f5b0d465be9602733baef4ef04e3be18e668af2",
+              "modifiedUnixNano": 1792523591212619000,
+              "path": "report.html",
+              "sizeBytes": 209
+            },
+            {
+              "checksum": "sha256:2a6885c7eec0691f4a01f2af25530565b995ae63d86cec7f139dff30ab3c56fd",
+              "modifiedUnixNano": 1792523591212619000,
+              "path": "stage-evaluate.json",
+              "sizeBytes": 4019
+            },
+            {
+              "checksum": "sha256:63f8a44654453355a512d28d73e72dce716ca55f1f3534181eca46b015e129ec",
+              "modifiedUnixNano": 1792523591001619000,
+              "path": "stage-ingest-data.json",
+              "sizeBytes": 3858
+            },
+            {
+              "checksum": "sha256:f1c4c7bb22fb6cc61918f85ff29c8bf50e9703fbc11b53b802b2a1e7b23c77f1",
+              "modifiedUnixNano": 1792523591001619000,
+              "path": "stage-train.json",
+              "sizeBytes": 3934
+            },
+            {
+              "checksum": "sha256:79201e845eee427ef716d14c2e7e6b3a73256a02e555c41319061263c5805a1b",
+              "modifiedUnixNano": 1792523591001619000,
+              "path": "stage-validate.json",
+              "sizeBytes": 3849
+            }
+          ],
+          "finishedAt": 1792523591.2181473,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:1007173c15042e83d0cecd4caac8dc84905739e62e9d91e9e9f9a2568a2b7c1f",
+              "modifiedUnixNano": 1792523591001619000,
+              "path": "model.pkl",
+              "sizeBytes": 50
+            },
+            {
+              "checksum": "sha256:63f8a44654453355a512d28d73e72dce716ca55f1f3534181eca46b015e129ec",
+              "modifiedUnixNano": 1792523591001619000,
+              "path": "stage-ingest-data.json",
+              "sizeBytes": 3858
+            },
+            {
+              "checksum": "sha256:f1c4c7bb22fb6cc61918f85ff29c8bf50e9703fbc11b53b802b2a1e7b23c77f1",
+              "modifiedUnixNano": 1792523591001619000,
+              "path": "stage-train.json",
+              "sizeBytes": 3934
+            },
+            {
+              "checksum": "sha256:79201e845eee427ef716d14c2e7e6b3a73256a02e555c41319061263c5805a1b",
+              "modifiedUnixNano": 1792523591001619000,
+              "path": "stage-validate.json",
+              "sizeBytes": 3849
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.022886037826538086,
+              "finishedAt": 1792523591.2181473,
+              "phase": "execution",
+              "startedAt": 1792523591.1952612,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+          "runId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+          "runtime": "showcase-training-with-mlflow-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523591.1952612,
+          "summary": {
+            "createdFiles": 3,
+            "deletedFiles": 0,
+            "finalFiles": 7,
+            "initialFiles": 4,
+            "modifiedFiles": 0,
+            "outputBytes": 4285
+          }
+        },
+        "exitCode": 0,
+        "externalId": "9f6698dbf960be454707a4de92d118170f8a782865997f7cee5607e0b36083b7",
+        "finishedAt": 1792523591.2181473,
+        "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+        "log": "{\"activity\": \"evaluate\", \"status\": \"success\", \"resultKeys\": [\"training\", \"validation\", \"model\", \"metrics\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-training-with-mlflow-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523591.1952765,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+          "submittedAt": 1792523591.1952612
+        },
+        "resourceId": "showcase-training-with-mlflow-local-docker",
+        "runId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "runtimeId": "showcase-training-with-mlflow-local",
+        "startedAt": 1792523591.1952612,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data",
+        "artifacts": {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:63f8a44654453355a512d28d73e72dce716ca55f1f3534181eca46b015e129ec",
+              "modifiedUnixNano": 1792523585801619000,
+              "path": "stage-ingest-data.json",
+              "sizeBytes": 3858
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:63f8a44654453355a512d28d73e72dce716ca55f1f3534181eca46b015e129ec",
+              "modifiedUnixNano": 1792523585801619000,
+              "path": "stage-ingest-data.json",
+              "sizeBytes": 3858
+            }
+          ],
+          "finishedAt": 1792523585.8065217,
+          "phases": [
+            {
+              "durationSeconds": 0.023839950561523438,
+              "finishedAt": 1792523585.8065217,
+              "phase": "execution",
+              "startedAt": 1792523585.7826817,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data",
+          "runId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+          "runtime": "showcase-training-with-mlflow-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523585.7826817,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 1,
+            "initialFiles": 0,
+            "modifiedFiles": 0,
+            "outputBytes": 3858
+          }
+        },
+        "exitCode": 0,
+        "externalId": "7b181138c6e81490cad99866b5458de1874ce1694b52b4455f7101a9d27e68ca",
+        "finishedAt": 1792523585.8065217,
+        "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data",
+        "log": "{\"activity\": \"ingest-data\", \"status\": \"success\", \"resultKeys\": [\"rows\", \"source\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-training-with-mlflow-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523585.7826972,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data",
+          "submittedAt": 1792523585.7826817
+        },
+        "resourceId": "showcase-training-with-mlflow-local-docker",
+        "runId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "runtimeId": "showcase-training-with-mlflow-local",
+        "startedAt": 1792523585.7826817,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+        "artifacts": {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:1007173c15042e83d0cecd4caac8dc84905739e62e9d91e9e9f9a2568a2b7c1f",
+              "modifiedUnixNano": 1792523593039619000,
+              "path": "mlflow-artifacts/2309c100b36a43eb9940116be130aa10/artifacts/model.pkl",
+              "sizeBytes": 50
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:a1605a2eb6bcd219277425b33cb2a1b170e3a44d4b5fd1e56510e8713167d9f2",
+              "modifiedUnixNano": 1792523594558619000,
+              "path": "mlflow-run.json",
+              "sizeBytes": 157
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:1ff72bd8773c3671ca19905bce96c0bead19f2c5da5294734e68f6f0938f6ef8",
+              "modifiedUnixNano": 1792523594556619000,
+              "path": "mlflow.db",
+              "sizeBytes": 954368
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:b33891bad5be2c6f5fd334d0faa563c3d0e3cccd3bc6390f1de7f555139d7197",
+              "modifiedUnixNano": 1792523594559619000,
+              "path": "stage-log-mlflow-run.json",
+              "sizeBytes": 525
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:affc08aaf27b78332c1606617d53176d23f9bd657d19b3defe96d78bb1d01fda",
+              "modifiedUnixNano": 1792523593039619000,
+              "path": "metrics.json",
+              "sizeBytes": 57
+            },
+            {
+              "checksum": "sha256:1007173c15042e83d0cecd4caac8dc84905739e62e9d91e9e9f9a2568a2b7c1f",
+              "modifiedUnixNano": 1792523593039619000,
+              "path": "mlflow-artifacts/2309c100b36a43eb9940116be130aa10/artifacts/model.pkl",
+              "sizeBytes": 50
+            },
+            {
+              "checksum": "sha256:a1605a2eb6bcd219277425b33cb2a1b170e3a44d4b5fd1e56510e8713167d9f2",
+              "modifiedUnixNano": 1792523594558619000,
+              "path": "mlflow-run.json",
+              "sizeBytes": 157
+            },
+            {
+              "checksum": "sha256:1ff72bd8773c3671ca19905bce96c0bead19f2c5da5294734e68f6f0938f6ef8",
+              "modifiedUnixNano": 1792523594556619000,
+              "path": "mlflow.db",
+              "sizeBytes": 954368
+            },
+            {
+              "checksum": "sha256:1007173c15042e83d0cecd4caac8dc84905739e62e9d91e9e9f9a2568a2b7c1f",
+              "modifiedUnixNano": 1792523593039619000,
+              "path": "model.pkl",
+              "sizeBytes": 50
+            },
+            {
+              "checksum": "sha256:50d70a9690c9a8ef4435c3288f5b0d465be9602733baef4ef04e3be18e668af2",
+              "modifiedUnixNano": 1792523593039619000,
+              "path": "report.html",
+              "sizeBytes": 209
+            },
+            {
+              "checksum": "sha256:2a6885c7eec0691f4a01f2af25530565b995ae63d86cec7f139dff30ab3c56fd",
+              "modifiedUnixNano": 1792523593039619000,
+              "path": "stage-evaluate.json",
+              "sizeBytes": 4019
+            },
+            {
+              "checksum": "sha256:63f8a44654453355a512d28d73e72dce716ca55f1f3534181eca46b015e129ec",
+              "modifiedUnixNano": 1792523593039619000,
+              "path": "stage-ingest-data.json",
+              "sizeBytes": 3858
+            },
+            {
+              "checksum": "sha256:b33891bad5be2c6f5fd334d0faa563c3d0e3cccd3bc6390f1de7f555139d7197",
+              "modifiedUnixNano": 1792523594559619000,
+              "path": "stage-log-mlflow-run.json",
+              "sizeBytes": 525
+            },
+            {
+              "checksum": "sha256:f1c4c7bb22fb6cc61918f85ff29c8bf50e9703fbc11b53b802b2a1e7b23c77f1",
+              "modifiedUnixNano": 1792523593039619000,
+              "path": "stage-train.json",
+              "sizeBytes": 3934
+            },
+            {
+              "checksum": "sha256:79201e845eee427ef716d14c2e7e6b3a73256a02e555c41319061263c5805a1b",
+              "modifiedUnixNano": 1792523593039619000,
+              "path": "stage-validate.json",
+              "sizeBytes": 3849
+            }
+          ],
+          "finishedAt": 1792523594.8345978,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:affc08aaf27b78332c1606617d53176d23f9bd657d19b3defe96d78bb1d01fda",
+              "modifiedUnixNano": 1792523593039619000,
+              "path": "metrics.json",
+              "sizeBytes": 57
+            },
+            {
+              "checksum": "sha256:1007173c15042e83d0cecd4caac8dc84905739e62e9d91e9e9f9a2568a2b7c1f",
+              "modifiedUnixNano": 1792523593039619000,
+              "path": "model.pkl",
+              "sizeBytes": 50
+            },
+            {
+              "checksum": "sha256:50d70a9690c9a8ef4435c3288f5b0d465be9602733baef4ef04e3be18e668af2",
+              "modifiedUnixNano": 1792523593039619000,
+              "path": "report.html",
+              "sizeBytes": 209
+            },
+            {
+              "checksum": "sha256:2a6885c7eec0691f4a01f2af25530565b995ae63d86cec7f139dff30ab3c56fd",
+              "modifiedUnixNano": 1792523593039619000,
+              "path": "stage-evaluate.json",
+              "sizeBytes": 4019
+            },
+            {
+              "checksum": "sha256:63f8a44654453355a512d28d73e72dce716ca55f1f3534181eca46b015e129ec",
+              "modifiedUnixNano": 1792523593039619000,
+              "path": "stage-ingest-data.json",
+              "sizeBytes": 3858
+            },
+            {
+              "checksum": "sha256:f1c4c7bb22fb6cc61918f85ff29c8bf50e9703fbc11b53b802b2a1e7b23c77f1",
+              "modifiedUnixNano": 1792523593039619000,
+              "path": "stage-train.json",
+              "sizeBytes": 3934
+            },
+            {
+              "checksum": "sha256:79201e845eee427ef716d14c2e7e6b3a73256a02e555c41319061263c5805a1b",
+              "modifiedUnixNano": 1792523593039619000,
+              "path": "stage-validate.json",
+              "sizeBytes": 3849
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 1.557936429977417,
+              "finishedAt": 1792523594.8345978,
+              "phase": "execution",
+              "startedAt": 1792523593.2766614,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+          "runId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+          "runtime": "showcase-training-with-mlflow-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523593.2766614,
+          "summary": {
+            "createdFiles": 4,
+            "deletedFiles": 0,
+            "finalFiles": 11,
+            "initialFiles": 7,
+            "modifiedFiles": 0,
+            "outputBytes": 955100
+          }
+        },
+        "exitCode": 0,
+        "externalId": "62155b883d519ed52dc5dfbc854705f7f51df5b9517027409d1673512b2a4df0",
+        "finishedAt": 1792523594.8345978,
+        "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+        "log": "2026/10/20 19:13:13 INFO mlflow.store.db.utils: Creating initial MLflow database tables...\n2026/10/20 19:13:13 INFO mlflow.store.db.utils: Updating database tables\n2026/10/20 19:13:14 WARNING mlflow.utils.git_utils: Failed to import Git (the Git executable is probably not on your PATH), so Git SHA is not available. Error: Failed to initialize: Bad git executable.\nThe git executable must be specified in one of the following ways:\n    - be included in your $PATH\n    - be set via $GIT_PYTHON_GIT_EXECUTABLE\n    - explicitly set via git.refresh(\u003cfull-path-to-git-executable\u003e)\n\nAll git commands will error until this is rectified.\n\nThis initial message can be silenced or aggravated in the future by setting the\n$GIT_PYTHON_REFRESH environment variable. Use one of the following values:\n    - quiet|q|silence|s|silent|none|n|0: for no message or exception\n    - warn|w|warning|log|l|1: for a warning message (logging level CRITICAL, displayed by default)\n    - error|e|exception|raise|r|2: for a raised exception\n\nExample:\n    export GIT_PYTHON_REFRESH=quiet\n\n2026/10/20 19:13:14 WARNING mlflow.utils.git_utils: Failed to import Git (the Git executable is probably not on your PATH), so Git branch is not available. Error: Failed to initialize: Bad git executable.\nThe git executable must be specified in one of the following ways:\n    - be included in your $PATH\n    - be set via $GIT_PYTHON_GIT_EXECUTABLE\n    - explicitly set via git.refresh(\u003cfull-path-to-git-executable\u003e)\n\nAll git commands will error until this is rectified.\n\nThis initial message can be silenced or aggravated in the future by setting the\n$GIT_PYTHON_REFRESH environment variable. Use one of the following values:\n    - quiet|q|silence|s|silent|none|n|0: for no message or exception\n    - warn|w|warning|log|l|1: for a warning message (logging level CRITICAL, displayed by default)\n    - error|e|exception|raise|r|2: for a raised exception\n\nExample:\n    export GIT_PYTHON_REFRESH=quiet\n\n2026/10/20 19:13:14 WARNING mlflow.utils.git_utils: Failed to import Git (the Git executable is probably not on your PATH), so Git repository URL is not available. Error: Failed to initialize: Bad git executable.\nThe git executable must be specified in one of the following ways:\n    - be included in your $PATH\n    - be set via $GIT_PYTHON_GIT_EXECUTABLE\n    - explicitly set via git.refresh(\u003cfull-path-to-git-executable\u003e)\n\nAll git commands will error until this is rectified.\n\nThis initial message can be silenced or aggravated in the future by setting the\n$GIT_PYTHON_REFRESH environment variable. Use one of the following values:\n    - quiet|q|silence|s|silent|none|n|0: for no message or exception\n    - warn|w|warning|log|l|1: for a warning message (logging level CRITICAL, displayed by default)\n    - error|e|exception|raise|r|2: for a raised exception\n\nExample:\n    export GIT_PYTHON_REFRESH=quiet\n\n{\"activity\": \"log-mlflow-run\", \"status\": \"success\", \"resultKeys\": [\"runId\", \"trackingStore\", \"status\", \"metrics\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-training-with-mlflow-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523593.2766674,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+          "submittedAt": 1792523593.2766614
+        },
+        "resourceId": "showcase-training-with-mlflow-local-docker",
+        "runId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "runtimeId": "showcase-training-with-mlflow-local",
+        "startedAt": 1792523593.2766614,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+        "artifacts": {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:628fe9998a0fc0aee79935d2bfd5fe01c2d7a41602d73cf4c22a8969c405f7c3",
+              "modifiedUnixNano": 1792523593303619000,
+              "path": "registry.json",
+              "sizeBytes": 226
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:c5268a50349a0a350ef390d3f1f9ac2fc8ee780f0aae28e136a82b9b9c16fe1b",
+              "modifiedUnixNano": 1792523593303619000,
+              "path": "stage-register-model.json",
+              "sizeBytes": 596
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:affc08aaf27b78332c1606617d53176d23f9bd657d19b3defe96d78bb1d01fda",
+              "modifiedUnixNano": 1792523593039619000,
+              "path": "metrics.json",
+              "sizeBytes": 57
+            },
+            {
+              "checksum": "sha256:1007173c15042e83d0cecd4caac8dc84905739e62e9d91e9e9f9a2568a2b7c1f",
+              "modifiedUnixNano": 1792523593039619000,
+              "path": "model.pkl",
+              "sizeBytes": 50
+            },
+            {
+              "checksum": "sha256:628fe9998a0fc0aee79935d2bfd5fe01c2d7a41602d73cf4c22a8969c405f7c3",
+              "modifiedUnixNano": 1792523593303619000,
+              "path": "registry.json",
+              "sizeBytes": 226
+            },
+            {
+              "checksum": "sha256:50d70a9690c9a8ef4435c3288f5b0d465be9602733baef4ef04e3be18e668af2",
+              "modifiedUnixNano": 1792523593039619000,
+              "path": "report.html",
+              "sizeBytes": 209
+            },
+            {
+              "checksum": "sha256:2a6885c7eec0691f4a01f2af25530565b995ae63d86cec7f139dff30ab3c56fd",
+              "modifiedUnixNano": 1792523593039619000,
+              "path": "stage-evaluate.json",
+              "sizeBytes": 4019
+            },
+            {
+              "checksum": "sha256:63f8a44654453355a512d28d73e72dce716ca55f1f3534181eca46b015e129ec",
+              "modifiedUnixNano": 1792523593039619000,
+              "path": "stage-ingest-data.json",
+              "sizeBytes": 3858
+            },
+            {
+              "checksum": "sha256:c5268a50349a0a350ef390d3f1f9ac2fc8ee780f0aae28e136a82b9b9c16fe1b",
+              "modifiedUnixNano": 1792523593303619000,
+              "path": "stage-register-model.json",
+              "sizeBytes": 596
+            },
+            {
+              "checksum": "sha256:f1c4c7bb22fb6cc61918f85ff29c8bf50e9703fbc11b53b802b2a1e7b23c77f1",
+              "modifiedUnixNano": 1792523593039619000,
+              "path": "stage-train.json",
+              "sizeBytes": 3934
+            },
+            {
+              "checksum": "sha256:79201e845eee427ef716d14c2e7e6b3a73256a02e555c41319061263c5805a1b",
+              "modifiedUnixNano": 1792523593039619000,
+              "path": "stage-validate.json",
+              "sizeBytes": 3849
+            }
+          ],
+          "finishedAt": 1792523593.3098478,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:affc08aaf27b78332c1606617d53176d23f9bd657d19b3defe96d78bb1d01fda",
+              "modifiedUnixNano": 1792523593039619000,
+              "path": "metrics.json",
+              "sizeBytes": 57
+            },
+            {
+              "checksum": "sha256:1007173c15042e83d0cecd4caac8dc84905739e62e9d91e9e9f9a2568a2b7c1f",
+              "modifiedUnixNano": 1792523593039619000,
+              "path": "model.pkl",
+              "sizeBytes": 50
+            },
+            {
+              "checksum": "sha256:50d70a9690c9a8ef4435c3288f5b0d465be9602733baef4ef04e3be18e668af2",
+              "modifiedUnixNano": 1792523593039619000,
+              "path": "report.html",
+              "sizeBytes": 209
+            },
+            {
+              "checksum": "sha256:2a6885c7eec0691f4a01f2af25530565b995ae63d86cec7f139dff30ab3c56fd",
+              "modifiedUnixNano": 1792523593039619000,
+              "path": "stage-evaluate.json",
+              "sizeBytes": 4019
+            },
+            {
+              "checksum": "sha256:63f8a44654453355a512d28d73e72dce716ca55f1f3534181eca46b015e129ec",
+              "modifiedUnixNano": 1792523593039619000,
+              "path": "stage-ingest-data.json",
+              "sizeBytes": 3858
+            },
+            {
+              "checksum": "sha256:f1c4c7bb22fb6cc61918f85ff29c8bf50e9703fbc11b53b802b2a1e7b23c77f1",
+              "modifiedUnixNano": 1792523593039619000,
+              "path": "stage-train.json",
+              "sizeBytes": 3934
+            },
+            {
+              "checksum": "sha256:79201e845eee427ef716d14c2e7e6b3a73256a02e555c41319061263c5805a1b",
+              "modifiedUnixNano": 1792523593039619000,
+              "path": "stage-validate.json",
+              "sizeBytes": 3849
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.023221731185913086,
+              "finishedAt": 1792523593.3098478,
+              "phase": "execution",
+              "startedAt": 1792523593.286626,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+          "runId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+          "runtime": "showcase-training-with-mlflow-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523593.286626,
+          "summary": {
+            "createdFiles": 2,
+            "deletedFiles": 0,
+            "finalFiles": 9,
+            "initialFiles": 7,
+            "modifiedFiles": 0,
+            "outputBytes": 822
+          }
+        },
+        "exitCode": 0,
+        "externalId": "991339e016b1c6bab395629faa9ec55b065e3ef2178e2537de573b93ae66dbb2",
+        "finishedAt": 1792523593.3098478,
+        "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+        "log": "{\"activity\": \"register-model\", \"status\": \"success\", \"resultKeys\": [\"model\", \"version\", \"artifact\", \"metrics\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-training-with-mlflow-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523593.286633,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+          "submittedAt": 1792523593.286626
+        },
+        "resourceId": "showcase-training-with-mlflow-local-docker",
+        "runId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "runtimeId": "showcase-training-with-mlflow-local",
+        "startedAt": 1792523593.286626,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-train",
+        "artifacts": {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-train",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:1007173c15042e83d0cecd4caac8dc84905739e62e9d91e9e9f9a2568a2b7c1f",
+              "modifiedUnixNano": 1792523589245619000,
+              "path": "model.pkl",
+              "sizeBytes": 50
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:f1c4c7bb22fb6cc61918f85ff29c8bf50e9703fbc11b53b802b2a1e7b23c77f1",
+              "modifiedUnixNano": 1792523589245619000,
+              "path": "stage-train.json",
+              "sizeBytes": 3934
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:1007173c15042e83d0cecd4caac8dc84905739e62e9d91e9e9f9a2568a2b7c1f",
+              "modifiedUnixNano": 1792523589245619000,
+              "path": "model.pkl",
+              "sizeBytes": 50
+            },
+            {
+              "checksum": "sha256:63f8a44654453355a512d28d73e72dce716ca55f1f3534181eca46b015e129ec",
+              "modifiedUnixNano": 1792523589029619000,
+              "path": "stage-ingest-data.json",
+              "sizeBytes": 3858
+            },
+            {
+              "checksum": "sha256:f1c4c7bb22fb6cc61918f85ff29c8bf50e9703fbc11b53b802b2a1e7b23c77f1",
+              "modifiedUnixNano": 1792523589245619000,
+              "path": "stage-train.json",
+              "sizeBytes": 3934
+            },
+            {
+              "checksum": "sha256:79201e845eee427ef716d14c2e7e6b3a73256a02e555c41319061263c5805a1b",
+              "modifiedUnixNano": 1792523589029619000,
+              "path": "stage-validate.json",
+              "sizeBytes": 3849
+            }
+          ],
+          "finishedAt": 1792523589.2506588,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:63f8a44654453355a512d28d73e72dce716ca55f1f3534181eca46b015e129ec",
+              "modifiedUnixNano": 1792523589029619000,
+              "path": "stage-ingest-data.json",
+              "sizeBytes": 3858
+            },
+            {
+              "checksum": "sha256:79201e845eee427ef716d14c2e7e6b3a73256a02e555c41319061263c5805a1b",
+              "modifiedUnixNano": 1792523589029619000,
+              "path": "stage-validate.json",
+              "sizeBytes": 3849
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.024242162704467773,
+              "finishedAt": 1792523589.2506588,
+              "phase": "execution",
+              "startedAt": 1792523589.2264166,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-train",
+          "runId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+          "runtime": "showcase-training-with-mlflow-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523589.2264166,
+          "summary": {
+            "createdFiles": 2,
+            "deletedFiles": 0,
+            "finalFiles": 4,
+            "initialFiles": 2,
+            "modifiedFiles": 0,
+            "outputBytes": 3984
+          }
+        },
+        "exitCode": 0,
+        "externalId": "b3ee8d28ede12ea9a4ed6bd4a1cbcc2a4acaa8c633b124b2a0402bc8065c4771",
+        "finishedAt": 1792523589.2506588,
+        "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-train",
+        "log": "{\"activity\": \"train\", \"status\": \"success\", \"resultKeys\": [\"training\", \"validation\", \"model\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-training-with-mlflow-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-train",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523589.2264228,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-train",
+          "submittedAt": 1792523589.2264166
+        },
+        "resourceId": "showcase-training-with-mlflow-local-docker",
+        "runId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "runtimeId": "showcase-training-with-mlflow-local",
+        "startedAt": 1792523589.2264166,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+        "artifacts": {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:79201e845eee427ef716d14c2e7e6b3a73256a02e555c41319061263c5805a1b",
+              "modifiedUnixNano": 1792523587254619000,
+              "path": "stage-validate.json",
+              "sizeBytes": 3849
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:63f8a44654453355a512d28d73e72dce716ca55f1f3534181eca46b015e129ec",
+              "modifiedUnixNano": 1792523587055619000,
+              "path": "stage-ingest-data.json",
+              "sizeBytes": 3858
+            },
+            {
+              "checksum": "sha256:79201e845eee427ef716d14c2e7e6b3a73256a02e555c41319061263c5805a1b",
+              "modifiedUnixNano": 1792523587254619000,
+              "path": "stage-validate.json",
+              "sizeBytes": 3849
+            }
+          ],
+          "finishedAt": 1792523587.2596686,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:63f8a44654453355a512d28d73e72dce716ca55f1f3534181eca46b015e129ec",
+              "modifiedUnixNano": 1792523587055619000,
+              "path": "stage-ingest-data.json",
+              "sizeBytes": 3858
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.026883363723754883,
+              "finishedAt": 1792523587.2596686,
+              "phase": "execution",
+              "startedAt": 1792523587.2327852,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+          "runId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+          "runtime": "showcase-training-with-mlflow-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523587.2327852,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 3849
+          }
+        },
+        "exitCode": 0,
+        "externalId": "c36595c471b5fee87a4b9420f5d62ffb559ac5c355d186c98903665b7391b6b0",
+        "finishedAt": 1792523587.2596686,
+        "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+        "log": "{\"activity\": \"validate\", \"status\": \"success\", \"resultKeys\": [\"training\", \"validation\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-training-with-mlflow-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523587.2327976,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+          "submittedAt": 1792523587.2327852
+        },
+        "resourceId": "showcase-training-with-mlflow-local-docker",
+        "runId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "runtimeId": "showcase-training-with-mlflow-local",
+        "startedAt": 1792523587.2327852,
+        "status": "completed"
+      }
+    ],
+    "infrastructureRuns": [],
+    "operationEvents": [],
+    "run": {
+      "activityCount": 6,
+      "breakdown": {
+        "computeSeconds": 1.6790096759796143,
+        "interferenceSeconds": 0,
+        "overheadSeconds": 0,
+        "queueSeconds": 0,
+        "transferSeconds": 0.8726358413696289
+      },
+      "completedActivityCount": 6,
+      "cost": 0,
+      "finishedAt": "2026-10-20T19:13:14Z",
+      "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+      "kind": "workflow",
+      "makespanSeconds": 9.051916122436523,
+      "mode": "real",
+      "schedulePlanId": "showcase-training-with-mlflow-local-48fb3dd5e7-manual-plan-20261020t191305.433100000",
+      "seed": 0,
+      "startedAt": "2026-10-20T19:13:05Z",
+      "status": "completed",
+      "title": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+      "transferredBytes": 55208
+    },
+    "timeline": {
+      "computeMakespanSeconds": 9.051916122436523,
+      "coveredWallSeconds": 2.3051517009735107,
+      "finishedAt": 1792523594,
+      "phases": [
+        {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data",
+          "category": "resource-queue",
+          "durationSeconds": 0.15220379829406738,
+          "finishedAt": 1792523585.7826817,
+          "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523585.630478,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data",
+          "category": "runtime",
+          "durationSeconds": 0.023839950561523438,
+          "finishedAt": 1792523585.8065217,
+          "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523585.7826817,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+          "category": "resource-queue",
+          "durationSeconds": 0.0034368038177490234,
+          "finishedAt": 1792523586.908273,
+          "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-validate:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523586.9048362,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.1932520866394043,
+          "finishedAt": 1792523587.101525,
+          "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-validate:transfer-workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-validate-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523586.908273,
+          "status": "completed",
+          "transferId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-validate:transfer-workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-validate-0"
+        },
+        {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+          "category": "launch",
+          "durationSeconds": 0.13126015663146973,
+          "finishedAt": 1792523587.2327852,
+          "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-validate:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523587.101525,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+          "category": "runtime",
+          "durationSeconds": 0.026883363723754883,
+          "finishedAt": 1792523587.2596686,
+          "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-validate:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523587.2327852,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-train",
+          "category": "resource-queue",
+          "durationSeconds": 0.003774881362915039,
+          "finishedAt": 1792523588.9039848,
+          "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-train:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523588.90021,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-train",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.17262029647827148,
+          "finishedAt": 1792523589.076605,
+          "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-train:transfer-workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-train-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523588.9039848,
+          "status": "completed",
+          "transferId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-train:transfer-workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-train-0"
+        },
+        {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-train",
+          "category": "launch",
+          "durationSeconds": 0.1498115062713623,
+          "finishedAt": 1792523589.2264166,
+          "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-train:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523589.076605,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-train",
+          "category": "runtime",
+          "durationSeconds": 0.024242162704467773,
+          "finishedAt": 1792523589.2506588,
+          "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-train:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523589.2264166,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+          "category": "resource-queue",
+          "durationSeconds": 0.0037224292755126953,
+          "finishedAt": 1792523590.9031558,
+          "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-evaluate:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523590.8994334,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.14188241958618164,
+          "finishedAt": 1792523591.0450382,
+          "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-evaluate:transfer-workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-evaluate-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523590.9031558,
+          "status": "completed",
+          "transferId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-evaluate:transfer-workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-evaluate-0"
+        },
+        {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+          "category": "launch",
+          "durationSeconds": 0.1502230167388916,
+          "finishedAt": 1792523591.1952612,
+          "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-evaluate:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523591.0450382,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+          "category": "runtime",
+          "durationSeconds": 0.022886037826538086,
+          "finishedAt": 1792523591.2181473,
+          "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-evaluate:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523591.1952612,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+          "category": "resource-queue",
+          "durationSeconds": 0.0064847469329833984,
+          "finishedAt": 1792523592.901372,
+          "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523592.8948872,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+          "category": "resource-queue",
+          "durationSeconds": 0.004235744476318359,
+          "finishedAt": 1792523592.9001584,
+          "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-register-model:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523592.8959227,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.1834425926208496,
+          "finishedAt": 1792523593.083601,
+          "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-register-model:transfer-workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-register-model-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523592.9001584,
+          "status": "completed",
+          "transferId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-register-model:transfer-workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-register-model-0"
+        },
+        {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.18143844604492188,
+          "finishedAt": 1792523593.0828104,
+          "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run:transfer-workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523592.901372,
+          "status": "completed",
+          "transferId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run:transfer-workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run-0"
+        },
+        {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+          "category": "launch",
+          "durationSeconds": 0.19385099411010742,
+          "finishedAt": 1792523593.2766614,
+          "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523593.0828104,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+          "category": "launch",
+          "durationSeconds": 0.20302510261535645,
+          "finishedAt": 1792523593.286626,
+          "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-register-model:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523593.083601,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+          "category": "runtime",
+          "durationSeconds": 1.557936429977417,
+          "finishedAt": 1792523594.8345978,
+          "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523593.2766614,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+          "category": "runtime",
+          "durationSeconds": 0.023221731185913086,
+          "finishedAt": 1792523593.3098478,
+          "id": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000:showcase-training-with-mlflow-local-48fb3dd5e7-register-model:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523593.286626,
+          "status": "completed"
+        }
+      ],
+      "startedAt": 1792523585,
+      "totals": {
+        "destroySeconds": 0,
+        "executablePreparationSeconds": 0,
+        "launchSeconds": 0.8281707763671875,
+        "provisionSeconds": 0,
+        "resourceQueueSeconds": 0.1738584041595459,
+        "runtimeSeconds": 1.6790096759796143,
+        "startSeconds": 0,
+        "stopSeconds": 0,
+        "validationSeconds": 0,
+        "workspaceTransferSeconds": 0.8726358413696289
+      },
+      "unclassifiedWallSeconds": 6.694848299026489,
+      "wallSeconds": 9
+    },
+    "workspaceLeases": [
+      {
+        "consumerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+        "id": "workspace-lease-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-evaluate-showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+        "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:13:13.08887392Z",
+        "runId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "workspaceId": "workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-evaluate"
+      },
+      {
+        "consumerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+        "id": "workspace-lease-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-evaluate-showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+        "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:13:13.08899742Z",
+        "runId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "workspaceId": "workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-evaluate"
+      },
+      {
+        "consumerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+        "id": "workspace-lease-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data-showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+        "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:13:07.103592668Z",
+        "runId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "workspaceId": "workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data"
+      },
+      {
+        "consumerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+        "id": "workspace-lease-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-train-showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+        "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-train",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:13:11.047768003Z",
+        "runId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "workspaceId": "workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-train"
+      },
+      {
+        "consumerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-train",
+        "id": "workspace-lease-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-validate-showcase-training-with-mlflow-local-48fb3dd5e7-train",
+        "producerActivityId": "showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:13:09.078469252Z",
+        "runId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "workspaceId": "workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-validate"
+      }
+    ],
+    "workspaces": [
+      {
+        "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+        "createdAt": "2026-10-20T19:13:05.610432209Z",
+        "driver": "local",
+        "environmentId": "showcase-training-with-mlflow-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+        "fileCount": 7,
+        "id": "workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+        "inputBytes": 11691,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:affc08aaf27b78332c1606617d53176d23f9bd657d19b3defe96d78bb1d01fda",
+              "path": "metrics.json",
+              "sizeBytes": 57
+            },
+            {
+              "digest": "sha256:1007173c15042e83d0cecd4caac8dc84905739e62e9d91e9e9f9a2568a2b7c1f",
+              "path": "model.pkl",
+              "sizeBytes": 50
+            },
+            {
+              "digest": "sha256:50d70a9690c9a8ef4435c3288f5b0d465be9602733baef4ef04e3be18e668af2",
+              "path": "report.html",
+              "sizeBytes": 209
+            },
+            {
+              "digest": "sha256:2a6885c7eec0691f4a01f2af25530565b995ae63d86cec7f139dff30ab3c56fd",
+              "path": "stage-evaluate.json",
+              "sizeBytes": 4019
+            },
+            {
+              "digest": "sha256:63f8a44654453355a512d28d73e72dce716ca55f1f3534181eca46b015e129ec",
+              "path": "stage-ingest-data.json",
+              "sizeBytes": 3858
+            },
+            {
+              "digest": "sha256:f1c4c7bb22fb6cc61918f85ff29c8bf50e9703fbc11b53b802b2a1e7b23c77f1",
+              "path": "stage-train.json",
+              "sizeBytes": 3934
+            },
+            {
+              "digest": "sha256:79201e845eee427ef716d14c2e7e6b3a73256a02e555c41319061263c5805a1b",
+              "path": "stage-validate.json",
+              "sizeBytes": 3849
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:1007173c15042e83d0cecd4caac8dc84905739e62e9d91e9e9f9a2568a2b7c1f",
+              "path": "model.pkl",
+              "sizeBytes": 50
+            },
+            {
+              "digest": "sha256:63f8a44654453355a512d28d73e72dce716ca55f1f3534181eca46b015e129ec",
+              "path": "stage-ingest-data.json",
+              "sizeBytes": 3858
+            },
+            {
+              "digest": "sha256:f1c4c7bb22fb6cc61918f85ff29c8bf50e9703fbc11b53b802b2a1e7b23c77f1",
+              "path": "stage-train.json",
+              "sizeBytes": 3934
+            },
+            {
+              "digest": "sha256:79201e845eee427ef716d14c2e7e6b3a73256a02e555c41319061263c5805a1b",
+              "path": "stage-validate.json",
+              "sizeBytes": 3849
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:1007173c15042e83d0cecd4caac8dc84905739e62e9d91e9e9f9a2568a2b7c1f",
+              "path": "model.pkl",
+              "sizeBytes": 50
+            },
+            {
+              "digest": "sha256:63f8a44654453355a512d28d73e72dce716ca55f1f3534181eca46b015e129ec",
+              "path": "stage-ingest-data.json",
+              "sizeBytes": 3858
+            },
+            {
+              "digest": "sha256:f1c4c7bb22fb6cc61918f85ff29c8bf50e9703fbc11b53b802b2a1e7b23c77f1",
+              "path": "stage-train.json",
+              "sizeBytes": 3934
+            },
+            {
+              "digest": "sha256:79201e845eee427ef716d14c2e7e6b3a73256a02e555c41319061263c5805a1b",
+              "path": "stage-validate.json",
+              "sizeBytes": 3849
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:affc08aaf27b78332c1606617d53176d23f9bd657d19b3defe96d78bb1d01fda",
+              "path": "metrics.json",
+              "sizeBytes": 57
+            },
+            {
+              "digest": "sha256:50d70a9690c9a8ef4435c3288f5b0d465be9602733baef4ef04e3be18e668af2",
+              "path": "report.html",
+              "sizeBytes": 209
+            },
+            {
+              "digest": "sha256:2a6885c7eec0691f4a01f2af25530565b995ae63d86cec7f139dff30ab3c56fd",
+              "path": "stage-evaluate.json",
+              "sizeBytes": 4019
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-evaluate",
+        "outputBytes": 4285,
+        "pinned": false,
+        "reclaimedBytes": 0,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:13:13.098760379Z",
+        "resourceId": "showcase-training-with-mlflow-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "runtimeId": "showcase-training-with-mlflow-local",
+        "sealedAt": "2026-10-20T19:13:12.89047542Z",
+        "sizeBytes": 15976,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-evaluate"
+      },
+      {
+        "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data",
+        "createdAt": "2026-10-20T19:13:05.610432209Z",
+        "driver": "local",
+        "environmentId": "showcase-training-with-mlflow-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data",
+        "fileCount": 1,
+        "id": "workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data",
+        "inputBytes": 0,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:63f8a44654453355a512d28d73e72dce716ca55f1f3534181eca46b015e129ec",
+              "path": "stage-ingest-data.json",
+              "sizeBytes": 3858
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:63f8a44654453355a512d28d73e72dce716ca55f1f3534181eca46b015e129ec",
+              "path": "stage-ingest-data.json",
+              "sizeBytes": 3858
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data",
+        "outputBytes": 3858,
+        "pinned": false,
+        "reclaimedBytes": 3858,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:13:07.112557876Z",
+        "resourceId": "showcase-training-with-mlflow-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "runtimeId": "showcase-training-with-mlflow-local",
+        "sealedAt": "2026-10-20T19:13:06.899710084Z",
+        "sizeBytes": 3858,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-ingest-data"
+      },
+      {
+        "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+        "createdAt": "2026-10-20T19:13:05.610432209Z",
+        "driver": "local",
+        "environmentId": "showcase-training-with-mlflow-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+        "fileCount": 4,
+        "id": "workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+        "inputBytes": 15976,
+        "isFinal": true,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:affc08aaf27b78332c1606617d53176d23f9bd657d19b3defe96d78bb1d01fda",
+              "path": "metrics.json",
+              "sizeBytes": 57
+            },
+            {
+              "digest": "sha256:1007173c15042e83d0cecd4caac8dc84905739e62e9d91e9e9f9a2568a2b7c1f",
+              "path": "mlflow-artifacts/2309c100b36a43eb9940116be130aa10/artifacts/model.pkl",
+              "sizeBytes": 50
+            },
+            {
+              "digest": "sha256:a1605a2eb6bcd219277425b33cb2a1b170e3a44d4b5fd1e56510e8713167d9f2",
+              "path": "mlflow-run.json",
+              "sizeBytes": 157
+            },
+            {
+              "digest": "sha256:1ff72bd8773c3671ca19905bce96c0bead19f2c5da5294734e68f6f0938f6ef8",
+              "path": "mlflow.db",
+              "sizeBytes": 954368
+            },
+            {
+              "digest": "sha256:1007173c15042e83d0cecd4caac8dc84905739e62e9d91e9e9f9a2568a2b7c1f",
+              "path": "model.pkl",
+              "sizeBytes": 50
+            },
+            {
+              "digest": "sha256:50d70a9690c9a8ef4435c3288f5b0d465be9602733baef4ef04e3be18e668af2",
+              "path": "report.html",
+              "sizeBytes": 209
+            },
+            {
+              "digest": "sha256:2a6885c7eec0691f4a01f2af25530565b995ae63d86cec7f139dff30ab3c56fd",
+              "path": "stage-evaluate.json",
+              "sizeBytes": 4019
+            },
+            {
+              "digest": "sha256:63f8a44654453355a512d28d73e72dce716ca55f1f3534181eca46b015e129ec",
+              "path": "stage-ingest-data.json",
+              "sizeBytes": 3858
+            },
+            {
+              "digest": "sha256:b33891bad5be2c6f5fd334d0faa563c3d0e3cccd3bc6390f1de7f555139d7197",
+              "path": "stage-log-mlflow-run.json",
+              "sizeBytes": 525
+            },
+            {
+              "digest": "sha256:f1c4c7bb22fb6cc61918f85ff29c8bf50e9703fbc11b53b802b2a1e7b23c77f1",
+              "path": "stage-train.json",
+              "sizeBytes": 3934
+            },
+            {
+              "digest": "sha256:79201e845eee427ef716d14c2e7e6b3a73256a02e555c41319061263c5805a1b",
+              "path": "stage-validate.json",
+              "sizeBytes": 3849
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:affc08aaf27b78332c1606617d53176d23f9bd657d19b3defe96d78bb1d01fda",
+              "path": "metrics.json",
+              "sizeBytes": 57
+            },
+            {
+              "digest": "sha256:1007173c15042e83d0cecd4caac8dc84905739e62e9d91e9e9f9a2568a2b7c1f",
+              "path": "model.pkl",
+              "sizeBytes": 50
+            },
+            {
+              "digest": "sha256:50d70a9690c9a8ef4435c3288f5b0d465be9602733baef4ef04e3be18e668af2",
+              "path": "report.html",
+              "sizeBytes": 209
+            },
+            {
+              "digest": "sha256:2a6885c7eec0691f4a01f2af25530565b995ae63d86cec7f139dff30ab3c56fd",
+              "path": "stage-evaluate.json",
+              "sizeBytes": 4019
+            },
+            {
+              "digest": "sha256:63f8a44654453355a512d28d73e72dce716ca55f1f3534181eca46b015e129ec",
+              "path": "stage-ingest-data.json",
+              "sizeBytes": 3858
+            },
+            {
+              "digest": "sha256:f1c4c7bb22fb6cc61918f85ff29c8bf50e9703fbc11b53b802b2a1e7b23c77f1",
+              "path": "stage-train.json",
+              "sizeBytes": 3934
+            },
+            {
+              "digest": "sha256:79201e845eee427ef716d14c2e7e6b3a73256a02e555c41319061263c5805a1b",
+              "path": "stage-validate.json",
+              "sizeBytes": 3849
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:affc08aaf27b78332c1606617d53176d23f9bd657d19b3defe96d78bb1d01fda",
+              "path": "metrics.json",
+              "sizeBytes": 57
+            },
+            {
+              "digest": "sha256:1007173c15042e83d0cecd4caac8dc84905739e62e9d91e9e9f9a2568a2b7c1f",
+              "path": "model.pkl",
+              "sizeBytes": 50
+            },
+            {
+              "digest": "sha256:50d70a9690c9a8ef4435c3288f5b0d465be9602733baef4ef04e3be18e668af2",
+              "path": "report.html",
+              "sizeBytes": 209
+            },
+            {
+              "digest": "sha256:2a6885c7eec0691f4a01f2af25530565b995ae63d86cec7f139dff30ab3c56fd",
+              "path": "stage-evaluate.json",
+              "sizeBytes": 4019
+            },
+            {
+              "digest": "sha256:63f8a44654453355a512d28d73e72dce716ca55f1f3534181eca46b015e129ec",
+              "path": "stage-ingest-data.json",
+              "sizeBytes": 3858
+            },
+            {
+              "digest": "sha256:f1c4c7bb22fb6cc61918f85ff29c8bf50e9703fbc11b53b802b2a1e7b23c77f1",
+              "path": "stage-train.json",
+              "sizeBytes": 3934
+            },
+            {
+              "digest": "sha256:79201e845eee427ef716d14c2e7e6b3a73256a02e555c41319061263c5805a1b",
+              "path": "stage-validate.json",
+              "sizeBytes": 3849
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:1007173c15042e83d0cecd4caac8dc84905739e62e9d91e9e9f9a2568a2b7c1f",
+              "path": "mlflow-artifacts/2309c100b36a43eb9940116be130aa10/artifacts/model.pkl",
+              "sizeBytes": 50
+            },
+            {
+              "digest": "sha256:a1605a2eb6bcd219277425b33cb2a1b170e3a44d4b5fd1e56510e8713167d9f2",
+              "path": "mlflow-run.json",
+              "sizeBytes": 157
+            },
+            {
+              "digest": "sha256:1ff72bd8773c3671ca19905bce96c0bead19f2c5da5294734e68f6f0938f6ef8",
+              "path": "mlflow.db",
+              "sizeBytes": 954368
+            },
+            {
+              "digest": "sha256:b33891bad5be2c6f5fd334d0faa563c3d0e3cccd3bc6390f1de7f555139d7197",
+              "path": "stage-log-mlflow-run.json",
+              "sizeBytes": 525
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run",
+        "outputBytes": 955100,
+        "pinned": false,
+        "reclaimedBytes": 15976,
+        "releaseReason": "inherited inputs pruned",
+        "resourceId": "showcase-training-with-mlflow-local-docker",
+        "retention": "final",
+        "runId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "runtimeId": "showcase-training-with-mlflow-local",
+        "sealedAt": "2026-10-20T19:13:14.969251796Z",
+        "sizeBytes": 955100,
+        "state": "sealed",
+        "uri": "file:///akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-log-mlflow-run"
+      },
+      {
+        "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+        "createdAt": "2026-10-20T19:13:05.610432209Z",
+        "driver": "local",
+        "environmentId": "showcase-training-with-mlflow-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+        "fileCount": 2,
+        "id": "workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+        "inputBytes": 15976,
+        "isFinal": true,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:affc08aaf27b78332c1606617d53176d23f9bd657d19b3defe96d78bb1d01fda",
+              "path": "metrics.json",
+              "sizeBytes": 57
+            },
+            {
+              "digest": "sha256:1007173c15042e83d0cecd4caac8dc84905739e62e9d91e9e9f9a2568a2b7c1f",
+              "path": "model.pkl",
+              "sizeBytes": 50
+            },
+            {
+              "digest": "sha256:628fe9998a0fc0aee79935d2bfd5fe01c2d7a41602d73cf4c22a8969c405f7c3",
+              "path": "registry.json",
+              "sizeBytes": 226
+            },
+            {
+              "digest": "sha256:50d70a9690c9a8ef4435c3288f5b0d465be9602733baef4ef04e3be18e668af2",
+              "path": "report.html",
+              "sizeBytes": 209
+            },
+            {
+              "digest": "sha256:2a6885c7eec0691f4a01f2af25530565b995ae63d86cec7f139dff30ab3c56fd",
+              "path": "stage-evaluate.json",
+              "sizeBytes": 4019
+            },
+            {
+              "digest": "sha256:63f8a44654453355a512d28d73e72dce716ca55f1f3534181eca46b015e129ec",
+              "path": "stage-ingest-data.json",
+              "sizeBytes": 3858
+            },
+            {
+              "digest": "sha256:c5268a50349a0a350ef390d3f1f9ac2fc8ee780f0aae28e136a82b9b9c16fe1b",
+              "path": "stage-register-model.json",
+              "sizeBytes": 596
+            },
+            {
+              "digest": "sha256:f1c4c7bb22fb6cc61918f85ff29c8bf50e9703fbc11b53b802b2a1e7b23c77f1",
+              "path": "stage-train.json",
+              "sizeBytes": 3934
+            },
+            {
+              "digest": "sha256:79201e845eee427ef716d14c2e7e6b3a73256a02e555c41319061263c5805a1b",
+              "path": "stage-validate.json",
+              "sizeBytes": 3849
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:affc08aaf27b78332c1606617d53176d23f9bd657d19b3defe96d78bb1d01fda",
+              "path": "metrics.json",
+              "sizeBytes": 57
+            },
+            {
+              "digest": "sha256:1007173c15042e83d0cecd4caac8dc84905739e62e9d91e9e9f9a2568a2b7c1f",
+              "path": "model.pkl",
+              "sizeBytes": 50
+            },
+            {
+              "digest": "sha256:50d70a9690c9a8ef4435c3288f5b0d465be9602733baef4ef04e3be18e668af2",
+              "path": "report.html",
+              "sizeBytes": 209
+            },
+            {
+              "digest": "sha256:2a6885c7eec0691f4a01f2af25530565b995ae63d86cec7f139dff30ab3c56fd",
+              "path": "stage-evaluate.json",
+              "sizeBytes": 4019
+            },
+            {
+              "digest": "sha256:63f8a44654453355a512d28d73e72dce716ca55f1f3534181eca46b015e129ec",
+              "path": "stage-ingest-data.json",
+              "sizeBytes": 3858
+            },
+            {
+              "digest": "sha256:f1c4c7bb22fb6cc61918f85ff29c8bf50e9703fbc11b53b802b2a1e7b23c77f1",
+              "path": "stage-train.json",
+              "sizeBytes": 3934
+            },
+            {
+              "digest": "sha256:79201e845eee427ef716d14c2e7e6b3a73256a02e555c41319061263c5805a1b",
+              "path": "stage-validate.json",
+              "sizeBytes": 3849
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:affc08aaf27b78332c1606617d53176d23f9bd657d19b3defe96d78bb1d01fda",
+              "path": "metrics.json",
+              "sizeBytes": 57
+            },
+            {
+              "digest": "sha256:1007173c15042e83d0cecd4caac8dc84905739e62e9d91e9e9f9a2568a2b7c1f",
+              "path": "model.pkl",
+              "sizeBytes": 50
+            },
+            {
+              "digest": "sha256:50d70a9690c9a8ef4435c3288f5b0d465be9602733baef4ef04e3be18e668af2",
+              "path": "report.html",
+              "sizeBytes": 209
+            },
+            {
+              "digest": "sha256:2a6885c7eec0691f4a01f2af25530565b995ae63d86cec7f139dff30ab3c56fd",
+              "path": "stage-evaluate.json",
+              "sizeBytes": 4019
+            },
+            {
+              "digest": "sha256:63f8a44654453355a512d28d73e72dce716ca55f1f3534181eca46b015e129ec",
+              "path": "stage-ingest-data.json",
+              "sizeBytes": 3858
+            },
+            {
+              "digest": "sha256:f1c4c7bb22fb6cc61918f85ff29c8bf50e9703fbc11b53b802b2a1e7b23c77f1",
+              "path": "stage-train.json",
+              "sizeBytes": 3934
+            },
+            {
+              "digest": "sha256:79201e845eee427ef716d14c2e7e6b3a73256a02e555c41319061263c5805a1b",
+              "path": "stage-validate.json",
+              "sizeBytes": 3849
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:628fe9998a0fc0aee79935d2bfd5fe01c2d7a41602d73cf4c22a8969c405f7c3",
+              "path": "registry.json",
+              "sizeBytes": 226
+            },
+            {
+              "digest": "sha256:c5268a50349a0a350ef390d3f1f9ac2fc8ee780f0aae28e136a82b9b9c16fe1b",
+              "path": "stage-register-model.json",
+              "sizeBytes": 596
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-register-model",
+        "outputBytes": 822,
+        "pinned": false,
+        "reclaimedBytes": 15976,
+        "releaseReason": "inherited inputs pruned",
+        "resourceId": "showcase-training-with-mlflow-local-docker",
+        "retention": "final",
+        "runId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "runtimeId": "showcase-training-with-mlflow-local",
+        "sealedAt": "2026-10-20T19:13:14.962851546Z",
+        "sizeBytes": 822,
+        "state": "sealed",
+        "uri": "file:///akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-register-model"
+      },
+      {
+        "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-train",
+        "createdAt": "2026-10-20T19:13:05.610432209Z",
+        "driver": "local",
+        "environmentId": "showcase-training-with-mlflow-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-train",
+        "fileCount": 4,
+        "id": "workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-train",
+        "inputBytes": 7707,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:1007173c15042e83d0cecd4caac8dc84905739e62e9d91e9e9f9a2568a2b7c1f",
+              "path": "model.pkl",
+              "sizeBytes": 50
+            },
+            {
+              "digest": "sha256:63f8a44654453355a512d28d73e72dce716ca55f1f3534181eca46b015e129ec",
+              "path": "stage-ingest-data.json",
+              "sizeBytes": 3858
+            },
+            {
+              "digest": "sha256:f1c4c7bb22fb6cc61918f85ff29c8bf50e9703fbc11b53b802b2a1e7b23c77f1",
+              "path": "stage-train.json",
+              "sizeBytes": 3934
+            },
+            {
+              "digest": "sha256:79201e845eee427ef716d14c2e7e6b3a73256a02e555c41319061263c5805a1b",
+              "path": "stage-validate.json",
+              "sizeBytes": 3849
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:63f8a44654453355a512d28d73e72dce716ca55f1f3534181eca46b015e129ec",
+              "path": "stage-ingest-data.json",
+              "sizeBytes": 3858
+            },
+            {
+              "digest": "sha256:79201e845eee427ef716d14c2e7e6b3a73256a02e555c41319061263c5805a1b",
+              "path": "stage-validate.json",
+              "sizeBytes": 3849
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:63f8a44654453355a512d28d73e72dce716ca55f1f3534181eca46b015e129ec",
+              "path": "stage-ingest-data.json",
+              "sizeBytes": 3858
+            },
+            {
+              "digest": "sha256:79201e845eee427ef716d14c2e7e6b3a73256a02e555c41319061263c5805a1b",
+              "path": "stage-validate.json",
+              "sizeBytes": 3849
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:1007173c15042e83d0cecd4caac8dc84905739e62e9d91e9e9f9a2568a2b7c1f",
+              "path": "model.pkl",
+              "sizeBytes": 50
+            },
+            {
+              "digest": "sha256:f1c4c7bb22fb6cc61918f85ff29c8bf50e9703fbc11b53b802b2a1e7b23c77f1",
+              "path": "stage-train.json",
+              "sizeBytes": 3934
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-train",
+        "outputBytes": 3984,
+        "pinned": false,
+        "reclaimedBytes": 11691,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:13:11.053819836Z",
+        "resourceId": "showcase-training-with-mlflow-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "runtimeId": "showcase-training-with-mlflow-local",
+        "sealedAt": "2026-10-20T19:13:10.893218128Z",
+        "sizeBytes": 11691,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-train"
+      },
+      {
+        "activityId": "showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+        "createdAt": "2026-10-20T19:13:05.610432209Z",
+        "driver": "local",
+        "environmentId": "showcase-training-with-mlflow-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+        "fileCount": 2,
+        "id": "workspace-showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000-showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+        "inputBytes": 3858,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:63f8a44654453355a512d28d73e72dce716ca55f1f3534181eca46b015e129ec",
+              "path": "stage-ingest-data.json",
+              "sizeBytes": 3858
+            },
+            {
+              "digest": "sha256:79201e845eee427ef716d14c2e7e6b3a73256a02e555c41319061263c5805a1b",
+              "path": "stage-validate.json",
+              "sizeBytes": 3849
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:63f8a44654453355a512d28d73e72dce716ca55f1f3534181eca46b015e129ec",
+              "path": "stage-ingest-data.json",
+              "sizeBytes": 3858
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:63f8a44654453355a512d28d73e72dce716ca55f1f3534181eca46b015e129ec",
+              "path": "stage-ingest-data.json",
+              "sizeBytes": 3858
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:79201e845eee427ef716d14c2e7e6b3a73256a02e555c41319061263c5805a1b",
+              "path": "stage-validate.json",
+              "sizeBytes": 3849
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-validate",
+        "outputBytes": 3849,
+        "pinned": false,
+        "reclaimedBytes": 7707,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:13:09.082257877Z",
+        "resourceId": "showcase-training-with-mlflow-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+        "runtimeId": "showcase-training-with-mlflow-local",
+        "sealedAt": "2026-10-20T19:13:08.895810168Z",
+        "sizeBytes": 7707,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000/showcase-training-with-mlflow-local-48fb3dd5e7-validate"
+      }
+    ]
+  },
+  "runId": "showcase-training-with-mlflow-local-48fb3dd5e7-run-20261020t191305.437066000",
+  "status": "completed",
+  "workflowId": "showcase-training-with-mlflow-local-48fb3dd5e7"
+}

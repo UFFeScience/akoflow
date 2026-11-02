@@ -1,0 +1,2653 @@
+{
+  "activityCount": 6,
+  "completedActivityCount": 6,
+  "image": "ghcr.io/uffescience/akoflow-examples/showcase-model-comparison:local-21d35b55500c7d0d",
+  "imageId": "sha256:21d35b55500c7d0db834ac5601d27a5143d1ec70af1a3b8bed6c01f778932e7e",
+  "observedAt": "2026-10-20T19:10:43Z",
+  "planId": "showcase-model-comparison-local-8c91f9619e-manual-plan-20261020t191035.549636000",
+  "projection": {
+    "activities": [
+      {
+        "activityId": "showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+        "allocatedResourceId": "showcase-model-comparison-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "finishedAt": 1792523435.9125116,
+        "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-model-comparison-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-comparison-local-8c91f9619e-manual-plan-20261020t191035.549636000-showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+        "plannedResourceId": "showcase-model-comparison-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523435.6300828,
+        "readyAt": 1792523435.6300828,
+        "runtimeId": "showcase-model-comparison-local",
+        "runtimeSeconds": 0.1368422508239746,
+        "startedAt": 1792523435.7756693,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-a",
+        "allocatedResourceId": "showcase-model-comparison-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "finishedAt": 1792523437.3610587,
+        "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-a",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1607499122619629,
+          "preparationFinishedAt": 1792523437.073622,
+          "preparationStartedAt": 1792523436.9121346,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.001901388168334961,
+          "runtimeId": "showcase-model-comparison-local",
+          "transferElapsedSeconds": 0.16148734092712402,
+          "transferWorkSeconds": 0.16148734092712402
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-comparison-local-8c91f9619e-manual-plan-20261020t191035.549636000-showcase-model-comparison-local-8c91f9619e-evaluate-a",
+        "plannedResourceId": "showcase-model-comparison-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523436.905327,
+        "readyAt": 1792523436.905327,
+        "runtimeId": "showcase-model-comparison-local",
+        "runtimeSeconds": 0.12668681144714355,
+        "startedAt": 1792523437.234372,
+        "status": "completed",
+        "transferBytes": 3837,
+        "transferSeconds": 0.16148734092712402
+      },
+      {
+        "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-b",
+        "allocatedResourceId": "showcase-model-comparison-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "finishedAt": 1792523437.420992,
+        "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-b",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.19260311126708984,
+          "preparationFinishedAt": 1792523437.096389,
+          "preparationStartedAt": 1792523436.9138439,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0027840137481689453,
+          "runtimeId": "showcase-model-comparison-local",
+          "transferElapsedSeconds": 0.18254518508911133,
+          "transferWorkSeconds": 0.18254518508911133
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-comparison-local-8c91f9619e-manual-plan-20261020t191035.549636000-showcase-model-comparison-local-8c91f9619e-evaluate-b",
+        "plannedResourceId": "showcase-model-comparison-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523436.9068508,
+        "readyAt": 1792523436.9068508,
+        "runtimeId": "showcase-model-comparison-local",
+        "runtimeSeconds": 0.13199973106384277,
+        "startedAt": 1792523437.2889922,
+        "status": "completed",
+        "transferBytes": 3837,
+        "transferSeconds": 0.18254518508911133
+      },
+      {
+        "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-c",
+        "allocatedResourceId": "showcase-model-comparison-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "finishedAt": 1792523437.423147,
+        "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-c",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.2115190029144287,
+          "preparationFinishedAt": 1792523437.0924447,
+          "preparationStartedAt": 1792523436.9162276,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0010089874267578125,
+          "runtimeId": "showcase-model-comparison-local",
+          "transferElapsedSeconds": 0.17621707916259766,
+          "transferWorkSeconds": 0.17621707916259766
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-comparison-local-8c91f9619e-manual-plan-20261020t191035.549636000-showcase-model-comparison-local-8c91f9619e-evaluate-c",
+        "plannedResourceId": "showcase-model-comparison-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523436.9080129,
+        "readyAt": 1792523436.9080129,
+        "runtimeId": "showcase-model-comparison-local",
+        "runtimeSeconds": 0.11918330192565918,
+        "startedAt": 1792523437.3039637,
+        "status": "completed",
+        "transferBytes": 3837,
+        "transferSeconds": 0.17621707916259766
+      },
+      {
+        "activityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+        "allocatedResourceId": "showcase-model-comparison-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "finishedAt": 1792523439.7679188,
+        "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-compare-metrics",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.162703275680542,
+          "preparationFinishedAt": 1792523439.4865186,
+          "preparationStartedAt": 1792523438.9801288,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0031135082244873047,
+          "runtimeId": "showcase-model-comparison-local",
+          "transferElapsedSeconds": 0.506389856338501,
+          "transferWorkSeconds": 1.0950424671173096
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-comparison-local-8c91f9619e-manual-plan-20261020t191035.549636000-showcase-model-comparison-local-8c91f9619e-compare-metrics",
+        "plannedResourceId": "showcase-model-comparison-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523438.974769,
+        "readyAt": 1792523438.974769,
+        "runtimeId": "showcase-model-comparison-local",
+        "runtimeSeconds": 0.11869692802429199,
+        "startedAt": 1792523439.649222,
+        "status": "completed",
+        "transferBytes": 5376,
+        "transferSeconds": 1.0950424671173096
+      },
+      {
+        "activityId": "showcase-model-comparison-local-8c91f9619e-approve-candidate",
+        "allocatedResourceId": "showcase-model-comparison-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "finishedAt": 1792523441.3566062,
+        "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-approve-candidate",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13276362419128418,
+          "preparationFinishedAt": 1792523441.117137,
+          "preparationStartedAt": 1792523440.9355934,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0018498897552490234,
+          "runtimeId": "showcase-model-comparison-local",
+          "transferElapsedSeconds": 0.18154358863830566,
+          "transferWorkSeconds": 0.18154358863830566
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-comparison-local-8c91f9619e-manual-plan-20261020t191035.549636000-showcase-model-comparison-local-8c91f9619e-approve-candidate",
+        "plannedResourceId": "showcase-model-comparison-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523440.9318378,
+        "readyAt": 1792523440.9318378,
+        "runtimeId": "showcase-model-comparison-local",
+        "runtimeSeconds": 0.1067056655883789,
+        "startedAt": 1792523441.2499006,
+        "status": "completed",
+        "transferBytes": 6658,
+        "transferSeconds": 0.18154358863830566
+      }
+    ],
+    "activityAttempts": [
+      {
+        "activityId": "showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+        "allocatedResourceId": "showcase-model-comparison-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "finishedAt": 1792523435.9125116,
+        "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-model-comparison-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-comparison-local-8c91f9619e-manual-plan-20261020t191035.549636000-showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+        "plannedResourceId": "showcase-model-comparison-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523435.6300828,
+        "readyAt": 1792523435.6300828,
+        "runtimeId": "showcase-model-comparison-local",
+        "runtimeSeconds": 0.1368422508239746,
+        "startedAt": 1792523435.7756693,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-a",
+        "allocatedResourceId": "showcase-model-comparison-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "finishedAt": 1792523437.3610587,
+        "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-a",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1607499122619629,
+          "preparationFinishedAt": 1792523437.073622,
+          "preparationStartedAt": 1792523436.9121346,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.001901388168334961,
+          "runtimeId": "showcase-model-comparison-local",
+          "transferElapsedSeconds": 0.16148734092712402,
+          "transferWorkSeconds": 0.16148734092712402
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-comparison-local-8c91f9619e-manual-plan-20261020t191035.549636000-showcase-model-comparison-local-8c91f9619e-evaluate-a",
+        "plannedResourceId": "showcase-model-comparison-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523436.905327,
+        "readyAt": 1792523436.905327,
+        "runtimeId": "showcase-model-comparison-local",
+        "runtimeSeconds": 0.12668681144714355,
+        "startedAt": 1792523437.234372,
+        "status": "completed",
+        "transferBytes": 3837,
+        "transferSeconds": 0.16148734092712402
+      },
+      {
+        "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-b",
+        "allocatedResourceId": "showcase-model-comparison-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "finishedAt": 1792523437.420992,
+        "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-b",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.19260311126708984,
+          "preparationFinishedAt": 1792523437.096389,
+          "preparationStartedAt": 1792523436.9138439,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0027840137481689453,
+          "runtimeId": "showcase-model-comparison-local",
+          "transferElapsedSeconds": 0.18254518508911133,
+          "transferWorkSeconds": 0.18254518508911133
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-comparison-local-8c91f9619e-manual-plan-20261020t191035.549636000-showcase-model-comparison-local-8c91f9619e-evaluate-b",
+        "plannedResourceId": "showcase-model-comparison-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523436.9068508,
+        "readyAt": 1792523436.9068508,
+        "runtimeId": "showcase-model-comparison-local",
+        "runtimeSeconds": 0.13199973106384277,
+        "startedAt": 1792523437.2889922,
+        "status": "completed",
+        "transferBytes": 3837,
+        "transferSeconds": 0.18254518508911133
+      },
+      {
+        "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-c",
+        "allocatedResourceId": "showcase-model-comparison-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "finishedAt": 1792523437.423147,
+        "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-c",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.2115190029144287,
+          "preparationFinishedAt": 1792523437.0924447,
+          "preparationStartedAt": 1792523436.9162276,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0010089874267578125,
+          "runtimeId": "showcase-model-comparison-local",
+          "transferElapsedSeconds": 0.17621707916259766,
+          "transferWorkSeconds": 0.17621707916259766
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-comparison-local-8c91f9619e-manual-plan-20261020t191035.549636000-showcase-model-comparison-local-8c91f9619e-evaluate-c",
+        "plannedResourceId": "showcase-model-comparison-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523436.9080129,
+        "readyAt": 1792523436.9080129,
+        "runtimeId": "showcase-model-comparison-local",
+        "runtimeSeconds": 0.11918330192565918,
+        "startedAt": 1792523437.3039637,
+        "status": "completed",
+        "transferBytes": 3837,
+        "transferSeconds": 0.17621707916259766
+      },
+      {
+        "activityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+        "allocatedResourceId": "showcase-model-comparison-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "finishedAt": 1792523439.7679188,
+        "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-compare-metrics",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.162703275680542,
+          "preparationFinishedAt": 1792523439.4865186,
+          "preparationStartedAt": 1792523438.9801288,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0031135082244873047,
+          "runtimeId": "showcase-model-comparison-local",
+          "transferElapsedSeconds": 0.506389856338501,
+          "transferWorkSeconds": 1.0950424671173096
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-comparison-local-8c91f9619e-manual-plan-20261020t191035.549636000-showcase-model-comparison-local-8c91f9619e-compare-metrics",
+        "plannedResourceId": "showcase-model-comparison-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523438.974769,
+        "readyAt": 1792523438.974769,
+        "runtimeId": "showcase-model-comparison-local",
+        "runtimeSeconds": 0.11869692802429199,
+        "startedAt": 1792523439.649222,
+        "status": "completed",
+        "transferBytes": 5376,
+        "transferSeconds": 1.0950424671173096
+      },
+      {
+        "activityId": "showcase-model-comparison-local-8c91f9619e-approve-candidate",
+        "allocatedResourceId": "showcase-model-comparison-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "finishedAt": 1792523441.3566062,
+        "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-approve-candidate",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13276362419128418,
+          "preparationFinishedAt": 1792523441.117137,
+          "preparationStartedAt": 1792523440.9355934,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0018498897552490234,
+          "runtimeId": "showcase-model-comparison-local",
+          "transferElapsedSeconds": 0.18154358863830566,
+          "transferWorkSeconds": 0.18154358863830566
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-comparison-local-8c91f9619e-manual-plan-20261020t191035.549636000-showcase-model-comparison-local-8c91f9619e-approve-candidate",
+        "plannedResourceId": "showcase-model-comparison-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523440.9318378,
+        "readyAt": 1792523440.9318378,
+        "runtimeId": "showcase-model-comparison-local",
+        "runtimeSeconds": 0.1067056655883789,
+        "startedAt": 1792523441.2499006,
+        "status": "completed",
+        "transferBytes": 6658,
+        "transferSeconds": 0.18154358863830566
+      }
+    ],
+    "artifactMaterializations": null,
+    "artifactTransferRuns": [
+      {
+        "activityId": "showcase-model-comparison-local-8c91f9619e-approve-candidate",
+        "durationSeconds": 0.18154358863830566,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "filesTransferred": 6,
+        "finishedAt": 1792523441.117137,
+        "id": "transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-approve-candidate-0",
+        "logicalBytes": 6658,
+        "planId": "transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-approve-candidate-0",
+        "route": {
+          "consumerActivityId": "showcase-model-comparison-local-8c91f9619e-approve-candidate",
+          "filesTransferred": 6,
+          "producerActivityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.091322917,
+          "sourceEnvironmentId": "showcase-model-comparison-v1",
+          "sourceResourceId": "showcase-model-comparison-local-docker",
+          "sshChannelWaitSeconds": 5.43e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-comparison-v1",
+          "targetResourceId": "showcase-model-comparison-local-docker"
+        },
+        "startedAt": 1792523440.9355934,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 6658
+      },
+      {
+        "activityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+        "durationSeconds": 0.2334299087524414,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "filesTransferred": 2,
+        "finishedAt": 1792523439.2135587,
+        "id": "transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-compare-metrics-0",
+        "logicalBytes": 4355,
+        "planId": "transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-compare-metrics-0",
+        "route": {
+          "consumerActivityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-model-comparison-local-8c91f9619e-evaluate-a",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.08815041700000001,
+          "sourceEnvironmentId": "showcase-model-comparison-v1",
+          "sourceResourceId": "showcase-model-comparison-local-docker",
+          "sshChannelWaitSeconds": 3.3300000000000003e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-comparison-v1",
+          "targetResourceId": "showcase-model-comparison-local-docker"
+        },
+        "startedAt": 1792523438.9801288,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 4355
+      },
+      {
+        "activityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+        "durationSeconds": 0.3552227020263672,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523439.3353515,
+        "id": "transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-compare-metrics-1",
+        "logicalBytes": 4340,
+        "planId": "transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-compare-metrics-1",
+        "route": {
+          "consumerActivityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-model-comparison-local-8c91f9619e-evaluate-b",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.07146425,
+          "sourceEnvironmentId": "showcase-model-comparison-v1",
+          "sourceResourceId": "showcase-model-comparison-local-docker",
+          "sshChannelWaitSeconds": 4.17e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-comparison-v1",
+          "targetResourceId": "showcase-model-comparison-local-docker"
+        },
+        "startedAt": 1792523438.9801288,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 503
+      },
+      {
+        "activityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+        "durationSeconds": 0.506389856338501,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523439.4865186,
+        "id": "transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-compare-metrics-2",
+        "logicalBytes": 4355,
+        "planId": "transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-compare-metrics-2",
+        "route": {
+          "consumerActivityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-model-comparison-local-8c91f9619e-evaluate-c",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.069816041,
+          "sourceEnvironmentId": "showcase-model-comparison-v1",
+          "sourceResourceId": "showcase-model-comparison-local-docker",
+          "sshChannelWaitSeconds": 2.51e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-comparison-v1",
+          "targetResourceId": "showcase-model-comparison-local-docker"
+        },
+        "startedAt": 1792523438.9801288,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 518
+      },
+      {
+        "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-a",
+        "durationSeconds": 0.16148734092712402,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523437.073622,
+        "id": "transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-evaluate-a-0",
+        "logicalBytes": 3837,
+        "planId": "transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-evaluate-a-0",
+        "route": {
+          "consumerActivityId": "showcase-model-comparison-local-8c91f9619e-evaluate-a",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.068128333,
+          "sourceEnvironmentId": "showcase-model-comparison-v1",
+          "sourceResourceId": "showcase-model-comparison-local-docker",
+          "sshChannelWaitSeconds": 3.76e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-comparison-v1",
+          "targetResourceId": "showcase-model-comparison-local-docker"
+        },
+        "startedAt": 1792523436.9121346,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 3837
+      },
+      {
+        "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-b",
+        "durationSeconds": 0.18254518508911133,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523437.096389,
+        "id": "transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-evaluate-b-0",
+        "logicalBytes": 3837,
+        "planId": "transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-evaluate-b-0",
+        "route": {
+          "consumerActivityId": "showcase-model-comparison-local-8c91f9619e-evaluate-b",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.090312499,
+          "sourceEnvironmentId": "showcase-model-comparison-v1",
+          "sourceResourceId": "showcase-model-comparison-local-docker",
+          "sshChannelWaitSeconds": 2.5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-comparison-v1",
+          "targetResourceId": "showcase-model-comparison-local-docker"
+        },
+        "startedAt": 1792523436.9138439,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 3837
+      },
+      {
+        "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-c",
+        "durationSeconds": 0.17621707916259766,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523437.0924447,
+        "id": "transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-evaluate-c-0",
+        "logicalBytes": 3837,
+        "planId": "transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-evaluate-c-0",
+        "route": {
+          "consumerActivityId": "showcase-model-comparison-local-8c91f9619e-evaluate-c",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.087014376,
+          "sourceEnvironmentId": "showcase-model-comparison-v1",
+          "sourceResourceId": "showcase-model-comparison-local-docker",
+          "sshChannelWaitSeconds": 2.5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-comparison-v1",
+          "targetResourceId": "showcase-model-comparison-local-docker"
+        },
+        "startedAt": 1792523436.9162276,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 3837
+      }
+    ],
+    "cloudBilling": {
+      "asOf": "2026-10-20T19:10:43.871421837Z",
+      "costBasis": "VM compute and boot-disk lifecycle at on-demand marginal rates; not a provider invoice",
+      "estimatedCost": 0,
+      "excludedCosts": [
+        "network-egress",
+        "public-ipv4",
+        "image-storage",
+        "discounts-and-tax"
+      ],
+      "instances": [],
+      "knownCost": 0,
+      "status": "estimated"
+    },
+    "dataLocations": [
+      {
+        "dataObjectInstanceId": "68a0e583d9f03a559739d854c672d056",
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "id": "714dddec5a632cc9e517e9fe59b8454e",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-comparison-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "0a67faac8b43935e384d35a71a332a34",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-approve-candidate/report.html"
+      },
+      {
+        "dataObjectInstanceId": "ccd9f0a9877360a96ca03bca92e12f29",
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "id": "69a5f51cbcaf0df337dcee5fbdc526a1",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-comparison-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "0a67faac8b43935e384d35a71a332a34",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-approve-candidate/stage-approve-candidate.json"
+      },
+      {
+        "dataObjectInstanceId": "7de7c24ae9355c1a42705cf6c3676e7f",
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "id": "de3d5004fa83ca51974e8069f012128a",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-comparison-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "0a67faac8b43935e384d35a71a332a34",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-compare-metrics/comparison.csv"
+      },
+      {
+        "dataObjectInstanceId": "67a1288789535ea8dd97867a70bb8def",
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "id": "6c7dc64f0ed50d3b817551bbdd0190a2",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-comparison-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "0a67faac8b43935e384d35a71a332a34",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-compare-metrics/stage-compare-metrics.json"
+      },
+      {
+        "dataObjectInstanceId": "75de3efd6a007f40f380bbee725cca88",
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "id": "c89e6b3f02347169dd1d3be5f3d8e4c8",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-comparison-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "0a67faac8b43935e384d35a71a332a34",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-evaluate-a/stage-evaluate-a.json"
+      },
+      {
+        "dataObjectInstanceId": "967dc6b90f602d7c5d924421f52b8ca6",
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "id": "7206d041d80966ff9070ed8b1098872c",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-comparison-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "0a67faac8b43935e384d35a71a332a34",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-evaluate-b/stage-evaluate-b.json"
+      },
+      {
+        "dataObjectInstanceId": "4330bd2cbdc59f1c43e5c69b36579f19",
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "id": "77b194205e3b24c2645b35dc486b6a49",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-comparison-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "0a67faac8b43935e384d35a71a332a34",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-evaluate-c/stage-evaluate-c.json"
+      },
+      {
+        "dataObjectInstanceId": "06792783b7c639d83449925fd7817512",
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "id": "0113b22d623ee1c95bd32dc31fd98a16",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-comparison-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "0a67faac8b43935e384d35a71a332a34",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set/stage-freeze-evaluation-set.json"
+      }
+    ],
+    "dataObjects": [
+      {
+        "attempt": 1,
+        "checksum": "sha256:f35f3f93c8b4625c3d6e0039da30273ec305178b71cad6de6296fd4e9196abb5",
+        "dataObjectId": "78915113a287cd718b8ac6a7ec9ce44f",
+        "discovered": true,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "id": "68a0e583d9f03a559739d854c672d056",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-comparison-local-8c91f9619e-approve-candidate",
+        "relativePath": "report.html",
+        "sizeBytes": 1112
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:067c186abdef1be1ad3b3aae1333d39ff04f79c77317026cc58f039c56b33f92",
+        "dataObjectId": "08edbd20b2b94715f57e1911bdc32677",
+        "discovered": true,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "id": "ccd9f0a9877360a96ca03bca92e12f29",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-comparison-local-8c91f9619e-approve-candidate",
+        "relativePath": "stage-approve-candidate.json",
+        "sizeBytes": 555
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:b52237feb5aa6e53d51038fe8eb119a62f779a81dfaf67f77fe81ff849540f36",
+        "dataObjectId": "889d3bc58ec3d1d46fb96207f3230e4f",
+        "discovered": true,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "id": "7de7c24ae9355c1a42705cf6c3676e7f",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+        "relativePath": "comparison.csv",
+        "sizeBytes": 109
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:a729d546b959853559a405b94ab0ecc2e33d9defcbbeb0451af1a98446d68871",
+        "dataObjectId": "dcefd408bd735122f95bf68ccd156ff1",
+        "discovered": true,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "id": "67a1288789535ea8dd97867a70bb8def",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+        "relativePath": "stage-compare-metrics.json",
+        "sizeBytes": 1173
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:b63c23f4c7ce883668990f879b1dadb1426898642a2866469e2ddda30b026eff",
+        "dataObjectId": "c71bbf6ab5588d18aaa9b5d22e1faaf4",
+        "discovered": true,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "id": "75de3efd6a007f40f380bbee725cca88",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-comparison-local-8c91f9619e-evaluate-a",
+        "relativePath": "stage-evaluate-a.json",
+        "sizeBytes": 518
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:2c0128a3634ee4776a1745e4f7935d020078cd48ac320d2cf1b0f4dcdb07a0e6",
+        "dataObjectId": "af514961de0a931400266a6e6615e48d",
+        "discovered": true,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "id": "967dc6b90f602d7c5d924421f52b8ca6",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-comparison-local-8c91f9619e-evaluate-b",
+        "relativePath": "stage-evaluate-b.json",
+        "sizeBytes": 503
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:83e81828829db43968b551b67c6f070e7aad3d07522d0d8412fe81c918c3b4b7",
+        "dataObjectId": "a66b2d34d18a66f6340edbfd9a0438bc",
+        "discovered": true,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "id": "4330bd2cbdc59f1c43e5c69b36579f19",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-comparison-local-8c91f9619e-evaluate-c",
+        "relativePath": "stage-evaluate-c.json",
+        "sizeBytes": 518
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:77bb2fb4384725520bf31fdb4e9f7be56b0f2366ef018ead1339f57c410637ab",
+        "dataObjectId": "d66175538d12a51f681cbdf374188a5e",
+        "discovered": true,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "id": "06792783b7c639d83449925fd7817512",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+        "relativePath": "stage-freeze-evaluation-set.json",
+        "sizeBytes": 3837
+      }
+    ],
+    "dataTransfers": [
+      {
+        "bytes": 3837,
+        "consumerActivityId": "showcase-model-comparison-local-8c91f9619e-evaluate-a",
+        "cost": 0,
+        "durationSeconds": 0.16148734092712402,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "finishedAt": 1792523437.073622,
+        "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-a:transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-evaluate-a-0",
+        "logicalBytes": 3837,
+        "producerActivityId": "showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+        "route": {
+          "consumerActivityId": "showcase-model-comparison-local-8c91f9619e-evaluate-a",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.068128333,
+          "sourceEnvironmentId": "showcase-model-comparison-v1",
+          "sourceResourceId": "showcase-model-comparison-local-docker",
+          "sshChannelWaitSeconds": 3.76e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-comparison-v1",
+          "targetResourceId": "showcase-model-comparison-local-docker"
+        },
+        "sourceResourceId": "showcase-model-comparison-local-docker",
+        "startedAt": 1792523436.9121346,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-model-comparison-local-docker"
+      },
+      {
+        "bytes": 3837,
+        "consumerActivityId": "showcase-model-comparison-local-8c91f9619e-evaluate-b",
+        "cost": 0,
+        "durationSeconds": 0.18254518508911133,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "finishedAt": 1792523437.096389,
+        "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-b:transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-evaluate-b-0",
+        "logicalBytes": 3837,
+        "producerActivityId": "showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+        "route": {
+          "consumerActivityId": "showcase-model-comparison-local-8c91f9619e-evaluate-b",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.090312499,
+          "sourceEnvironmentId": "showcase-model-comparison-v1",
+          "sourceResourceId": "showcase-model-comparison-local-docker",
+          "sshChannelWaitSeconds": 2.5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-comparison-v1",
+          "targetResourceId": "showcase-model-comparison-local-docker"
+        },
+        "sourceResourceId": "showcase-model-comparison-local-docker",
+        "startedAt": 1792523436.9138439,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-model-comparison-local-docker"
+      },
+      {
+        "bytes": 3837,
+        "consumerActivityId": "showcase-model-comparison-local-8c91f9619e-evaluate-c",
+        "cost": 0,
+        "durationSeconds": 0.17621707916259766,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "finishedAt": 1792523437.0924447,
+        "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-c:transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-evaluate-c-0",
+        "logicalBytes": 3837,
+        "producerActivityId": "showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+        "route": {
+          "consumerActivityId": "showcase-model-comparison-local-8c91f9619e-evaluate-c",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.087014376,
+          "sourceEnvironmentId": "showcase-model-comparison-v1",
+          "sourceResourceId": "showcase-model-comparison-local-docker",
+          "sshChannelWaitSeconds": 2.5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-comparison-v1",
+          "targetResourceId": "showcase-model-comparison-local-docker"
+        },
+        "sourceResourceId": "showcase-model-comparison-local-docker",
+        "startedAt": 1792523436.9162276,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-model-comparison-local-docker"
+      },
+      {
+        "bytes": 4355,
+        "consumerActivityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+        "cost": 0,
+        "durationSeconds": 0.2334299087524414,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "finishedAt": 1792523439.2135587,
+        "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-compare-metrics:transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-compare-metrics-0",
+        "logicalBytes": 4355,
+        "producerActivityId": "showcase-model-comparison-local-8c91f9619e-evaluate-a",
+        "route": {
+          "consumerActivityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-model-comparison-local-8c91f9619e-evaluate-a",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.08815041700000001,
+          "sourceEnvironmentId": "showcase-model-comparison-v1",
+          "sourceResourceId": "showcase-model-comparison-local-docker",
+          "sshChannelWaitSeconds": 3.3300000000000003e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-comparison-v1",
+          "targetResourceId": "showcase-model-comparison-local-docker"
+        },
+        "sourceResourceId": "showcase-model-comparison-local-docker",
+        "startedAt": 1792523438.9801288,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-model-comparison-local-docker"
+      },
+      {
+        "bytes": 503,
+        "consumerActivityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+        "cost": 0,
+        "durationSeconds": 0.3552227020263672,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "finishedAt": 1792523439.3353515,
+        "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-compare-metrics:transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-compare-metrics-1",
+        "logicalBytes": 4340,
+        "producerActivityId": "showcase-model-comparison-local-8c91f9619e-evaluate-b",
+        "route": {
+          "consumerActivityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-model-comparison-local-8c91f9619e-evaluate-b",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.07146425,
+          "sourceEnvironmentId": "showcase-model-comparison-v1",
+          "sourceResourceId": "showcase-model-comparison-local-docker",
+          "sshChannelWaitSeconds": 4.17e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-comparison-v1",
+          "targetResourceId": "showcase-model-comparison-local-docker"
+        },
+        "sourceResourceId": "showcase-model-comparison-local-docker",
+        "startedAt": 1792523438.9801288,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-model-comparison-local-docker"
+      },
+      {
+        "bytes": 518,
+        "consumerActivityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+        "cost": 0,
+        "durationSeconds": 0.506389856338501,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "finishedAt": 1792523439.4865186,
+        "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-compare-metrics:transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-compare-metrics-2",
+        "logicalBytes": 4355,
+        "producerActivityId": "showcase-model-comparison-local-8c91f9619e-evaluate-c",
+        "route": {
+          "consumerActivityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-model-comparison-local-8c91f9619e-evaluate-c",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.069816041,
+          "sourceEnvironmentId": "showcase-model-comparison-v1",
+          "sourceResourceId": "showcase-model-comparison-local-docker",
+          "sshChannelWaitSeconds": 2.51e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-comparison-v1",
+          "targetResourceId": "showcase-model-comparison-local-docker"
+        },
+        "sourceResourceId": "showcase-model-comparison-local-docker",
+        "startedAt": 1792523438.9801288,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-model-comparison-local-docker"
+      },
+      {
+        "bytes": 6658,
+        "consumerActivityId": "showcase-model-comparison-local-8c91f9619e-approve-candidate",
+        "cost": 0,
+        "durationSeconds": 0.18154358863830566,
+        "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "finishedAt": 1792523441.117137,
+        "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-approve-candidate:transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-approve-candidate-0",
+        "logicalBytes": 6658,
+        "producerActivityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+        "route": {
+          "consumerActivityId": "showcase-model-comparison-local-8c91f9619e-approve-candidate",
+          "filesTransferred": 6,
+          "producerActivityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.091322917,
+          "sourceEnvironmentId": "showcase-model-comparison-v1",
+          "sourceResourceId": "showcase-model-comparison-local-docker",
+          "sshChannelWaitSeconds": 5.43e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-comparison-v1",
+          "targetResourceId": "showcase-model-comparison-local-docker"
+        },
+        "sourceResourceId": "showcase-model-comparison-local-docker",
+        "startedAt": 1792523440.9355934,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-model-comparison-local-docker"
+      }
+    ],
+    "events": [
+      {
+        "aggregateId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.started",
+        "id": "46268a02aa70c1b7201a5c6a4f6dda26",
+        "occurredAt": "2026-10-20T19:10:35.604971125Z",
+        "payload": {
+          "mode": "real",
+          "schedulePlanId": "showcase-model-comparison-local-8c91f9619e-manual-plan-20261020t191035.549636000"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "15172c104bf0749a7203bccdd874829a",
+        "occurredAt": "2026-10-20T19:10:36.825859126Z",
+        "payload": {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+          "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "d8b651d5a25b0d6ddd87a5ea0154efa3",
+        "occurredAt": "2026-10-20T19:10:36.903473334Z",
+        "payload": {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+          "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+          "failureReason": "",
+          "runtimeSeconds": 0.1368422508239746,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-a",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "33a7d7ea10f0ad6589515ab866278ee8",
+        "occurredAt": "2026-10-20T19:10:38.835587418Z",
+        "payload": {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-a",
+          "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-c",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "9b5335bf42cff3f79a7a868e0926cc03",
+        "occurredAt": "2026-10-20T19:10:38.839933585Z",
+        "payload": {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-c",
+          "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-b",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "e91a2d264694d0e8a45437e54ec38172",
+        "occurredAt": "2026-10-20T19:10:38.844972085Z",
+        "payload": {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-b",
+          "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-a",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "d653b062edd9d3ae0393e4d9c40bcefa",
+        "occurredAt": "2026-10-20T19:10:38.96510396Z",
+        "payload": {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-a",
+          "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+          "failureReason": "",
+          "runtimeSeconds": 0.12668681144714355,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-b",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "09248f588c388d68c3461936ed15c210",
+        "occurredAt": "2026-10-20T19:10:38.969847543Z",
+        "payload": {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-b",
+          "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+          "failureReason": "",
+          "runtimeSeconds": 0.13199973106384277,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-c",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "0df0e99e0619583044aead9a74b74a8d",
+        "occurredAt": "2026-10-20T19:10:38.973485793Z",
+        "payload": {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-c",
+          "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11918330192565918,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-compare-metrics",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "6a8a8a6d57ae36c262b71da4266862d7",
+        "occurredAt": "2026-10-20T19:10:40.860219169Z",
+        "payload": {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+          "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-compare-metrics",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "e22ad5d5110b3b1432ce2435081b04e1",
+        "occurredAt": "2026-10-20T19:10:40.930150461Z",
+        "payload": {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+          "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11869692802429199,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-approve-candidate",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "b3acff5e7c74c66c763f15ad376daaf3",
+        "occurredAt": "2026-10-20T19:10:42.858649587Z",
+        "payload": {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-approve-candidate",
+          "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-approve-candidate",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "88ab8970876176145c134a7908259ab4",
+        "occurredAt": "2026-10-20T19:10:42.921255587Z",
+        "payload": {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-approve-candidate",
+          "executionRunId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+          "failureReason": "",
+          "runtimeSeconds": 0.1067056655883789,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.completed",
+        "id": "4d0899e4791f0bb8bc570feddb0262d7",
+        "occurredAt": "2026-10-20T19:10:42.92437067Z",
+        "payload": {
+          "cost": 0,
+          "makespanSeconds": 5.580936908721924
+        }
+      }
+    ],
+    "handles": [
+      {
+        "activityId": "showcase-model-comparison-local-8c91f9619e-approve-candidate",
+        "artifacts": {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-approve-candidate",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:f35f3f93c8b4625c3d6e0039da30273ec305178b71cad6de6296fd4e9196abb5",
+              "modifiedUnixNano": 1792523441351355000,
+              "path": "report.html",
+              "sizeBytes": 1112
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:067c186abdef1be1ad3b3aae1333d39ff04f79c77317026cc58f039c56b33f92",
+              "modifiedUnixNano": 1792523441351355000,
+              "path": "stage-approve-candidate.json",
+              "sizeBytes": 555
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:b52237feb5aa6e53d51038fe8eb119a62f779a81dfaf67f77fe81ff849540f36",
+              "modifiedUnixNano": 1792523441072355000,
+              "path": "comparison.csv",
+              "sizeBytes": 109
+            },
+            {
+              "checksum": "sha256:f35f3f93c8b4625c3d6e0039da30273ec305178b71cad6de6296fd4e9196abb5",
+              "modifiedUnixNano": 1792523441351355000,
+              "path": "report.html",
+              "sizeBytes": 1112
+            },
+            {
+              "checksum": "sha256:067c186abdef1be1ad3b3aae1333d39ff04f79c77317026cc58f039c56b33f92",
+              "modifiedUnixNano": 1792523441351355000,
+              "path": "stage-approve-candidate.json",
+              "sizeBytes": 555
+            },
+            {
+              "checksum": "sha256:a729d546b959853559a405b94ab0ecc2e33d9defcbbeb0451af1a98446d68871",
+              "modifiedUnixNano": 1792523441072355000,
+              "path": "stage-compare-metrics.json",
+              "sizeBytes": 1173
+            },
+            {
+              "checksum": "sha256:b63c23f4c7ce883668990f879b1dadb1426898642a2866469e2ddda30b026eff",
+              "modifiedUnixNano": 1792523441072355000,
+              "path": "stage-evaluate-a.json",
+              "sizeBytes": 518
+            },
+            {
+              "checksum": "sha256:2c0128a3634ee4776a1745e4f7935d020078cd48ac320d2cf1b0f4dcdb07a0e6",
+              "modifiedUnixNano": 1792523441072355000,
+              "path": "stage-evaluate-b.json",
+              "sizeBytes": 503
+            },
+            {
+              "checksum": "sha256:83e81828829db43968b551b67c6f070e7aad3d07522d0d8412fe81c918c3b4b7",
+              "modifiedUnixNano": 1792523441072355000,
+              "path": "stage-evaluate-c.json",
+              "sizeBytes": 518
+            },
+            {
+              "checksum": "sha256:77bb2fb4384725520bf31fdb4e9f7be56b0f2366ef018ead1339f57c410637ab",
+              "modifiedUnixNano": 1792523441072355000,
+              "path": "stage-freeze-evaluation-set.json",
+              "sizeBytes": 3837
+            }
+          ],
+          "finishedAt": 1792523441.3566062,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:b52237feb5aa6e53d51038fe8eb119a62f779a81dfaf67f77fe81ff849540f36",
+              "modifiedUnixNano": 1792523441072355000,
+              "path": "comparison.csv",
+              "sizeBytes": 109
+            },
+            {
+              "checksum": "sha256:a729d546b959853559a405b94ab0ecc2e33d9defcbbeb0451af1a98446d68871",
+              "modifiedUnixNano": 1792523441072355000,
+              "path": "stage-compare-metrics.json",
+              "sizeBytes": 1173
+            },
+            {
+              "checksum": "sha256:b63c23f4c7ce883668990f879b1dadb1426898642a2866469e2ddda30b026eff",
+              "modifiedUnixNano": 1792523441072355000,
+              "path": "stage-evaluate-a.json",
+              "sizeBytes": 518
+            },
+            {
+              "checksum": "sha256:2c0128a3634ee4776a1745e4f7935d020078cd48ac320d2cf1b0f4dcdb07a0e6",
+              "modifiedUnixNano": 1792523441072355000,
+              "path": "stage-evaluate-b.json",
+              "sizeBytes": 503
+            },
+            {
+              "checksum": "sha256:83e81828829db43968b551b67c6f070e7aad3d07522d0d8412fe81c918c3b4b7",
+              "modifiedUnixNano": 1792523441072355000,
+              "path": "stage-evaluate-c.json",
+              "sizeBytes": 518
+            },
+            {
+              "checksum": "sha256:77bb2fb4384725520bf31fdb4e9f7be56b0f2366ef018ead1339f57c410637ab",
+              "modifiedUnixNano": 1792523441072355000,
+              "path": "stage-freeze-evaluation-set.json",
+              "sizeBytes": 3837
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.1067056655883789,
+              "finishedAt": 1792523441.3566062,
+              "phase": "execution",
+              "startedAt": 1792523441.2499006,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-approve-candidate",
+          "runId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+          "runtime": "showcase-model-comparison-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523441.2499006,
+          "summary": {
+            "createdFiles": 2,
+            "deletedFiles": 0,
+            "finalFiles": 8,
+            "initialFiles": 6,
+            "modifiedFiles": 0,
+            "outputBytes": 1667
+          }
+        },
+        "exitCode": 0,
+        "externalId": "748d03f052df8d85c23e001f1d319049a3d76addd97ee8c69101f02a57b7bb29",
+        "finishedAt": 1792523441.3566062,
+        "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-approve-candidate",
+        "log": "{\"activity\": \"approve-candidate\", \"status\": \"success\", \"resultKeys\": [\"approved\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-model-comparison-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-approve-candidate",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523441.2499056,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-approve-candidate",
+          "submittedAt": 1792523441.2499006
+        },
+        "resourceId": "showcase-model-comparison-local-docker",
+        "runId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "runtimeId": "showcase-model-comparison-local",
+        "startedAt": 1792523441.2499006,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+        "artifacts": {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:b52237feb5aa6e53d51038fe8eb119a62f779a81dfaf67f77fe81ff849540f36",
+              "modifiedUnixNano": 1792523439760355000,
+              "path": "comparison.csv",
+              "sizeBytes": 109
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:a729d546b959853559a405b94ab0ecc2e33d9defcbbeb0451af1a98446d68871",
+              "modifiedUnixNano": 1792523439761355000,
+              "path": "stage-compare-metrics.json",
+              "sizeBytes": 1173
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:b52237feb5aa6e53d51038fe8eb119a62f779a81dfaf67f77fe81ff849540f36",
+              "modifiedUnixNano": 1792523439760355000,
+              "path": "comparison.csv",
+              "sizeBytes": 109
+            },
+            {
+              "checksum": "sha256:a729d546b959853559a405b94ab0ecc2e33d9defcbbeb0451af1a98446d68871",
+              "modifiedUnixNano": 1792523439761355000,
+              "path": "stage-compare-metrics.json",
+              "sizeBytes": 1173
+            },
+            {
+              "checksum": "sha256:b63c23f4c7ce883668990f879b1dadb1426898642a2866469e2ddda30b026eff",
+              "modifiedUnixNano": 1792523439170355000,
+              "path": "stage-evaluate-a.json",
+              "sizeBytes": 518
+            },
+            {
+              "checksum": "sha256:2c0128a3634ee4776a1745e4f7935d020078cd48ac320d2cf1b0f4dcdb07a0e6",
+              "modifiedUnixNano": 1792523439288355000,
+              "path": "stage-evaluate-b.json",
+              "sizeBytes": 503
+            },
+            {
+              "checksum": "sha256:83e81828829db43968b551b67c6f070e7aad3d07522d0d8412fe81c918c3b4b7",
+              "modifiedUnixNano": 1792523439442355000,
+              "path": "stage-evaluate-c.json",
+              "sizeBytes": 518
+            },
+            {
+              "checksum": "sha256:77bb2fb4384725520bf31fdb4e9f7be56b0f2366ef018ead1339f57c410637ab",
+              "modifiedUnixNano": 1792523439170355000,
+              "path": "stage-freeze-evaluation-set.json",
+              "sizeBytes": 3837
+            }
+          ],
+          "finishedAt": 1792523439.7679188,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:b63c23f4c7ce883668990f879b1dadb1426898642a2866469e2ddda30b026eff",
+              "modifiedUnixNano": 1792523439170355000,
+              "path": "stage-evaluate-a.json",
+              "sizeBytes": 518
+            },
+            {
+              "checksum": "sha256:2c0128a3634ee4776a1745e4f7935d020078cd48ac320d2cf1b0f4dcdb07a0e6",
+              "modifiedUnixNano": 1792523439288355000,
+              "path": "stage-evaluate-b.json",
+              "sizeBytes": 503
+            },
+            {
+              "checksum": "sha256:83e81828829db43968b551b67c6f070e7aad3d07522d0d8412fe81c918c3b4b7",
+              "modifiedUnixNano": 1792523439442355000,
+              "path": "stage-evaluate-c.json",
+              "sizeBytes": 518
+            },
+            {
+              "checksum": "sha256:77bb2fb4384725520bf31fdb4e9f7be56b0f2366ef018ead1339f57c410637ab",
+              "modifiedUnixNano": 1792523439170355000,
+              "path": "stage-freeze-evaluation-set.json",
+              "sizeBytes": 3837
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11869692802429199,
+              "finishedAt": 1792523439.7679188,
+              "phase": "execution",
+              "startedAt": 1792523439.649222,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-compare-metrics",
+          "runId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+          "runtime": "showcase-model-comparison-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523439.649222,
+          "summary": {
+            "createdFiles": 2,
+            "deletedFiles": 0,
+            "finalFiles": 6,
+            "initialFiles": 4,
+            "modifiedFiles": 0,
+            "outputBytes": 1282
+          }
+        },
+        "exitCode": 0,
+        "externalId": "b85b7241ed15797e6f4c5645db341056d01c3e41e7e1e6aa73b1cb8d268bdfb1",
+        "finishedAt": 1792523439.7679188,
+        "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-compare-metrics",
+        "log": "{\"activity\": \"compare-metrics\", \"status\": \"success\", \"resultKeys\": [\"candidates\", \"best\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-model-comparison-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-compare-metrics",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523439.6492274,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-compare-metrics",
+          "submittedAt": 1792523439.649222
+        },
+        "resourceId": "showcase-model-comparison-local-docker",
+        "runId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "runtimeId": "showcase-model-comparison-local",
+        "startedAt": 1792523439.649222,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-a",
+        "artifacts": {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-a",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:b63c23f4c7ce883668990f879b1dadb1426898642a2866469e2ddda30b026eff",
+              "modifiedUnixNano": 1792523437354355000,
+              "path": "stage-evaluate-a.json",
+              "sizeBytes": 518
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:b63c23f4c7ce883668990f879b1dadb1426898642a2866469e2ddda30b026eff",
+              "modifiedUnixNano": 1792523437354355000,
+              "path": "stage-evaluate-a.json",
+              "sizeBytes": 518
+            },
+            {
+              "checksum": "sha256:77bb2fb4384725520bf31fdb4e9f7be56b0f2366ef018ead1339f57c410637ab",
+              "modifiedUnixNano": 1792523437030355000,
+              "path": "stage-freeze-evaluation-set.json",
+              "sizeBytes": 3837
+            }
+          ],
+          "finishedAt": 1792523437.3610587,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:77bb2fb4384725520bf31fdb4e9f7be56b0f2366ef018ead1339f57c410637ab",
+              "modifiedUnixNano": 1792523437030355000,
+              "path": "stage-freeze-evaluation-set.json",
+              "sizeBytes": 3837
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.12668681144714355,
+              "finishedAt": 1792523437.3610587,
+              "phase": "execution",
+              "startedAt": 1792523437.234372,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-evaluate-a",
+          "runId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+          "runtime": "showcase-model-comparison-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523437.234372,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 518
+          }
+        },
+        "exitCode": 0,
+        "externalId": "6a6549d5a4f3b205a9090e45f1af116f3bbc20511d586c90eda77b7edb13d7f2",
+        "finishedAt": 1792523437.3610587,
+        "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-a",
+        "log": "{\"activity\": \"evaluate-a\", \"status\": \"success\", \"resultKeys\": [\"candidate\", \"rmse\", \"model\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-model-comparison-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-evaluate-a",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523437.2343776,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-evaluate-a",
+          "submittedAt": 1792523437.234372
+        },
+        "resourceId": "showcase-model-comparison-local-docker",
+        "runId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "runtimeId": "showcase-model-comparison-local",
+        "startedAt": 1792523437.234372,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-b",
+        "artifacts": {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-b",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:2c0128a3634ee4776a1745e4f7935d020078cd48ac320d2cf1b0f4dcdb07a0e6",
+              "modifiedUnixNano": 1792523437411355000,
+              "path": "stage-evaluate-b.json",
+              "sizeBytes": 503
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:2c0128a3634ee4776a1745e4f7935d020078cd48ac320d2cf1b0f4dcdb07a0e6",
+              "modifiedUnixNano": 1792523437411355000,
+              "path": "stage-evaluate-b.json",
+              "sizeBytes": 503
+            },
+            {
+              "checksum": "sha256:77bb2fb4384725520bf31fdb4e9f7be56b0f2366ef018ead1339f57c410637ab",
+              "modifiedUnixNano": 1792523437051355000,
+              "path": "stage-freeze-evaluation-set.json",
+              "sizeBytes": 3837
+            }
+          ],
+          "finishedAt": 1792523437.420992,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:77bb2fb4384725520bf31fdb4e9f7be56b0f2366ef018ead1339f57c410637ab",
+              "modifiedUnixNano": 1792523437051355000,
+              "path": "stage-freeze-evaluation-set.json",
+              "sizeBytes": 3837
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.13199973106384277,
+              "finishedAt": 1792523437.420992,
+              "phase": "execution",
+              "startedAt": 1792523437.2889922,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-evaluate-b",
+          "runId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+          "runtime": "showcase-model-comparison-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523437.2889922,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 503
+          }
+        },
+        "exitCode": 0,
+        "externalId": "225a08b3002b8b3698bd53b60a50f59476ce211b61cfb6521104e23994a17640",
+        "finishedAt": 1792523437.420992,
+        "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-b",
+        "log": "{\"activity\": \"evaluate-b\", \"status\": \"success\", \"resultKeys\": [\"candidate\", \"rmse\", \"model\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-model-comparison-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-evaluate-b",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523437.288999,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-evaluate-b",
+          "submittedAt": 1792523437.2889922
+        },
+        "resourceId": "showcase-model-comparison-local-docker",
+        "runId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "runtimeId": "showcase-model-comparison-local",
+        "startedAt": 1792523437.2889922,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-c",
+        "artifacts": {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-c",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:83e81828829db43968b551b67c6f070e7aad3d07522d0d8412fe81c918c3b4b7",
+              "modifiedUnixNano": 1792523437416355000,
+              "path": "stage-evaluate-c.json",
+              "sizeBytes": 518
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:83e81828829db43968b551b67c6f070e7aad3d07522d0d8412fe81c918c3b4b7",
+              "modifiedUnixNano": 1792523437416355000,
+              "path": "stage-evaluate-c.json",
+              "sizeBytes": 518
+            },
+            {
+              "checksum": "sha256:77bb2fb4384725520bf31fdb4e9f7be56b0f2366ef018ead1339f57c410637ab",
+              "modifiedUnixNano": 1792523437049355000,
+              "path": "stage-freeze-evaluation-set.json",
+              "sizeBytes": 3837
+            }
+          ],
+          "finishedAt": 1792523437.423147,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:77bb2fb4384725520bf31fdb4e9f7be56b0f2366ef018ead1339f57c410637ab",
+              "modifiedUnixNano": 1792523437049355000,
+              "path": "stage-freeze-evaluation-set.json",
+              "sizeBytes": 3837
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11918330192565918,
+              "finishedAt": 1792523437.423147,
+              "phase": "execution",
+              "startedAt": 1792523437.3039637,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-evaluate-c",
+          "runId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+          "runtime": "showcase-model-comparison-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523437.3039637,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 518
+          }
+        },
+        "exitCode": 0,
+        "externalId": "8b796cb0d064d897f4dabbc5855120f9c12e568c6a564b8367b687273e93eda5",
+        "finishedAt": 1792523437.423147,
+        "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-c",
+        "log": "{\"activity\": \"evaluate-c\", \"status\": \"success\", \"resultKeys\": [\"candidate\", \"rmse\", \"model\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-model-comparison-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-evaluate-c",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523437.3039694,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-evaluate-c",
+          "submittedAt": 1792523437.3039637
+        },
+        "resourceId": "showcase-model-comparison-local-docker",
+        "runId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "runtimeId": "showcase-model-comparison-local",
+        "startedAt": 1792523437.3039637,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+        "artifacts": {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:77bb2fb4384725520bf31fdb4e9f7be56b0f2366ef018ead1339f57c410637ab",
+              "modifiedUnixNano": 1792523435906355000,
+              "path": "stage-freeze-evaluation-set.json",
+              "sizeBytes": 3837
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:77bb2fb4384725520bf31fdb4e9f7be56b0f2366ef018ead1339f57c410637ab",
+              "modifiedUnixNano": 1792523435906355000,
+              "path": "stage-freeze-evaluation-set.json",
+              "sizeBytes": 3837
+            }
+          ],
+          "finishedAt": 1792523435.9125116,
+          "phases": [
+            {
+              "durationSeconds": 0.1368422508239746,
+              "finishedAt": 1792523435.9125116,
+              "phase": "execution",
+              "startedAt": 1792523435.7756693,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+          "runId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+          "runtime": "showcase-model-comparison-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523435.7756693,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 1,
+            "initialFiles": 0,
+            "modifiedFiles": 0,
+            "outputBytes": 3837
+          }
+        },
+        "exitCode": 0,
+        "externalId": "05e6c3c41b81e29525d22691b20bc266f21748c1a2f0fd6f1b0f20e65314d2e3",
+        "finishedAt": 1792523435.9125116,
+        "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+        "log": "{\"activity\": \"freeze-evaluation-set\", \"status\": \"success\", \"resultKeys\": [\"training\", \"validation\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-model-comparison-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523435.7756777,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+          "submittedAt": 1792523435.7756693
+        },
+        "resourceId": "showcase-model-comparison-local-docker",
+        "runId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "runtimeId": "showcase-model-comparison-local",
+        "startedAt": 1792523435.7756693,
+        "status": "completed"
+      }
+    ],
+    "infrastructureRuns": [],
+    "operationEvents": [],
+    "run": {
+      "activityCount": 6,
+      "breakdown": {
+        "computeSeconds": 0.740114688873291,
+        "interferenceSeconds": 0,
+        "overheadSeconds": 0,
+        "queueSeconds": 0,
+        "transferSeconds": 1.7968356609344482
+      },
+      "completedActivityCount": 6,
+      "cost": 0,
+      "finishedAt": "2026-10-20T19:10:42Z",
+      "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+      "kind": "workflow",
+      "makespanSeconds": 5.580936908721924,
+      "mode": "real",
+      "schedulePlanId": "showcase-model-comparison-local-8c91f9619e-manual-plan-20261020t191035.549636000",
+      "seed": 0,
+      "startedAt": "2026-10-20T19:10:35Z",
+      "status": "completed",
+      "title": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+      "transferredBytes": 23545
+    },
+    "timeline": {
+      "computeMakespanSeconds": 5.580936908721924,
+      "coveredWallSeconds": 2.0181667804718018,
+      "finishedAt": 1792523442,
+      "phases": [
+        {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+          "category": "resource-queue",
+          "durationSeconds": 0.14558649063110352,
+          "finishedAt": 1792523435.7756693,
+          "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523435.6300828,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+          "category": "runtime",
+          "durationSeconds": 0.1368422508239746,
+          "finishedAt": 1792523435.9125116,
+          "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523435.7756693,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-a",
+          "category": "resource-queue",
+          "durationSeconds": 0.006807565689086914,
+          "finishedAt": 1792523436.9121346,
+          "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-a:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523436.905327,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-b",
+          "category": "resource-queue",
+          "durationSeconds": 0.00699305534362793,
+          "finishedAt": 1792523436.9138439,
+          "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-b:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523436.9068508,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-c",
+          "category": "resource-queue",
+          "durationSeconds": 0.008214712142944336,
+          "finishedAt": 1792523436.9162276,
+          "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-c:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523436.9080129,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-a",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.16148734092712402,
+          "finishedAt": 1792523437.073622,
+          "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-a:transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-evaluate-a-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523436.9121346,
+          "status": "completed",
+          "transferId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-a:transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-evaluate-a-0"
+        },
+        {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-b",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.18254518508911133,
+          "finishedAt": 1792523437.096389,
+          "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-b:transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-evaluate-b-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523436.9138439,
+          "status": "completed",
+          "transferId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-b:transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-evaluate-b-0"
+        },
+        {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-c",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.17621707916259766,
+          "finishedAt": 1792523437.0924447,
+          "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-c:transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-evaluate-c-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523436.9162276,
+          "status": "completed",
+          "transferId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-c:transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-evaluate-c-0"
+        },
+        {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-a",
+          "category": "launch",
+          "durationSeconds": 0.1607499122619629,
+          "finishedAt": 1792523437.234372,
+          "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-a:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523437.073622,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-c",
+          "category": "launch",
+          "durationSeconds": 0.2115190029144287,
+          "finishedAt": 1792523437.3039637,
+          "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-c:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523437.0924447,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-b",
+          "category": "launch",
+          "durationSeconds": 0.19260311126708984,
+          "finishedAt": 1792523437.2889922,
+          "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-b:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523437.096389,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-a",
+          "category": "runtime",
+          "durationSeconds": 0.12668681144714355,
+          "finishedAt": 1792523437.3610587,
+          "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-a:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523437.234372,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-b",
+          "category": "runtime",
+          "durationSeconds": 0.13199973106384277,
+          "finishedAt": 1792523437.420992,
+          "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-b:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523437.2889922,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-c",
+          "category": "runtime",
+          "durationSeconds": 0.11918330192565918,
+          "finishedAt": 1792523437.423147,
+          "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-evaluate-c:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523437.3039637,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+          "category": "resource-queue",
+          "durationSeconds": 0.005359649658203125,
+          "finishedAt": 1792523438.9801288,
+          "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-compare-metrics:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523438.974769,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.2334299087524414,
+          "finishedAt": 1792523439.2135587,
+          "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-compare-metrics:transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-compare-metrics-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523438.9801288,
+          "status": "completed",
+          "transferId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-compare-metrics:transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-compare-metrics-0"
+        },
+        {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.3552227020263672,
+          "finishedAt": 1792523439.3353515,
+          "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-compare-metrics:transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-compare-metrics-1",
+          "source": "transfer-observation",
+          "startedAt": 1792523438.9801288,
+          "status": "completed",
+          "transferId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-compare-metrics:transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-compare-metrics-1"
+        },
+        {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.506389856338501,
+          "finishedAt": 1792523439.4865186,
+          "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-compare-metrics:transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-compare-metrics-2",
+          "source": "transfer-observation",
+          "startedAt": 1792523438.9801288,
+          "status": "completed",
+          "transferId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-compare-metrics:transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-compare-metrics-2"
+        },
+        {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+          "category": "launch",
+          "durationSeconds": 0.162703275680542,
+          "finishedAt": 1792523439.649222,
+          "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-compare-metrics:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523439.4865186,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+          "category": "runtime",
+          "durationSeconds": 0.11869692802429199,
+          "finishedAt": 1792523439.7679188,
+          "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-compare-metrics:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523439.649222,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-approve-candidate",
+          "category": "resource-queue",
+          "durationSeconds": 0.0037555694580078125,
+          "finishedAt": 1792523440.9355934,
+          "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-approve-candidate:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523440.9318378,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-approve-candidate",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.18154358863830566,
+          "finishedAt": 1792523441.117137,
+          "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-approve-candidate:transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-approve-candidate-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523440.9355934,
+          "status": "completed",
+          "transferId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-approve-candidate:transfer-workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-approve-candidate-0"
+        },
+        {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-approve-candidate",
+          "category": "launch",
+          "durationSeconds": 0.13276362419128418,
+          "finishedAt": 1792523441.2499006,
+          "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-approve-candidate:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523441.117137,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-comparison-local-8c91f9619e-approve-candidate",
+          "category": "runtime",
+          "durationSeconds": 0.1067056655883789,
+          "finishedAt": 1792523441.3566062,
+          "id": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000:showcase-model-comparison-local-8c91f9619e-approve-candidate:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523441.2499006,
+          "status": "completed"
+        }
+      ],
+      "startedAt": 1792523435,
+      "totals": {
+        "destroySeconds": 0,
+        "executablePreparationSeconds": 0,
+        "launchSeconds": 0.8603389263153076,
+        "provisionSeconds": 0,
+        "resourceQueueSeconds": 0.17671704292297363,
+        "runtimeSeconds": 0.740114688873291,
+        "startSeconds": 0,
+        "stopSeconds": 0,
+        "validationSeconds": 0,
+        "workspaceTransferSeconds": 1.7968356609344482
+      },
+      "unclassifiedWallSeconds": 4.981833219528198,
+      "wallSeconds": 7
+    },
+    "workspaceLeases": [
+      {
+        "consumerActivityId": "showcase-model-comparison-local-8c91f9619e-approve-candidate",
+        "id": "workspace-lease-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-compare-metrics-showcase-model-comparison-local-8c91f9619e-approve-candidate",
+        "producerActivityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:10:41.118182461Z",
+        "runId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "workspaceId": "workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-compare-metrics"
+      },
+      {
+        "consumerActivityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+        "id": "workspace-lease-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-evaluate-a-showcase-model-comparison-local-8c91f9619e-compare-metrics",
+        "producerActivityId": "showcase-model-comparison-local-8c91f9619e-evaluate-a",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:10:39.49614996Z",
+        "runId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "workspaceId": "workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-evaluate-a"
+      },
+      {
+        "consumerActivityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+        "id": "workspace-lease-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-evaluate-b-showcase-model-comparison-local-8c91f9619e-compare-metrics",
+        "producerActivityId": "showcase-model-comparison-local-8c91f9619e-evaluate-b",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:10:39.49614996Z",
+        "runId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "workspaceId": "workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-evaluate-b"
+      },
+      {
+        "consumerActivityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+        "id": "workspace-lease-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-evaluate-c-showcase-model-comparison-local-8c91f9619e-compare-metrics",
+        "producerActivityId": "showcase-model-comparison-local-8c91f9619e-evaluate-c",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:10:39.49614996Z",
+        "runId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "workspaceId": "workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-evaluate-c"
+      },
+      {
+        "consumerActivityId": "showcase-model-comparison-local-8c91f9619e-evaluate-a",
+        "id": "workspace-lease-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set-showcase-model-comparison-local-8c91f9619e-evaluate-a",
+        "producerActivityId": "showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:10:37.075646834Z",
+        "runId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "workspaceId": "workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set"
+      },
+      {
+        "consumerActivityId": "showcase-model-comparison-local-8c91f9619e-evaluate-b",
+        "id": "workspace-lease-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set-showcase-model-comparison-local-8c91f9619e-evaluate-b",
+        "producerActivityId": "showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:10:37.099225876Z",
+        "runId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "workspaceId": "workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set"
+      },
+      {
+        "consumerActivityId": "showcase-model-comparison-local-8c91f9619e-evaluate-c",
+        "id": "workspace-lease-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set-showcase-model-comparison-local-8c91f9619e-evaluate-c",
+        "producerActivityId": "showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:10:37.093795709Z",
+        "runId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "workspaceId": "workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set"
+      }
+    ],
+    "workspaces": [
+      {
+        "activityId": "showcase-model-comparison-local-8c91f9619e-approve-candidate",
+        "createdAt": "2026-10-20T19:10:35.607520334Z",
+        "driver": "local",
+        "environmentId": "showcase-model-comparison-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-approve-candidate",
+        "fileCount": 2,
+        "id": "workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-approve-candidate",
+        "inputBytes": 6658,
+        "isFinal": true,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:b52237feb5aa6e53d51038fe8eb119a62f779a81dfaf67f77fe81ff849540f36",
+              "path": "comparison.csv",
+              "sizeBytes": 109
+            },
+            {
+              "digest": "sha256:f35f3f93c8b4625c3d6e0039da30273ec305178b71cad6de6296fd4e9196abb5",
+              "path": "report.html",
+              "sizeBytes": 1112
+            },
+            {
+              "digest": "sha256:067c186abdef1be1ad3b3aae1333d39ff04f79c77317026cc58f039c56b33f92",
+              "path": "stage-approve-candidate.json",
+              "sizeBytes": 555
+            },
+            {
+              "digest": "sha256:a729d546b959853559a405b94ab0ecc2e33d9defcbbeb0451af1a98446d68871",
+              "path": "stage-compare-metrics.json",
+              "sizeBytes": 1173
+            },
+            {
+              "digest": "sha256:b63c23f4c7ce883668990f879b1dadb1426898642a2866469e2ddda30b026eff",
+              "path": "stage-evaluate-a.json",
+              "sizeBytes": 518
+            },
+            {
+              "digest": "sha256:2c0128a3634ee4776a1745e4f7935d020078cd48ac320d2cf1b0f4dcdb07a0e6",
+              "path": "stage-evaluate-b.json",
+              "sizeBytes": 503
+            },
+            {
+              "digest": "sha256:83e81828829db43968b551b67c6f070e7aad3d07522d0d8412fe81c918c3b4b7",
+              "path": "stage-evaluate-c.json",
+              "sizeBytes": 518
+            },
+            {
+              "digest": "sha256:77bb2fb4384725520bf31fdb4e9f7be56b0f2366ef018ead1339f57c410637ab",
+              "path": "stage-freeze-evaluation-set.json",
+              "sizeBytes": 3837
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:b52237feb5aa6e53d51038fe8eb119a62f779a81dfaf67f77fe81ff849540f36",
+              "path": "comparison.csv",
+              "sizeBytes": 109
+            },
+            {
+              "digest": "sha256:a729d546b959853559a405b94ab0ecc2e33d9defcbbeb0451af1a98446d68871",
+              "path": "stage-compare-metrics.json",
+              "sizeBytes": 1173
+            },
+            {
+              "digest": "sha256:b63c23f4c7ce883668990f879b1dadb1426898642a2866469e2ddda30b026eff",
+              "path": "stage-evaluate-a.json",
+              "sizeBytes": 518
+            },
+            {
+              "digest": "sha256:2c0128a3634ee4776a1745e4f7935d020078cd48ac320d2cf1b0f4dcdb07a0e6",
+              "path": "stage-evaluate-b.json",
+              "sizeBytes": 503
+            },
+            {
+              "digest": "sha256:83e81828829db43968b551b67c6f070e7aad3d07522d0d8412fe81c918c3b4b7",
+              "path": "stage-evaluate-c.json",
+              "sizeBytes": 518
+            },
+            {
+              "digest": "sha256:77bb2fb4384725520bf31fdb4e9f7be56b0f2366ef018ead1339f57c410637ab",
+              "path": "stage-freeze-evaluation-set.json",
+              "sizeBytes": 3837
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:b52237feb5aa6e53d51038fe8eb119a62f779a81dfaf67f77fe81ff849540f36",
+              "path": "comparison.csv",
+              "sizeBytes": 109
+            },
+            {
+              "digest": "sha256:a729d546b959853559a405b94ab0ecc2e33d9defcbbeb0451af1a98446d68871",
+              "path": "stage-compare-metrics.json",
+              "sizeBytes": 1173
+            },
+            {
+              "digest": "sha256:b63c23f4c7ce883668990f879b1dadb1426898642a2866469e2ddda30b026eff",
+              "path": "stage-evaluate-a.json",
+              "sizeBytes": 518
+            },
+            {
+              "digest": "sha256:2c0128a3634ee4776a1745e4f7935d020078cd48ac320d2cf1b0f4dcdb07a0e6",
+              "path": "stage-evaluate-b.json",
+              "sizeBytes": 503
+            },
+            {
+              "digest": "sha256:83e81828829db43968b551b67c6f070e7aad3d07522d0d8412fe81c918c3b4b7",
+              "path": "stage-evaluate-c.json",
+              "sizeBytes": 518
+            },
+            {
+              "digest": "sha256:77bb2fb4384725520bf31fdb4e9f7be56b0f2366ef018ead1339f57c410637ab",
+              "path": "stage-freeze-evaluation-set.json",
+              "sizeBytes": 3837
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:f35f3f93c8b4625c3d6e0039da30273ec305178b71cad6de6296fd4e9196abb5",
+              "path": "report.html",
+              "sizeBytes": 1112
+            },
+            {
+              "digest": "sha256:067c186abdef1be1ad3b3aae1333d39ff04f79c77317026cc58f039c56b33f92",
+              "path": "stage-approve-candidate.json",
+              "sizeBytes": 555
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-approve-candidate",
+        "outputBytes": 1667,
+        "pinned": false,
+        "reclaimedBytes": 6658,
+        "releaseReason": "inherited inputs pruned",
+        "resourceId": "showcase-model-comparison-local-docker",
+        "retention": "final",
+        "runId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "runtimeId": "showcase-model-comparison-local",
+        "sealedAt": "2026-10-20T19:10:42.915679295Z",
+        "sizeBytes": 1667,
+        "state": "sealed",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-approve-candidate"
+      },
+      {
+        "activityId": "showcase-model-comparison-local-8c91f9619e-compare-metrics",
+        "createdAt": "2026-10-20T19:10:35.607520334Z",
+        "driver": "local",
+        "environmentId": "showcase-model-comparison-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-compare-metrics",
+        "fileCount": 6,
+        "id": "workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-compare-metrics",
+        "inputBytes": 5376,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:b52237feb5aa6e53d51038fe8eb119a62f779a81dfaf67f77fe81ff849540f36",
+              "path": "comparison.csv",
+              "sizeBytes": 109
+            },
+            {
+              "digest": "sha256:a729d546b959853559a405b94ab0ecc2e33d9defcbbeb0451af1a98446d68871",
+              "path": "stage-compare-metrics.json",
+              "sizeBytes": 1173
+            },
+            {
+              "digest": "sha256:b63c23f4c7ce883668990f879b1dadb1426898642a2866469e2ddda30b026eff",
+              "path": "stage-evaluate-a.json",
+              "sizeBytes": 518
+            },
+            {
+              "digest": "sha256:2c0128a3634ee4776a1745e4f7935d020078cd48ac320d2cf1b0f4dcdb07a0e6",
+              "path": "stage-evaluate-b.json",
+              "sizeBytes": 503
+            },
+            {
+              "digest": "sha256:83e81828829db43968b551b67c6f070e7aad3d07522d0d8412fe81c918c3b4b7",
+              "path": "stage-evaluate-c.json",
+              "sizeBytes": 518
+            },
+            {
+              "digest": "sha256:77bb2fb4384725520bf31fdb4e9f7be56b0f2366ef018ead1339f57c410637ab",
+              "path": "stage-freeze-evaluation-set.json",
+              "sizeBytes": 3837
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:b63c23f4c7ce883668990f879b1dadb1426898642a2866469e2ddda30b026eff",
+              "path": "stage-evaluate-a.json",
+              "sizeBytes": 518
+            },
+            {
+              "digest": "sha256:2c0128a3634ee4776a1745e4f7935d020078cd48ac320d2cf1b0f4dcdb07a0e6",
+              "path": "stage-evaluate-b.json",
+              "sizeBytes": 503
+            },
+            {
+              "digest": "sha256:83e81828829db43968b551b67c6f070e7aad3d07522d0d8412fe81c918c3b4b7",
+              "path": "stage-evaluate-c.json",
+              "sizeBytes": 518
+            },
+            {
+              "digest": "sha256:77bb2fb4384725520bf31fdb4e9f7be56b0f2366ef018ead1339f57c410637ab",
+              "path": "stage-freeze-evaluation-set.json",
+              "sizeBytes": 3837
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:b63c23f4c7ce883668990f879b1dadb1426898642a2866469e2ddda30b026eff",
+              "path": "stage-evaluate-a.json",
+              "sizeBytes": 518
+            },
+            {
+              "digest": "sha256:2c0128a3634ee4776a1745e4f7935d020078cd48ac320d2cf1b0f4dcdb07a0e6",
+              "path": "stage-evaluate-b.json",
+              "sizeBytes": 503
+            },
+            {
+              "digest": "sha256:83e81828829db43968b551b67c6f070e7aad3d07522d0d8412fe81c918c3b4b7",
+              "path": "stage-evaluate-c.json",
+              "sizeBytes": 518
+            },
+            {
+              "digest": "sha256:77bb2fb4384725520bf31fdb4e9f7be56b0f2366ef018ead1339f57c410637ab",
+              "path": "stage-freeze-evaluation-set.json",
+              "sizeBytes": 3837
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:b52237feb5aa6e53d51038fe8eb119a62f779a81dfaf67f77fe81ff849540f36",
+              "path": "comparison.csv",
+              "sizeBytes": 109
+            },
+            {
+              "digest": "sha256:a729d546b959853559a405b94ab0ecc2e33d9defcbbeb0451af1a98446d68871",
+              "path": "stage-compare-metrics.json",
+              "sizeBytes": 1173
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-compare-metrics",
+        "outputBytes": 1282,
+        "pinned": false,
+        "reclaimedBytes": 6658,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:10:41.122060586Z",
+        "resourceId": "showcase-model-comparison-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "runtimeId": "showcase-model-comparison-local",
+        "sealedAt": "2026-10-20T19:10:40.927490378Z",
+        "sizeBytes": 6658,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-compare-metrics"
+      },
+      {
+        "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-a",
+        "createdAt": "2026-10-20T19:10:35.607520334Z",
+        "driver": "local",
+        "environmentId": "showcase-model-comparison-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-evaluate-a",
+        "fileCount": 2,
+        "id": "workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-evaluate-a",
+        "inputBytes": 3837,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:b63c23f4c7ce883668990f879b1dadb1426898642a2866469e2ddda30b026eff",
+              "path": "stage-evaluate-a.json",
+              "sizeBytes": 518
+            },
+            {
+              "digest": "sha256:77bb2fb4384725520bf31fdb4e9f7be56b0f2366ef018ead1339f57c410637ab",
+              "path": "stage-freeze-evaluation-set.json",
+              "sizeBytes": 3837
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:77bb2fb4384725520bf31fdb4e9f7be56b0f2366ef018ead1339f57c410637ab",
+              "path": "stage-freeze-evaluation-set.json",
+              "sizeBytes": 3837
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:77bb2fb4384725520bf31fdb4e9f7be56b0f2366ef018ead1339f57c410637ab",
+              "path": "stage-freeze-evaluation-set.json",
+              "sizeBytes": 3837
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:b63c23f4c7ce883668990f879b1dadb1426898642a2866469e2ddda30b026eff",
+              "path": "stage-evaluate-a.json",
+              "sizeBytes": 518
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-evaluate-a",
+        "outputBytes": 518,
+        "pinned": false,
+        "reclaimedBytes": 4355,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:10:39.502747877Z",
+        "resourceId": "showcase-model-comparison-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "runtimeId": "showcase-model-comparison-local",
+        "sealedAt": "2026-10-20T19:10:38.961033377Z",
+        "sizeBytes": 4355,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-evaluate-a"
+      },
+      {
+        "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-b",
+        "createdAt": "2026-10-20T19:10:35.607520334Z",
+        "driver": "local",
+        "environmentId": "showcase-model-comparison-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-evaluate-b",
+        "fileCount": 2,
+        "id": "workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-evaluate-b",
+        "inputBytes": 3837,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:2c0128a3634ee4776a1745e4f7935d020078cd48ac320d2cf1b0f4dcdb07a0e6",
+              "path": "stage-evaluate-b.json",
+              "sizeBytes": 503
+            },
+            {
+              "digest": "sha256:77bb2fb4384725520bf31fdb4e9f7be56b0f2366ef018ead1339f57c410637ab",
+              "path": "stage-freeze-evaluation-set.json",
+              "sizeBytes": 3837
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:77bb2fb4384725520bf31fdb4e9f7be56b0f2366ef018ead1339f57c410637ab",
+              "path": "stage-freeze-evaluation-set.json",
+              "sizeBytes": 3837
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:77bb2fb4384725520bf31fdb4e9f7be56b0f2366ef018ead1339f57c410637ab",
+              "path": "stage-freeze-evaluation-set.json",
+              "sizeBytes": 3837
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:2c0128a3634ee4776a1745e4f7935d020078cd48ac320d2cf1b0f4dcdb07a0e6",
+              "path": "stage-evaluate-b.json",
+              "sizeBytes": 503
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-evaluate-b",
+        "outputBytes": 503,
+        "pinned": false,
+        "reclaimedBytes": 4340,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:10:39.509410085Z",
+        "resourceId": "showcase-model-comparison-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "runtimeId": "showcase-model-comparison-local",
+        "sealedAt": "2026-10-20T19:10:38.96693271Z",
+        "sizeBytes": 4340,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-evaluate-b"
+      },
+      {
+        "activityId": "showcase-model-comparison-local-8c91f9619e-evaluate-c",
+        "createdAt": "2026-10-20T19:10:35.607520334Z",
+        "driver": "local",
+        "environmentId": "showcase-model-comparison-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-evaluate-c",
+        "fileCount": 2,
+        "id": "workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-evaluate-c",
+        "inputBytes": 3837,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:83e81828829db43968b551b67c6f070e7aad3d07522d0d8412fe81c918c3b4b7",
+              "path": "stage-evaluate-c.json",
+              "sizeBytes": 518
+            },
+            {
+              "digest": "sha256:77bb2fb4384725520bf31fdb4e9f7be56b0f2366ef018ead1339f57c410637ab",
+              "path": "stage-freeze-evaluation-set.json",
+              "sizeBytes": 3837
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:77bb2fb4384725520bf31fdb4e9f7be56b0f2366ef018ead1339f57c410637ab",
+              "path": "stage-freeze-evaluation-set.json",
+              "sizeBytes": 3837
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:77bb2fb4384725520bf31fdb4e9f7be56b0f2366ef018ead1339f57c410637ab",
+              "path": "stage-freeze-evaluation-set.json",
+              "sizeBytes": 3837
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:83e81828829db43968b551b67c6f070e7aad3d07522d0d8412fe81c918c3b4b7",
+              "path": "stage-evaluate-c.json",
+              "sizeBytes": 518
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-evaluate-c",
+        "outputBytes": 518,
+        "pinned": false,
+        "reclaimedBytes": 4355,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:10:39.515622669Z",
+        "resourceId": "showcase-model-comparison-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "runtimeId": "showcase-model-comparison-local",
+        "sealedAt": "2026-10-20T19:10:38.97177821Z",
+        "sizeBytes": 4355,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-evaluate-c"
+      },
+      {
+        "activityId": "showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+        "createdAt": "2026-10-20T19:10:35.607520334Z",
+        "driver": "local",
+        "environmentId": "showcase-model-comparison-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+        "fileCount": 1,
+        "id": "workspace-showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000-showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+        "inputBytes": 0,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:77bb2fb4384725520bf31fdb4e9f7be56b0f2366ef018ead1339f57c410637ab",
+              "path": "stage-freeze-evaluation-set.json",
+              "sizeBytes": 3837
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:77bb2fb4384725520bf31fdb4e9f7be56b0f2366ef018ead1339f57c410637ab",
+              "path": "stage-freeze-evaluation-set.json",
+              "sizeBytes": 3837
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set",
+        "outputBytes": 3837,
+        "pinned": false,
+        "reclaimedBytes": 3837,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:10:37.103272293Z",
+        "resourceId": "showcase-model-comparison-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+        "runtimeId": "showcase-model-comparison-local",
+        "sealedAt": "2026-10-20T19:10:36.900425293Z",
+        "sizeBytes": 3837,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000/showcase-model-comparison-local-8c91f9619e-freeze-evaluation-set"
+      }
+    ]
+  },
+  "runId": "showcase-model-comparison-local-8c91f9619e-run-20261020t191035.554879000",
+  "status": "completed",
+  "workflowId": "showcase-model-comparison-local-8c91f9619e"
+}

@@ -1,0 +1,46 @@
+---
+title: Local RAG Factory
+description: Build and evaluate a network-free retrieval pipeline over a versioned local corpus.
+---
+
+import WorkflowExecutionEvidence from "@site/src/components/WorkflowExecutionEvidence";
+
+import WorkflowLocalRun from "@site/src/components/WorkflowLocalRun";
+
+import {
+  WorkflowDag,
+  WorkflowPatternDetails,
+} from "@site/src/components/WorkflowShowcase";
+
+# Local RAG Factory
+
+The workflow normalizes a local Markdown corpus, creates chunks, builds a hashed TF-IDF index, retrieves evidence, generates extractive answers with citations, and evaluates grounding. Its deterministic implementation makes retrieval behavior inspectable before an optional Ollama adapter is introduced.
+
+<WorkflowDag
+  title="Local RAG Factory"
+  stages={["ingest", "chunk", "index", "retrieve", "answer", "evaluate"]}
+/>
+
+<WorkflowPatternDetails
+  inputs={["Versioned Markdown corpus", "Questions with expected evidence"]}
+  outputs={[
+    "Normalized documents and chunks",
+    "Vector index",
+    "Ranked retrieval results",
+    "Cited answers",
+    "Grounded-accuracy report",
+  ]}
+  evidence={[
+    "Document SHA-256 values",
+    "Chunk identifiers",
+    "Retrieval scores",
+    "Answer citations and evaluation result",
+  ]}
+/>
+
+<WorkflowLocalRun examplePath="generative-ai/local-rag" />
+
+<WorkflowExecutionEvidence
+  title="Local RAG Factory"
+  examplePath="generative-ai/local-rag"
+/>

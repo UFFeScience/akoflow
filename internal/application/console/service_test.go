@@ -149,6 +149,7 @@ func TestCommandControllerFailureAndValidation(t *testing.T) {
 func TestCloudConnectionIsAvailableWhileAnsibleConfigures(t *testing.T) {
 	controller := &CommandController{cloud: cloudConfigurationStoreStub{instances: []domain.CloudProvisionedInstance{{
 		ID: "instance", CapacityTargetID: "capacity", Status: "configuring",
+		ProviderID: "123", TerraformOutput: map[string]any{"verifiedHostGeneration": "123", "verifiedHostKeyAlias": "verified-generation", "verifiedKnownHostsFile": "verified-hosts"},
 		PublicAddress: "203.0.113.10", SSHUsername: "akoflow", SSHCredentialRef: "file:key",
 	}}}}
 	connection, err := controller.resolveCloudConnection(context.Background(), domain.EnvironmentConnection{
@@ -160,7 +161,7 @@ func TestCloudConnectionIsAvailableWhileAnsibleConfigures(t *testing.T) {
 	if connection.Type != domain.ConnectionSSH || connection.Endpoint != "203.0.113.10" {
 		t.Fatalf("unexpected SSH connection %#v", connection)
 	}
-	if connection.Configuration["hostKeyAlias"] != "instance" {
+	if connection.Configuration["hostKeyAlias"] != "verified-generation" || connection.Configuration["knownHostsFile"] != "verified-hosts" || connection.Configuration["strictHostKeyChecking"] != true {
 		t.Fatalf("cloud host key must be scoped to the provisioned instance: %#v", connection.Configuration)
 	}
 }

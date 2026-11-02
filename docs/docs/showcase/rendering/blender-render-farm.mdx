@@ -1,0 +1,45 @@
+---
+title: Blender Render Farm
+description: Render disjoint frame shards concurrently and compose a validated animation.
+---
+
+import WorkflowExecutionEvidence from "@site/src/components/WorkflowExecutionEvidence";
+
+import WorkflowLocalRun from "@site/src/components/WorkflowLocalRun";
+
+import {
+  WorkflowDag,
+  WorkflowPatternDetails,
+} from "@site/src/components/WorkflowShowcase";
+
+# Blender Render Farm
+
+This example creates a procedural Blender scene, divides frames into even and odd shards, renders both activities independently, and composes the complete sequence. The fan-out makes resource placement and parallel makespan visible in an AkôFlow plan.
+
+<WorkflowDag
+  title="Blender Render Farm"
+  stages={["setup", ["render-even", "render-odd"], "compose", "verify"]}
+/>
+
+<WorkflowPatternDetails
+  inputs={["Procedural scene definition", "Smoke or demo frame profile"]}
+  outputs={[
+    "Blender scene",
+    "Complete frame sequence",
+    "MP4 or portable YUV4MPEG animation",
+    "Render report",
+  ]}
+  evidence={[
+    "Render plan and engine",
+    "Frame ownership by shard",
+    "Expected and observed frame counts",
+    "Final animation",
+  ]}
+/>
+
+<WorkflowLocalRun examplePath="rendering/blender-render-farm" />
+
+<WorkflowExecutionEvidence
+  title="Blender Render Farm"
+  examplePath="rendering/blender-render-farm"
+/>

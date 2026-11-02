@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
+	"github.com/UFFeScience/akoflow/internal/mcpbridge"
 	"net"
 	"net/http"
 	"os/exec"
@@ -73,16 +75,8 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 	mux.HandleFunc("POST /akoflow-api/provenance/sql/", http_config.KernelHandler(workflowEngine.QueryProvenanceSQL))
 	mux.HandleFunc("GET /akoflow-api/provenance/sql/schema/", http_config.KernelHandler(workflowEngine.GetProvenanceSchema))
 	mux.HandleFunc("POST /akoflow-api/provenance/sql/explain/", http_config.KernelHandler(workflowEngine.ExplainProvenanceSQL))
-	mux.HandleFunc("GET /akoflow-api/console-commands/", http_config.KernelHandler(workflowEngine.ListConsoleCommands))
-	mux.HandleFunc("POST /akoflow-api/console-commands/", http_config.KernelHandler(workflowEngine.ExecuteConsoleCommand))
-	mux.HandleFunc("POST /akoflow-api/console-sessions/", http_config.KernelHandler(workflowEngine.OpenConsoleSession))
-	mux.HandleFunc("GET /akoflow-api/console-sessions/", http_config.KernelHandler(workflowEngine.ListConsoleSessions))
-	mux.HandleFunc("DELETE /akoflow-api/console-sessions/{sessionId}/", http_config.KernelHandler(workflowEngine.CloseConsoleSession))
-	mux.HandleFunc("GET /akoflow-api/console-sessions/{sessionId}/log/", http_config.KernelHandler(workflowEngine.ExportConsoleSessionLog))
-	mux.HandleFunc("GET /akoflow-api/console-sessions/{sessionId}/stream/", workflowEngine.StreamConsoleSession)
-	mux.HandleFunc("GET /akoflow-api/ssh-keys/", http_config.KernelHandler(workflowEngine.ListSSHKeys))
-	mux.HandleFunc("POST /akoflow-api/ssh-keys/", http_config.KernelHandler(workflowEngine.GenerateSSHKey))
-	mux.HandleFunc("POST /akoflow-api/ssh-keys/import/", http_config.KernelHandler(workflowEngine.ImportSSHKey))
+	registerConsoleRoutes(mux, workflowEngine)
+	registerSSHKeyRoutes(mux, workflowEngine)
 	mux.HandleFunc("POST /akoflow-api/kubernetes-tokens/", http_config.KernelHandler(workflowEngine.SaveKubernetesToken))
 	mux.HandleFunc("PUT /akoflow-api/instance/", http_config.KernelHandler(workflowEngine.SaveInstance))
 	mux.HandleFunc("POST /akoflow-api/factory-reset/", http_config.KernelHandler(workflowEngine.FactoryReset))
@@ -103,6 +97,7 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 	mux.HandleFunc("POST /akoflow-api/environments/{environmentId}/cloud-instances/", http_config.KernelHandler(workflowEngine.ProvisionCloudInstance))
 	mux.HandleFunc("POST /akoflow-api/environments/{environmentId}/cloud-provisioning/", http_config.KernelHandler(workflowEngine.StartCloudProvisioning))
 	mux.HandleFunc("GET /akoflow-api/cloud-instances/{instanceId}/provisioning-log/", http_config.KernelHandler(workflowEngine.GetCloudProvisioningLog))
+	mux.HandleFunc("GET /akoflow-api/cloud-instances/{instanceId}/", http_config.KernelHandler(workflowEngine.GetCloudInstance))
 	mux.HandleFunc("POST /akoflow-api/cloud-instances/{instanceId}/configure/", http_config.KernelHandler(workflowEngine.ConfigureCloudInstance))
 	mux.HandleFunc("POST /akoflow-api/cloud-instances/{instanceId}/destroy/", http_config.KernelHandler(workflowEngine.DestroyCloudInstance))
 	mux.HandleFunc("POST /akoflow-api/cloud-instances/{instanceId}/start/", http_config.KernelHandler(workflowEngine.StartCloudInstance))
@@ -110,6 +105,7 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 	mux.HandleFunc("POST /akoflow-api/cloud-instances/{instanceId}/validate/", http_config.KernelHandler(workflowEngine.ValidateCloudInstance))
 	mux.HandleFunc("GET /akoflow-api/cloud-operations/", http_config.KernelHandler(workflowEngine.ListCloudOperations))
 	mux.HandleFunc("GET /akoflow-api/cloud-operations/{operationId}/", http_config.KernelHandler(workflowEngine.GetCloudOperation))
+	mux.HandleFunc("POST /akoflow-api/cloud-operations/{operationId}/reconcile-orphan/", http_config.KernelHandler(workflowEngine.ReconcileOrphanCloudOperation))
 	mux.HandleFunc("GET /akoflow-api/cloud-operations/{operationId}/events/", http_config.KernelHandler(workflowEngine.ListCloudOperationEvents))
 	mux.HandleFunc("GET /akoflow-api/machine-configurations/", http_config.KernelHandler(workflowEngine.ListMachineConfigurations))
 	mux.HandleFunc("POST /akoflow-api/machine-configurations/", http_config.KernelHandler(workflowEngine.CreateMachineConfiguration))
@@ -124,6 +120,7 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 	mux.HandleFunc("DELETE /akoflow-api/environments/{environmentId}/", http_config.KernelHandler(workflowEngine.DeleteEnvironment))
 	mux.HandleFunc("GET /akoflow-api/environments/{environmentId}/storages/", http_config.KernelHandler(workflowEngine.ListStorages))
 	mux.HandleFunc("GET /akoflow-api/storages/{storageId}/roots/", http_config.KernelHandler(workflowEngine.StorageRoots))
+	mux.HandleFunc("GET /akoflow-api/storages/{storageId}/workspace-budget/", http_config.KernelHandler(workflowEngine.WorkspaceStorageBudget))
 	mux.HandleFunc("GET /akoflow-api/storages/{storageId}/entries/", http_config.KernelHandler(workflowEngine.BrowseStorage))
 	mux.HandleFunc("DELETE /akoflow-api/storages/{storageId}/entries/", http_config.KernelHandler(workflowEngine.DeleteStorageEntry))
 	mux.HandleFunc("GET /akoflow-api/storages/{storageId}/entry/", http_config.KernelHandler(workflowEngine.StatStorageEntry))
@@ -151,6 +148,8 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 	mux.HandleFunc("POST /akoflow-api/build-contexts/", http_config.KernelHandler(workflowEngine.SaveBuildContext))
 	mux.HandleFunc("POST /akoflow-api/artifact-builds/", http_config.KernelHandler(workflowEngine.CreateArtifactBuild))
 	mux.HandleFunc("POST /akoflow-api/artifacts/docker/", http_config.KernelHandler(workflowEngine.RegisterDockerArtifact))
+	mux.HandleFunc("GET /akoflow-api/docker-hub/search/", http_config.KernelHandler(workflowEngine.SearchDockerHub))
+	mux.HandleFunc("GET /akoflow-api/docker-hub/tags/", http_config.KernelHandler(workflowEngine.DockerHubTags))
 	mux.HandleFunc("GET /akoflow-api/artifact-builds/{buildId}/", http_config.KernelHandler(workflowEngine.GetArtifactBuild))
 	mux.HandleFunc("GET /akoflow-api/artifacts/{artifactId}/builds/", http_config.KernelHandler(workflowEngine.ListArtifactBuilds))
 	mux.HandleFunc("GET /akoflow-api/artifact-builds/{buildId}/runs/", http_config.KernelHandler(workflowEngine.ListBuildRuns))
@@ -170,6 +169,8 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 	mux.HandleFunc("POST /akoflow-api/workflow-definitions/", http_config.KernelHandler(workflowEngine.CreateWorkflow))
 	mux.HandleFunc("POST /akoflow-api/workflow-definitions/import/", http_config.KernelHandler(workflowEngine.CreateWorkflow))
 	mux.HandleFunc("GET /akoflow-api/workflow-definitions/", http_config.KernelHandler(workflowEngine.ListWorkflows))
+	mux.HandleFunc("GET /akoflow-api/workflow-versions/{versionId}/", http_config.KernelHandler(workflowEngine.GetWorkflowVersion))
+	mux.HandleFunc("GET /akoflow-api/schedule-plans/{planId}/context/", http_config.KernelHandler(workflowEngine.GetPlanContext))
 	mux.HandleFunc("GET /akoflow-api/workflow-definitions/{workflowId}/", http_config.KernelHandler(workflowEngine.GetWorkflow))
 	mux.HandleFunc("GET /akoflow-api/workflow-definitions/{workflowId}/export/", http_config.KernelHandler(workflowEngine.ExportWorkflow))
 	mux.HandleFunc("POST /akoflow-api/workflow-definition-actions/duplicate/{workflowId}/", http_config.KernelHandler(workflowEngine.DuplicateWorkflow))
@@ -177,6 +178,12 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 	mux.HandleFunc("POST /akoflow-api/schedule-plans/import/", http_config.KernelHandler(workflowEngine.ImportPlan))
 	mux.HandleFunc("GET /akoflow-api/schedule-plans/", http_config.KernelHandler(workflowEngine.ListPlans))
 	mux.HandleFunc("GET /akoflow-api/schedule-plans/{planId}/", http_config.KernelHandler(workflowEngine.GetPlan))
+	mux.HandleFunc("GET /akoflow-api/scheduling-algorithms/", http_config.KernelHandler(workflowEngine.ListSchedulerLibrary))
+	mux.HandleFunc("POST /akoflow-api/scheduling-algorithms/validate/", http_config.KernelHandler(workflowEngine.ValidateSchedulerSource))
+	mux.HandleFunc("GET /akoflow-api/scheduling-algorithms/template/", http_config.KernelHandler(workflowEngine.SchedulerTemplate))
+	mux.HandleFunc("GET /akoflow-api/scheduling-algorithms/{algorithmId}/", http_config.KernelHandler(workflowEngine.GetSchedulerLibrary))
+	mux.HandleFunc("POST /akoflow-api/scheduling-algorithms/", http_config.KernelHandler(workflowEngine.SaveSchedulerPlugin))
+	mux.HandleFunc("PUT /akoflow-api/scheduling-algorithms/{algorithmId}/", http_config.KernelHandler(workflowEngine.SaveSchedulerPlugin))
 	mux.HandleFunc("GET /akoflow-api/planning-algorithms/", http_config.KernelHandler(workflowEngine.ListPlanningAlgorithms))
 	mux.HandleFunc("POST /akoflow-api/planning-sessions/", http_config.KernelHandler(workflowEngine.CreatePlanningSession))
 	mux.HandleFunc("GET /akoflow-api/planning-sessions/", http_config.KernelHandler(workflowEngine.ListPlanningSessions))
@@ -192,10 +199,12 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 func registerExecutionRoutes(mux *http.ServeMux, workflowEngine *workflow_engine_api_handler.Handler) {
 	mux.HandleFunc("POST /akoflow-api/execution-runs/", http_config.KernelHandler(workflowEngine.CreateExecution))
 	mux.HandleFunc("GET /akoflow-api/execution-runs/", http_config.KernelHandler(workflowEngine.ListExecutions))
+	mux.HandleFunc("GET /akoflow-api/generated-data/", http_config.KernelHandler(workflowEngine.ListGeneratedData))
 	mux.HandleFunc("GET /akoflow-api/execution-runs/{runId}/", http_config.KernelHandler(workflowEngine.GetExecution))
 	mux.HandleFunc("POST /akoflow-api/execution-runs/{runId}/cancel/", http_config.KernelHandler(workflowEngine.CancelExecution))
 	mux.HandleFunc("GET /akoflow-api/execution-runs/{runId}/recovery/", http_config.KernelHandler(workflowEngine.GetExecutionRecovery))
 	mux.HandleFunc("POST /akoflow-api/execution-runs/{runId}/recovery/", http_config.KernelHandler(workflowEngine.RecoverExecution))
+	mux.HandleFunc("POST /akoflow-api/execution-runs/{runId}/preserve-cloud-workspaces/", http_config.KernelHandler(workflowEngine.PreserveCancelledCloudWorkspaces))
 	mux.HandleFunc("POST /akoflow-api/execution-runs/{runId}/activities/{activityId}/interrupt/", http_config.KernelHandler(workflowEngine.InterruptExecutionActivity))
 	mux.HandleFunc("GET /akoflow-api/execution-runs/{runId}/activity-metrics/", http_config.KernelHandler(workflowEngine.ListActivityMetricSummaries))
 	mux.HandleFunc("GET /akoflow-api/execution-runs/{runId}/activities/{activityId}/metrics/", http_config.KernelHandler(workflowEngine.ListActivityMetricSamples))
@@ -211,11 +220,20 @@ func Serve(ctx context.Context, address string, workflowEngine *workflow_engine_
 }
 
 func ServeSecure(ctx context.Context, address string, workflowEngine *workflow_engine_api_handler.Handler, security SecurityOptions) error {
-	handler := AllowCORSFor(SecureAPI(readOnlyAPI(NewMux(workflowEngine), workflowEngine), security), security.AllowedOrigins)
+	var handler http.Handler = AllowCORSFor(SecureAPI(readOnlyAPI(NewMux(workflowEngine), workflowEngine), security), security.AllowedOrigins)
+	settings := config.Load()
+	handler, closeMCP, err := managedMCPRoutes(handler, address, security, settings)
+	if err != nil {
+		return err
+	}
+	defer closeMCP()
+
 	server := &http.Server{Addr: address, Handler: handler, ReadHeaderTimeout: 10 * time.Second, IdleTimeout: 60 * time.Second}
-	go shutdownWhenCanceled(ctx, server)
-	err := server.ListenAndServe()
+	shutdownDone := make(chan struct{})
+	go func() { shutdownWhenCanceled(ctx, server); close(shutdownDone) }()
+	err = server.ListenAndServe()
 	if errors.Is(err, http.ErrServerClosed) {
+		<-shutdownDone
 		return nil
 	}
 	return err
@@ -248,4 +266,45 @@ func shutdownWhenCanceled(ctx context.Context, server *http.Server) {
 	shutdownContext, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	_ = server.Shutdown(shutdownContext)
+}
+
+func newMCPHandler(address string, security SecurityOptions, settings config.Settings) (http.Handler, func(), error) {
+	host, port, err := net.SplitHostPort(address)
+	if err != nil {
+		return nil, nil, err
+	}
+	if host == "" || host == "0.0.0.0" || host == "::" {
+		host = "127.0.0.1"
+	}
+	bridge, err := mcpbridge.New(mcpbridge.Options{
+		APIURL:         "http://" + net.JoinHostPort(host, port) + "/akoflow-api",
+		APIToken:       security.BearerToken,
+		Permissions:    mcpbridge.Permission(settings.MCPPermissions),
+		StateDirectory: settings.MCPStateDirectory,
+	})
+	if err != nil {
+		return nil, nil, fmt.Errorf("MCP configuration: %w", err)
+	}
+	handler, err := bridge.HTTPHandler(mcpbridge.HTTPOptionsFromEnvironment(settings.MCPToken, settings.MCPAllowedOrigins))
+	if err != nil {
+		bridge.Close()
+		return nil, nil, err
+	}
+	return handler, func() { bridge.Close() }, nil
+}
+
+func registerConsoleRoutes(mux *http.ServeMux, workflowEngine *workflow_engine_api_handler.Handler) {
+	mux.HandleFunc("GET /akoflow-api/console-commands/", http_config.KernelHandler(workflowEngine.ListConsoleCommands))
+	mux.HandleFunc("POST /akoflow-api/console-commands/", http_config.KernelHandler(workflowEngine.ExecuteConsoleCommand))
+	mux.HandleFunc("POST /akoflow-api/console-sessions/", http_config.KernelHandler(workflowEngine.OpenConsoleSession))
+	mux.HandleFunc("GET /akoflow-api/console-sessions/", http_config.KernelHandler(workflowEngine.ListConsoleSessions))
+	mux.HandleFunc("DELETE /akoflow-api/console-sessions/{sessionId}/", http_config.KernelHandler(workflowEngine.CloseConsoleSession))
+	mux.HandleFunc("GET /akoflow-api/console-sessions/{sessionId}/log/", http_config.KernelHandler(workflowEngine.ExportConsoleSessionLog))
+	mux.HandleFunc("GET /akoflow-api/console-sessions/{sessionId}/stream/", workflowEngine.StreamConsoleSession)
+}
+
+func registerSSHKeyRoutes(mux *http.ServeMux, workflowEngine *workflow_engine_api_handler.Handler) {
+	mux.HandleFunc("GET /akoflow-api/ssh-keys/", http_config.KernelHandler(workflowEngine.ListSSHKeys))
+	mux.HandleFunc("POST /akoflow-api/ssh-keys/", http_config.KernelHandler(workflowEngine.GenerateSSHKey))
+	mux.HandleFunc("POST /akoflow-api/ssh-keys/import/", http_config.KernelHandler(workflowEngine.ImportSSHKey))
 }

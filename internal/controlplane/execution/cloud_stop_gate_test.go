@@ -3,9 +3,40 @@ package execution
 import (
 	"context"
 	"testing"
+	"time"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
 )
+
+func TestIdleCloudStopsDoNotBlockObservationAndBoundAdmission(t *testing.T) {
+	workers := newIdleCloudStops(context.Background())
+	entered := make(chan struct{}, 4)
+	exited := make(chan struct{}, 4)
+	for i := 0; i < 4; i++ {
+		if !workers.submit(func(ctx context.Context) error {
+			entered <- struct{}{}
+			<-ctx.Done()
+			exited <- struct{}{}
+			return ctx.Err()
+		}) {
+			t.Fatal("worker admission blocked")
+		}
+	}
+	if workers.submit(func(context.Context) error { t.Fatal("exceeded stop concurrency"); return nil }) {
+		t.Fatal("admitted fifth stop")
+	}
+	for i := 0; i < 4; i++ {
+		select {
+		case <-entered:
+		case <-time.After(time.Second):
+			t.Fatal("stop did not start independently")
+		}
+	}
+	workers.close()
+	if len(exited) != 4 {
+		t.Fatal("cleanup returned with workers still active")
+	}
+}
 
 type cloudStopperFake struct {
 	stopped  map[string]domain.RuntimeAllocation

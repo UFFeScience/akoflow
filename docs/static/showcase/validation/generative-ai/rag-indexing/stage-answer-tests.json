@@ -1,0 +1,48 @@
+{
+  "dependencies": [
+    "build-index"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:46.784639Z",
+  "finishedAtUnixNs": 1792523566779207000,
+  "inputDigest": "23df4fad9044d17f0db6a2d73a6cd0020efd7db35729ca15965e3f8ba52ac1c2",
+  "result": {
+    "passed": 3,
+    "tests": [
+      {
+        "answer": {
+          "document": "montage",
+          "score": 0.6123724356957945,
+          "text": "Montage creates astronomical image mosaics from FITS observations."
+        },
+        "passed": true,
+        "question": "What creates astronomical mosaics?"
+      },
+      {
+        "answer": {
+          "document": "mlflow",
+          "score": 0.7272375668006759,
+          "text": "MLflow records experiment parameters and metrics."
+        },
+        "passed": true,
+        "question": "What records experiment parameters?"
+      },
+      {
+        "answer": {
+          "document": "akoflow",
+          "score": 0.5105622673496982,
+          "text": "Akoflow schedules activities using a directed acyclic graph."
+        },
+        "passed": true,
+        "question": "How does Akoflow schedule activities?"
+      }
+    ],
+    "total": 3
+  },
+  "showcase": "rag-indexing",
+  "stage": "answer-tests",
+  "startedAt": "2026-10-20T19:12:46.737394Z",
+  "startedAtUnixNs": 1792523566778784000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

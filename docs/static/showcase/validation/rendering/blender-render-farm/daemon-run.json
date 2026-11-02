@@ -1,0 +1,2648 @@
+{
+  "activityCount": 5,
+  "completedActivityCount": 5,
+  "image": "ghcr.io/uffescience/akoflow-examples/blender-render-farm:v1",
+  "imageId": "sha256:12a47cf91b78efbb6c52ce12625179a85197517b95af5f9d32f97982594d09c0",
+  "planId": "blender-render-farm-local-c7b71b395d-manual-plan-20261020t182650",
+  "projection": {
+    "activities": [
+      {
+        "activityId": "blender-render-farm-local-c7b71b395d-setup",
+        "allocatedResourceId": "blender-render-farm-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "finishedAt": 1792520811.9065855,
+        "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-setup",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "blender-render-farm-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "blender-render-farm-local-c7b71b395d-manual-plan-20261020t182650-blender-render-farm-local-c7b71b395d-setup",
+        "plannedResourceId": "blender-render-farm-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520811.1506324,
+        "readyAt": 1792520811.1506324,
+        "runtimeId": "blender-render-farm-local",
+        "runtimeSeconds": 0.6272358894348145,
+        "startedAt": 1792520811.2793496,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "blender-render-farm-local-c7b71b395d-render-even",
+        "allocatedResourceId": "blender-render-farm-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "finishedAt": 1792520814.5742762,
+        "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-render-even",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.131866455078125,
+          "preparationFinishedAt": 1792520812.5236573,
+          "preparationStartedAt": 1792520812.3992815,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.002125978469848633,
+          "runtimeId": "blender-render-farm-local",
+          "transferElapsedSeconds": 0.12437582015991211,
+          "transferWorkSeconds": 0.12437582015991211
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "blender-render-farm-local-c7b71b395d-manual-plan-20261020t182650-blender-render-farm-local-c7b71b395d-render-even",
+        "plannedResourceId": "blender-render-farm-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520812.3936906,
+        "readyAt": 1792520812.3936906,
+        "runtimeId": "blender-render-farm-local",
+        "runtimeSeconds": 1.9187524318695068,
+        "startedAt": 1792520812.6555238,
+        "status": "completed",
+        "transferBytes": 488685,
+        "transferSeconds": 0.12437582015991211
+      },
+      {
+        "activityId": "blender-render-farm-local-c7b71b395d-render-odd",
+        "allocatedResourceId": "blender-render-farm-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "finishedAt": 1792520814.6245835,
+        "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-render-odd",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1432793140411377,
+          "preparationFinishedAt": 1792520812.5660555,
+          "preparationStartedAt": 1792520812.4009464,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.003014087677001953,
+          "runtimeId": "blender-render-farm-local",
+          "transferElapsedSeconds": 0.16510915756225586,
+          "transferWorkSeconds": 0.16510915756225586
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "blender-render-farm-local-c7b71b395d-manual-plan-20261020t182650-blender-render-farm-local-c7b71b395d-render-odd",
+        "plannedResourceId": "blender-render-farm-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520812.394852,
+        "readyAt": 1792520812.394852,
+        "runtimeId": "blender-render-farm-local",
+        "runtimeSeconds": 1.9152486324310303,
+        "startedAt": 1792520812.7093349,
+        "status": "completed",
+        "transferBytes": 488685,
+        "transferSeconds": 0.16510915756225586
+      },
+      {
+        "activityId": "blender-render-farm-local-c7b71b395d-compose",
+        "allocatedResourceId": "blender-render-farm-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "finishedAt": 1792520816.1194391,
+        "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-compose",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14598345756530762,
+          "preparationFinishedAt": 1792520815.8954196,
+          "preparationStartedAt": 1792520815.5347126,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.002669095993041992,
+          "runtimeId": "blender-render-farm-local",
+          "transferElapsedSeconds": 0.36070704460144043,
+          "transferWorkSeconds": 0.5790541172027588
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "blender-render-farm-local-c7b71b395d-manual-plan-20261020t182650-blender-render-farm-local-c7b71b395d-compose",
+        "plannedResourceId": "blender-render-farm-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520815.528794,
+        "readyAt": 1792520815.528794,
+        "runtimeId": "blender-render-farm-local",
+        "runtimeSeconds": 0.07803606986999512,
+        "startedAt": 1792520816.041403,
+        "status": "completed",
+        "transferBytes": 2611015,
+        "transferSeconds": 0.5790541172027588
+      },
+      {
+        "activityId": "blender-render-farm-local-c7b71b395d-verify",
+        "allocatedResourceId": "blender-render-farm-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "finishedAt": 1792520817.5132456,
+        "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-verify",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14398407936096191,
+          "preparationFinishedAt": 1792520817.3508224,
+          "preparationStartedAt": 1792520817.161198,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0010292530059814453,
+          "runtimeId": "blender-render-farm-local",
+          "transferElapsedSeconds": 0.18962454795837402,
+          "transferWorkSeconds": 0.18962454795837402
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "blender-render-farm-local-c7b71b395d-manual-plan-20261020t182650-blender-render-farm-local-c7b71b395d-verify",
+        "plannedResourceId": "blender-render-farm-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520817.1580257,
+        "readyAt": 1792520817.1580257,
+        "runtimeId": "blender-render-farm-local",
+        "runtimeSeconds": 0.018439054489135742,
+        "startedAt": 1792520817.4948065,
+        "status": "completed",
+        "transferBytes": 2694052,
+        "transferSeconds": 0.18962454795837402
+      }
+    ],
+    "activityAttempts": [
+      {
+        "activityId": "blender-render-farm-local-c7b71b395d-setup",
+        "allocatedResourceId": "blender-render-farm-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "finishedAt": 1792520811.9065855,
+        "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-setup",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "blender-render-farm-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "blender-render-farm-local-c7b71b395d-manual-plan-20261020t182650-blender-render-farm-local-c7b71b395d-setup",
+        "plannedResourceId": "blender-render-farm-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520811.1506324,
+        "readyAt": 1792520811.1506324,
+        "runtimeId": "blender-render-farm-local",
+        "runtimeSeconds": 0.6272358894348145,
+        "startedAt": 1792520811.2793496,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "blender-render-farm-local-c7b71b395d-render-even",
+        "allocatedResourceId": "blender-render-farm-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "finishedAt": 1792520814.5742762,
+        "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-render-even",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.131866455078125,
+          "preparationFinishedAt": 1792520812.5236573,
+          "preparationStartedAt": 1792520812.3992815,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.002125978469848633,
+          "runtimeId": "blender-render-farm-local",
+          "transferElapsedSeconds": 0.12437582015991211,
+          "transferWorkSeconds": 0.12437582015991211
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "blender-render-farm-local-c7b71b395d-manual-plan-20261020t182650-blender-render-farm-local-c7b71b395d-render-even",
+        "plannedResourceId": "blender-render-farm-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520812.3936906,
+        "readyAt": 1792520812.3936906,
+        "runtimeId": "blender-render-farm-local",
+        "runtimeSeconds": 1.9187524318695068,
+        "startedAt": 1792520812.6555238,
+        "status": "completed",
+        "transferBytes": 488685,
+        "transferSeconds": 0.12437582015991211
+      },
+      {
+        "activityId": "blender-render-farm-local-c7b71b395d-render-odd",
+        "allocatedResourceId": "blender-render-farm-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "finishedAt": 1792520814.6245835,
+        "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-render-odd",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1432793140411377,
+          "preparationFinishedAt": 1792520812.5660555,
+          "preparationStartedAt": 1792520812.4009464,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.003014087677001953,
+          "runtimeId": "blender-render-farm-local",
+          "transferElapsedSeconds": 0.16510915756225586,
+          "transferWorkSeconds": 0.16510915756225586
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "blender-render-farm-local-c7b71b395d-manual-plan-20261020t182650-blender-render-farm-local-c7b71b395d-render-odd",
+        "plannedResourceId": "blender-render-farm-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520812.394852,
+        "readyAt": 1792520812.394852,
+        "runtimeId": "blender-render-farm-local",
+        "runtimeSeconds": 1.9152486324310303,
+        "startedAt": 1792520812.7093349,
+        "status": "completed",
+        "transferBytes": 488685,
+        "transferSeconds": 0.16510915756225586
+      },
+      {
+        "activityId": "blender-render-farm-local-c7b71b395d-compose",
+        "allocatedResourceId": "blender-render-farm-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "finishedAt": 1792520816.1194391,
+        "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-compose",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14598345756530762,
+          "preparationFinishedAt": 1792520815.8954196,
+          "preparationStartedAt": 1792520815.5347126,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.002669095993041992,
+          "runtimeId": "blender-render-farm-local",
+          "transferElapsedSeconds": 0.36070704460144043,
+          "transferWorkSeconds": 0.5790541172027588
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "blender-render-farm-local-c7b71b395d-manual-plan-20261020t182650-blender-render-farm-local-c7b71b395d-compose",
+        "plannedResourceId": "blender-render-farm-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520815.528794,
+        "readyAt": 1792520815.528794,
+        "runtimeId": "blender-render-farm-local",
+        "runtimeSeconds": 0.07803606986999512,
+        "startedAt": 1792520816.041403,
+        "status": "completed",
+        "transferBytes": 2611015,
+        "transferSeconds": 0.5790541172027588
+      },
+      {
+        "activityId": "blender-render-farm-local-c7b71b395d-verify",
+        "allocatedResourceId": "blender-render-farm-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "finishedAt": 1792520817.5132456,
+        "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-verify",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14398407936096191,
+          "preparationFinishedAt": 1792520817.3508224,
+          "preparationStartedAt": 1792520817.161198,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0010292530059814453,
+          "runtimeId": "blender-render-farm-local",
+          "transferElapsedSeconds": 0.18962454795837402,
+          "transferWorkSeconds": 0.18962454795837402
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "blender-render-farm-local-c7b71b395d-manual-plan-20261020t182650-blender-render-farm-local-c7b71b395d-verify",
+        "plannedResourceId": "blender-render-farm-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520817.1580257,
+        "readyAt": 1792520817.1580257,
+        "runtimeId": "blender-render-farm-local",
+        "runtimeSeconds": 0.018439054489135742,
+        "startedAt": 1792520817.4948065,
+        "status": "completed",
+        "transferBytes": 2694052,
+        "transferSeconds": 0.18962454795837402
+      }
+    ],
+    "artifactMaterializations": null,
+    "artifactTransferRuns": [
+      {
+        "activityId": "blender-render-farm-local-c7b71b395d-compose",
+        "durationSeconds": 0.21834707260131836,
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "filesTransferred": 5,
+        "finishedAt": 1792520815.7530596,
+        "id": "transfer-workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-compose-0",
+        "logicalBytes": 1550484,
+        "planId": "transfer-workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-compose-0",
+        "route": {
+          "consumerActivityId": "blender-render-farm-local-c7b71b395d-compose",
+          "filesTransferred": 5,
+          "producerActivityId": "blender-render-farm-local-c7b71b395d-render-even",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.095364667,
+          "sourceEnvironmentId": "blender-render-farm-v1",
+          "sourceResourceId": "blender-render-farm-local-docker",
+          "sshChannelWaitSeconds": 4.16e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "blender-render-farm-v1",
+          "targetResourceId": "blender-render-farm-local-docker"
+        },
+        "startedAt": 1792520815.5347126,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 1550484
+      },
+      {
+        "activityId": "blender-render-farm-local-c7b71b395d-compose",
+        "durationSeconds": 0.36070704460144043,
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "filesTransferred": 3,
+        "finishedAt": 1792520815.8954196,
+        "id": "transfer-workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-compose-1",
+        "logicalBytes": 1549216,
+        "planId": "transfer-workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-compose-1",
+        "route": {
+          "consumerActivityId": "blender-render-farm-local-c7b71b395d-compose",
+          "filesTransferred": 3,
+          "producerActivityId": "blender-render-farm-local-c7b71b395d-render-odd",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.073324626,
+          "sourceEnvironmentId": "blender-render-farm-v1",
+          "sourceResourceId": "blender-render-farm-local-docker",
+          "sshChannelWaitSeconds": 5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "blender-render-farm-v1",
+          "targetResourceId": "blender-render-farm-local-docker"
+        },
+        "startedAt": 1792520815.5347126,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 1060531
+      },
+      {
+        "activityId": "blender-render-farm-local-c7b71b395d-render-even",
+        "durationSeconds": 0.12437582015991211,
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "filesTransferred": 2,
+        "finishedAt": 1792520812.5236573,
+        "id": "transfer-workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-render-even-0",
+        "logicalBytes": 488685,
+        "planId": "transfer-workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-render-even-0",
+        "route": {
+          "consumerActivityId": "blender-render-farm-local-c7b71b395d-render-even",
+          "filesTransferred": 2,
+          "producerActivityId": "blender-render-farm-local-c7b71b395d-setup",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.051760417,
+          "sourceEnvironmentId": "blender-render-farm-v1",
+          "sourceResourceId": "blender-render-farm-local-docker",
+          "sshChannelWaitSeconds": 3.75e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "blender-render-farm-v1",
+          "targetResourceId": "blender-render-farm-local-docker"
+        },
+        "startedAt": 1792520812.3992815,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 488685
+      },
+      {
+        "activityId": "blender-render-farm-local-c7b71b395d-render-odd",
+        "durationSeconds": 0.16510915756225586,
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "filesTransferred": 2,
+        "finishedAt": 1792520812.5660555,
+        "id": "transfer-workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-render-odd-0",
+        "logicalBytes": 488685,
+        "planId": "transfer-workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-render-odd-0",
+        "route": {
+          "consumerActivityId": "blender-render-farm-local-c7b71b395d-render-odd",
+          "filesTransferred": 2,
+          "producerActivityId": "blender-render-farm-local-c7b71b395d-setup",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.092139376,
+          "sourceEnvironmentId": "blender-render-farm-v1",
+          "sourceResourceId": "blender-render-farm-local-docker",
+          "sshChannelWaitSeconds": 3.7400000000000004e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "blender-render-farm-v1",
+          "targetResourceId": "blender-render-farm-local-docker"
+        },
+        "startedAt": 1792520812.4009464,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 488685
+      },
+      {
+        "activityId": "blender-render-farm-local-c7b71b395d-verify",
+        "durationSeconds": 0.18962454795837402,
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "filesTransferred": 9,
+        "finishedAt": 1792520817.3508224,
+        "id": "transfer-workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-verify-0",
+        "logicalBytes": 2694052,
+        "planId": "transfer-workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-verify-0",
+        "route": {
+          "consumerActivityId": "blender-render-farm-local-c7b71b395d-verify",
+          "filesTransferred": 9,
+          "producerActivityId": "blender-render-farm-local-c7b71b395d-compose",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.10682112499999999,
+          "sourceEnvironmentId": "blender-render-farm-v1",
+          "sourceResourceId": "blender-render-farm-local-docker",
+          "sshChannelWaitSeconds": 7.09e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "blender-render-farm-v1",
+          "targetResourceId": "blender-render-farm-local-docker"
+        },
+        "startedAt": 1792520817.161198,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 2694052
+      }
+    ],
+    "cloudBilling": {
+      "asOf": "2026-10-20T18:26:59.899466512Z",
+      "costBasis": "VM compute and boot-disk lifecycle at on-demand marginal rates; not a provider invoice",
+      "estimatedCost": 0,
+      "excludedCosts": [
+        "network-egress",
+        "public-ipv4",
+        "image-storage",
+        "discounts-and-tax"
+      ],
+      "instances": [],
+      "knownCost": 0,
+      "status": "estimated"
+    },
+    "dataLocations": [
+      {
+        "dataObjectInstanceId": "bc402006a4b15e74bfcbcef438783c5c",
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "id": "ca46efc40a57fc32e3105a92b6929657",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "blender-render-farm-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "4d6c498929adfcc36c49a57484e69407",
+        "uri": "file:///akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-compose/animation.mp4"
+      },
+      {
+        "dataObjectInstanceId": "7806d4f9437d0e5818a3822f13ee8f78",
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "id": "3fee665f918d63f88c3c570c5bb62f79",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "blender-render-farm-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "4d6c498929adfcc36c49a57484e69407",
+        "uri": "file:///akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-render-even/frames/frame-0002.png"
+      },
+      {
+        "dataObjectInstanceId": "b52d347a00a861ef2dcfb22b0869797a",
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "id": "2439c74d2d55b4f669e6c3ff33aaf9cb",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "blender-render-farm-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "4d6c498929adfcc36c49a57484e69407",
+        "uri": "file:///akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-render-even/frames/frame-0004.png"
+      },
+      {
+        "dataObjectInstanceId": "db5389ed41e96d254286b8ff7778d0ad",
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "id": "9261d02a89404b35e7758f8a0ed249de",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "blender-render-farm-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "4d6c498929adfcc36c49a57484e69407",
+        "uri": "file:///akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-render-even/frames/frame-0006.png"
+      },
+      {
+        "dataObjectInstanceId": "bae8276a71df0b587419bbdfc6446dad",
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "id": "ce7daa779cb09169a24e90c9138359b9",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "blender-render-farm-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "4d6c498929adfcc36c49a57484e69407",
+        "uri": "file:///akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-render-odd/frames/frame-0001.png"
+      },
+      {
+        "dataObjectInstanceId": "87a99a8ba70b917b0a581c9ca0c1146a",
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "id": "a4c9c613396e0ff420008c3559743a1a",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "blender-render-farm-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "4d6c498929adfcc36c49a57484e69407",
+        "uri": "file:///akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-render-odd/frames/frame-0003.png"
+      },
+      {
+        "dataObjectInstanceId": "21b2e35883a6b9e7590318c9de7dc286",
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "id": "737e794775a050231e14823e25218da3",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "blender-render-farm-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "4d6c498929adfcc36c49a57484e69407",
+        "uri": "file:///akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-render-odd/frames/frame-0005.png"
+      },
+      {
+        "dataObjectInstanceId": "0582f0475119798cb7a8819daa149979",
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "id": "1d3bb0a443368ea2a724a2e1f0592b77",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "blender-render-farm-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "4d6c498929adfcc36c49a57484e69407",
+        "uri": "file:///akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-setup/render-plan.json"
+      },
+      {
+        "dataObjectInstanceId": "c627b5fa0dbe10ffcf9448c7fe1c1177",
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "id": "c2e98a0f5ec2eea1540034ab123c3bf3",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "blender-render-farm-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "4d6c498929adfcc36c49a57484e69407",
+        "uri": "file:///akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-setup/scene.blend"
+      },
+      {
+        "dataObjectInstanceId": "b787d71ffcd6fb47465b9d95a8ca0645",
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "id": "7cc6b83c67b81145c8b7605b6c21c06a",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "blender-render-farm-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "4d6c498929adfcc36c49a57484e69407",
+        "uri": "file:///akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-verify/manifest.json"
+      },
+      {
+        "dataObjectInstanceId": "bfd116ec8bf0f3fc355485a1441a77c1",
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "id": "bfc26315eba8806e6b3cc4c9ae177d1c",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "blender-render-farm-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "4d6c498929adfcc36c49a57484e69407",
+        "uri": "file:///akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-verify/render-report.json"
+      }
+    ],
+    "dataObjects": [
+      {
+        "attempt": 1,
+        "checksum": "sha256:0c4435d1819c5c08a633edb7aceba1eb1b8f598fff3a4f184d5c62e742bd3337",
+        "dataObjectId": "d7424f4d212adefa5d9b5dae0e60bc4e",
+        "discovered": true,
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "id": "bc402006a4b15e74bfcbcef438783c5c",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "blender-render-farm-local-c7b71b395d-compose",
+        "relativePath": "animation.mp4",
+        "sizeBytes": 83037
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:019f93fa95bf8c54f975102cf2794b2896fb1142a9533c691d92dad350d65e69",
+        "dataObjectId": "af407bb61f82f7b51fadb3570173ee5c",
+        "discovered": true,
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "id": "7806d4f9437d0e5818a3822f13ee8f78",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "blender-render-farm-local-c7b71b395d-render-even",
+        "relativePath": "frames/frame-0002.png",
+        "sizeBytes": 352138
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:36dc8dea75649479da05ca07e1cac9dc31bb225cb67c4ee8fcf52a291dce10ff",
+        "dataObjectId": "6855bb81aedbb04606138c24332acb83",
+        "discovered": true,
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "id": "b52d347a00a861ef2dcfb22b0869797a",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "blender-render-farm-local-c7b71b395d-render-even",
+        "relativePath": "frames/frame-0004.png",
+        "sizeBytes": 353946
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:6eb9dd317b43d80217869d700d920c2b4e180a5d5bf421db3d9a316ce404c693",
+        "dataObjectId": "30b887c00176d57d8c4cb724619f6a9e",
+        "discovered": true,
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "id": "db5389ed41e96d254286b8ff7778d0ad",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "blender-render-farm-local-c7b71b395d-render-even",
+        "relativePath": "frames/frame-0006.png",
+        "sizeBytes": 355715
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:6d04841fc284e4b29dc6311ae146201e55333f4e91dde79a50f6100e6b677245",
+        "dataObjectId": "44b2c65a493138815855034667bc916f",
+        "discovered": true,
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "id": "bae8276a71df0b587419bbdfc6446dad",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "blender-render-farm-local-c7b71b395d-render-odd",
+        "relativePath": "frames/frame-0001.png",
+        "sizeBytes": 352328
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:69cfdede3d63edc9b3c0b018efec1060548b5a6e8d289c123013f8a0f856b0eb",
+        "dataObjectId": "4a668bce9aa90c65ff8895bdfd593030",
+        "discovered": true,
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "id": "87a99a8ba70b917b0a581c9ca0c1146a",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "blender-render-farm-local-c7b71b395d-render-odd",
+        "relativePath": "frames/frame-0003.png",
+        "sizeBytes": 353190
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:a440a7cac24cc97de2065f4bf3aa495e2e08817f2d89d6342f2eb491d00dcd9d",
+        "dataObjectId": "5202f5df4e1a277dc19ddd4c35dfd84a",
+        "discovered": true,
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "id": "21b2e35883a6b9e7590318c9de7dc286",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "blender-render-farm-local-c7b71b395d-render-odd",
+        "relativePath": "frames/frame-0005.png",
+        "sizeBytes": 355013
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:e83dee132df2c6861d6cff3a5ac52ba9ccc0766b52b9fa3e1868903f2a3b5c05",
+        "dataObjectId": "829524e004f5af9bf6b05e269f03af51",
+        "discovered": true,
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "id": "0582f0475119798cb7a8819daa149979",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "blender-render-farm-local-c7b71b395d-setup",
+        "relativePath": "render-plan.json",
+        "sizeBytes": 125
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:bb943fa991ab7f8293ce8d6fbf6645f502ccfc05e2a9b020002e8b452b07ae31",
+        "dataObjectId": "a72f058f49a29ae42dfd39c203ef32af",
+        "discovered": true,
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "id": "c627b5fa0dbe10ffcf9448c7fe1c1177",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "blender-render-farm-local-c7b71b395d-setup",
+        "relativePath": "scene.blend",
+        "sizeBytes": 488560
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:012420e315841b1b36b9bdec5f5e12bd4781590e5b02020e30d20ec19ddf5fde",
+        "dataObjectId": "791b82fd3d853fbef3a3d2472d04091c",
+        "discovered": true,
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "id": "b787d71ffcd6fb47465b9d95a8ca0645",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "blender-render-farm-local-c7b71b395d-verify",
+        "relativePath": "manifest.json",
+        "sizeBytes": 174
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:c2b80956ba35fc8c76d16762d7f0385c4e16e6677203c8a5ac82a312c64e861c",
+        "dataObjectId": "7fbaed00c7e43783cdca33cfcfc805ae",
+        "discovered": true,
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "id": "bfd116ec8bf0f3fc355485a1441a77c1",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "blender-render-farm-local-c7b71b395d-verify",
+        "relativePath": "render-report.json",
+        "sizeBytes": 89
+      }
+    ],
+    "dataTransfers": [
+      {
+        "bytes": 488685,
+        "consumerActivityId": "blender-render-farm-local-c7b71b395d-render-even",
+        "cost": 0,
+        "durationSeconds": 0.12437582015991211,
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "finishedAt": 1792520812.5236573,
+        "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-render-even:transfer-workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-render-even-0",
+        "logicalBytes": 488685,
+        "producerActivityId": "blender-render-farm-local-c7b71b395d-setup",
+        "route": {
+          "consumerActivityId": "blender-render-farm-local-c7b71b395d-render-even",
+          "filesTransferred": 2,
+          "producerActivityId": "blender-render-farm-local-c7b71b395d-setup",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.051760417,
+          "sourceEnvironmentId": "blender-render-farm-v1",
+          "sourceResourceId": "blender-render-farm-local-docker",
+          "sshChannelWaitSeconds": 3.75e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "blender-render-farm-v1",
+          "targetResourceId": "blender-render-farm-local-docker"
+        },
+        "sourceResourceId": "blender-render-farm-local-docker",
+        "startedAt": 1792520812.3992815,
+        "strategy": "gateway",
+        "targetResourceId": "blender-render-farm-local-docker"
+      },
+      {
+        "bytes": 488685,
+        "consumerActivityId": "blender-render-farm-local-c7b71b395d-render-odd",
+        "cost": 0,
+        "durationSeconds": 0.16510915756225586,
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "finishedAt": 1792520812.5660555,
+        "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-render-odd:transfer-workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-render-odd-0",
+        "logicalBytes": 488685,
+        "producerActivityId": "blender-render-farm-local-c7b71b395d-setup",
+        "route": {
+          "consumerActivityId": "blender-render-farm-local-c7b71b395d-render-odd",
+          "filesTransferred": 2,
+          "producerActivityId": "blender-render-farm-local-c7b71b395d-setup",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.092139376,
+          "sourceEnvironmentId": "blender-render-farm-v1",
+          "sourceResourceId": "blender-render-farm-local-docker",
+          "sshChannelWaitSeconds": 3.7400000000000004e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "blender-render-farm-v1",
+          "targetResourceId": "blender-render-farm-local-docker"
+        },
+        "sourceResourceId": "blender-render-farm-local-docker",
+        "startedAt": 1792520812.4009464,
+        "strategy": "gateway",
+        "targetResourceId": "blender-render-farm-local-docker"
+      },
+      {
+        "bytes": 1550484,
+        "consumerActivityId": "blender-render-farm-local-c7b71b395d-compose",
+        "cost": 0,
+        "durationSeconds": 0.21834707260131836,
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "finishedAt": 1792520815.7530596,
+        "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-compose:transfer-workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-compose-0",
+        "logicalBytes": 1550484,
+        "producerActivityId": "blender-render-farm-local-c7b71b395d-render-even",
+        "route": {
+          "consumerActivityId": "blender-render-farm-local-c7b71b395d-compose",
+          "filesTransferred": 5,
+          "producerActivityId": "blender-render-farm-local-c7b71b395d-render-even",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.095364667,
+          "sourceEnvironmentId": "blender-render-farm-v1",
+          "sourceResourceId": "blender-render-farm-local-docker",
+          "sshChannelWaitSeconds": 4.16e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "blender-render-farm-v1",
+          "targetResourceId": "blender-render-farm-local-docker"
+        },
+        "sourceResourceId": "blender-render-farm-local-docker",
+        "startedAt": 1792520815.5347126,
+        "strategy": "gateway",
+        "targetResourceId": "blender-render-farm-local-docker"
+      },
+      {
+        "bytes": 1060531,
+        "consumerActivityId": "blender-render-farm-local-c7b71b395d-compose",
+        "cost": 0,
+        "durationSeconds": 0.36070704460144043,
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "finishedAt": 1792520815.8954196,
+        "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-compose:transfer-workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-compose-1",
+        "logicalBytes": 1549216,
+        "producerActivityId": "blender-render-farm-local-c7b71b395d-render-odd",
+        "route": {
+          "consumerActivityId": "blender-render-farm-local-c7b71b395d-compose",
+          "filesTransferred": 3,
+          "producerActivityId": "blender-render-farm-local-c7b71b395d-render-odd",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.073324626,
+          "sourceEnvironmentId": "blender-render-farm-v1",
+          "sourceResourceId": "blender-render-farm-local-docker",
+          "sshChannelWaitSeconds": 5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "blender-render-farm-v1",
+          "targetResourceId": "blender-render-farm-local-docker"
+        },
+        "sourceResourceId": "blender-render-farm-local-docker",
+        "startedAt": 1792520815.5347126,
+        "strategy": "gateway",
+        "targetResourceId": "blender-render-farm-local-docker"
+      },
+      {
+        "bytes": 2694052,
+        "consumerActivityId": "blender-render-farm-local-c7b71b395d-verify",
+        "cost": 0,
+        "durationSeconds": 0.18962454795837402,
+        "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "finishedAt": 1792520817.3508224,
+        "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-verify:transfer-workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-verify-0",
+        "logicalBytes": 2694052,
+        "producerActivityId": "blender-render-farm-local-c7b71b395d-compose",
+        "route": {
+          "consumerActivityId": "blender-render-farm-local-c7b71b395d-verify",
+          "filesTransferred": 9,
+          "producerActivityId": "blender-render-farm-local-c7b71b395d-compose",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.10682112499999999,
+          "sourceEnvironmentId": "blender-render-farm-v1",
+          "sourceResourceId": "blender-render-farm-local-docker",
+          "sshChannelWaitSeconds": 7.09e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "blender-render-farm-v1",
+          "targetResourceId": "blender-render-farm-local-docker"
+        },
+        "sourceResourceId": "blender-render-farm-local-docker",
+        "startedAt": 1792520817.161198,
+        "strategy": "gateway",
+        "targetResourceId": "blender-render-farm-local-docker"
+      }
+    ],
+    "events": [
+      {
+        "aggregateId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.started",
+        "id": "3197377122a22ab608a6ddf68e84e94e",
+        "occurredAt": "2026-10-20T18:26:51.118986341Z",
+        "payload": {
+          "mode": "real",
+          "schedulePlanId": "blender-render-farm-local-c7b71b395d-manual-plan-20261020t182650"
+        }
+      },
+      {
+        "aggregateId": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-setup",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "afafb317b9df2bd5bbc92b6541209db9",
+        "occurredAt": "2026-10-20T18:26:52.312111133Z",
+        "payload": {
+          "activityId": "blender-render-farm-local-c7b71b395d-setup",
+          "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-setup",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "72d206d02d2cdb421ab7fbaec8c5acf1",
+        "occurredAt": "2026-10-20T18:26:52.392343675Z",
+        "payload": {
+          "activityId": "blender-render-farm-local-c7b71b395d-setup",
+          "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+          "failureReason": "",
+          "runtimeSeconds": 0.6272358894348145,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-render-even",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "019a75f9dffa4c23fca7bef81a591a15",
+        "occurredAt": "2026-10-20T18:26:54.313396801Z",
+        "payload": {
+          "activityId": "blender-render-farm-local-c7b71b395d-render-even",
+          "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-render-odd",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "3cd7248922d3ec4dbfb824256a6a9f1f",
+        "occurredAt": "2026-10-20T18:26:54.316782593Z",
+        "payload": {
+          "activityId": "blender-render-farm-local-c7b71b395d-render-odd",
+          "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-render-even",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "03e88d72eff550244e8b222dab949181",
+        "occurredAt": "2026-10-20T18:26:55.523167593Z",
+        "payload": {
+          "activityId": "blender-render-farm-local-c7b71b395d-render-even",
+          "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+          "failureReason": "",
+          "runtimeSeconds": 1.9187524318695068,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-render-odd",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "d21fa2fb050d72bb88f91e5595e50981",
+        "occurredAt": "2026-10-20T18:26:55.526706177Z",
+        "payload": {
+          "activityId": "blender-render-farm-local-c7b71b395d-render-odd",
+          "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+          "failureReason": "",
+          "runtimeSeconds": 1.9152486324310303,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-compose",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "a25da02d161e71e971847602f6a62a10",
+        "occurredAt": "2026-10-20T18:26:57.078534011Z",
+        "payload": {
+          "activityId": "blender-render-farm-local-c7b71b395d-compose",
+          "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-compose",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "68699de5d3871a27a662576f8c47e1d5",
+        "occurredAt": "2026-10-20T18:26:57.156022136Z",
+        "payload": {
+          "activityId": "blender-render-farm-local-c7b71b395d-compose",
+          "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+          "failureReason": "",
+          "runtimeSeconds": 0.07803606986999512,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-verify",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "10749e7cfd09951d63597c7ec9361d6b",
+        "occurredAt": "2026-10-20T18:26:59.078416428Z",
+        "payload": {
+          "activityId": "blender-render-farm-local-c7b71b395d-verify",
+          "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-verify",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "bbb7bc464e99a555476fc01269869982",
+        "occurredAt": "2026-10-20T18:26:59.170292095Z",
+        "payload": {
+          "activityId": "blender-render-farm-local-c7b71b395d-verify",
+          "executionRunId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+          "failureReason": "",
+          "runtimeSeconds": 0.018439054489135742,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.completed",
+        "id": "139d986031143e1212a09da821614d25",
+        "occurredAt": "2026-10-20T18:26:59.173627137Z",
+        "payload": {
+          "cost": 0,
+          "makespanSeconds": 6.233896017074585
+        }
+      }
+    ],
+    "handles": [
+      {
+        "activityId": "blender-render-farm-local-c7b71b395d-compose",
+        "artifacts": {
+          "activityId": "blender-render-farm-local-c7b71b395d-compose",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:0c4435d1819c5c08a633edb7aceba1eb1b8f598fff3a4f184d5c62e742bd3337",
+              "modifiedUnixNano": 1792520816111314000,
+              "path": "animation.mp4",
+              "sizeBytes": 83037
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:0c4435d1819c5c08a633edb7aceba1eb1b8f598fff3a4f184d5c62e742bd3337",
+              "modifiedUnixNano": 1792520816111314000,
+              "path": "animation.mp4",
+              "sizeBytes": 83037
+            },
+            {
+              "checksum": "sha256:6d04841fc284e4b29dc6311ae146201e55333f4e91dde79a50f6100e6b677245",
+              "modifiedUnixNano": 1792520815851314000,
+              "path": "frames/frame-0001.png",
+              "sizeBytes": 352328
+            },
+            {
+              "checksum": "sha256:019f93fa95bf8c54f975102cf2794b2896fb1142a9533c691d92dad350d65e69",
+              "modifiedUnixNano": 1792520815707314000,
+              "path": "frames/frame-0002.png",
+              "sizeBytes": 352138
+            },
+            {
+              "checksum": "sha256:69cfdede3d63edc9b3c0b018efec1060548b5a6e8d289c123013f8a0f856b0eb",
+              "modifiedUnixNano": 1792520815852314000,
+              "path": "frames/frame-0003.png",
+              "sizeBytes": 353190
+            },
+            {
+              "checksum": "sha256:36dc8dea75649479da05ca07e1cac9dc31bb225cb67c4ee8fcf52a291dce10ff",
+              "modifiedUnixNano": 1792520815707314000,
+              "path": "frames/frame-0004.png",
+              "sizeBytes": 353946
+            },
+            {
+              "checksum": "sha256:a440a7cac24cc97de2065f4bf3aa495e2e08817f2d89d6342f2eb491d00dcd9d",
+              "modifiedUnixNano": 1792520815852314000,
+              "path": "frames/frame-0005.png",
+              "sizeBytes": 355013
+            },
+            {
+              "checksum": "sha256:6eb9dd317b43d80217869d700d920c2b4e180a5d5bf421db3d9a316ce404c693",
+              "modifiedUnixNano": 1792520815707314000,
+              "path": "frames/frame-0006.png",
+              "sizeBytes": 355715
+            },
+            {
+              "checksum": "sha256:e83dee132df2c6861d6cff3a5ac52ba9ccc0766b52b9fa3e1868903f2a3b5c05",
+              "modifiedUnixNano": 1792520815706314000,
+              "path": "render-plan.json",
+              "sizeBytes": 125
+            },
+            {
+              "checksum": "sha256:bb943fa991ab7f8293ce8d6fbf6645f502ccfc05e2a9b020002e8b452b07ae31",
+              "modifiedUnixNano": 1792520815706314000,
+              "path": "scene.blend",
+              "sizeBytes": 488560
+            }
+          ],
+          "finishedAt": 1792520816.1194391,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:6d04841fc284e4b29dc6311ae146201e55333f4e91dde79a50f6100e6b677245",
+              "modifiedUnixNano": 1792520815851314000,
+              "path": "frames/frame-0001.png",
+              "sizeBytes": 352328
+            },
+            {
+              "checksum": "sha256:019f93fa95bf8c54f975102cf2794b2896fb1142a9533c691d92dad350d65e69",
+              "modifiedUnixNano": 1792520815707314000,
+              "path": "frames/frame-0002.png",
+              "sizeBytes": 352138
+            },
+            {
+              "checksum": "sha256:69cfdede3d63edc9b3c0b018efec1060548b5a6e8d289c123013f8a0f856b0eb",
+              "modifiedUnixNano": 1792520815852314000,
+              "path": "frames/frame-0003.png",
+              "sizeBytes": 353190
+            },
+            {
+              "checksum": "sha256:36dc8dea75649479da05ca07e1cac9dc31bb225cb67c4ee8fcf52a291dce10ff",
+              "modifiedUnixNano": 1792520815707314000,
+              "path": "frames/frame-0004.png",
+              "sizeBytes": 353946
+            },
+            {
+              "checksum": "sha256:a440a7cac24cc97de2065f4bf3aa495e2e08817f2d89d6342f2eb491d00dcd9d",
+              "modifiedUnixNano": 1792520815852314000,
+              "path": "frames/frame-0005.png",
+              "sizeBytes": 355013
+            },
+            {
+              "checksum": "sha256:6eb9dd317b43d80217869d700d920c2b4e180a5d5bf421db3d9a316ce404c693",
+              "modifiedUnixNano": 1792520815707314000,
+              "path": "frames/frame-0006.png",
+              "sizeBytes": 355715
+            },
+            {
+              "checksum": "sha256:e83dee132df2c6861d6cff3a5ac52ba9ccc0766b52b9fa3e1868903f2a3b5c05",
+              "modifiedUnixNano": 1792520815706314000,
+              "path": "render-plan.json",
+              "sizeBytes": 125
+            },
+            {
+              "checksum": "sha256:bb943fa991ab7f8293ce8d6fbf6645f502ccfc05e2a9b020002e8b452b07ae31",
+              "modifiedUnixNano": 1792520815706314000,
+              "path": "scene.blend",
+              "sizeBytes": 488560
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.07803606986999512,
+              "finishedAt": 1792520816.1194391,
+              "phase": "execution",
+              "startedAt": 1792520816.041403,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-compose",
+          "runId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+          "runtime": "blender-render-farm-local",
+          "schemaVersion": 1,
+          "startedAt": 1792520816.041403,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 9,
+            "initialFiles": 8,
+            "modifiedFiles": 0,
+            "outputBytes": 83037
+          }
+        },
+        "exitCode": 0,
+        "externalId": "8faddcb0ed4fc1c42e0915fdb5d3bddc807eb411aa5feec172535a82dcb7fae4",
+        "finishedAt": 1792520816.1194391,
+        "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-compose",
+        "log": "[AKOFLOW INFO] Activity started on runtime blender-render-farm-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-compose",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792520816.041408,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-compose",
+          "submittedAt": 1792520816.041403
+        },
+        "resourceId": "blender-render-farm-local-docker",
+        "runId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "runtimeId": "blender-render-farm-local",
+        "startedAt": 1792520816.041403,
+        "status": "completed"
+      },
+      {
+        "activityId": "blender-render-farm-local-c7b71b395d-render-even",
+        "artifacts": {
+          "activityId": "blender-render-farm-local-c7b71b395d-render-even",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:019f93fa95bf8c54f975102cf2794b2896fb1142a9533c691d92dad350d65e69",
+              "modifiedUnixNano": 1792520813690314000,
+              "path": "frames/frame-0002.png",
+              "sizeBytes": 352138
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:36dc8dea75649479da05ca07e1cac9dc31bb225cb67c4ee8fcf52a291dce10ff",
+              "modifiedUnixNano": 1792520814116314000,
+              "path": "frames/frame-0004.png",
+              "sizeBytes": 353946
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:6eb9dd317b43d80217869d700d920c2b4e180a5d5bf421db3d9a316ce404c693",
+              "modifiedUnixNano": 1792520814541314000,
+              "path": "frames/frame-0006.png",
+              "sizeBytes": 355715
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:019f93fa95bf8c54f975102cf2794b2896fb1142a9533c691d92dad350d65e69",
+              "modifiedUnixNano": 1792520813690314000,
+              "path": "frames/frame-0002.png",
+              "sizeBytes": 352138
+            },
+            {
+              "checksum": "sha256:36dc8dea75649479da05ca07e1cac9dc31bb225cb67c4ee8fcf52a291dce10ff",
+              "modifiedUnixNano": 1792520814116314000,
+              "path": "frames/frame-0004.png",
+              "sizeBytes": 353946
+            },
+            {
+              "checksum": "sha256:6eb9dd317b43d80217869d700d920c2b4e180a5d5bf421db3d9a316ce404c693",
+              "modifiedUnixNano": 1792520814541314000,
+              "path": "frames/frame-0006.png",
+              "sizeBytes": 355715
+            },
+            {
+              "checksum": "sha256:e83dee132df2c6861d6cff3a5ac52ba9ccc0766b52b9fa3e1868903f2a3b5c05",
+              "modifiedUnixNano": 1792520812500314000,
+              "path": "render-plan.json",
+              "sizeBytes": 125
+            },
+            {
+              "checksum": "sha256:bb943fa991ab7f8293ce8d6fbf6645f502ccfc05e2a9b020002e8b452b07ae31",
+              "modifiedUnixNano": 1792520812500314000,
+              "path": "scene.blend",
+              "sizeBytes": 488560
+            }
+          ],
+          "finishedAt": 1792520814.5742762,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:e83dee132df2c6861d6cff3a5ac52ba9ccc0766b52b9fa3e1868903f2a3b5c05",
+              "modifiedUnixNano": 1792520812500314000,
+              "path": "render-plan.json",
+              "sizeBytes": 125
+            },
+            {
+              "checksum": "sha256:bb943fa991ab7f8293ce8d6fbf6645f502ccfc05e2a9b020002e8b452b07ae31",
+              "modifiedUnixNano": 1792520812500314000,
+              "path": "scene.blend",
+              "sizeBytes": 488560
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 1.9187524318695068,
+              "finishedAt": 1792520814.5742762,
+              "phase": "execution",
+              "startedAt": 1792520812.6555238,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-render-even",
+          "runId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+          "runtime": "blender-render-farm-local",
+          "schemaVersion": 1,
+          "startedAt": 1792520812.6555238,
+          "summary": {
+            "createdFiles": 3,
+            "deletedFiles": 0,
+            "finalFiles": 5,
+            "initialFiles": 2,
+            "modifiedFiles": 0,
+            "outputBytes": 1061799
+          }
+        },
+        "exitCode": 0,
+        "externalId": "55a5cbac30b261d8771c39391175de24a86c9e9683086a8620f9284cd575b018",
+        "finishedAt": 1792520814.5742762,
+        "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-render-even",
+        "log": "Blender 4.0.2\nRead blend: \"/akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-render-even/scene.blend\"\nFra:2 Mem:9.33M (Peak 9.33M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Plane\nFra:2 Mem:9.33M (Peak 9.33M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Icosphere.002\nFra:2 Mem:9.34M (Peak 9.34M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Icosphere.001\nFra:2 Mem:9.36M (Peak 9.36M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Icosphere\nFra:2 Mem:9.37M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing\nFra:2 Mem:9.16M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start\nFra:2 Mem:9.16M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)\nFra:2 Mem:9.16M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene\nFra:2 Mem:9.16M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders\nFra:2 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Procedurals\nFra:2 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Background\nFra:2 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Camera\nFra:2 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Meshes Flags\nFra:2 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Objects\nFra:2 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Objects | Copying Transformations to device\nFra:2 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Objects | Applying Static Transformations\nFra:2 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Particle Systems\nFra:2 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device\nFra:2 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Meshes\nFra:2 Mem:9.26M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Mesh | Computing attributes\nFra:2 Mem:9.26M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device\nFra:2 Mem:9.26M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene BVH | Building\nFra:2 Mem:9.26M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene BVH | Building BVH\nFra:2 Mem:9.31M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene BVH | Packing BVH triangles and strands\nFra:2 Mem:9.32M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene BVH | Packing BVH nodes\nFra:2 Mem:9.31M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device\nFra:2 Mem:9.31M (Peak 9.37M) | Time:00:00.00 | Mem:0.03M, Peak:0.03M | Scene, ViewLayer | Updating Mesh | Computing normals\nFra:2 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.03M, Peak:0.03M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device\nFra:2 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Objects Flags\nFra:2 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Primitive Offsets\nFra:2 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Images\nFra:2 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Camera Volume\nFra:2 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Lookup Tables\nFra:2 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.14M, Peak:0.14M | Scene, ViewLayer | Updating Lights\nFra:2 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.14M, Peak:0.14M | Scene, ViewLayer | Updating Lights | Computing distribution\nFra:2 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.14M, Peak:0.14M | Scene, ViewLayer | Updating Lights | Computing tree\nFra:2 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.14M, Peak:0.14M | Scene, ViewLayer | Updating Integrator\nFra:2 Mem:10.35M (Peak 10.35M) | Time:00:00.00 | Mem:1.14M, Peak:1.14M | Scene, ViewLayer | Updating Film\nFra:2 Mem:10.35M (Peak 10.35M) | Time:00:00.00 | Mem:1.06M, Peak:1.14M | Scene, ViewLayer | Updating Lookup Tables\nFra:2 Mem:10.35M (Peak 10.35M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Updating Baking\nFra:2 Mem:10.35M (Peak 10.35M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Updating Device | Writing constant memory\nFra:2 Mem:10.35M (Peak 10.35M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Sample 0/4\nFra:2 Mem:18.27M (Peak 18.27M) | Time:00:00.10 | Remaining:00:00.29 | Mem:9.06M, Peak:9.06M | Scene, ViewLayer | Sample 1/4\nFra:2 Mem:21.79M (Peak 28.82M) | Time:00:00.39 | Mem:9.06M, Peak:9.06M | Scene, ViewLayer | Sample 4/4\nFra:2 Mem:21.79M (Peak 28.82M) | Time:00:00.39 | Mem:9.06M, Peak:9.06M | Scene, ViewLayer | Finished\nSaved: 'frames/frame-0002.png'\nTime: 00:00.49 (Saving: 00:00.09)\n\nFra:4 Mem:9.34M (Peak 9.34M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Plane\nFra:4 Mem:9.34M (Peak 9.34M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Icosphere.002\nFra:4 Mem:9.35M (Peak 9.35M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Icosphere\nFra:4 Mem:9.36M (Peak 9.36M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Icosphere.001\nFra:4 Mem:9.37M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing\nFra:4 Mem:9.16M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start\nFra:4 Mem:9.16M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)\nFra:4 Mem:9.16M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene\nFra:4 Mem:9.16M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders\nFra:4 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Procedurals\nFra:4 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Background\nFra:4 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Camera\nFra:4 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Meshes Flags\nFra:4 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Objects\nFra:4 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Objects | Copying Transformations to device\nFra:4 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Objects | Applying Static Transformations\nFra:4 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Particle Systems\nFra:4 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device\nFra:4 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Meshes\nFra:4 Mem:9.26M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Mesh | Computing attributes\nFra:4 Mem:9.26M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device\nFra:4 Mem:9.26M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene BVH | Building\nFra:4 Mem:9.26M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene BVH | Building BVH\nFra:4 Mem:9.31M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene BVH | Packing BVH triangles and strands\nFra:4 Mem:9.32M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene BVH | Packing BVH nodes\nFra:4 Mem:9.32M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device\nFra:4 Mem:9.32M (Peak 9.37M) | Time:00:00.00 | Mem:0.03M, Peak:0.03M | Scene, ViewLayer | Updating Mesh | Computing normals\nFra:4 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.03M, Peak:0.03M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device\nFra:4 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Objects Flags\nFra:4 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Primitive Offsets\nFra:4 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Images\nFra:4 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Camera Volume\nFra:4 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Lookup Tables\nFra:4 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.14M, Peak:0.14M | Scene, ViewLayer | Updating Lights\nFra:4 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.15M, Peak:0.15M | Scene, ViewLayer | Updating Lights | Computing distribution\nFra:4 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.15M, Peak:0.15M | Scene, ViewLayer | Updating Lights | Computing tree\nFra:4 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.15M, Peak:0.15M | Scene, ViewLayer | Updating Integrator\nFra:4 Mem:10.35M (Peak 10.35M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Updating Film\nFra:4 Mem:10.35M (Peak 10.35M) | Time:00:00.00 | Mem:1.06M, Peak:1.15M | Scene, ViewLayer | Updating Lookup Tables\nFra:4 Mem:10.35M (Peak 10.35M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Updating Baking\nFra:4 Mem:10.35M (Peak 10.35M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Updating Device | Writing constant memory\nFra:4 Mem:10.35M (Peak 10.35M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Sample 0/4\nFra:4 Mem:18.27M (Peak 18.27M) | Time:00:00.10 | Remaining:00:00.31 | Mem:9.06M, Peak:9.06M | Scene, ViewLayer | Sample 1/4\nFra:4 Mem:21.79M (Peak 28.82M) | Time:00:00.40 | Mem:9.06M, Peak:9.06M | Scene, ViewLayer | Sample 4/4\nFra:4 Mem:21.79M (Peak 28.82M) | Time:00:00.40 | Mem:9.06M, Peak:9.06M | Scene, ViewLayer | Finished\nSaved: 'frames/frame-0004.png'\nTime: 00:00.42 (Saving: 00:00.02)\n\nFra:6 Mem:9.34M (Peak 9.34M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Plane\nFra:6 Mem:9.34M (Peak 9.34M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Icosphere.002\nFra:6 Mem:9.35M (Peak 9.35M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Icosphere\nFra:6 Mem:9.36M (Peak 9.36M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Icosphere.001\nFra:6 Mem:9.37M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing\nFra:6 Mem:9.16M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start\nFra:6 Mem:9.16M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)\nFra:6 Mem:9.16M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene\nFra:6 Mem:9.16M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders\nFra:6 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Procedurals\nFra:6 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Background\nFra:6 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Camera\nFra:6 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Meshes Flags\nFra:6 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Objects\nFra:6 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Objects | Copying Transformations to device\nFra:6 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Objects | Applying Static Transformations\nFra:6 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Particle Systems\nFra:6 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device\nFra:6 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Meshes\nFra:6 Mem:9.26M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Mesh | Computing attributes\nFra:6 Mem:9.26M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device\nFra:6 Mem:9.26M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene BVH | Building\nFra:6 Mem:9.26M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene BVH | Building BVH\nFra:6 Mem:9.31M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene BVH | Packing BVH triangles and strands\nFra:6 Mem:9.32M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene BVH | Packing BVH nodes\nFra:6 Mem:9.31M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device\nFra:6 Mem:9.31M (Peak 9.37M) | Time:00:00.00 | Mem:0.03M, Peak:0.03M | Scene, ViewLayer | Updating Mesh | Computing normals\nFra:6 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.03M, Peak:0.03M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device\nFra:6 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Objects Flags\nFra:6 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Primitive Offsets\nFra:6 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Images\nFra:6 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Camera Volume\nFra:6 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Lookup Tables\nFra:6 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.14M, Peak:0.14M | Scene, ViewLayer | Updating Lights\nFra:6 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.14M, Peak:0.14M | Scene, ViewLayer | Updating Lights | Computing distribution\nFra:6 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.14M, Peak:0.14M | Scene, ViewLayer | Updating Lights | Computing tree\nFra:6 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.14M, Peak:0.14M | Scene, ViewLayer | Updating Integrator\nFra:6 Mem:10.35M (Peak 10.35M) | Time:00:00.00 | Mem:1.14M, Peak:1.14M | Scene, ViewLayer | Updating Film\nFra:6 Mem:10.35M (Peak 10.35M) | Time:00:00.00 | Mem:1.06M, Peak:1.14M | Scene, ViewLayer | Updating Lookup Tables\nFra:6 Mem:10.35M (Peak 10.35M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Updating Baking\nFra:6 Mem:10.35M (Peak 10.35M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Updating Device | Writing constant memory\nFra:6 Mem:10.35M (Peak 10.35M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Sample 0/4\nFra:6 Mem:18.27M (Peak 18.27M) | Time:00:00.10 | Remaining:00:00.31 | Mem:9.06M, Peak:9.06M | Scene, ViewLayer | Sample 1/4\nFra:6 Mem:21.78M (Peak 28.82M) | Time:00:00.40 | Mem:9.06M, Peak:9.06M | Scene, ViewLayer | Sample 4/4\nFra:6 Mem:21.78M (Peak 28.82M) | Time:00:00.40 | Mem:9.06M, Peak:9.06M | Scene, ViewLayer | Finished\nSaved: 'frames/frame-0006.png'\nTime: 00:00.42 (Saving: 00:00.02)\n\n\nBlender quit\n[AKOFLOW INFO] Activity started on runtime blender-render-farm-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-render-even",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792520812.655529,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-render-even",
+          "submittedAt": 1792520812.6555238
+        },
+        "resourceId": "blender-render-farm-local-docker",
+        "runId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "runtimeId": "blender-render-farm-local",
+        "startedAt": 1792520812.6555238,
+        "status": "completed"
+      },
+      {
+        "activityId": "blender-render-farm-local-c7b71b395d-render-odd",
+        "artifacts": {
+          "activityId": "blender-render-farm-local-c7b71b395d-render-odd",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:6d04841fc284e4b29dc6311ae146201e55333f4e91dde79a50f6100e6b677245",
+              "modifiedUnixNano": 1792520813730314000,
+              "path": "frames/frame-0001.png",
+              "sizeBytes": 352328
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:69cfdede3d63edc9b3c0b018efec1060548b5a6e8d289c123013f8a0f856b0eb",
+              "modifiedUnixNano": 1792520814157314000,
+              "path": "frames/frame-0003.png",
+              "sizeBytes": 353190
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:a440a7cac24cc97de2065f4bf3aa495e2e08817f2d89d6342f2eb491d00dcd9d",
+              "modifiedUnixNano": 1792520814590314000,
+              "path": "frames/frame-0005.png",
+              "sizeBytes": 355013
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:6d04841fc284e4b29dc6311ae146201e55333f4e91dde79a50f6100e6b677245",
+              "modifiedUnixNano": 1792520813730314000,
+              "path": "frames/frame-0001.png",
+              "sizeBytes": 352328
+            },
+            {
+              "checksum": "sha256:69cfdede3d63edc9b3c0b018efec1060548b5a6e8d289c123013f8a0f856b0eb",
+              "modifiedUnixNano": 1792520814157314000,
+              "path": "frames/frame-0003.png",
+              "sizeBytes": 353190
+            },
+            {
+              "checksum": "sha256:a440a7cac24cc97de2065f4bf3aa495e2e08817f2d89d6342f2eb491d00dcd9d",
+              "modifiedUnixNano": 1792520814590314000,
+              "path": "frames/frame-0005.png",
+              "sizeBytes": 355013
+            },
+            {
+              "checksum": "sha256:e83dee132df2c6861d6cff3a5ac52ba9ccc0766b52b9fa3e1868903f2a3b5c05",
+              "modifiedUnixNano": 1792520812521314000,
+              "path": "render-plan.json",
+              "sizeBytes": 125
+            },
+            {
+              "checksum": "sha256:bb943fa991ab7f8293ce8d6fbf6645f502ccfc05e2a9b020002e8b452b07ae31",
+              "modifiedUnixNano": 1792520812522314000,
+              "path": "scene.blend",
+              "sizeBytes": 488560
+            }
+          ],
+          "finishedAt": 1792520814.6245835,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:e83dee132df2c6861d6cff3a5ac52ba9ccc0766b52b9fa3e1868903f2a3b5c05",
+              "modifiedUnixNano": 1792520812521314000,
+              "path": "render-plan.json",
+              "sizeBytes": 125
+            },
+            {
+              "checksum": "sha256:bb943fa991ab7f8293ce8d6fbf6645f502ccfc05e2a9b020002e8b452b07ae31",
+              "modifiedUnixNano": 1792520812522314000,
+              "path": "scene.blend",
+              "sizeBytes": 488560
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 1.9152486324310303,
+              "finishedAt": 1792520814.6245835,
+              "phase": "execution",
+              "startedAt": 1792520812.7093349,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-render-odd",
+          "runId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+          "runtime": "blender-render-farm-local",
+          "schemaVersion": 1,
+          "startedAt": 1792520812.7093349,
+          "summary": {
+            "createdFiles": 3,
+            "deletedFiles": 0,
+            "finalFiles": 5,
+            "initialFiles": 2,
+            "modifiedFiles": 0,
+            "outputBytes": 1060531
+          }
+        },
+        "exitCode": 0,
+        "externalId": "dbc912887292552f506aec0e9397441eedce22761281f07970d28c8e97bd5e47",
+        "finishedAt": 1792520814.6245835,
+        "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-render-odd",
+        "log": "Blender 4.0.2\nRead blend: \"/akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-render-odd/scene.blend\"\nFra:1 Mem:9.33M (Peak 9.33M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Plane\nFra:1 Mem:9.33M (Peak 9.33M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Icosphere.002\nFra:1 Mem:9.34M (Peak 9.34M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Icosphere.001\nFra:1 Mem:9.36M (Peak 9.36M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Icosphere\nFra:1 Mem:9.37M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing\nFra:1 Mem:9.16M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start\nFra:1 Mem:9.16M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)\nFra:1 Mem:9.16M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene\nFra:1 Mem:9.16M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders\nFra:1 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Procedurals\nFra:1 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Background\nFra:1 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Camera\nFra:1 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Meshes Flags\nFra:1 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Objects\nFra:1 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Objects | Copying Transformations to device\nFra:1 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Objects | Applying Static Transformations\nFra:1 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Particle Systems\nFra:1 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device\nFra:1 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Meshes\nFra:1 Mem:9.26M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Mesh | Computing attributes\nFra:1 Mem:9.26M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device\nFra:1 Mem:9.26M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene BVH | Building\nFra:1 Mem:9.26M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene BVH | Building BVH\nFra:1 Mem:9.31M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene BVH | Packing BVH triangles and strands\nFra:1 Mem:9.32M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene BVH | Packing BVH nodes\nFra:1 Mem:9.31M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device\nFra:1 Mem:9.31M (Peak 9.37M) | Time:00:00.00 | Mem:0.03M, Peak:0.03M | Scene, ViewLayer | Updating Mesh | Computing normals\nFra:1 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.03M, Peak:0.03M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device\nFra:1 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Objects Flags\nFra:1 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Primitive Offsets\nFra:1 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Images\nFra:1 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Camera Volume\nFra:1 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Lookup Tables\nFra:1 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.14M, Peak:0.14M | Scene, ViewLayer | Updating Lights\nFra:1 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.15M, Peak:0.15M | Scene, ViewLayer | Updating Lights | Computing distribution\nFra:1 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.15M, Peak:0.15M | Scene, ViewLayer | Updating Lights | Computing tree\nFra:1 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.15M, Peak:0.15M | Scene, ViewLayer | Updating Integrator\nFra:1 Mem:10.35M (Peak 10.35M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Updating Film\nFra:1 Mem:10.35M (Peak 10.35M) | Time:00:00.00 | Mem:1.06M, Peak:1.15M | Scene, ViewLayer | Updating Lookup Tables\nFra:1 Mem:10.35M (Peak 10.35M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Updating Baking\nFra:1 Mem:10.35M (Peak 10.35M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Updating Device | Writing constant memory\nFra:1 Mem:10.35M (Peak 10.35M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Sample 0/4\nFra:1 Mem:18.27M (Peak 18.27M) | Time:00:00.10 | Remaining:00:00.31 | Mem:9.06M, Peak:9.06M | Scene, ViewLayer | Sample 1/4\nFra:1 Mem:21.79M (Peak 28.82M) | Time:00:00.40 | Mem:9.06M, Peak:9.06M | Scene, ViewLayer | Sample 4/4\nFra:1 Mem:21.79M (Peak 28.82M) | Time:00:00.40 | Mem:9.06M, Peak:9.06M | Scene, ViewLayer | Finished\nSaved: 'frames/frame-0001.png'\nTime: 00:00.50 (Saving: 00:00.09)\n\nFra:3 Mem:9.34M (Peak 9.34M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Icosphere.002\nFra:3 Mem:9.35M (Peak 9.35M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Plane\nFra:3 Mem:9.35M (Peak 9.35M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Icosphere.001\nFra:3 Mem:9.36M (Peak 9.36M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Icosphere\nFra:3 Mem:9.37M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing\nFra:3 Mem:9.16M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start\nFra:3 Mem:9.16M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)\nFra:3 Mem:9.16M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene\nFra:3 Mem:9.16M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders\nFra:3 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Procedurals\nFra:3 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Background\nFra:3 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Camera\nFra:3 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Meshes Flags\nFra:3 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Objects\nFra:3 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Objects | Copying Transformations to device\nFra:3 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Objects | Applying Static Transformations\nFra:3 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Particle Systems\nFra:3 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device\nFra:3 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Meshes\nFra:3 Mem:9.26M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Mesh | Computing attributes\nFra:3 Mem:9.26M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device\nFra:3 Mem:9.26M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene BVH | Building\nFra:3 Mem:9.26M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene BVH | Building BVH\nFra:3 Mem:9.31M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene BVH | Packing BVH triangles and strands\nFra:3 Mem:9.32M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene BVH | Packing BVH nodes\nFra:3 Mem:9.31M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device\nFra:3 Mem:9.31M (Peak 9.37M) | Time:00:00.00 | Mem:0.03M, Peak:0.03M | Scene, ViewLayer | Updating Mesh | Computing normals\nFra:3 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.03M, Peak:0.03M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device\nFra:3 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Objects Flags\nFra:3 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Primitive Offsets\nFra:3 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Images\nFra:3 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Camera Volume\nFra:3 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Lookup Tables\nFra:3 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.14M, Peak:0.14M | Scene, ViewLayer | Updating Lights\nFra:3 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.14M, Peak:0.14M | Scene, ViewLayer | Updating Lights | Computing distribution\nFra:3 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.14M, Peak:0.14M | Scene, ViewLayer | Updating Lights | Computing tree\nFra:3 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.14M, Peak:0.14M | Scene, ViewLayer | Updating Integrator\nFra:3 Mem:10.35M (Peak 10.35M) | Time:00:00.00 | Mem:1.14M, Peak:1.14M | Scene, ViewLayer | Updating Film\nFra:3 Mem:10.35M (Peak 10.35M) | Time:00:00.00 | Mem:1.06M, Peak:1.14M | Scene, ViewLayer | Updating Lookup Tables\nFra:3 Mem:10.35M (Peak 10.35M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Updating Baking\nFra:3 Mem:10.35M (Peak 10.35M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Updating Device | Writing constant memory\nFra:3 Mem:10.35M (Peak 10.35M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Sample 0/4\nFra:3 Mem:18.27M (Peak 18.27M) | Time:00:00.10 | Remaining:00:00.30 | Mem:9.06M, Peak:9.06M | Scene, ViewLayer | Sample 1/4\nFra:3 Mem:21.79M (Peak 28.82M) | Time:00:00.40 | Mem:9.06M, Peak:9.06M | Scene, ViewLayer | Sample 4/4\nFra:3 Mem:21.79M (Peak 28.82M) | Time:00:00.40 | Mem:9.06M, Peak:9.06M | Scene, ViewLayer | Finished\nSaved: 'frames/frame-0003.png'\nTime: 00:00.42 (Saving: 00:00.02)\n\nFra:5 Mem:9.34M (Peak 9.34M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Plane\nFra:5 Mem:9.34M (Peak 9.34M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Icosphere.002\nFra:5 Mem:9.35M (Peak 9.35M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Icosphere\nFra:5 Mem:9.36M (Peak 9.36M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | Icosphere.001\nFra:5 Mem:9.37M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing\nFra:5 Mem:9.16M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start\nFra:5 Mem:9.16M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)\nFra:5 Mem:9.16M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene\nFra:5 Mem:9.16M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders\nFra:5 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Procedurals\nFra:5 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Background\nFra:5 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Camera\nFra:5 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Meshes Flags\nFra:5 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Objects\nFra:5 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Objects | Copying Transformations to device\nFra:5 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Objects | Applying Static Transformations\nFra:5 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Particle Systems\nFra:5 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device\nFra:5 Mem:9.24M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Meshes\nFra:5 Mem:9.26M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Mesh | Computing attributes\nFra:5 Mem:9.26M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device\nFra:5 Mem:9.26M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene BVH | Building\nFra:5 Mem:9.26M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene BVH | Building BVH\nFra:5 Mem:9.31M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene BVH | Packing BVH triangles and strands\nFra:5 Mem:9.32M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene BVH | Packing BVH nodes\nFra:5 Mem:9.31M (Peak 9.37M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device\nFra:5 Mem:9.31M (Peak 9.37M) | Time:00:00.00 | Mem:0.03M, Peak:0.03M | Scene, ViewLayer | Updating Mesh | Computing normals\nFra:5 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.03M, Peak:0.03M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device\nFra:5 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Objects Flags\nFra:5 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Primitive Offsets\nFra:5 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Images\nFra:5 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Camera Volume\nFra:5 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Lookup Tables\nFra:5 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.14M, Peak:0.14M | Scene, ViewLayer | Updating Lights\nFra:5 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.14M, Peak:0.14M | Scene, ViewLayer | Updating Lights | Computing distribution\nFra:5 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.14M, Peak:0.14M | Scene, ViewLayer | Updating Lights | Computing tree\nFra:5 Mem:9.35M (Peak 9.37M) | Time:00:00.00 | Mem:0.14M, Peak:0.14M | Scene, ViewLayer | Updating Integrator\nFra:5 Mem:10.35M (Peak 10.35M) | Time:00:00.00 | Mem:1.14M, Peak:1.14M | Scene, ViewLayer | Updating Film\nFra:5 Mem:10.35M (Peak 10.35M) | Time:00:00.00 | Mem:1.06M, Peak:1.14M | Scene, ViewLayer | Updating Lookup Tables\nFra:5 Mem:10.35M (Peak 10.35M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Updating Baking\nFra:5 Mem:10.35M (Peak 10.35M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Updating Device | Writing constant memory\nFra:5 Mem:10.35M (Peak 10.35M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Sample 0/4\nFra:5 Mem:18.27M (Peak 18.27M) | Time:00:00.10 | Remaining:00:00.31 | Mem:9.06M, Peak:9.06M | Scene, ViewLayer | Sample 1/4\nFra:5 Mem:21.78M (Peak 28.82M) | Time:00:00.40 | Mem:9.06M, Peak:9.06M | Scene, ViewLayer | Sample 4/4\nFra:5 Mem:21.78M (Peak 28.82M) | Time:00:00.40 | Mem:9.06M, Peak:9.06M | Scene, ViewLayer | Finished\nSaved: 'frames/frame-0005.png'\nTime: 00:00.43 (Saving: 00:00.02)\n\n\nBlender quit\n[AKOFLOW INFO] Activity started on runtime blender-render-farm-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-render-odd",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792520812.7093427,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-render-odd",
+          "submittedAt": 1792520812.7093349
+        },
+        "resourceId": "blender-render-farm-local-docker",
+        "runId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "runtimeId": "blender-render-farm-local",
+        "startedAt": 1792520812.7093349,
+        "status": "completed"
+      },
+      {
+        "activityId": "blender-render-farm-local-c7b71b395d-setup",
+        "artifacts": {
+          "activityId": "blender-render-farm-local-c7b71b395d-setup",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:e83dee132df2c6861d6cff3a5ac52ba9ccc0766b52b9fa3e1868903f2a3b5c05",
+              "modifiedUnixNano": 1792520811901314000,
+              "path": "render-plan.json",
+              "sizeBytes": 125
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:bb943fa991ab7f8293ce8d6fbf6645f502ccfc05e2a9b020002e8b452b07ae31",
+              "modifiedUnixNano": 1792520811872314000,
+              "path": "scene.blend",
+              "sizeBytes": 488560
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:e83dee132df2c6861d6cff3a5ac52ba9ccc0766b52b9fa3e1868903f2a3b5c05",
+              "modifiedUnixNano": 1792520811901314000,
+              "path": "render-plan.json",
+              "sizeBytes": 125
+            },
+            {
+              "checksum": "sha256:bb943fa991ab7f8293ce8d6fbf6645f502ccfc05e2a9b020002e8b452b07ae31",
+              "modifiedUnixNano": 1792520811872314000,
+              "path": "scene.blend",
+              "sizeBytes": 488560
+            }
+          ],
+          "finishedAt": 1792520811.9065855,
+          "phases": [
+            {
+              "durationSeconds": 0.6272358894348145,
+              "finishedAt": 1792520811.9065855,
+              "phase": "execution",
+              "startedAt": 1792520811.2793496,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-setup",
+          "runId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+          "runtime": "blender-render-farm-local",
+          "schemaVersion": 1,
+          "startedAt": 1792520811.2793496,
+          "summary": {
+            "createdFiles": 2,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 0,
+            "modifiedFiles": 0,
+            "outputBytes": 488685
+          }
+        },
+        "exitCode": 0,
+        "externalId": "fdae871fff2328941ae79abf8b39b29d663d7a4b37c83d213a98f6fbfa355cfb",
+        "finishedAt": 1792520811.9065855,
+        "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-setup",
+        "log": "Blender 4.0.2\nInfo: Total files 0 | Changed 0 | Failed 0\nInfo: Saved \"scene.blend\"\n\nBlender quit\n[AKOFLOW INFO] Activity started on runtime blender-render-farm-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-setup",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792520811.2793543,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-setup",
+          "submittedAt": 1792520811.2793496
+        },
+        "resourceId": "blender-render-farm-local-docker",
+        "runId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "runtimeId": "blender-render-farm-local",
+        "startedAt": 1792520811.2793496,
+        "status": "completed"
+      },
+      {
+        "activityId": "blender-render-farm-local-c7b71b395d-verify",
+        "artifacts": {
+          "activityId": "blender-render-farm-local-c7b71b395d-verify",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:012420e315841b1b36b9bdec5f5e12bd4781590e5b02020e30d20ec19ddf5fde",
+              "modifiedUnixNano": 1792520817507314000,
+              "path": "manifest.json",
+              "sizeBytes": 174
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:c2b80956ba35fc8c76d16762d7f0385c4e16e6677203c8a5ac82a312c64e861c",
+              "modifiedUnixNano": 1792520817507314000,
+              "path": "render-report.json",
+              "sizeBytes": 89
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:0c4435d1819c5c08a633edb7aceba1eb1b8f598fff3a4f184d5c62e742bd3337",
+              "modifiedUnixNano": 1792520817298314000,
+              "path": "animation.mp4",
+              "sizeBytes": 83037
+            },
+            {
+              "checksum": "sha256:6d04841fc284e4b29dc6311ae146201e55333f4e91dde79a50f6100e6b677245",
+              "modifiedUnixNano": 1792520817299314000,
+              "path": "frames/frame-0001.png",
+              "sizeBytes": 352328
+            },
+            {
+              "checksum": "sha256:019f93fa95bf8c54f975102cf2794b2896fb1142a9533c691d92dad350d65e69",
+              "modifiedUnixNano": 1792520817299314000,
+              "path": "frames/frame-0002.png",
+              "sizeBytes": 352138
+            },
+            {
+              "checksum": "sha256:69cfdede3d63edc9b3c0b018efec1060548b5a6e8d289c123013f8a0f856b0eb",
+              "modifiedUnixNano": 1792520817300314000,
+              "path": "frames/frame-0003.png",
+              "sizeBytes": 353190
+            },
+            {
+              "checksum": "sha256:36dc8dea75649479da05ca07e1cac9dc31bb225cb67c4ee8fcf52a291dce10ff",
+              "modifiedUnixNano": 1792520817300314000,
+              "path": "frames/frame-0004.png",
+              "sizeBytes": 353946
+            },
+            {
+              "checksum": "sha256:a440a7cac24cc97de2065f4bf3aa495e2e08817f2d89d6342f2eb491d00dcd9d",
+              "modifiedUnixNano": 1792520817301314000,
+              "path": "frames/frame-0005.png",
+              "sizeBytes": 355013
+            },
+            {
+              "checksum": "sha256:6eb9dd317b43d80217869d700d920c2b4e180a5d5bf421db3d9a316ce404c693",
+              "modifiedUnixNano": 1792520817301314000,
+              "path": "frames/frame-0006.png",
+              "sizeBytes": 355715
+            },
+            {
+              "checksum": "sha256:012420e315841b1b36b9bdec5f5e12bd4781590e5b02020e30d20ec19ddf5fde",
+              "modifiedUnixNano": 1792520817507314000,
+              "path": "manifest.json",
+              "sizeBytes": 174
+            },
+            {
+              "checksum": "sha256:e83dee132df2c6861d6cff3a5ac52ba9ccc0766b52b9fa3e1868903f2a3b5c05",
+              "modifiedUnixNano": 1792520817298314000,
+              "path": "render-plan.json",
+              "sizeBytes": 125
+            },
+            {
+              "checksum": "sha256:c2b80956ba35fc8c76d16762d7f0385c4e16e6677203c8a5ac82a312c64e861c",
+              "modifiedUnixNano": 1792520817507314000,
+              "path": "render-report.json",
+              "sizeBytes": 89
+            },
+            {
+              "checksum": "sha256:bb943fa991ab7f8293ce8d6fbf6645f502ccfc05e2a9b020002e8b452b07ae31",
+              "modifiedUnixNano": 1792520817299314000,
+              "path": "scene.blend",
+              "sizeBytes": 488560
+            }
+          ],
+          "finishedAt": 1792520817.5132456,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:0c4435d1819c5c08a633edb7aceba1eb1b8f598fff3a4f184d5c62e742bd3337",
+              "modifiedUnixNano": 1792520817298314000,
+              "path": "animation.mp4",
+              "sizeBytes": 83037
+            },
+            {
+              "checksum": "sha256:6d04841fc284e4b29dc6311ae146201e55333f4e91dde79a50f6100e6b677245",
+              "modifiedUnixNano": 1792520817299314000,
+              "path": "frames/frame-0001.png",
+              "sizeBytes": 352328
+            },
+            {
+              "checksum": "sha256:019f93fa95bf8c54f975102cf2794b2896fb1142a9533c691d92dad350d65e69",
+              "modifiedUnixNano": 1792520817299314000,
+              "path": "frames/frame-0002.png",
+              "sizeBytes": 352138
+            },
+            {
+              "checksum": "sha256:69cfdede3d63edc9b3c0b018efec1060548b5a6e8d289c123013f8a0f856b0eb",
+              "modifiedUnixNano": 1792520817300314000,
+              "path": "frames/frame-0003.png",
+              "sizeBytes": 353190
+            },
+            {
+              "checksum": "sha256:36dc8dea75649479da05ca07e1cac9dc31bb225cb67c4ee8fcf52a291dce10ff",
+              "modifiedUnixNano": 1792520817300314000,
+              "path": "frames/frame-0004.png",
+              "sizeBytes": 353946
+            },
+            {
+              "checksum": "sha256:a440a7cac24cc97de2065f4bf3aa495e2e08817f2d89d6342f2eb491d00dcd9d",
+              "modifiedUnixNano": 1792520817301314000,
+              "path": "frames/frame-0005.png",
+              "sizeBytes": 355013
+            },
+            {
+              "checksum": "sha256:6eb9dd317b43d80217869d700d920c2b4e180a5d5bf421db3d9a316ce404c693",
+              "modifiedUnixNano": 1792520817301314000,
+              "path": "frames/frame-0006.png",
+              "sizeBytes": 355715
+            },
+            {
+              "checksum": "sha256:e83dee132df2c6861d6cff3a5ac52ba9ccc0766b52b9fa3e1868903f2a3b5c05",
+              "modifiedUnixNano": 1792520817298314000,
+              "path": "render-plan.json",
+              "sizeBytes": 125
+            },
+            {
+              "checksum": "sha256:bb943fa991ab7f8293ce8d6fbf6645f502ccfc05e2a9b020002e8b452b07ae31",
+              "modifiedUnixNano": 1792520817299314000,
+              "path": "scene.blend",
+              "sizeBytes": 488560
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.018439054489135742,
+              "finishedAt": 1792520817.5132456,
+              "phase": "execution",
+              "startedAt": 1792520817.4948065,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-verify",
+          "runId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+          "runtime": "blender-render-farm-local",
+          "schemaVersion": 1,
+          "startedAt": 1792520817.4948065,
+          "summary": {
+            "createdFiles": 2,
+            "deletedFiles": 0,
+            "finalFiles": 11,
+            "initialFiles": 9,
+            "modifiedFiles": 0,
+            "outputBytes": 263
+          }
+        },
+        "exitCode": 0,
+        "externalId": "c9981fba265e764c4ef309e82e0d11276cc97998a254e0e406c5f5667fde0325",
+        "finishedAt": 1792520817.5132456,
+        "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-verify",
+        "log": "[AKOFLOW INFO] Activity started on runtime blender-render-farm-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-verify",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792520817.4948146,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-verify",
+          "submittedAt": 1792520817.4948065
+        },
+        "resourceId": "blender-render-farm-local-docker",
+        "runId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "runtimeId": "blender-render-farm-local",
+        "startedAt": 1792520817.4948065,
+        "status": "completed"
+      }
+    ],
+    "infrastructureRuns": [],
+    "operationEvents": [],
+    "run": {
+      "activityCount": 5,
+      "breakdown": {
+        "computeSeconds": 4.557712078094482,
+        "interferenceSeconds": 0,
+        "overheadSeconds": 0,
+        "queueSeconds": 0,
+        "transferSeconds": 1.0581636428833008
+      },
+      "completedActivityCount": 5,
+      "cost": 0,
+      "finishedAt": "2026-10-20T18:26:59Z",
+      "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+      "kind": "workflow",
+      "makespanSeconds": 6.233896017074585,
+      "mode": "real",
+      "schedulePlanId": "blender-render-farm-local-c7b71b395d-manual-plan-20261020t182650",
+      "seed": 0,
+      "startedAt": "2026-10-20T18:26:51Z",
+      "status": "completed",
+      "title": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+      "transferredBytes": 6282437
+    },
+    "timeline": {
+      "computeMakespanSeconds": 6.233896017074585,
+      "coveredWallSeconds": 3.932710886001587,
+      "finishedAt": 1792520819,
+      "phases": [
+        {
+          "activityId": "blender-render-farm-local-c7b71b395d-setup",
+          "category": "resource-queue",
+          "durationSeconds": 0.12871718406677246,
+          "finishedAt": 1792520811.2793496,
+          "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-setup:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792520811.1506324,
+          "status": "completed"
+        },
+        {
+          "activityId": "blender-render-farm-local-c7b71b395d-setup",
+          "category": "runtime",
+          "durationSeconds": 0.6272358894348145,
+          "finishedAt": 1792520811.9065855,
+          "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-setup:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792520811.2793496,
+          "status": "completed"
+        },
+        {
+          "activityId": "blender-render-farm-local-c7b71b395d-render-even",
+          "category": "resource-queue",
+          "durationSeconds": 0.005590915679931641,
+          "finishedAt": 1792520812.3992815,
+          "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-render-even:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792520812.3936906,
+          "status": "completed"
+        },
+        {
+          "activityId": "blender-render-farm-local-c7b71b395d-render-odd",
+          "category": "resource-queue",
+          "durationSeconds": 0.006094455718994141,
+          "finishedAt": 1792520812.4009464,
+          "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-render-odd:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792520812.394852,
+          "status": "completed"
+        },
+        {
+          "activityId": "blender-render-farm-local-c7b71b395d-render-even",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.12437582015991211,
+          "finishedAt": 1792520812.5236573,
+          "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-render-even:transfer-workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-render-even-0",
+          "source": "transfer-observation",
+          "startedAt": 1792520812.3992815,
+          "status": "completed",
+          "transferId": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-render-even:transfer-workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-render-even-0"
+        },
+        {
+          "activityId": "blender-render-farm-local-c7b71b395d-render-odd",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.16510915756225586,
+          "finishedAt": 1792520812.5660555,
+          "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-render-odd:transfer-workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-render-odd-0",
+          "source": "transfer-observation",
+          "startedAt": 1792520812.4009464,
+          "status": "completed",
+          "transferId": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-render-odd:transfer-workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-render-odd-0"
+        },
+        {
+          "activityId": "blender-render-farm-local-c7b71b395d-render-even",
+          "category": "launch",
+          "durationSeconds": 0.131866455078125,
+          "finishedAt": 1792520812.6555238,
+          "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-render-even:launch",
+          "source": "task-metadata",
+          "startedAt": 1792520812.5236573,
+          "status": "completed"
+        },
+        {
+          "activityId": "blender-render-farm-local-c7b71b395d-render-odd",
+          "category": "launch",
+          "durationSeconds": 0.1432793140411377,
+          "finishedAt": 1792520812.7093349,
+          "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-render-odd:launch",
+          "source": "task-metadata",
+          "startedAt": 1792520812.5660555,
+          "status": "completed"
+        },
+        {
+          "activityId": "blender-render-farm-local-c7b71b395d-render-even",
+          "category": "runtime",
+          "durationSeconds": 1.9187524318695068,
+          "finishedAt": 1792520814.5742762,
+          "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-render-even:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792520812.6555238,
+          "status": "completed"
+        },
+        {
+          "activityId": "blender-render-farm-local-c7b71b395d-render-odd",
+          "category": "runtime",
+          "durationSeconds": 1.9152486324310303,
+          "finishedAt": 1792520814.6245835,
+          "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-render-odd:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792520812.7093349,
+          "status": "completed"
+        },
+        {
+          "activityId": "blender-render-farm-local-c7b71b395d-compose",
+          "category": "resource-queue",
+          "durationSeconds": 0.0059185028076171875,
+          "finishedAt": 1792520815.5347126,
+          "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-compose:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792520815.528794,
+          "status": "completed"
+        },
+        {
+          "activityId": "blender-render-farm-local-c7b71b395d-compose",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.21834707260131836,
+          "finishedAt": 1792520815.7530596,
+          "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-compose:transfer-workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-compose-0",
+          "source": "transfer-observation",
+          "startedAt": 1792520815.5347126,
+          "status": "completed",
+          "transferId": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-compose:transfer-workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-compose-0"
+        },
+        {
+          "activityId": "blender-render-farm-local-c7b71b395d-compose",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.36070704460144043,
+          "finishedAt": 1792520815.8954196,
+          "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-compose:transfer-workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-compose-1",
+          "source": "transfer-observation",
+          "startedAt": 1792520815.5347126,
+          "status": "completed",
+          "transferId": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-compose:transfer-workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-compose-1"
+        },
+        {
+          "activityId": "blender-render-farm-local-c7b71b395d-compose",
+          "category": "launch",
+          "durationSeconds": 0.14598345756530762,
+          "finishedAt": 1792520816.041403,
+          "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-compose:launch",
+          "source": "task-metadata",
+          "startedAt": 1792520815.8954196,
+          "status": "completed"
+        },
+        {
+          "activityId": "blender-render-farm-local-c7b71b395d-compose",
+          "category": "runtime",
+          "durationSeconds": 0.07803606986999512,
+          "finishedAt": 1792520816.1194391,
+          "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-compose:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792520816.041403,
+          "status": "completed"
+        },
+        {
+          "activityId": "blender-render-farm-local-c7b71b395d-verify",
+          "category": "resource-queue",
+          "durationSeconds": 0.003172159194946289,
+          "finishedAt": 1792520817.161198,
+          "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-verify:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792520817.1580257,
+          "status": "completed"
+        },
+        {
+          "activityId": "blender-render-farm-local-c7b71b395d-verify",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.18962454795837402,
+          "finishedAt": 1792520817.3508224,
+          "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-verify:transfer-workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-verify-0",
+          "source": "transfer-observation",
+          "startedAt": 1792520817.161198,
+          "status": "completed",
+          "transferId": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-verify:transfer-workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-verify-0"
+        },
+        {
+          "activityId": "blender-render-farm-local-c7b71b395d-verify",
+          "category": "launch",
+          "durationSeconds": 0.14398407936096191,
+          "finishedAt": 1792520817.4948065,
+          "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-verify:launch",
+          "source": "task-metadata",
+          "startedAt": 1792520817.3508224,
+          "status": "completed"
+        },
+        {
+          "activityId": "blender-render-farm-local-c7b71b395d-verify",
+          "category": "runtime",
+          "durationSeconds": 0.018439054489135742,
+          "finishedAt": 1792520817.5132456,
+          "id": "blender-render-farm-local-c7b71b395d-run-20261020t182650:blender-render-farm-local-c7b71b395d-verify:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792520817.4948065,
+          "status": "completed"
+        }
+      ],
+      "startedAt": 1792520811,
+      "totals": {
+        "destroySeconds": 0,
+        "executablePreparationSeconds": 0,
+        "launchSeconds": 0.5651133060455322,
+        "provisionSeconds": 0,
+        "resourceQueueSeconds": 0.14949321746826172,
+        "runtimeSeconds": 4.557712078094482,
+        "startSeconds": 0,
+        "stopSeconds": 0,
+        "validationSeconds": 0,
+        "workspaceTransferSeconds": 1.0581636428833008
+      },
+      "unclassifiedWallSeconds": 4.067289113998413,
+      "wallSeconds": 8
+    },
+    "workspaceLeases": [
+      {
+        "consumerActivityId": "blender-render-farm-local-c7b71b395d-verify",
+        "id": "workspace-lease-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-compose-blender-render-farm-local-c7b71b395d-verify",
+        "producerActivityId": "blender-render-farm-local-c7b71b395d-compose",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T18:26:57.354455261Z",
+        "runId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "workspaceId": "workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-compose"
+      },
+      {
+        "consumerActivityId": "blender-render-farm-local-c7b71b395d-compose",
+        "id": "workspace-lease-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-render-even-blender-render-farm-local-c7b71b395d-compose",
+        "producerActivityId": "blender-render-farm-local-c7b71b395d-render-even",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T18:26:55.901637552Z",
+        "runId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "workspaceId": "workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-render-even"
+      },
+      {
+        "consumerActivityId": "blender-render-farm-local-c7b71b395d-compose",
+        "id": "workspace-lease-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-render-odd-blender-render-farm-local-c7b71b395d-compose",
+        "producerActivityId": "blender-render-farm-local-c7b71b395d-render-odd",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T18:26:55.901637552Z",
+        "runId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "workspaceId": "workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-render-odd"
+      },
+      {
+        "consumerActivityId": "blender-render-farm-local-c7b71b395d-render-even",
+        "id": "workspace-lease-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-setup-blender-render-farm-local-c7b71b395d-render-even",
+        "producerActivityId": "blender-render-farm-local-c7b71b395d-setup",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T18:26:52.525931009Z",
+        "runId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "workspaceId": "workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-setup"
+      },
+      {
+        "consumerActivityId": "blender-render-farm-local-c7b71b395d-render-odd",
+        "id": "workspace-lease-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-setup-blender-render-farm-local-c7b71b395d-render-odd",
+        "producerActivityId": "blender-render-farm-local-c7b71b395d-setup",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T18:26:52.567634967Z",
+        "runId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "workspaceId": "workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-setup"
+      }
+    ],
+    "workspaces": [
+      {
+        "activityId": "blender-render-farm-local-c7b71b395d-compose",
+        "createdAt": "2026-10-20T18:26:51.122880008Z",
+        "driver": "local",
+        "environmentId": "blender-render-farm-v1",
+        "executionPath": "/akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-compose",
+        "fileCount": 9,
+        "id": "workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-compose",
+        "inputBytes": 2611015,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:0c4435d1819c5c08a633edb7aceba1eb1b8f598fff3a4f184d5c62e742bd3337",
+              "path": "animation.mp4",
+              "sizeBytes": 83037
+            },
+            {
+              "digest": "sha256:6d04841fc284e4b29dc6311ae146201e55333f4e91dde79a50f6100e6b677245",
+              "path": "frames/frame-0001.png",
+              "sizeBytes": 352328
+            },
+            {
+              "digest": "sha256:019f93fa95bf8c54f975102cf2794b2896fb1142a9533c691d92dad350d65e69",
+              "path": "frames/frame-0002.png",
+              "sizeBytes": 352138
+            },
+            {
+              "digest": "sha256:69cfdede3d63edc9b3c0b018efec1060548b5a6e8d289c123013f8a0f856b0eb",
+              "path": "frames/frame-0003.png",
+              "sizeBytes": 353190
+            },
+            {
+              "digest": "sha256:36dc8dea75649479da05ca07e1cac9dc31bb225cb67c4ee8fcf52a291dce10ff",
+              "path": "frames/frame-0004.png",
+              "sizeBytes": 353946
+            },
+            {
+              "digest": "sha256:a440a7cac24cc97de2065f4bf3aa495e2e08817f2d89d6342f2eb491d00dcd9d",
+              "path": "frames/frame-0005.png",
+              "sizeBytes": 355013
+            },
+            {
+              "digest": "sha256:6eb9dd317b43d80217869d700d920c2b4e180a5d5bf421db3d9a316ce404c693",
+              "path": "frames/frame-0006.png",
+              "sizeBytes": 355715
+            },
+            {
+              "digest": "sha256:e83dee132df2c6861d6cff3a5ac52ba9ccc0766b52b9fa3e1868903f2a3b5c05",
+              "path": "render-plan.json",
+              "sizeBytes": 125
+            },
+            {
+              "digest": "sha256:bb943fa991ab7f8293ce8d6fbf6645f502ccfc05e2a9b020002e8b452b07ae31",
+              "path": "scene.blend",
+              "sizeBytes": 488560
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:6d04841fc284e4b29dc6311ae146201e55333f4e91dde79a50f6100e6b677245",
+              "path": "frames/frame-0001.png",
+              "sizeBytes": 352328
+            },
+            {
+              "digest": "sha256:019f93fa95bf8c54f975102cf2794b2896fb1142a9533c691d92dad350d65e69",
+              "path": "frames/frame-0002.png",
+              "sizeBytes": 352138
+            },
+            {
+              "digest": "sha256:69cfdede3d63edc9b3c0b018efec1060548b5a6e8d289c123013f8a0f856b0eb",
+              "path": "frames/frame-0003.png",
+              "sizeBytes": 353190
+            },
+            {
+              "digest": "sha256:36dc8dea75649479da05ca07e1cac9dc31bb225cb67c4ee8fcf52a291dce10ff",
+              "path": "frames/frame-0004.png",
+              "sizeBytes": 353946
+            },
+            {
+              "digest": "sha256:a440a7cac24cc97de2065f4bf3aa495e2e08817f2d89d6342f2eb491d00dcd9d",
+              "path": "frames/frame-0005.png",
+              "sizeBytes": 355013
+            },
+            {
+              "digest": "sha256:6eb9dd317b43d80217869d700d920c2b4e180a5d5bf421db3d9a316ce404c693",
+              "path": "frames/frame-0006.png",
+              "sizeBytes": 355715
+            },
+            {
+              "digest": "sha256:e83dee132df2c6861d6cff3a5ac52ba9ccc0766b52b9fa3e1868903f2a3b5c05",
+              "path": "render-plan.json",
+              "sizeBytes": 125
+            },
+            {
+              "digest": "sha256:bb943fa991ab7f8293ce8d6fbf6645f502ccfc05e2a9b020002e8b452b07ae31",
+              "path": "scene.blend",
+              "sizeBytes": 488560
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:6d04841fc284e4b29dc6311ae146201e55333f4e91dde79a50f6100e6b677245",
+              "path": "frames/frame-0001.png",
+              "sizeBytes": 352328
+            },
+            {
+              "digest": "sha256:019f93fa95bf8c54f975102cf2794b2896fb1142a9533c691d92dad350d65e69",
+              "path": "frames/frame-0002.png",
+              "sizeBytes": 352138
+            },
+            {
+              "digest": "sha256:69cfdede3d63edc9b3c0b018efec1060548b5a6e8d289c123013f8a0f856b0eb",
+              "path": "frames/frame-0003.png",
+              "sizeBytes": 353190
+            },
+            {
+              "digest": "sha256:36dc8dea75649479da05ca07e1cac9dc31bb225cb67c4ee8fcf52a291dce10ff",
+              "path": "frames/frame-0004.png",
+              "sizeBytes": 353946
+            },
+            {
+              "digest": "sha256:a440a7cac24cc97de2065f4bf3aa495e2e08817f2d89d6342f2eb491d00dcd9d",
+              "path": "frames/frame-0005.png",
+              "sizeBytes": 355013
+            },
+            {
+              "digest": "sha256:6eb9dd317b43d80217869d700d920c2b4e180a5d5bf421db3d9a316ce404c693",
+              "path": "frames/frame-0006.png",
+              "sizeBytes": 355715
+            },
+            {
+              "digest": "sha256:e83dee132df2c6861d6cff3a5ac52ba9ccc0766b52b9fa3e1868903f2a3b5c05",
+              "path": "render-plan.json",
+              "sizeBytes": 125
+            },
+            {
+              "digest": "sha256:bb943fa991ab7f8293ce8d6fbf6645f502ccfc05e2a9b020002e8b452b07ae31",
+              "path": "scene.blend",
+              "sizeBytes": 488560
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:0c4435d1819c5c08a633edb7aceba1eb1b8f598fff3a4f184d5c62e742bd3337",
+              "path": "animation.mp4",
+              "sizeBytes": 83037
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-compose",
+        "outputBytes": 83037,
+        "pinned": false,
+        "reclaimedBytes": 2694052,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T18:26:57.360700969Z",
+        "resourceId": "blender-render-farm-local-docker",
+        "retention": "intermediate",
+        "runId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "runtimeId": "blender-render-farm-local",
+        "sealedAt": "2026-10-20T18:26:57.152916552Z",
+        "sizeBytes": 2694052,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-compose"
+      },
+      {
+        "activityId": "blender-render-farm-local-c7b71b395d-render-even",
+        "createdAt": "2026-10-20T18:26:51.122880008Z",
+        "driver": "local",
+        "environmentId": "blender-render-farm-v1",
+        "executionPath": "/akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-render-even",
+        "fileCount": 5,
+        "id": "workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-render-even",
+        "inputBytes": 488685,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:019f93fa95bf8c54f975102cf2794b2896fb1142a9533c691d92dad350d65e69",
+              "path": "frames/frame-0002.png",
+              "sizeBytes": 352138
+            },
+            {
+              "digest": "sha256:36dc8dea75649479da05ca07e1cac9dc31bb225cb67c4ee8fcf52a291dce10ff",
+              "path": "frames/frame-0004.png",
+              "sizeBytes": 353946
+            },
+            {
+              "digest": "sha256:6eb9dd317b43d80217869d700d920c2b4e180a5d5bf421db3d9a316ce404c693",
+              "path": "frames/frame-0006.png",
+              "sizeBytes": 355715
+            },
+            {
+              "digest": "sha256:e83dee132df2c6861d6cff3a5ac52ba9ccc0766b52b9fa3e1868903f2a3b5c05",
+              "path": "render-plan.json",
+              "sizeBytes": 125
+            },
+            {
+              "digest": "sha256:bb943fa991ab7f8293ce8d6fbf6645f502ccfc05e2a9b020002e8b452b07ae31",
+              "path": "scene.blend",
+              "sizeBytes": 488560
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:e83dee132df2c6861d6cff3a5ac52ba9ccc0766b52b9fa3e1868903f2a3b5c05",
+              "path": "render-plan.json",
+              "sizeBytes": 125
+            },
+            {
+              "digest": "sha256:bb943fa991ab7f8293ce8d6fbf6645f502ccfc05e2a9b020002e8b452b07ae31",
+              "path": "scene.blend",
+              "sizeBytes": 488560
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:e83dee132df2c6861d6cff3a5ac52ba9ccc0766b52b9fa3e1868903f2a3b5c05",
+              "path": "render-plan.json",
+              "sizeBytes": 125
+            },
+            {
+              "digest": "sha256:bb943fa991ab7f8293ce8d6fbf6645f502ccfc05e2a9b020002e8b452b07ae31",
+              "path": "scene.blend",
+              "sizeBytes": 488560
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:019f93fa95bf8c54f975102cf2794b2896fb1142a9533c691d92dad350d65e69",
+              "path": "frames/frame-0002.png",
+              "sizeBytes": 352138
+            },
+            {
+              "digest": "sha256:36dc8dea75649479da05ca07e1cac9dc31bb225cb67c4ee8fcf52a291dce10ff",
+              "path": "frames/frame-0004.png",
+              "sizeBytes": 353946
+            },
+            {
+              "digest": "sha256:6eb9dd317b43d80217869d700d920c2b4e180a5d5bf421db3d9a316ce404c693",
+              "path": "frames/frame-0006.png",
+              "sizeBytes": 355715
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-render-even",
+        "outputBytes": 1061799,
+        "pinned": false,
+        "reclaimedBytes": 1550484,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T18:26:55.90602126Z",
+        "resourceId": "blender-render-farm-local-docker",
+        "retention": "intermediate",
+        "runId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "runtimeId": "blender-render-farm-local",
+        "sealedAt": "2026-10-20T18:26:55.519844593Z",
+        "sizeBytes": 1550484,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-render-even"
+      },
+      {
+        "activityId": "blender-render-farm-local-c7b71b395d-render-odd",
+        "createdAt": "2026-10-20T18:26:51.122880008Z",
+        "driver": "local",
+        "environmentId": "blender-render-farm-v1",
+        "executionPath": "/akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-render-odd",
+        "fileCount": 5,
+        "id": "workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-render-odd",
+        "inputBytes": 488685,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:6d04841fc284e4b29dc6311ae146201e55333f4e91dde79a50f6100e6b677245",
+              "path": "frames/frame-0001.png",
+              "sizeBytes": 352328
+            },
+            {
+              "digest": "sha256:69cfdede3d63edc9b3c0b018efec1060548b5a6e8d289c123013f8a0f856b0eb",
+              "path": "frames/frame-0003.png",
+              "sizeBytes": 353190
+            },
+            {
+              "digest": "sha256:a440a7cac24cc97de2065f4bf3aa495e2e08817f2d89d6342f2eb491d00dcd9d",
+              "path": "frames/frame-0005.png",
+              "sizeBytes": 355013
+            },
+            {
+              "digest": "sha256:e83dee132df2c6861d6cff3a5ac52ba9ccc0766b52b9fa3e1868903f2a3b5c05",
+              "path": "render-plan.json",
+              "sizeBytes": 125
+            },
+            {
+              "digest": "sha256:bb943fa991ab7f8293ce8d6fbf6645f502ccfc05e2a9b020002e8b452b07ae31",
+              "path": "scene.blend",
+              "sizeBytes": 488560
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:e83dee132df2c6861d6cff3a5ac52ba9ccc0766b52b9fa3e1868903f2a3b5c05",
+              "path": "render-plan.json",
+              "sizeBytes": 125
+            },
+            {
+              "digest": "sha256:bb943fa991ab7f8293ce8d6fbf6645f502ccfc05e2a9b020002e8b452b07ae31",
+              "path": "scene.blend",
+              "sizeBytes": 488560
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:e83dee132df2c6861d6cff3a5ac52ba9ccc0766b52b9fa3e1868903f2a3b5c05",
+              "path": "render-plan.json",
+              "sizeBytes": 125
+            },
+            {
+              "digest": "sha256:bb943fa991ab7f8293ce8d6fbf6645f502ccfc05e2a9b020002e8b452b07ae31",
+              "path": "scene.blend",
+              "sizeBytes": 488560
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:6d04841fc284e4b29dc6311ae146201e55333f4e91dde79a50f6100e6b677245",
+              "path": "frames/frame-0001.png",
+              "sizeBytes": 352328
+            },
+            {
+              "digest": "sha256:69cfdede3d63edc9b3c0b018efec1060548b5a6e8d289c123013f8a0f856b0eb",
+              "path": "frames/frame-0003.png",
+              "sizeBytes": 353190
+            },
+            {
+              "digest": "sha256:a440a7cac24cc97de2065f4bf3aa495e2e08817f2d89d6342f2eb491d00dcd9d",
+              "path": "frames/frame-0005.png",
+              "sizeBytes": 355013
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-render-odd",
+        "outputBytes": 1060531,
+        "pinned": false,
+        "reclaimedBytes": 1549216,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T18:26:55.911796927Z",
+        "resourceId": "blender-render-farm-local-docker",
+        "retention": "intermediate",
+        "runId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "runtimeId": "blender-render-farm-local",
+        "sealedAt": "2026-10-20T18:26:55.524926968Z",
+        "sizeBytes": 1549216,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-render-odd"
+      },
+      {
+        "activityId": "blender-render-farm-local-c7b71b395d-setup",
+        "createdAt": "2026-10-20T18:26:51.122880008Z",
+        "driver": "local",
+        "environmentId": "blender-render-farm-v1",
+        "executionPath": "/akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-setup",
+        "fileCount": 2,
+        "id": "workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-setup",
+        "inputBytes": 0,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:e83dee132df2c6861d6cff3a5ac52ba9ccc0766b52b9fa3e1868903f2a3b5c05",
+              "path": "render-plan.json",
+              "sizeBytes": 125
+            },
+            {
+              "digest": "sha256:bb943fa991ab7f8293ce8d6fbf6645f502ccfc05e2a9b020002e8b452b07ae31",
+              "path": "scene.blend",
+              "sizeBytes": 488560
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:e83dee132df2c6861d6cff3a5ac52ba9ccc0766b52b9fa3e1868903f2a3b5c05",
+              "path": "render-plan.json",
+              "sizeBytes": 125
+            },
+            {
+              "digest": "sha256:bb943fa991ab7f8293ce8d6fbf6645f502ccfc05e2a9b020002e8b452b07ae31",
+              "path": "scene.blend",
+              "sizeBytes": 488560
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-setup",
+        "outputBytes": 488685,
+        "pinned": false,
+        "reclaimedBytes": 488685,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T18:26:52.571472634Z",
+        "resourceId": "blender-render-farm-local-docker",
+        "retention": "intermediate",
+        "runId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "runtimeId": "blender-render-farm-local",
+        "sealedAt": "2026-10-20T18:26:52.389593634Z",
+        "sizeBytes": 488685,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-setup"
+      },
+      {
+        "activityId": "blender-render-farm-local-c7b71b395d-verify",
+        "createdAt": "2026-10-20T18:26:51.122880008Z",
+        "driver": "local",
+        "environmentId": "blender-render-farm-v1",
+        "executionPath": "/akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-verify",
+        "fileCount": 2,
+        "id": "workspace-blender-render-farm-local-c7b71b395d-run-20261020t182650-blender-render-farm-local-c7b71b395d-verify",
+        "inputBytes": 2694052,
+        "isFinal": true,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:0c4435d1819c5c08a633edb7aceba1eb1b8f598fff3a4f184d5c62e742bd3337",
+              "path": "animation.mp4",
+              "sizeBytes": 83037
+            },
+            {
+              "digest": "sha256:6d04841fc284e4b29dc6311ae146201e55333f4e91dde79a50f6100e6b677245",
+              "path": "frames/frame-0001.png",
+              "sizeBytes": 352328
+            },
+            {
+              "digest": "sha256:019f93fa95bf8c54f975102cf2794b2896fb1142a9533c691d92dad350d65e69",
+              "path": "frames/frame-0002.png",
+              "sizeBytes": 352138
+            },
+            {
+              "digest": "sha256:69cfdede3d63edc9b3c0b018efec1060548b5a6e8d289c123013f8a0f856b0eb",
+              "path": "frames/frame-0003.png",
+              "sizeBytes": 353190
+            },
+            {
+              "digest": "sha256:36dc8dea75649479da05ca07e1cac9dc31bb225cb67c4ee8fcf52a291dce10ff",
+              "path": "frames/frame-0004.png",
+              "sizeBytes": 353946
+            },
+            {
+              "digest": "sha256:a440a7cac24cc97de2065f4bf3aa495e2e08817f2d89d6342f2eb491d00dcd9d",
+              "path": "frames/frame-0005.png",
+              "sizeBytes": 355013
+            },
+            {
+              "digest": "sha256:6eb9dd317b43d80217869d700d920c2b4e180a5d5bf421db3d9a316ce404c693",
+              "path": "frames/frame-0006.png",
+              "sizeBytes": 355715
+            },
+            {
+              "digest": "sha256:012420e315841b1b36b9bdec5f5e12bd4781590e5b02020e30d20ec19ddf5fde",
+              "path": "manifest.json",
+              "sizeBytes": 174
+            },
+            {
+              "digest": "sha256:e83dee132df2c6861d6cff3a5ac52ba9ccc0766b52b9fa3e1868903f2a3b5c05",
+              "path": "render-plan.json",
+              "sizeBytes": 125
+            },
+            {
+              "digest": "sha256:c2b80956ba35fc8c76d16762d7f0385c4e16e6677203c8a5ac82a312c64e861c",
+              "path": "render-report.json",
+              "sizeBytes": 89
+            },
+            {
+              "digest": "sha256:bb943fa991ab7f8293ce8d6fbf6645f502ccfc05e2a9b020002e8b452b07ae31",
+              "path": "scene.blend",
+              "sizeBytes": 488560
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:0c4435d1819c5c08a633edb7aceba1eb1b8f598fff3a4f184d5c62e742bd3337",
+              "path": "animation.mp4",
+              "sizeBytes": 83037
+            },
+            {
+              "digest": "sha256:6d04841fc284e4b29dc6311ae146201e55333f4e91dde79a50f6100e6b677245",
+              "path": "frames/frame-0001.png",
+              "sizeBytes": 352328
+            },
+            {
+              "digest": "sha256:019f93fa95bf8c54f975102cf2794b2896fb1142a9533c691d92dad350d65e69",
+              "path": "frames/frame-0002.png",
+              "sizeBytes": 352138
+            },
+            {
+              "digest": "sha256:69cfdede3d63edc9b3c0b018efec1060548b5a6e8d289c123013f8a0f856b0eb",
+              "path": "frames/frame-0003.png",
+              "sizeBytes": 353190
+            },
+            {
+              "digest": "sha256:36dc8dea75649479da05ca07e1cac9dc31bb225cb67c4ee8fcf52a291dce10ff",
+              "path": "frames/frame-0004.png",
+              "sizeBytes": 353946
+            },
+            {
+              "digest": "sha256:a440a7cac24cc97de2065f4bf3aa495e2e08817f2d89d6342f2eb491d00dcd9d",
+              "path": "frames/frame-0005.png",
+              "sizeBytes": 355013
+            },
+            {
+              "digest": "sha256:6eb9dd317b43d80217869d700d920c2b4e180a5d5bf421db3d9a316ce404c693",
+              "path": "frames/frame-0006.png",
+              "sizeBytes": 355715
+            },
+            {
+              "digest": "sha256:e83dee132df2c6861d6cff3a5ac52ba9ccc0766b52b9fa3e1868903f2a3b5c05",
+              "path": "render-plan.json",
+              "sizeBytes": 125
+            },
+            {
+              "digest": "sha256:bb943fa991ab7f8293ce8d6fbf6645f502ccfc05e2a9b020002e8b452b07ae31",
+              "path": "scene.blend",
+              "sizeBytes": 488560
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:0c4435d1819c5c08a633edb7aceba1eb1b8f598fff3a4f184d5c62e742bd3337",
+              "path": "animation.mp4",
+              "sizeBytes": 83037
+            },
+            {
+              "digest": "sha256:6d04841fc284e4b29dc6311ae146201e55333f4e91dde79a50f6100e6b677245",
+              "path": "frames/frame-0001.png",
+              "sizeBytes": 352328
+            },
+            {
+              "digest": "sha256:019f93fa95bf8c54f975102cf2794b2896fb1142a9533c691d92dad350d65e69",
+              "path": "frames/frame-0002.png",
+              "sizeBytes": 352138
+            },
+            {
+              "digest": "sha256:69cfdede3d63edc9b3c0b018efec1060548b5a6e8d289c123013f8a0f856b0eb",
+              "path": "frames/frame-0003.png",
+              "sizeBytes": 353190
+            },
+            {
+              "digest": "sha256:36dc8dea75649479da05ca07e1cac9dc31bb225cb67c4ee8fcf52a291dce10ff",
+              "path": "frames/frame-0004.png",
+              "sizeBytes": 353946
+            },
+            {
+              "digest": "sha256:a440a7cac24cc97de2065f4bf3aa495e2e08817f2d89d6342f2eb491d00dcd9d",
+              "path": "frames/frame-0005.png",
+              "sizeBytes": 355013
+            },
+            {
+              "digest": "sha256:6eb9dd317b43d80217869d700d920c2b4e180a5d5bf421db3d9a316ce404c693",
+              "path": "frames/frame-0006.png",
+              "sizeBytes": 355715
+            },
+            {
+              "digest": "sha256:e83dee132df2c6861d6cff3a5ac52ba9ccc0766b52b9fa3e1868903f2a3b5c05",
+              "path": "render-plan.json",
+              "sizeBytes": 125
+            },
+            {
+              "digest": "sha256:bb943fa991ab7f8293ce8d6fbf6645f502ccfc05e2a9b020002e8b452b07ae31",
+              "path": "scene.blend",
+              "sizeBytes": 488560
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:012420e315841b1b36b9bdec5f5e12bd4781590e5b02020e30d20ec19ddf5fde",
+              "path": "manifest.json",
+              "sizeBytes": 174
+            },
+            {
+              "digest": "sha256:c2b80956ba35fc8c76d16762d7f0385c4e16e6677203c8a5ac82a312c64e861c",
+              "path": "render-report.json",
+              "sizeBytes": 89
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-verify",
+        "outputBytes": 263,
+        "pinned": false,
+        "reclaimedBytes": 2694052,
+        "releaseReason": "inherited inputs pruned",
+        "resourceId": "blender-render-farm-local-docker",
+        "retention": "final",
+        "runId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+        "runtimeId": "blender-render-farm-local",
+        "sealedAt": "2026-10-20T18:26:59.164607387Z",
+        "sizeBytes": 263,
+        "state": "sealed",
+        "uri": "file:///akoflow/workspace/runs/blender-render-farm-local-c7b71b395d-run-20261020t182650/blender-render-farm-local-c7b71b395d-verify"
+      }
+    ]
+  },
+  "runId": "blender-render-farm-local-c7b71b395d-run-20261020t182650",
+  "status": "completed",
+  "workflowId": "blender-render-farm-local-c7b71b395d"
+}

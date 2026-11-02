@@ -1,0 +1,13 @@
+{
+  "issue": "AKO-161",
+  "plan": "montage-prism-all-hpc-speedup-20261011-v1",
+  "status": "offline-diagnostic-not-deployed",
+  "runtimeContract": "Producer leases released after successful consumer preparation; workspace reclaimed only after every downstream lease released. Leaves retained/pruned to final outputs.",
+  "scratchContract": "WorkspaceRsync preparation scratch cleanup runs before preparation returns; forecast conservatively retains two input copies until consumer command barrier.",
+  "oldReservedUpperBoundBytesApprox": 100432511613,
+  "rollingReservedUpperBoundBytes": 41020996139,
+  "referenceAvailableBytes": 20091539456,
+  "fitsQuota": false,
+  "realSubmitted": false,
+  "limitation": "Predicted lifetime bound, not observed physical disk peak. Parallelism, producer fanout and retained leaves still consume simultaneous space. No hardlinks or unverified cleanup credit."
+}

@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 
 	applicationconfiguration "github.com/UFFeScience/akoflow/internal/application/machineconfiguration"
@@ -337,7 +338,24 @@ func (r *Repository) CreateCapacityTarget(ctx context.Context, value domain.Clou
 		id,environment_id,name,provider,provider_machine_type,region,zone_policy,fixed_zone,
 		image_reference,architecture,vcpu,memory_mib,provisioning_mode,maximum_instances,
 		lifecycle_policy,configuration,enabled,created_at
-	) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`, value.ID, value.EnvironmentID, value.Name,
+	) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+	ON CONFLICT(id) DO UPDATE SET
+		environment_id=excluded.environment_id,
+		name=excluded.name,
+		provider=excluded.provider,
+		provider_machine_type=excluded.provider_machine_type,
+		region=excluded.region,
+		zone_policy=excluded.zone_policy,
+		fixed_zone=excluded.fixed_zone,
+		image_reference=excluded.image_reference,
+		architecture=excluded.architecture,
+		vcpu=excluded.vcpu,
+		memory_mib=excluded.memory_mib,
+		provisioning_mode=excluded.provisioning_mode,
+		maximum_instances=excluded.maximum_instances,
+		lifecycle_policy=excluded.lifecycle_policy,
+		configuration=excluded.configuration,
+		enabled=excluded.enabled`, value.ID, value.EnvironmentID, value.Name,
 		value.Provider, value.ProviderMachineType, value.Region, value.ZonePolicy, value.FixedZone,
 		value.ImageReference, value.Architecture, value.VCPU, value.MemoryMiB,
 		value.ProvisioningMode, value.MaximumInstances, value.LifecyclePolicy, configuration,
@@ -345,29 +363,12 @@ func (r *Repository) CreateCapacityTarget(ctx context.Context, value domain.Clou
 	if err != nil {
 		return err
 	}
-	configurations := value.MachineConfigurations
-	hasDefault := false
-	for _, configuration := range configurations {
-		if configuration.ConfigurationVersionID == domain.DefaultMachineConfigurationVersionID {
-			hasDefault = true
-			break
-		}
+	if _, err = tx.ExecContext(ctx, `DELETE FROM cloud_capacity_target_configurations
+		WHERE capacity_target_id=?`, value.ID); err != nil {
+		return err
 	}
-	if !hasDefault {
-		configurations = append([]domain.CloudTargetConfiguration{{
-			ConfigurationVersionID: domain.DefaultMachineConfigurationVersionID,
-			ExecutionOrder:         0, Required: true, Enabled: true,
-		}}, configurations...)
-	}
-	for _, item := range configurations {
-		variables, _ := json.Marshal(item.Variables)
-		_, err = tx.ExecContext(ctx, `INSERT INTO cloud_capacity_target_configurations(
-			capacity_target_id,configuration_version_id,execution_order,variables,required,enabled
-		) VALUES(?,?,?,?,?,?)`, value.ID, item.ConfigurationVersionID, item.ExecutionOrder,
-			variables, item.Required, item.Enabled)
-		if err != nil {
-			return err
-		}
+	if err := persistCapacityTargetConfigurations(ctx, tx, value); err != nil {
+		return err
 	}
 	return tx.Commit()
 }
@@ -597,9 +598,19 @@ func (r *Repository) FindCloudOperation(ctx context.Context, id string) (*domain
 }
 
 func (r *Repository) ListCloudOperations(ctx context.Context) ([]domain.CloudOperationRun, error) {
-	rows, err := r.db.QueryContext(ctx, `SELECT id,kind,status,environment_id,capacity_target_id,
+	return r.ListCloudOperationsFiltered(ctx, domain.CloudOperationFilter{})
+}
+
+func (r *Repository) ListCloudOperationsFiltered(ctx context.Context, filter domain.CloudOperationFilter) ([]domain.CloudOperationRun, error) {
+	conditions, args := cloudOperationConditions(filter)
+	query := `SELECT id,kind,status,environment_id,capacity_target_id,
 		instance_id,execution_run_id,activity_id,phase,request,failure_reason,created_at,started_at,finished_at
-		FROM cloud_operation_runs ORDER BY created_at DESC`)
+		FROM cloud_operation_runs WHERE ` + strings.Join(conditions, " AND ") + ` ORDER BY created_at DESC,id DESC`
+	if filter.Limit > 0 {
+		query += ` LIMIT ? OFFSET ?`
+		args = append(args, filter.Limit, max(0, filter.Offset))
+	}
+	rows, err := r.db.QueryContext(ctx, query, args...)
 	if err != nil {
 		return nil, err
 	}
@@ -613,6 +624,27 @@ func (r *Repository) ListCloudOperations(ctx context.Context) ([]domain.CloudOpe
 		values = append(values, *value)
 	}
 	return values, rows.Err()
+}
+
+func cloudOperationConditions(filter domain.CloudOperationFilter) ([]string, []any) {
+	conditions, args := []string{"1=1"}, []any{}
+	for _, field := range []struct{ column, value string }{
+		{"environment_id", filter.EnvironmentID}, {"instance_id", filter.InstanceID},
+		{"capacity_target_id", filter.CapacityTargetID}, {"execution_run_id", filter.ExecutionRunID}, {"status", filter.Status},
+	} {
+		if field.value != "" && field.value != "all" {
+			conditions = append(conditions, field.column+"=?")
+			args = append(args, field.value)
+		}
+	}
+	return conditions, args
+}
+
+func (r *Repository) CountCloudOperations(ctx context.Context, filter domain.CloudOperationFilter) (int, error) {
+	conditions, args := cloudOperationConditions(filter)
+	var count int
+	err := r.db.QueryRowContext(ctx, `SELECT COUNT(*) FROM cloud_operation_runs WHERE `+strings.Join(conditions, " AND "), args...).Scan(&count)
+	return count, err
 }
 
 func scanCloudOperation(scan scanner) (*domain.CloudOperationRun, error) {
@@ -671,8 +703,31 @@ func (r *Repository) CheckCloudLifecycle(ctx context.Context, instanceID, exclud
 		args    []any
 	}{
 		{
-			query:   `SELECT COUNT(*) FROM task_executions WHERE json_extract(metadata,'$.cloudInstanceId')=? AND status IN ('blocked','ready','preparing','running')`,
+			query: `SELECT COUNT(*) FROM activity_workspaces w
+				JOIN workspace_leases l ON l.workspace_id=w.id
+				WHERE w.state<>'released' AND l.released=0
+				AND instr('&'||substr(w.uri,instr(w.uri,'?')+1)||'&',
+					'&cloudInstanceId='||?||'&')>0`,
+			message: "producer workspaces still have pending consumers", args: []any{instanceID},
+		},
+		{
+			query: `SELECT COUNT(*) FROM task_executions t
+				WHERE json_extract(t.metadata,'$.cloudInstanceId')=?
+				AND t.status IN ('blocked','ready','preparing','running')
+				AND NOT EXISTS (
+					SELECT 1 FROM task_executions newer
+					WHERE newer.execution_run_id=t.execution_run_id
+					AND newer.activity_id=t.activity_id AND newer.attempt>t.attempt
+					AND newer.status='completed')`,
 			message: "workflow activities are still active", args: []any{instanceID},
+		},
+		{
+			query: `SELECT COUNT(*) FROM activity_handles h
+				JOIN cloud_provisioned_instances i ON i.capacity_target_id=h.resource_id
+				WHERE i.id=? AND h.status IN ('starting','running')
+				AND (json_extract(h.metadata,'$.cloudInstanceId')=i.id
+					OR COALESCE(json_extract(h.metadata,'$.cloudInstanceId'),'')='')`,
+			message: "workflow execution handles are still active", args: []any{instanceID},
 		},
 		{
 			query:   `SELECT COUNT(*) FROM transfer_runs WHERE status IN ('planned','running') AND (json_extract(route,'$.sourceCloudInstanceId')=? OR json_extract(route,'$.targetCloudInstanceId')=?)`,
@@ -699,6 +754,50 @@ func (r *Repository) CheckCloudLifecycle(ctx context.Context, instanceID, exclud
 		}
 		if count > 0 {
 			return fmt.Errorf("cloud instance %q cannot change lifecycle: %s", instanceID, check.message)
+		}
+	}
+	return nil
+}
+
+func persistCapacityTargetConfigurations(ctx context.Context, tx *sql.Tx, value domain.CloudCapacityTarget) error {
+	var err error
+	configurations := append([]domain.CloudTargetConfiguration(nil), value.MachineConfigurations...)
+	hasDefault := false
+	for index, configuration := range configurations {
+		// A published required version of the worker baseline replaces the
+		// default version, not the safety requirement. This supports immutable
+		// preinstalled images without silently appending the installation recipe.
+		var configurationID, status string
+		if err := tx.QueryRowContext(ctx, `SELECT machine_configuration_id,status
+			FROM machine_configuration_versions WHERE id=?`, configuration.ConfigurationVersionID).Scan(&configurationID, &status); err != nil {
+			return fmt.Errorf("load target configuration version: %w", err)
+		}
+		if configuration.ConfigurationVersionID == domain.DefaultMachineConfigurationVersionID {
+			configurations[index].Required, configurations[index].Enabled = true, true
+			hasDefault = true
+		} else if configurationID == domain.DefaultMachineConfigurationID && status == "published" && configuration.Required && configuration.Enabled {
+			hasDefault = true
+		}
+	}
+	if !hasDefault {
+		// Reserve nonnegative order zero for the mandatory baseline while
+		// preserving the relative order of explicitly supplied configurations.
+		for index := range configurations {
+			configurations[index].ExecutionOrder++
+		}
+		configurations = append([]domain.CloudTargetConfiguration{{
+			ConfigurationVersionID: domain.DefaultMachineConfigurationVersionID,
+			ExecutionOrder:         0, Required: true, Enabled: true,
+		}}, configurations...)
+	}
+	for _, item := range configurations {
+		variables, _ := json.Marshal(item.Variables)
+		_, err = tx.ExecContext(ctx, `INSERT INTO cloud_capacity_target_configurations(
+			capacity_target_id,configuration_version_id,execution_order,variables,required,enabled
+		) VALUES(?,?,?,?,?,?)`, value.ID, item.ConfigurationVersionID, item.ExecutionOrder,
+			variables, item.Required, item.Enabled)
+		if err != nil {
+			return err
 		}
 	}
 	return nil

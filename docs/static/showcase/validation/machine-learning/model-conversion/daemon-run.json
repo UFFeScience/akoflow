@@ -1,0 +1,3729 @@
+{
+  "activityCount": 7,
+  "completedActivityCount": 7,
+  "image": "ghcr.io/uffescience/akoflow-examples/showcase-model-conversion:local-723ff3698b6f79aa",
+  "imageId": "sha256:723ff3698b6f79aa777b8941b8390b44f1804f71fdc6a8ca68a7ed722edf3c02",
+  "observedAt": "2026-10-20T19:11:38Z",
+  "planId": "showcase-model-conversion-local-f22e706408-manual-plan-20261020t191128.221185000",
+  "projection": {
+    "activities": [
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-load-model",
+        "allocatedResourceId": "showcase-model-conversion-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "finishedAt": 1792523488.8123968,
+        "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-load-model",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-model-conversion-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-conversion-local-f22e706408-manual-plan-20261020t191128.221185000-showcase-model-conversion-local-f22e706408-load-model",
+        "plannedResourceId": "showcase-model-conversion-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523488.6413298,
+        "readyAt": 1792523488.6413298,
+        "runtimeId": "showcase-model-conversion-local",
+        "runtimeSeconds": 0.027910947799682617,
+        "startedAt": 1792523488.7844858,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-export-torchscript",
+        "allocatedResourceId": "showcase-model-conversion-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "finishedAt": 1792523491.3721335,
+        "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-export-torchscript",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1718590259552002,
+          "preparationFinishedAt": 1792523490.0688422,
+          "preparationStartedAt": 1792523489.9078977,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0025627613067626953,
+          "runtimeId": "showcase-model-conversion-local",
+          "transferElapsedSeconds": 0.16094446182250977,
+          "transferWorkSeconds": 0.16094446182250977
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-conversion-local-f22e706408-manual-plan-20261020t191128.221185000-showcase-model-conversion-local-f22e706408-export-torchscript",
+        "plannedResourceId": "showcase-model-conversion-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523489.9022315,
+        "readyAt": 1792523489.9022315,
+        "runtimeId": "showcase-model-conversion-local",
+        "runtimeSeconds": 1.131432294845581,
+        "startedAt": 1792523490.2407012,
+        "status": "completed",
+        "transferBytes": 462,
+        "transferSeconds": 0.16094446182250977
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-export-onnx",
+        "allocatedResourceId": "showcase-model-conversion-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "finishedAt": 1792523490.4945211,
+        "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-export-onnx",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1758103370666504,
+          "preparationFinishedAt": 1792523490.0691743,
+          "preparationStartedAt": 1792523489.9064467,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0022623538970947266,
+          "runtimeId": "showcase-model-conversion-local",
+          "transferElapsedSeconds": 0.16272759437561035,
+          "transferWorkSeconds": 0.16272759437561035
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-conversion-local-f22e706408-manual-plan-20261020t191128.221185000-showcase-model-conversion-local-f22e706408-export-onnx",
+        "plannedResourceId": "showcase-model-conversion-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523489.9010296,
+        "readyAt": 1792523489.9010296,
+        "runtimeId": "showcase-model-conversion-local",
+        "runtimeSeconds": 0.24953651428222656,
+        "startedAt": 1792523490.2449846,
+        "status": "completed",
+        "transferBytes": 462,
+        "transferSeconds": 0.16272759437561035
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-quantize-cpu",
+        "allocatedResourceId": "showcase-model-conversion-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "finishedAt": 1792523492.6301997,
+        "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-quantize-cpu",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.18014240264892578,
+          "preparationFinishedAt": 1792523492.2780535,
+          "preparationStartedAt": 1792523491.9356017,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0037038326263427734,
+          "runtimeId": "showcase-model-conversion-local",
+          "transferElapsedSeconds": 0.342451810836792,
+          "transferWorkSeconds": 0.5482296943664551
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-conversion-local-f22e706408-manual-plan-20261020t191128.221185000-showcase-model-conversion-local-f22e706408-quantize-cpu",
+        "plannedResourceId": "showcase-model-conversion-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523491.9281242,
+        "readyAt": 1792523491.9281242,
+        "runtimeId": "showcase-model-conversion-local",
+        "runtimeSeconds": 0.17200374603271484,
+        "startedAt": 1792523492.458196,
+        "status": "completed",
+        "transferBytes": 5008,
+        "transferSeconds": 0.5482296943664551
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-quantize-gpu",
+        "allocatedResourceId": "showcase-model-conversion-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "finishedAt": 1792523493.2536726,
+        "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-quantize-gpu",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.18645620346069336,
+          "preparationFinishedAt": 1792523492.2829733,
+          "preparationStartedAt": 1792523491.936917,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.00430607795715332,
+          "runtimeId": "showcase-model-conversion-local",
+          "transferElapsedSeconds": 0.3460562229156494,
+          "transferWorkSeconds": 0.573901891708374
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-conversion-local-f22e706408-manual-plan-20261020t191128.221185000-showcase-model-conversion-local-f22e706408-quantize-gpu",
+        "plannedResourceId": "showcase-model-conversion-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523491.9296932,
+        "readyAt": 1792523491.9296932,
+        "runtimeId": "showcase-model-conversion-local",
+        "runtimeSeconds": 0.784243106842041,
+        "startedAt": 1792523492.4694295,
+        "status": "completed",
+        "transferBytes": 5008,
+        "transferSeconds": 0.573901891708374
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-validate-outputs",
+        "allocatedResourceId": "showcase-model-conversion-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "finishedAt": 1792523495.3606734,
+        "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-validate-outputs",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1867351531982422,
+          "preparationFinishedAt": 1792523494.295479,
+          "preparationStartedAt": 1792523493.9811857,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0021462440490722656,
+          "runtimeId": "showcase-model-conversion-local",
+          "transferElapsedSeconds": 0.31429338455200195,
+          "transferWorkSeconds": 0.5044431686401367
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-conversion-local-f22e706408-manual-plan-20261020t191128.221185000-showcase-model-conversion-local-f22e706408-validate-outputs",
+        "plannedResourceId": "showcase-model-conversion-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523493.975425,
+        "readyAt": 1792523493.975425,
+        "runtimeId": "showcase-model-conversion-local",
+        "runtimeSeconds": 0.8784592151641846,
+        "startedAt": 1792523494.4822142,
+        "status": "completed",
+        "transferBytes": 6156,
+        "transferSeconds": 0.5044431686401367
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-publish-variants",
+        "allocatedResourceId": "showcase-model-conversion-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "finishedAt": 1792523496.2129464,
+        "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-publish-variants",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.12746548652648926,
+          "preparationFinishedAt": 1792523496.057435,
+          "preparationStartedAt": 1792523495.8965704,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.001706838607788086,
+          "runtimeId": "showcase-model-conversion-local",
+          "transferElapsedSeconds": 0.16086459159851074,
+          "transferWorkSeconds": 0.16086459159851074
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-conversion-local-f22e706408-manual-plan-20261020t191128.221185000-showcase-model-conversion-local-f22e706408-publish-variants",
+        "plannedResourceId": "showcase-model-conversion-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523495.89292,
+        "readyAt": 1792523495.89292,
+        "runtimeId": "showcase-model-conversion-local",
+        "runtimeSeconds": 0.0280458927154541,
+        "startedAt": 1792523496.1849005,
+        "status": "completed",
+        "transferBytes": 6816,
+        "transferSeconds": 0.16086459159851074
+      }
+    ],
+    "activityAttempts": [
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-load-model",
+        "allocatedResourceId": "showcase-model-conversion-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "finishedAt": 1792523488.8123968,
+        "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-load-model",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-model-conversion-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-conversion-local-f22e706408-manual-plan-20261020t191128.221185000-showcase-model-conversion-local-f22e706408-load-model",
+        "plannedResourceId": "showcase-model-conversion-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523488.6413298,
+        "readyAt": 1792523488.6413298,
+        "runtimeId": "showcase-model-conversion-local",
+        "runtimeSeconds": 0.027910947799682617,
+        "startedAt": 1792523488.7844858,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-export-torchscript",
+        "allocatedResourceId": "showcase-model-conversion-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "finishedAt": 1792523491.3721335,
+        "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-export-torchscript",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1718590259552002,
+          "preparationFinishedAt": 1792523490.0688422,
+          "preparationStartedAt": 1792523489.9078977,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0025627613067626953,
+          "runtimeId": "showcase-model-conversion-local",
+          "transferElapsedSeconds": 0.16094446182250977,
+          "transferWorkSeconds": 0.16094446182250977
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-conversion-local-f22e706408-manual-plan-20261020t191128.221185000-showcase-model-conversion-local-f22e706408-export-torchscript",
+        "plannedResourceId": "showcase-model-conversion-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523489.9022315,
+        "readyAt": 1792523489.9022315,
+        "runtimeId": "showcase-model-conversion-local",
+        "runtimeSeconds": 1.131432294845581,
+        "startedAt": 1792523490.2407012,
+        "status": "completed",
+        "transferBytes": 462,
+        "transferSeconds": 0.16094446182250977
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-export-onnx",
+        "allocatedResourceId": "showcase-model-conversion-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "finishedAt": 1792523490.4945211,
+        "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-export-onnx",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1758103370666504,
+          "preparationFinishedAt": 1792523490.0691743,
+          "preparationStartedAt": 1792523489.9064467,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0022623538970947266,
+          "runtimeId": "showcase-model-conversion-local",
+          "transferElapsedSeconds": 0.16272759437561035,
+          "transferWorkSeconds": 0.16272759437561035
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-conversion-local-f22e706408-manual-plan-20261020t191128.221185000-showcase-model-conversion-local-f22e706408-export-onnx",
+        "plannedResourceId": "showcase-model-conversion-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523489.9010296,
+        "readyAt": 1792523489.9010296,
+        "runtimeId": "showcase-model-conversion-local",
+        "runtimeSeconds": 0.24953651428222656,
+        "startedAt": 1792523490.2449846,
+        "status": "completed",
+        "transferBytes": 462,
+        "transferSeconds": 0.16272759437561035
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-quantize-cpu",
+        "allocatedResourceId": "showcase-model-conversion-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "finishedAt": 1792523492.6301997,
+        "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-quantize-cpu",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.18014240264892578,
+          "preparationFinishedAt": 1792523492.2780535,
+          "preparationStartedAt": 1792523491.9356017,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0037038326263427734,
+          "runtimeId": "showcase-model-conversion-local",
+          "transferElapsedSeconds": 0.342451810836792,
+          "transferWorkSeconds": 0.5482296943664551
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-conversion-local-f22e706408-manual-plan-20261020t191128.221185000-showcase-model-conversion-local-f22e706408-quantize-cpu",
+        "plannedResourceId": "showcase-model-conversion-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523491.9281242,
+        "readyAt": 1792523491.9281242,
+        "runtimeId": "showcase-model-conversion-local",
+        "runtimeSeconds": 0.17200374603271484,
+        "startedAt": 1792523492.458196,
+        "status": "completed",
+        "transferBytes": 5008,
+        "transferSeconds": 0.5482296943664551
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-quantize-gpu",
+        "allocatedResourceId": "showcase-model-conversion-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "finishedAt": 1792523493.2536726,
+        "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-quantize-gpu",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.18645620346069336,
+          "preparationFinishedAt": 1792523492.2829733,
+          "preparationStartedAt": 1792523491.936917,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.00430607795715332,
+          "runtimeId": "showcase-model-conversion-local",
+          "transferElapsedSeconds": 0.3460562229156494,
+          "transferWorkSeconds": 0.573901891708374
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-conversion-local-f22e706408-manual-plan-20261020t191128.221185000-showcase-model-conversion-local-f22e706408-quantize-gpu",
+        "plannedResourceId": "showcase-model-conversion-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523491.9296932,
+        "readyAt": 1792523491.9296932,
+        "runtimeId": "showcase-model-conversion-local",
+        "runtimeSeconds": 0.784243106842041,
+        "startedAt": 1792523492.4694295,
+        "status": "completed",
+        "transferBytes": 5008,
+        "transferSeconds": 0.573901891708374
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-validate-outputs",
+        "allocatedResourceId": "showcase-model-conversion-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "finishedAt": 1792523495.3606734,
+        "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-validate-outputs",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1867351531982422,
+          "preparationFinishedAt": 1792523494.295479,
+          "preparationStartedAt": 1792523493.9811857,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0021462440490722656,
+          "runtimeId": "showcase-model-conversion-local",
+          "transferElapsedSeconds": 0.31429338455200195,
+          "transferWorkSeconds": 0.5044431686401367
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-conversion-local-f22e706408-manual-plan-20261020t191128.221185000-showcase-model-conversion-local-f22e706408-validate-outputs",
+        "plannedResourceId": "showcase-model-conversion-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523493.975425,
+        "readyAt": 1792523493.975425,
+        "runtimeId": "showcase-model-conversion-local",
+        "runtimeSeconds": 0.8784592151641846,
+        "startedAt": 1792523494.4822142,
+        "status": "completed",
+        "transferBytes": 6156,
+        "transferSeconds": 0.5044431686401367
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-publish-variants",
+        "allocatedResourceId": "showcase-model-conversion-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "finishedAt": 1792523496.2129464,
+        "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-publish-variants",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.12746548652648926,
+          "preparationFinishedAt": 1792523496.057435,
+          "preparationStartedAt": 1792523495.8965704,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.001706838607788086,
+          "runtimeId": "showcase-model-conversion-local",
+          "transferElapsedSeconds": 0.16086459159851074,
+          "transferWorkSeconds": 0.16086459159851074
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-conversion-local-f22e706408-manual-plan-20261020t191128.221185000-showcase-model-conversion-local-f22e706408-publish-variants",
+        "plannedResourceId": "showcase-model-conversion-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523495.89292,
+        "readyAt": 1792523495.89292,
+        "runtimeId": "showcase-model-conversion-local",
+        "runtimeSeconds": 0.0280458927154541,
+        "startedAt": 1792523496.1849005,
+        "status": "completed",
+        "transferBytes": 6816,
+        "transferSeconds": 0.16086459159851074
+      }
+    ],
+    "artifactMaterializations": null,
+    "artifactTransferRuns": [
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-export-onnx",
+        "durationSeconds": 0.16272759437561035,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523490.0691743,
+        "id": "transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-export-onnx-0",
+        "logicalBytes": 462,
+        "planId": "transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-export-onnx-0",
+        "route": {
+          "consumerActivityId": "showcase-model-conversion-local-f22e706408-export-onnx",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-model-conversion-local-f22e706408-load-model",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.093134751,
+          "sourceEnvironmentId": "showcase-model-conversion-v1",
+          "sourceResourceId": "showcase-model-conversion-local-docker",
+          "sshChannelWaitSeconds": 3.76e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-conversion-v1",
+          "targetResourceId": "showcase-model-conversion-local-docker"
+        },
+        "startedAt": 1792523489.9064467,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 462
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-export-torchscript",
+        "durationSeconds": 0.16094446182250977,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523490.0688422,
+        "id": "transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-export-torchscript-0",
+        "logicalBytes": 462,
+        "planId": "transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-export-torchscript-0",
+        "route": {
+          "consumerActivityId": "showcase-model-conversion-local-f22e706408-export-torchscript",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-model-conversion-local-f22e706408-load-model",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.069991833,
+          "sourceEnvironmentId": "showcase-model-conversion-v1",
+          "sourceResourceId": "showcase-model-conversion-local-docker",
+          "sshChannelWaitSeconds": 4.58e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-conversion-v1",
+          "targetResourceId": "showcase-model-conversion-local-docker"
+        },
+        "startedAt": 1792523489.9078977,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 462
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-publish-variants",
+        "durationSeconds": 0.16086459159851074,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "filesTransferred": 11,
+        "finishedAt": 1792523496.057435,
+        "id": "transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-publish-variants-0",
+        "logicalBytes": 6816,
+        "planId": "transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-publish-variants-0",
+        "route": {
+          "consumerActivityId": "showcase-model-conversion-local-f22e706408-publish-variants",
+          "filesTransferred": 11,
+          "producerActivityId": "showcase-model-conversion-local-f22e706408-validate-outputs",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.07045575,
+          "sourceEnvironmentId": "showcase-model-conversion-v1",
+          "sourceResourceId": "showcase-model-conversion-local-docker",
+          "sshChannelWaitSeconds": 5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-conversion-v1",
+          "targetResourceId": "showcase-model-conversion-local-docker"
+        },
+        "startedAt": 1792523495.8965704,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 6816
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-quantize-cpu",
+        "durationSeconds": 0.20577788352966309,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "filesTransferred": 3,
+        "finishedAt": 1792523492.1413796,
+        "id": "transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-quantize-cpu-0",
+        "logicalBytes": 986,
+        "planId": "transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-quantize-cpu-0",
+        "route": {
+          "consumerActivityId": "showcase-model-conversion-local-f22e706408-quantize-cpu",
+          "filesTransferred": 3,
+          "producerActivityId": "showcase-model-conversion-local-f22e706408-export-onnx",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.090881958,
+          "sourceEnvironmentId": "showcase-model-conversion-v1",
+          "sourceResourceId": "showcase-model-conversion-local-docker",
+          "sshChannelWaitSeconds": 3.34e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-conversion-v1",
+          "targetResourceId": "showcase-model-conversion-local-docker"
+        },
+        "startedAt": 1792523491.9356017,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 986
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-quantize-cpu",
+        "durationSeconds": 0.342451810836792,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "filesTransferred": 2,
+        "finishedAt": 1792523492.2780535,
+        "id": "transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-quantize-cpu-1",
+        "logicalBytes": 4484,
+        "planId": "transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-quantize-cpu-1",
+        "route": {
+          "consumerActivityId": "showcase-model-conversion-local-f22e706408-quantize-cpu",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-model-conversion-local-f22e706408-export-torchscript",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.070676916,
+          "sourceEnvironmentId": "showcase-model-conversion-v1",
+          "sourceResourceId": "showcase-model-conversion-local-docker",
+          "sshChannelWaitSeconds": 5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-conversion-v1",
+          "targetResourceId": "showcase-model-conversion-local-docker"
+        },
+        "startedAt": 1792523491.9356017,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 4022
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-quantize-gpu",
+        "durationSeconds": 0.2278456687927246,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "filesTransferred": 3,
+        "finishedAt": 1792523492.1647627,
+        "id": "transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-quantize-gpu-0",
+        "logicalBytes": 986,
+        "planId": "transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-quantize-gpu-0",
+        "route": {
+          "consumerActivityId": "showcase-model-conversion-local-f22e706408-quantize-gpu",
+          "filesTransferred": 3,
+          "producerActivityId": "showcase-model-conversion-local-f22e706408-export-onnx",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.090449459,
+          "sourceEnvironmentId": "showcase-model-conversion-v1",
+          "sourceResourceId": "showcase-model-conversion-local-docker",
+          "sshChannelWaitSeconds": 2.5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-conversion-v1",
+          "targetResourceId": "showcase-model-conversion-local-docker"
+        },
+        "startedAt": 1792523491.936917,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 986
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-quantize-gpu",
+        "durationSeconds": 0.3460562229156494,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "filesTransferred": 2,
+        "finishedAt": 1792523492.2829733,
+        "id": "transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-quantize-gpu-1",
+        "logicalBytes": 4484,
+        "planId": "transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-quantize-gpu-1",
+        "route": {
+          "consumerActivityId": "showcase-model-conversion-local-f22e706408-quantize-gpu",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-model-conversion-local-f22e706408-export-torchscript",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.07131575,
+          "sourceEnvironmentId": "showcase-model-conversion-v1",
+          "sourceResourceId": "showcase-model-conversion-local-docker",
+          "sshChannelWaitSeconds": 3.34e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-conversion-v1",
+          "targetResourceId": "showcase-model-conversion-local-docker"
+        },
+        "startedAt": 1792523491.936917,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 4022
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-validate-outputs",
+        "durationSeconds": 0.19014978408813477,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "filesTransferred": 7,
+        "finishedAt": 1792523494.1713355,
+        "id": "transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-validate-outputs-0",
+        "logicalBytes": 5597,
+        "planId": "transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-validate-outputs-0",
+        "route": {
+          "consumerActivityId": "showcase-model-conversion-local-f22e706408-validate-outputs",
+          "filesTransferred": 7,
+          "producerActivityId": "showcase-model-conversion-local-f22e706408-quantize-cpu",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.04969,
+          "sourceEnvironmentId": "showcase-model-conversion-v1",
+          "sourceResourceId": "showcase-model-conversion-local-docker",
+          "sshChannelWaitSeconds": 4.16e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-conversion-v1",
+          "targetResourceId": "showcase-model-conversion-local-docker"
+        },
+        "startedAt": 1792523493.9811857,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 5597
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-validate-outputs",
+        "durationSeconds": 0.31429338455200195,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "filesTransferred": 2,
+        "finishedAt": 1792523494.295479,
+        "id": "transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-validate-outputs-1",
+        "logicalBytes": 5567,
+        "planId": "transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-validate-outputs-1",
+        "route": {
+          "consumerActivityId": "showcase-model-conversion-local-f22e706408-validate-outputs",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-model-conversion-local-f22e706408-quantize-gpu",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.099421083,
+          "sourceEnvironmentId": "showcase-model-conversion-v1",
+          "sourceResourceId": "showcase-model-conversion-local-docker",
+          "sshChannelWaitSeconds": 3.34e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-conversion-v1",
+          "targetResourceId": "showcase-model-conversion-local-docker"
+        },
+        "startedAt": 1792523493.9811857,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 559
+      }
+    ],
+    "cloudBilling": {
+      "asOf": "2026-10-20T19:11:38.572439668Z",
+      "costBasis": "VM compute and boot-disk lifecycle at on-demand marginal rates; not a provider invoice",
+      "estimatedCost": 0,
+      "excludedCosts": [
+        "network-egress",
+        "public-ipv4",
+        "image-storage",
+        "discounts-and-tax"
+      ],
+      "instances": [],
+      "knownCost": 0,
+      "status": "estimated"
+    },
+    "dataLocations": [
+      {
+        "dataObjectInstanceId": "b1e5446e2e482ccde5a809c57619da3e",
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "id": "900c1cb828e8b86a2b7e5b3272b37313",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-conversion-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "af21a593d32ab000ecdb96c457ee6cff",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-export-onnx/model.onnx"
+      },
+      {
+        "dataObjectInstanceId": "a69fe8affc493dc647c2abcfafbb27f7",
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "id": "bc10c523ce7b67e5d33df9a17403bd1b",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-conversion-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "af21a593d32ab000ecdb96c457ee6cff",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-export-onnx/stage-export-onnx.json"
+      },
+      {
+        "dataObjectInstanceId": "c239058058bf009a7d06a03e49ab37c8",
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "id": "7fa4b614c9fa0ea0dc4583d9e36ca71b",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-conversion-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "af21a593d32ab000ecdb96c457ee6cff",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-export-torchscript/model.torchscript.pt"
+      },
+      {
+        "dataObjectInstanceId": "45162e36282a3db5f22b14ff0cb847f0",
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "id": "561a475f0909e56eb2b75c376158a367",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-conversion-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "af21a593d32ab000ecdb96c457ee6cff",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-export-torchscript/stage-export-torchscript.json"
+      },
+      {
+        "dataObjectInstanceId": "117c9e163dc1f954cc5ff41ded2a2ec2",
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "id": "588059fc09bf5ad3c9cebea8120e8562",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-conversion-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "af21a593d32ab000ecdb96c457ee6cff",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-load-model/stage-load-model.json"
+      },
+      {
+        "dataObjectInstanceId": "0d6cf0c98f2cdb8d93c2e9faa2c3a96c",
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "id": "61af8dd85b955d3bac40ece82a2f3cad",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-conversion-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "af21a593d32ab000ecdb96c457ee6cff",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-publish-variants/stage-publish-variants.json"
+      },
+      {
+        "dataObjectInstanceId": "40936fe85c40e238aa42687130f2de2a",
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "id": "9b041e0d4cbebad7634914b8ab77322f",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-conversion-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "af21a593d32ab000ecdb96c457ee6cff",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-quantize-cpu/model-int8.json"
+      },
+      {
+        "dataObjectInstanceId": "dae89335022f70575438f84026da6506",
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "id": "97fc49382f8c50fecfdf11969f31febb",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-conversion-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "af21a593d32ab000ecdb96c457ee6cff",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-quantize-cpu/stage-quantize-cpu.json"
+      },
+      {
+        "dataObjectInstanceId": "6a175e69f5555489e9475b9ba01a7695",
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "id": "8446a939839017d8d549db8f4c0ebd6f",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-conversion-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "af21a593d32ab000ecdb96c457ee6cff",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-quantize-gpu/model-fp16.bin"
+      },
+      {
+        "dataObjectInstanceId": "9c03ed113698cb3c597646e18b126b86",
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "id": "34ed07e4e8011a4cae162fe69721c490",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-conversion-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "af21a593d32ab000ecdb96c457ee6cff",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-quantize-gpu/stage-quantize-gpu.json"
+      },
+      {
+        "dataObjectInstanceId": "73ae4f0f5cdae393962b5c7f16053623",
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "id": "f6e678e686d76307bc073e45326dec02",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-conversion-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "af21a593d32ab000ecdb96c457ee6cff",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-validate-outputs/stage-validate-outputs.json"
+      },
+      {
+        "dataObjectInstanceId": "04b123b4afab48eaa836b6e612de8fde",
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "id": "6ae851d01dc5d3d80410259d403f47e1",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-conversion-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "af21a593d32ab000ecdb96c457ee6cff",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-validate-outputs/validation.json"
+      }
+    ],
+    "dataObjects": [
+      {
+        "attempt": 1,
+        "checksum": "sha256:33e3564c24027428cc979d833ca013f6aef3b86aebb5b1710d5bccd00f869ff5",
+        "dataObjectId": "36e43c531a3a29dda9741803f2cf3f31",
+        "discovered": true,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "id": "b1e5446e2e482ccde5a809c57619da3e",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-conversion-local-f22e706408-export-onnx",
+        "relativePath": "model.onnx",
+        "sizeBytes": 130
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:3ede5ebe1d611971b25ac03d7ac1e2e46a28dbb5965da542945e14672e20aebe",
+        "dataObjectId": "1edcd77cdb0ee08be9ec2dae28052e01",
+        "discovered": true,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "id": "a69fe8affc493dc647c2abcfafbb27f7",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-conversion-local-f22e706408-export-onnx",
+        "relativePath": "stage-export-onnx.json",
+        "sizeBytes": 394
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:312681d101f715e97af1e7165cf66a294cee225619ec5ee289116243f30da033",
+        "dataObjectId": "fac97be9ff36e0b0dc7dc695a202e85d",
+        "discovered": true,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "id": "c239058058bf009a7d06a03e49ab37c8",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-conversion-local-f22e706408-export-torchscript",
+        "relativePath": "model.torchscript.pt",
+        "sizeBytes": 3613
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:e257fcfe56811f6dde041c15719e95346f9be8838c57925699fc581fb21127d0",
+        "dataObjectId": "a5885a888869ed2822c18a6ee50f8197",
+        "discovered": true,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "id": "45162e36282a3db5f22b14ff0cb847f0",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-conversion-local-f22e706408-export-torchscript",
+        "relativePath": "stage-export-torchscript.json",
+        "sizeBytes": 409
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+        "dataObjectId": "2f534a0b807976eb0f1f96335f0cdd18",
+        "discovered": true,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "id": "117c9e163dc1f954cc5ff41ded2a2ec2",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-conversion-local-f22e706408-load-model",
+        "relativePath": "stage-load-model.json",
+        "sizeBytes": 462
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:ee82fba0077c1987cec51a373b239b7042375068a4a940a7688d17d34022d60d",
+        "dataObjectId": "4d42434a97a540605aa5d866f109e9da",
+        "discovered": true,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "id": "0d6cf0c98f2cdb8d93c2e9faa2c3a96c",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-conversion-local-f22e706408-publish-variants",
+        "relativePath": "stage-publish-variants.json",
+        "sizeBytes": 647
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:19dfef1b5b1c26d96209057b7c2a254ade24a7e7ab3f73cb87f55de2d09e6334",
+        "dataObjectId": "48825fb5d07e300546b0746d7fd89952",
+        "discovered": true,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "id": "40936fe85c40e238aa42687130f2de2a",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-conversion-local-f22e706408-quantize-cpu",
+        "relativePath": "model-int8.json",
+        "sizeBytes": 101
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:a4323ce9c7f70e1f732edb098f09ff7264ef4cef358dc1ebc271d34ccfe54a9d",
+        "dataObjectId": "015f19ba0173c9e38cdf9534080b91e0",
+        "discovered": true,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "id": "dae89335022f70575438f84026da6506",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-conversion-local-f22e706408-quantize-cpu",
+        "relativePath": "stage-quantize-cpu.json",
+        "sizeBytes": 488
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:7048b37101a3033c1059ea43579e39a159515545427bd0665986ca6a100a7147",
+        "dataObjectId": "63e6aa81486e6a7efece33d94368b4d1",
+        "discovered": true,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "id": "6a175e69f5555489e9475b9ba01a7695",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-conversion-local-f22e706408-quantize-gpu",
+        "relativePath": "model-fp16.bin",
+        "sizeBytes": 4
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:0582225bfd5c6f694c6ad44cc2d24597d679c9c5c5b14e4707643ab076bd06e0",
+        "dataObjectId": "4d1fcbd1a6af9fbb80e7e3df8e3295f7",
+        "discovered": true,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "id": "9c03ed113698cb3c597646e18b126b86",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-conversion-local-f22e706408-quantize-gpu",
+        "relativePath": "stage-quantize-gpu.json",
+        "sizeBytes": 555
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:c80769d4b7e6f06b1f0c6eb4608fe78055d845430a014b15aead7ad0a0a1e81e",
+        "dataObjectId": "219f8303d004e4c94d8cadf7370a5f28",
+        "discovered": true,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "id": "73ae4f0f5cdae393962b5c7f16053623",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-conversion-local-f22e706408-validate-outputs",
+        "relativePath": "stage-validate-outputs.json",
+        "sizeBytes": 497
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:cf64adf55bcdebf19110d8d2e8244b6000bbf9fce3b2410574e0fdd1a1277db4",
+        "dataObjectId": "276a501f1e3a17e527f3de05f56ae941",
+        "discovered": true,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "id": "04b123b4afab48eaa836b6e612de8fde",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-conversion-local-f22e706408-validate-outputs",
+        "relativePath": "validation.json",
+        "sizeBytes": 163
+      }
+    ],
+    "dataTransfers": [
+      {
+        "bytes": 462,
+        "consumerActivityId": "showcase-model-conversion-local-f22e706408-export-onnx",
+        "cost": 0,
+        "durationSeconds": 0.16272759437561035,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "finishedAt": 1792523490.0691743,
+        "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-export-onnx:transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-export-onnx-0",
+        "logicalBytes": 462,
+        "producerActivityId": "showcase-model-conversion-local-f22e706408-load-model",
+        "route": {
+          "consumerActivityId": "showcase-model-conversion-local-f22e706408-export-onnx",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-model-conversion-local-f22e706408-load-model",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.093134751,
+          "sourceEnvironmentId": "showcase-model-conversion-v1",
+          "sourceResourceId": "showcase-model-conversion-local-docker",
+          "sshChannelWaitSeconds": 3.76e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-conversion-v1",
+          "targetResourceId": "showcase-model-conversion-local-docker"
+        },
+        "sourceResourceId": "showcase-model-conversion-local-docker",
+        "startedAt": 1792523489.9064467,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-model-conversion-local-docker"
+      },
+      {
+        "bytes": 462,
+        "consumerActivityId": "showcase-model-conversion-local-f22e706408-export-torchscript",
+        "cost": 0,
+        "durationSeconds": 0.16094446182250977,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "finishedAt": 1792523490.0688422,
+        "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-export-torchscript:transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-export-torchscript-0",
+        "logicalBytes": 462,
+        "producerActivityId": "showcase-model-conversion-local-f22e706408-load-model",
+        "route": {
+          "consumerActivityId": "showcase-model-conversion-local-f22e706408-export-torchscript",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-model-conversion-local-f22e706408-load-model",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.069991833,
+          "sourceEnvironmentId": "showcase-model-conversion-v1",
+          "sourceResourceId": "showcase-model-conversion-local-docker",
+          "sshChannelWaitSeconds": 4.58e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-conversion-v1",
+          "targetResourceId": "showcase-model-conversion-local-docker"
+        },
+        "sourceResourceId": "showcase-model-conversion-local-docker",
+        "startedAt": 1792523489.9078977,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-model-conversion-local-docker"
+      },
+      {
+        "bytes": 986,
+        "consumerActivityId": "showcase-model-conversion-local-f22e706408-quantize-cpu",
+        "cost": 0,
+        "durationSeconds": 0.20577788352966309,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "finishedAt": 1792523492.1413796,
+        "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-quantize-cpu:transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-quantize-cpu-0",
+        "logicalBytes": 986,
+        "producerActivityId": "showcase-model-conversion-local-f22e706408-export-onnx",
+        "route": {
+          "consumerActivityId": "showcase-model-conversion-local-f22e706408-quantize-cpu",
+          "filesTransferred": 3,
+          "producerActivityId": "showcase-model-conversion-local-f22e706408-export-onnx",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.090881958,
+          "sourceEnvironmentId": "showcase-model-conversion-v1",
+          "sourceResourceId": "showcase-model-conversion-local-docker",
+          "sshChannelWaitSeconds": 3.34e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-conversion-v1",
+          "targetResourceId": "showcase-model-conversion-local-docker"
+        },
+        "sourceResourceId": "showcase-model-conversion-local-docker",
+        "startedAt": 1792523491.9356017,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-model-conversion-local-docker"
+      },
+      {
+        "bytes": 4022,
+        "consumerActivityId": "showcase-model-conversion-local-f22e706408-quantize-cpu",
+        "cost": 0,
+        "durationSeconds": 0.342451810836792,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "finishedAt": 1792523492.2780535,
+        "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-quantize-cpu:transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-quantize-cpu-1",
+        "logicalBytes": 4484,
+        "producerActivityId": "showcase-model-conversion-local-f22e706408-export-torchscript",
+        "route": {
+          "consumerActivityId": "showcase-model-conversion-local-f22e706408-quantize-cpu",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-model-conversion-local-f22e706408-export-torchscript",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.070676916,
+          "sourceEnvironmentId": "showcase-model-conversion-v1",
+          "sourceResourceId": "showcase-model-conversion-local-docker",
+          "sshChannelWaitSeconds": 5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-conversion-v1",
+          "targetResourceId": "showcase-model-conversion-local-docker"
+        },
+        "sourceResourceId": "showcase-model-conversion-local-docker",
+        "startedAt": 1792523491.9356017,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-model-conversion-local-docker"
+      },
+      {
+        "bytes": 986,
+        "consumerActivityId": "showcase-model-conversion-local-f22e706408-quantize-gpu",
+        "cost": 0,
+        "durationSeconds": 0.2278456687927246,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "finishedAt": 1792523492.1647627,
+        "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-quantize-gpu:transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-quantize-gpu-0",
+        "logicalBytes": 986,
+        "producerActivityId": "showcase-model-conversion-local-f22e706408-export-onnx",
+        "route": {
+          "consumerActivityId": "showcase-model-conversion-local-f22e706408-quantize-gpu",
+          "filesTransferred": 3,
+          "producerActivityId": "showcase-model-conversion-local-f22e706408-export-onnx",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.090449459,
+          "sourceEnvironmentId": "showcase-model-conversion-v1",
+          "sourceResourceId": "showcase-model-conversion-local-docker",
+          "sshChannelWaitSeconds": 2.5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-conversion-v1",
+          "targetResourceId": "showcase-model-conversion-local-docker"
+        },
+        "sourceResourceId": "showcase-model-conversion-local-docker",
+        "startedAt": 1792523491.936917,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-model-conversion-local-docker"
+      },
+      {
+        "bytes": 4022,
+        "consumerActivityId": "showcase-model-conversion-local-f22e706408-quantize-gpu",
+        "cost": 0,
+        "durationSeconds": 0.3460562229156494,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "finishedAt": 1792523492.2829733,
+        "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-quantize-gpu:transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-quantize-gpu-1",
+        "logicalBytes": 4484,
+        "producerActivityId": "showcase-model-conversion-local-f22e706408-export-torchscript",
+        "route": {
+          "consumerActivityId": "showcase-model-conversion-local-f22e706408-quantize-gpu",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-model-conversion-local-f22e706408-export-torchscript",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.07131575,
+          "sourceEnvironmentId": "showcase-model-conversion-v1",
+          "sourceResourceId": "showcase-model-conversion-local-docker",
+          "sshChannelWaitSeconds": 3.34e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-conversion-v1",
+          "targetResourceId": "showcase-model-conversion-local-docker"
+        },
+        "sourceResourceId": "showcase-model-conversion-local-docker",
+        "startedAt": 1792523491.936917,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-model-conversion-local-docker"
+      },
+      {
+        "bytes": 5597,
+        "consumerActivityId": "showcase-model-conversion-local-f22e706408-validate-outputs",
+        "cost": 0,
+        "durationSeconds": 0.19014978408813477,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "finishedAt": 1792523494.1713355,
+        "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-validate-outputs:transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-validate-outputs-0",
+        "logicalBytes": 5597,
+        "producerActivityId": "showcase-model-conversion-local-f22e706408-quantize-cpu",
+        "route": {
+          "consumerActivityId": "showcase-model-conversion-local-f22e706408-validate-outputs",
+          "filesTransferred": 7,
+          "producerActivityId": "showcase-model-conversion-local-f22e706408-quantize-cpu",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.04969,
+          "sourceEnvironmentId": "showcase-model-conversion-v1",
+          "sourceResourceId": "showcase-model-conversion-local-docker",
+          "sshChannelWaitSeconds": 4.16e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-conversion-v1",
+          "targetResourceId": "showcase-model-conversion-local-docker"
+        },
+        "sourceResourceId": "showcase-model-conversion-local-docker",
+        "startedAt": 1792523493.9811857,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-model-conversion-local-docker"
+      },
+      {
+        "bytes": 559,
+        "consumerActivityId": "showcase-model-conversion-local-f22e706408-validate-outputs",
+        "cost": 0,
+        "durationSeconds": 0.31429338455200195,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "finishedAt": 1792523494.295479,
+        "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-validate-outputs:transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-validate-outputs-1",
+        "logicalBytes": 5567,
+        "producerActivityId": "showcase-model-conversion-local-f22e706408-quantize-gpu",
+        "route": {
+          "consumerActivityId": "showcase-model-conversion-local-f22e706408-validate-outputs",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-model-conversion-local-f22e706408-quantize-gpu",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.099421083,
+          "sourceEnvironmentId": "showcase-model-conversion-v1",
+          "sourceResourceId": "showcase-model-conversion-local-docker",
+          "sshChannelWaitSeconds": 3.34e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-conversion-v1",
+          "targetResourceId": "showcase-model-conversion-local-docker"
+        },
+        "sourceResourceId": "showcase-model-conversion-local-docker",
+        "startedAt": 1792523493.9811857,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-model-conversion-local-docker"
+      },
+      {
+        "bytes": 6816,
+        "consumerActivityId": "showcase-model-conversion-local-f22e706408-publish-variants",
+        "cost": 0,
+        "durationSeconds": 0.16086459159851074,
+        "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "finishedAt": 1792523496.057435,
+        "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-publish-variants:transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-publish-variants-0",
+        "logicalBytes": 6816,
+        "producerActivityId": "showcase-model-conversion-local-f22e706408-validate-outputs",
+        "route": {
+          "consumerActivityId": "showcase-model-conversion-local-f22e706408-publish-variants",
+          "filesTransferred": 11,
+          "producerActivityId": "showcase-model-conversion-local-f22e706408-validate-outputs",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.07045575,
+          "sourceEnvironmentId": "showcase-model-conversion-v1",
+          "sourceResourceId": "showcase-model-conversion-local-docker",
+          "sshChannelWaitSeconds": 5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-conversion-v1",
+          "targetResourceId": "showcase-model-conversion-local-docker"
+        },
+        "sourceResourceId": "showcase-model-conversion-local-docker",
+        "startedAt": 1792523495.8965704,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-model-conversion-local-docker"
+      }
+    ],
+    "events": [
+      {
+        "aggregateId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.started",
+        "id": "b78921cf53d8127e2ad8a4a64a9694ab",
+        "occurredAt": "2026-10-20T19:11:28.61615522Z",
+        "payload": {
+          "mode": "real",
+          "schedulePlanId": "showcase-model-conversion-local-f22e706408-manual-plan-20261020t191128.221185000"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-load-model",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "3283b00638cb3e4d6ecb3371a972641e",
+        "occurredAt": "2026-10-20T19:11:29.816656262Z",
+        "payload": {
+          "activityId": "showcase-model-conversion-local-f22e706408-load-model",
+          "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-load-model",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "d3d2fb8e80211ef68dec015355f80030",
+        "occurredAt": "2026-10-20T19:11:29.899568637Z",
+        "payload": {
+          "activityId": "showcase-model-conversion-local-f22e706408-load-model",
+          "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+          "failureReason": "",
+          "runtimeSeconds": 0.027910947799682617,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-export-onnx",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "451a37f4b048c8fe295b7e38edfadb79",
+        "occurredAt": "2026-10-20T19:11:31.819022971Z",
+        "payload": {
+          "activityId": "showcase-model-conversion-local-f22e706408-export-onnx",
+          "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-export-torchscript",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "628889af0149a8099cc81d7b6547e881",
+        "occurredAt": "2026-10-20T19:11:31.821628971Z",
+        "payload": {
+          "activityId": "showcase-model-conversion-local-f22e706408-export-torchscript",
+          "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-export-onnx",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "d75e62f8421861d78a62c7a11d1b7878",
+        "occurredAt": "2026-10-20T19:11:31.921759138Z",
+        "payload": {
+          "activityId": "showcase-model-conversion-local-f22e706408-export-onnx",
+          "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+          "failureReason": "",
+          "runtimeSeconds": 0.24953651428222656,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-export-torchscript",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "9d70eae35b27ee24ef30d049e06f3564",
+        "occurredAt": "2026-10-20T19:11:31.925755929Z",
+        "payload": {
+          "activityId": "showcase-model-conversion-local-f22e706408-export-torchscript",
+          "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+          "failureReason": "",
+          "runtimeSeconds": 1.131432294845581,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-quantize-gpu",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "8b732e07cce794ea72b82a7991436e98",
+        "occurredAt": "2026-10-20T19:11:33.822871347Z",
+        "payload": {
+          "activityId": "showcase-model-conversion-local-f22e706408-quantize-gpu",
+          "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-quantize-cpu",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "16a2839906cfcb3ef683c372fe56450f",
+        "occurredAt": "2026-10-20T19:11:33.826321972Z",
+        "payload": {
+          "activityId": "showcase-model-conversion-local-f22e706408-quantize-cpu",
+          "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-quantize-cpu",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "4a9b8f7975952c4106c5b253d57a0386",
+        "occurredAt": "2026-10-20T19:11:33.968504389Z",
+        "payload": {
+          "activityId": "showcase-model-conversion-local-f22e706408-quantize-cpu",
+          "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+          "failureReason": "",
+          "runtimeSeconds": 0.17200374603271484,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-quantize-gpu",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "e2cd1bd7cdf92d5769bf0f2d90c36000",
+        "occurredAt": "2026-10-20T19:11:33.972689055Z",
+        "payload": {
+          "activityId": "showcase-model-conversion-local-f22e706408-quantize-gpu",
+          "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+          "failureReason": "",
+          "runtimeSeconds": 0.784243106842041,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-validate-outputs",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "2a2343906bbb55167c71b0024a6f81aa",
+        "occurredAt": "2026-10-20T19:11:35.824812834Z",
+        "payload": {
+          "activityId": "showcase-model-conversion-local-f22e706408-validate-outputs",
+          "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-validate-outputs",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "08bcb7943c99066f321b1051e62d4078",
+        "occurredAt": "2026-10-20T19:11:35.891149334Z",
+        "payload": {
+          "activityId": "showcase-model-conversion-local-f22e706408-validate-outputs",
+          "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+          "failureReason": "",
+          "runtimeSeconds": 0.8784592151641846,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-publish-variants",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "4acc0e30b465d51c6d39a6f8f49c53a1",
+        "occurredAt": "2026-10-20T19:11:37.830369335Z",
+        "payload": {
+          "activityId": "showcase-model-conversion-local-f22e706408-publish-variants",
+          "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-publish-variants",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "8929a8acc2b7fc3c9e91e3ea726ffb21",
+        "occurredAt": "2026-10-20T19:11:37.897101251Z",
+        "payload": {
+          "activityId": "showcase-model-conversion-local-f22e706408-publish-variants",
+          "executionRunId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+          "failureReason": "",
+          "runtimeSeconds": 0.0280458927154541,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.completed",
+        "id": "1d32750f509cc3df65c2d9a578598521",
+        "occurredAt": "2026-10-20T19:11:37.900050043Z",
+        "payload": {
+          "cost": 0,
+          "makespanSeconds": 7.428460597991943
+        }
+      }
+    ],
+    "handles": [
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-export-onnx",
+        "artifacts": {
+          "activityId": "showcase-model-conversion-local-f22e706408-export-onnx",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:33e3564c24027428cc979d833ca013f6aef3b86aebb5b1710d5bccd00f869ff5",
+              "modifiedUnixNano": 1792523490397971000,
+              "path": "model.onnx",
+              "sizeBytes": 130
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:3ede5ebe1d611971b25ac03d7ac1e2e46a28dbb5965da542945e14672e20aebe",
+              "modifiedUnixNano": 1792523490397971000,
+              "path": "stage-export-onnx.json",
+              "sizeBytes": 394
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:33e3564c24027428cc979d833ca013f6aef3b86aebb5b1710d5bccd00f869ff5",
+              "modifiedUnixNano": 1792523490397971000,
+              "path": "model.onnx",
+              "sizeBytes": 130
+            },
+            {
+              "checksum": "sha256:3ede5ebe1d611971b25ac03d7ac1e2e46a28dbb5965da542945e14672e20aebe",
+              "modifiedUnixNano": 1792523490397971000,
+              "path": "stage-export-onnx.json",
+              "sizeBytes": 394
+            },
+            {
+              "checksum": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "modifiedUnixNano": 1792523490023971000,
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            }
+          ],
+          "finishedAt": 1792523490.4945211,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "modifiedUnixNano": 1792523490023971000,
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.24953651428222656,
+              "finishedAt": 1792523490.4945211,
+              "phase": "execution",
+              "startedAt": 1792523490.2449846,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-export-onnx",
+          "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+          "runtime": "showcase-model-conversion-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523490.2449846,
+          "summary": {
+            "createdFiles": 2,
+            "deletedFiles": 0,
+            "finalFiles": 3,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 524
+          }
+        },
+        "exitCode": 0,
+        "externalId": "187a012678a258c910cd25f5d3b8d2517a4390d57e6b9175a8a4344e76265e60",
+        "finishedAt": 1792523490.4945211,
+        "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-export-onnx",
+        "log": "{\"activity\": \"export-onnx\", \"status\": \"success\", \"resultKeys\": [\"format\", \"bytes\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-model-conversion-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-export-onnx",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523490.2449892,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-export-onnx",
+          "submittedAt": 1792523490.2449846
+        },
+        "resourceId": "showcase-model-conversion-local-docker",
+        "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "runtimeId": "showcase-model-conversion-local",
+        "startedAt": 1792523490.2449846,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-export-torchscript",
+        "artifacts": {
+          "activityId": "showcase-model-conversion-local-f22e706408-export-torchscript",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:312681d101f715e97af1e7165cf66a294cee225619ec5ee289116243f30da033",
+              "modifiedUnixNano": 1792523491150971100,
+              "path": "model.torchscript.pt",
+              "sizeBytes": 3613
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:e257fcfe56811f6dde041c15719e95346f9be8838c57925699fc581fb21127d0",
+              "modifiedUnixNano": 1792523491150971100,
+              "path": "stage-export-torchscript.json",
+              "sizeBytes": 409
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:312681d101f715e97af1e7165cf66a294cee225619ec5ee289116243f30da033",
+              "modifiedUnixNano": 1792523491150971100,
+              "path": "model.torchscript.pt",
+              "sizeBytes": 3613
+            },
+            {
+              "checksum": "sha256:e257fcfe56811f6dde041c15719e95346f9be8838c57925699fc581fb21127d0",
+              "modifiedUnixNano": 1792523491150971100,
+              "path": "stage-export-torchscript.json",
+              "sizeBytes": 409
+            },
+            {
+              "checksum": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "modifiedUnixNano": 1792523490025971000,
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            }
+          ],
+          "finishedAt": 1792523491.3721335,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "modifiedUnixNano": 1792523490025971000,
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 1.131432294845581,
+              "finishedAt": 1792523491.3721335,
+              "phase": "execution",
+              "startedAt": 1792523490.2407012,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-export-torchscript",
+          "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+          "runtime": "showcase-model-conversion-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523490.2407012,
+          "summary": {
+            "createdFiles": 2,
+            "deletedFiles": 0,
+            "finalFiles": 3,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 4022
+          }
+        },
+        "exitCode": 0,
+        "externalId": "676957f22db6791447f923bdaec7ec8963b6786d8048aa92ca8bec38ad5cdbea",
+        "finishedAt": 1792523491.3721335,
+        "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-export-torchscript",
+        "log": "/usr/local/lib/python3.12/site-packages/torch/jit/_trace.py:1006: FutureWarning: `torch.jit.trace` is deprecated. Please switch to `torch.compile` or `torch.export`.\n  warnings.warn(\n/usr/local/lib/python3.12/site-packages/torch/jit/_trace.py:1145: FutureWarning: `torch.jit.trace_method` is deprecated. Please switch to `torch.compile` or `torch.export`.\n  warnings.warn(\n{\"activity\": \"export-torchscript\", \"status\": \"success\", \"resultKeys\": [\"format\", \"bytes\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-model-conversion-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-export-torchscript",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523490.2407472,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-export-torchscript",
+          "submittedAt": 1792523490.2407012
+        },
+        "resourceId": "showcase-model-conversion-local-docker",
+        "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "runtimeId": "showcase-model-conversion-local",
+        "startedAt": 1792523490.2407012,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-load-model",
+        "artifacts": {
+          "activityId": "showcase-model-conversion-local-f22e706408-load-model",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "modifiedUnixNano": 1792523488805971000,
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "modifiedUnixNano": 1792523488805971000,
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            }
+          ],
+          "finishedAt": 1792523488.8123968,
+          "phases": [
+            {
+              "durationSeconds": 0.027910947799682617,
+              "finishedAt": 1792523488.8123968,
+              "phase": "execution",
+              "startedAt": 1792523488.7844858,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-load-model",
+          "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+          "runtime": "showcase-model-conversion-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523488.7844858,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 1,
+            "initialFiles": 0,
+            "modifiedFiles": 0,
+            "outputBytes": 462
+          }
+        },
+        "exitCode": 0,
+        "externalId": "1a7e702dca73f163616ebc3aa08d419e1e1d650c8d98b3c3a1bb6793960c0b89",
+        "finishedAt": 1792523488.8123968,
+        "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-load-model",
+        "log": "{\"activity\": \"load-model\", \"status\": \"success\", \"resultKeys\": [\"weight\", \"bias\", \"inputs\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-model-conversion-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-load-model",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523488.7845008,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-load-model",
+          "submittedAt": 1792523488.7844858
+        },
+        "resourceId": "showcase-model-conversion-local-docker",
+        "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "runtimeId": "showcase-model-conversion-local",
+        "startedAt": 1792523488.7844858,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-publish-variants",
+        "artifacts": {
+          "activityId": "showcase-model-conversion-local-f22e706408-publish-variants",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:ee82fba0077c1987cec51a373b239b7042375068a4a940a7688d17d34022d60d",
+              "modifiedUnixNano": 1792523496207754000,
+              "path": "stage-publish-variants.json",
+              "sizeBytes": 647
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:7048b37101a3033c1059ea43579e39a159515545427bd0665986ca6a100a7147",
+              "modifiedUnixNano": 1792523496033754000,
+              "path": "model-fp16.bin",
+              "sizeBytes": 4
+            },
+            {
+              "checksum": "sha256:19dfef1b5b1c26d96209057b7c2a254ade24a7e7ab3f73cb87f55de2d09e6334",
+              "modifiedUnixNano": 1792523496033754000,
+              "path": "model-int8.json",
+              "sizeBytes": 101
+            },
+            {
+              "checksum": "sha256:33e3564c24027428cc979d833ca013f6aef3b86aebb5b1710d5bccd00f869ff5",
+              "modifiedUnixNano": 1792523496033754000,
+              "path": "model.onnx",
+              "sizeBytes": 130
+            },
+            {
+              "checksum": "sha256:312681d101f715e97af1e7165cf66a294cee225619ec5ee289116243f30da033",
+              "modifiedUnixNano": 1792523496033754000,
+              "path": "model.torchscript.pt",
+              "sizeBytes": 3613
+            },
+            {
+              "checksum": "sha256:3ede5ebe1d611971b25ac03d7ac1e2e46a28dbb5965da542945e14672e20aebe",
+              "modifiedUnixNano": 1792523496033754000,
+              "path": "stage-export-onnx.json",
+              "sizeBytes": 394
+            },
+            {
+              "checksum": "sha256:e257fcfe56811f6dde041c15719e95346f9be8838c57925699fc581fb21127d0",
+              "modifiedUnixNano": 1792523496033754000,
+              "path": "stage-export-torchscript.json",
+              "sizeBytes": 409
+            },
+            {
+              "checksum": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "modifiedUnixNano": 1792523496033754000,
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            },
+            {
+              "checksum": "sha256:ee82fba0077c1987cec51a373b239b7042375068a4a940a7688d17d34022d60d",
+              "modifiedUnixNano": 1792523496207754000,
+              "path": "stage-publish-variants.json",
+              "sizeBytes": 647
+            },
+            {
+              "checksum": "sha256:a4323ce9c7f70e1f732edb098f09ff7264ef4cef358dc1ebc271d34ccfe54a9d",
+              "modifiedUnixNano": 1792523496033754000,
+              "path": "stage-quantize-cpu.json",
+              "sizeBytes": 488
+            },
+            {
+              "checksum": "sha256:0582225bfd5c6f694c6ad44cc2d24597d679c9c5c5b14e4707643ab076bd06e0",
+              "modifiedUnixNano": 1792523496033754000,
+              "path": "stage-quantize-gpu.json",
+              "sizeBytes": 555
+            },
+            {
+              "checksum": "sha256:c80769d4b7e6f06b1f0c6eb4608fe78055d845430a014b15aead7ad0a0a1e81e",
+              "modifiedUnixNano": 1792523496033754000,
+              "path": "stage-validate-outputs.json",
+              "sizeBytes": 497
+            },
+            {
+              "checksum": "sha256:cf64adf55bcdebf19110d8d2e8244b6000bbf9fce3b2410574e0fdd1a1277db4",
+              "modifiedUnixNano": 1792523496033754000,
+              "path": "validation.json",
+              "sizeBytes": 163
+            }
+          ],
+          "finishedAt": 1792523496.2129464,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:7048b37101a3033c1059ea43579e39a159515545427bd0665986ca6a100a7147",
+              "modifiedUnixNano": 1792523496033754000,
+              "path": "model-fp16.bin",
+              "sizeBytes": 4
+            },
+            {
+              "checksum": "sha256:19dfef1b5b1c26d96209057b7c2a254ade24a7e7ab3f73cb87f55de2d09e6334",
+              "modifiedUnixNano": 1792523496033754000,
+              "path": "model-int8.json",
+              "sizeBytes": 101
+            },
+            {
+              "checksum": "sha256:33e3564c24027428cc979d833ca013f6aef3b86aebb5b1710d5bccd00f869ff5",
+              "modifiedUnixNano": 1792523496033754000,
+              "path": "model.onnx",
+              "sizeBytes": 130
+            },
+            {
+              "checksum": "sha256:312681d101f715e97af1e7165cf66a294cee225619ec5ee289116243f30da033",
+              "modifiedUnixNano": 1792523496033754000,
+              "path": "model.torchscript.pt",
+              "sizeBytes": 3613
+            },
+            {
+              "checksum": "sha256:3ede5ebe1d611971b25ac03d7ac1e2e46a28dbb5965da542945e14672e20aebe",
+              "modifiedUnixNano": 1792523496033754000,
+              "path": "stage-export-onnx.json",
+              "sizeBytes": 394
+            },
+            {
+              "checksum": "sha256:e257fcfe56811f6dde041c15719e95346f9be8838c57925699fc581fb21127d0",
+              "modifiedUnixNano": 1792523496033754000,
+              "path": "stage-export-torchscript.json",
+              "sizeBytes": 409
+            },
+            {
+              "checksum": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "modifiedUnixNano": 1792523496033754000,
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            },
+            {
+              "checksum": "sha256:a4323ce9c7f70e1f732edb098f09ff7264ef4cef358dc1ebc271d34ccfe54a9d",
+              "modifiedUnixNano": 1792523496033754000,
+              "path": "stage-quantize-cpu.json",
+              "sizeBytes": 488
+            },
+            {
+              "checksum": "sha256:0582225bfd5c6f694c6ad44cc2d24597d679c9c5c5b14e4707643ab076bd06e0",
+              "modifiedUnixNano": 1792523496033754000,
+              "path": "stage-quantize-gpu.json",
+              "sizeBytes": 555
+            },
+            {
+              "checksum": "sha256:c80769d4b7e6f06b1f0c6eb4608fe78055d845430a014b15aead7ad0a0a1e81e",
+              "modifiedUnixNano": 1792523496033754000,
+              "path": "stage-validate-outputs.json",
+              "sizeBytes": 497
+            },
+            {
+              "checksum": "sha256:cf64adf55bcdebf19110d8d2e8244b6000bbf9fce3b2410574e0fdd1a1277db4",
+              "modifiedUnixNano": 1792523496033754000,
+              "path": "validation.json",
+              "sizeBytes": 163
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.0280458927154541,
+              "finishedAt": 1792523496.2129464,
+              "phase": "execution",
+              "startedAt": 1792523496.1849005,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-publish-variants",
+          "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+          "runtime": "showcase-model-conversion-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523496.1849005,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 12,
+            "initialFiles": 11,
+            "modifiedFiles": 0,
+            "outputBytes": 647
+          }
+        },
+        "exitCode": 0,
+        "externalId": "2d82e9a02e17b8d7c61325a49ea4c9863a09c2fc7d691af7ab824b8615a94895",
+        "finishedAt": 1792523496.2129464,
+        "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-publish-variants",
+        "log": "{\"activity\": \"publish-variants\", \"status\": \"success\", \"resultKeys\": [\"validatedVariants\", \"formats\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-model-conversion-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-publish-variants",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523496.1849096,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-publish-variants",
+          "submittedAt": 1792523496.1849005
+        },
+        "resourceId": "showcase-model-conversion-local-docker",
+        "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "runtimeId": "showcase-model-conversion-local",
+        "startedAt": 1792523496.1849005,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-quantize-cpu",
+        "artifacts": {
+          "activityId": "showcase-model-conversion-local-f22e706408-quantize-cpu",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:19dfef1b5b1c26d96209057b7c2a254ade24a7e7ab3f73cb87f55de2d09e6334",
+              "modifiedUnixNano": 1792523492614971100,
+              "path": "model-int8.json",
+              "sizeBytes": 101
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:a4323ce9c7f70e1f732edb098f09ff7264ef4cef358dc1ebc271d34ccfe54a9d",
+              "modifiedUnixNano": 1792523492614971100,
+              "path": "stage-quantize-cpu.json",
+              "sizeBytes": 488
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:19dfef1b5b1c26d96209057b7c2a254ade24a7e7ab3f73cb87f55de2d09e6334",
+              "modifiedUnixNano": 1792523492614971100,
+              "path": "model-int8.json",
+              "sizeBytes": 101
+            },
+            {
+              "checksum": "sha256:33e3564c24027428cc979d833ca013f6aef3b86aebb5b1710d5bccd00f869ff5",
+              "modifiedUnixNano": 1792523492096971000,
+              "path": "model.onnx",
+              "sizeBytes": 130
+            },
+            {
+              "checksum": "sha256:312681d101f715e97af1e7165cf66a294cee225619ec5ee289116243f30da033",
+              "modifiedUnixNano": 1792523492233971000,
+              "path": "model.torchscript.pt",
+              "sizeBytes": 3613
+            },
+            {
+              "checksum": "sha256:3ede5ebe1d611971b25ac03d7ac1e2e46a28dbb5965da542945e14672e20aebe",
+              "modifiedUnixNano": 1792523492096971000,
+              "path": "stage-export-onnx.json",
+              "sizeBytes": 394
+            },
+            {
+              "checksum": "sha256:e257fcfe56811f6dde041c15719e95346f9be8838c57925699fc581fb21127d0",
+              "modifiedUnixNano": 1792523492233971000,
+              "path": "stage-export-torchscript.json",
+              "sizeBytes": 409
+            },
+            {
+              "checksum": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "modifiedUnixNano": 1792523492096971000,
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            },
+            {
+              "checksum": "sha256:a4323ce9c7f70e1f732edb098f09ff7264ef4cef358dc1ebc271d34ccfe54a9d",
+              "modifiedUnixNano": 1792523492614971100,
+              "path": "stage-quantize-cpu.json",
+              "sizeBytes": 488
+            }
+          ],
+          "finishedAt": 1792523492.6301997,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:33e3564c24027428cc979d833ca013f6aef3b86aebb5b1710d5bccd00f869ff5",
+              "modifiedUnixNano": 1792523492096971000,
+              "path": "model.onnx",
+              "sizeBytes": 130
+            },
+            {
+              "checksum": "sha256:312681d101f715e97af1e7165cf66a294cee225619ec5ee289116243f30da033",
+              "modifiedUnixNano": 1792523492233971000,
+              "path": "model.torchscript.pt",
+              "sizeBytes": 3613
+            },
+            {
+              "checksum": "sha256:3ede5ebe1d611971b25ac03d7ac1e2e46a28dbb5965da542945e14672e20aebe",
+              "modifiedUnixNano": 1792523492096971000,
+              "path": "stage-export-onnx.json",
+              "sizeBytes": 394
+            },
+            {
+              "checksum": "sha256:e257fcfe56811f6dde041c15719e95346f9be8838c57925699fc581fb21127d0",
+              "modifiedUnixNano": 1792523492233971000,
+              "path": "stage-export-torchscript.json",
+              "sizeBytes": 409
+            },
+            {
+              "checksum": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "modifiedUnixNano": 1792523492096971000,
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.17200374603271484,
+              "finishedAt": 1792523492.6301997,
+              "phase": "execution",
+              "startedAt": 1792523492.458196,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-quantize-cpu",
+          "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+          "runtime": "showcase-model-conversion-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523492.458196,
+          "summary": {
+            "createdFiles": 2,
+            "deletedFiles": 0,
+            "finalFiles": 7,
+            "initialFiles": 5,
+            "modifiedFiles": 0,
+            "outputBytes": 589
+          }
+        },
+        "exitCode": 0,
+        "externalId": "1c3f340dada43e5442a6fc389a1cec006b7c8613d48134e74ed8ee64fadcfa9f",
+        "finishedAt": 1792523492.6301997,
+        "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-quantize-cpu",
+        "log": "{\"activity\": \"quantize-cpu\", \"status\": \"success\", \"resultKeys\": [\"dtype\", \"weight\", \"scale\", \"bias\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-model-conversion-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-quantize-cpu",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523492.4582038,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-quantize-cpu",
+          "submittedAt": 1792523492.458196
+        },
+        "resourceId": "showcase-model-conversion-local-docker",
+        "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "runtimeId": "showcase-model-conversion-local",
+        "startedAt": 1792523492.458196,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-quantize-gpu",
+        "artifacts": {
+          "activityId": "showcase-model-conversion-local-f22e706408-quantize-gpu",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:7048b37101a3033c1059ea43579e39a159515545427bd0665986ca6a100a7147",
+              "modifiedUnixNano": 1792523493127971000,
+              "path": "model-fp16.bin",
+              "sizeBytes": 4
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:0582225bfd5c6f694c6ad44cc2d24597d679c9c5c5b14e4707643ab076bd06e0",
+              "modifiedUnixNano": 1792523493127971000,
+              "path": "stage-quantize-gpu.json",
+              "sizeBytes": 555
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:7048b37101a3033c1059ea43579e39a159515545427bd0665986ca6a100a7147",
+              "modifiedUnixNano": 1792523493127971000,
+              "path": "model-fp16.bin",
+              "sizeBytes": 4
+            },
+            {
+              "checksum": "sha256:33e3564c24027428cc979d833ca013f6aef3b86aebb5b1710d5bccd00f869ff5",
+              "modifiedUnixNano": 1792523492120971000,
+              "path": "model.onnx",
+              "sizeBytes": 130
+            },
+            {
+              "checksum": "sha256:312681d101f715e97af1e7165cf66a294cee225619ec5ee289116243f30da033",
+              "modifiedUnixNano": 1792523492258971100,
+              "path": "model.torchscript.pt",
+              "sizeBytes": 3613
+            },
+            {
+              "checksum": "sha256:3ede5ebe1d611971b25ac03d7ac1e2e46a28dbb5965da542945e14672e20aebe",
+              "modifiedUnixNano": 1792523492120971000,
+              "path": "stage-export-onnx.json",
+              "sizeBytes": 394
+            },
+            {
+              "checksum": "sha256:e257fcfe56811f6dde041c15719e95346f9be8838c57925699fc581fb21127d0",
+              "modifiedUnixNano": 1792523492259971000,
+              "path": "stage-export-torchscript.json",
+              "sizeBytes": 409
+            },
+            {
+              "checksum": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "modifiedUnixNano": 1792523492120971000,
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            },
+            {
+              "checksum": "sha256:0582225bfd5c6f694c6ad44cc2d24597d679c9c5c5b14e4707643ab076bd06e0",
+              "modifiedUnixNano": 1792523493127971000,
+              "path": "stage-quantize-gpu.json",
+              "sizeBytes": 555
+            }
+          ],
+          "finishedAt": 1792523493.2536726,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:33e3564c24027428cc979d833ca013f6aef3b86aebb5b1710d5bccd00f869ff5",
+              "modifiedUnixNano": 1792523492120971000,
+              "path": "model.onnx",
+              "sizeBytes": 130
+            },
+            {
+              "checksum": "sha256:312681d101f715e97af1e7165cf66a294cee225619ec5ee289116243f30da033",
+              "modifiedUnixNano": 1792523492258971100,
+              "path": "model.torchscript.pt",
+              "sizeBytes": 3613
+            },
+            {
+              "checksum": "sha256:3ede5ebe1d611971b25ac03d7ac1e2e46a28dbb5965da542945e14672e20aebe",
+              "modifiedUnixNano": 1792523492120971000,
+              "path": "stage-export-onnx.json",
+              "sizeBytes": 394
+            },
+            {
+              "checksum": "sha256:e257fcfe56811f6dde041c15719e95346f9be8838c57925699fc581fb21127d0",
+              "modifiedUnixNano": 1792523492259971000,
+              "path": "stage-export-torchscript.json",
+              "sizeBytes": 409
+            },
+            {
+              "checksum": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "modifiedUnixNano": 1792523492120971000,
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.784243106842041,
+              "finishedAt": 1792523493.2536726,
+              "phase": "execution",
+              "startedAt": 1792523492.4694295,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-quantize-gpu",
+          "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+          "runtime": "showcase-model-conversion-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523492.4694295,
+          "summary": {
+            "createdFiles": 2,
+            "deletedFiles": 0,
+            "finalFiles": 7,
+            "initialFiles": 5,
+            "modifiedFiles": 0,
+            "outputBytes": 559
+          }
+        },
+        "exitCode": 0,
+        "externalId": "3d83050b4169fe5a9125a43d3a0f7875a6dcce721801bff285ac88968b4473dd",
+        "finishedAt": 1792523493.2536726,
+        "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-quantize-gpu",
+        "log": "/usr/local/lib/python3.12/site-packages/torch/jit/_serialization.py:176: FutureWarning: `torch.jit.load` is deprecated. Please switch to `torch.export`.\n  warnings.warn(\n{\"activity\": \"quantize-gpu\", \"status\": \"success\", \"resultKeys\": [\"dtype\", \"values\", \"hardware\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-model-conversion-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-quantize-gpu",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523492.4694636,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-quantize-gpu",
+          "submittedAt": 1792523492.4694295
+        },
+        "resourceId": "showcase-model-conversion-local-docker",
+        "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "runtimeId": "showcase-model-conversion-local",
+        "startedAt": 1792523492.4694295,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-validate-outputs",
+        "artifacts": {
+          "activityId": "showcase-model-conversion-local-f22e706408-validate-outputs",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:c80769d4b7e6f06b1f0c6eb4608fe78055d845430a014b15aead7ad0a0a1e81e",
+              "modifiedUnixNano": 1792523495193754000,
+              "path": "stage-validate-outputs.json",
+              "sizeBytes": 497
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:cf64adf55bcdebf19110d8d2e8244b6000bbf9fce3b2410574e0fdd1a1277db4",
+              "modifiedUnixNano": 1792523495193754000,
+              "path": "validation.json",
+              "sizeBytes": 163
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:7048b37101a3033c1059ea43579e39a159515545427bd0665986ca6a100a7147",
+              "modifiedUnixNano": 1792523494247754000,
+              "path": "model-fp16.bin",
+              "sizeBytes": 4
+            },
+            {
+              "checksum": "sha256:19dfef1b5b1c26d96209057b7c2a254ade24a7e7ab3f73cb87f55de2d09e6334",
+              "modifiedUnixNano": 1792523494148754000,
+              "path": "model-int8.json",
+              "sizeBytes": 101
+            },
+            {
+              "checksum": "sha256:33e3564c24027428cc979d833ca013f6aef3b86aebb5b1710d5bccd00f869ff5",
+              "modifiedUnixNano": 1792523494148754000,
+              "path": "model.onnx",
+              "sizeBytes": 130
+            },
+            {
+              "checksum": "sha256:312681d101f715e97af1e7165cf66a294cee225619ec5ee289116243f30da033",
+              "modifiedUnixNano": 1792523494148754000,
+              "path": "model.torchscript.pt",
+              "sizeBytes": 3613
+            },
+            {
+              "checksum": "sha256:3ede5ebe1d611971b25ac03d7ac1e2e46a28dbb5965da542945e14672e20aebe",
+              "modifiedUnixNano": 1792523494148754000,
+              "path": "stage-export-onnx.json",
+              "sizeBytes": 394
+            },
+            {
+              "checksum": "sha256:e257fcfe56811f6dde041c15719e95346f9be8838c57925699fc581fb21127d0",
+              "modifiedUnixNano": 1792523494148754000,
+              "path": "stage-export-torchscript.json",
+              "sizeBytes": 409
+            },
+            {
+              "checksum": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "modifiedUnixNano": 1792523494148754000,
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            },
+            {
+              "checksum": "sha256:a4323ce9c7f70e1f732edb098f09ff7264ef4cef358dc1ebc271d34ccfe54a9d",
+              "modifiedUnixNano": 1792523494148754000,
+              "path": "stage-quantize-cpu.json",
+              "sizeBytes": 488
+            },
+            {
+              "checksum": "sha256:0582225bfd5c6f694c6ad44cc2d24597d679c9c5c5b14e4707643ab076bd06e0",
+              "modifiedUnixNano": 1792523494247754000,
+              "path": "stage-quantize-gpu.json",
+              "sizeBytes": 555
+            },
+            {
+              "checksum": "sha256:c80769d4b7e6f06b1f0c6eb4608fe78055d845430a014b15aead7ad0a0a1e81e",
+              "modifiedUnixNano": 1792523495193754000,
+              "path": "stage-validate-outputs.json",
+              "sizeBytes": 497
+            },
+            {
+              "checksum": "sha256:cf64adf55bcdebf19110d8d2e8244b6000bbf9fce3b2410574e0fdd1a1277db4",
+              "modifiedUnixNano": 1792523495193754000,
+              "path": "validation.json",
+              "sizeBytes": 163
+            }
+          ],
+          "finishedAt": 1792523495.3606734,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:7048b37101a3033c1059ea43579e39a159515545427bd0665986ca6a100a7147",
+              "modifiedUnixNano": 1792523494247754000,
+              "path": "model-fp16.bin",
+              "sizeBytes": 4
+            },
+            {
+              "checksum": "sha256:19dfef1b5b1c26d96209057b7c2a254ade24a7e7ab3f73cb87f55de2d09e6334",
+              "modifiedUnixNano": 1792523494148754000,
+              "path": "model-int8.json",
+              "sizeBytes": 101
+            },
+            {
+              "checksum": "sha256:33e3564c24027428cc979d833ca013f6aef3b86aebb5b1710d5bccd00f869ff5",
+              "modifiedUnixNano": 1792523494148754000,
+              "path": "model.onnx",
+              "sizeBytes": 130
+            },
+            {
+              "checksum": "sha256:312681d101f715e97af1e7165cf66a294cee225619ec5ee289116243f30da033",
+              "modifiedUnixNano": 1792523494148754000,
+              "path": "model.torchscript.pt",
+              "sizeBytes": 3613
+            },
+            {
+              "checksum": "sha256:3ede5ebe1d611971b25ac03d7ac1e2e46a28dbb5965da542945e14672e20aebe",
+              "modifiedUnixNano": 1792523494148754000,
+              "path": "stage-export-onnx.json",
+              "sizeBytes": 394
+            },
+            {
+              "checksum": "sha256:e257fcfe56811f6dde041c15719e95346f9be8838c57925699fc581fb21127d0",
+              "modifiedUnixNano": 1792523494148754000,
+              "path": "stage-export-torchscript.json",
+              "sizeBytes": 409
+            },
+            {
+              "checksum": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "modifiedUnixNano": 1792523494148754000,
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            },
+            {
+              "checksum": "sha256:a4323ce9c7f70e1f732edb098f09ff7264ef4cef358dc1ebc271d34ccfe54a9d",
+              "modifiedUnixNano": 1792523494148754000,
+              "path": "stage-quantize-cpu.json",
+              "sizeBytes": 488
+            },
+            {
+              "checksum": "sha256:0582225bfd5c6f694c6ad44cc2d24597d679c9c5c5b14e4707643ab076bd06e0",
+              "modifiedUnixNano": 1792523494247754000,
+              "path": "stage-quantize-gpu.json",
+              "sizeBytes": 555
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.8784592151641846,
+              "finishedAt": 1792523495.3606734,
+              "phase": "execution",
+              "startedAt": 1792523494.4822142,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-validate-outputs",
+          "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+          "runtime": "showcase-model-conversion-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523494.4822142,
+          "summary": {
+            "createdFiles": 2,
+            "deletedFiles": 0,
+            "finalFiles": 11,
+            "initialFiles": 9,
+            "modifiedFiles": 0,
+            "outputBytes": 660
+          }
+        },
+        "exitCode": 0,
+        "externalId": "7c1146102285a026101d7ac0367dc1b555ce13c1d967fb5870788fb26a212ecc",
+        "finishedAt": 1792523495.3606734,
+        "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-validate-outputs",
+        "log": "/usr/local/lib/python3.12/site-packages/torch/jit/_serialization.py:176: FutureWarning: `torch.jit.load` is deprecated. Please switch to `torch.export`.\n  warnings.warn(\n{\"activity\": \"validate-outputs\", \"status\": \"success\", \"resultKeys\": [\"onnx\", \"torchscript\", \"int8\", \"float16\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-model-conversion-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-validate-outputs",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523494.482225,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-validate-outputs",
+          "submittedAt": 1792523494.4822142
+        },
+        "resourceId": "showcase-model-conversion-local-docker",
+        "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "runtimeId": "showcase-model-conversion-local",
+        "startedAt": 1792523494.4822142,
+        "status": "completed"
+      }
+    ],
+    "infrastructureRuns": [],
+    "operationEvents": [],
+    "run": {
+      "activityCount": 7,
+      "breakdown": {
+        "computeSeconds": 3.2716317176818848,
+        "interferenceSeconds": 0,
+        "overheadSeconds": 0,
+        "queueSeconds": 0,
+        "transferSeconds": 2.1111114025115967
+      },
+      "completedActivityCount": 7,
+      "cost": 0,
+      "finishedAt": "2026-10-20T19:11:37Z",
+      "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+      "kind": "workflow",
+      "makespanSeconds": 7.428460597991943,
+      "mode": "real",
+      "schedulePlanId": "showcase-model-conversion-local-f22e706408-manual-plan-20261020t191128.221185000",
+      "seed": 0,
+      "startedAt": "2026-10-20T19:11:28Z",
+      "status": "completed",
+      "title": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+      "transferredBytes": 23912
+    },
+    "timeline": {
+      "computeMakespanSeconds": 7.428460597991943,
+      "coveredWallSeconds": 4.672994136810303,
+      "finishedAt": 1792523497,
+      "phases": [
+        {
+          "activityId": "showcase-model-conversion-local-f22e706408-load-model",
+          "category": "resource-queue",
+          "durationSeconds": 0.1431560516357422,
+          "finishedAt": 1792523488.7844858,
+          "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-load-model:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523488.6413298,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-conversion-local-f22e706408-load-model",
+          "category": "runtime",
+          "durationSeconds": 0.027910947799682617,
+          "finishedAt": 1792523488.8123968,
+          "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-load-model:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523488.7844858,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-conversion-local-f22e706408-export-onnx",
+          "category": "resource-queue",
+          "durationSeconds": 0.0054171085357666016,
+          "finishedAt": 1792523489.9064467,
+          "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-export-onnx:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523489.9010296,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-conversion-local-f22e706408-export-torchscript",
+          "category": "resource-queue",
+          "durationSeconds": 0.005666255950927734,
+          "finishedAt": 1792523489.9078977,
+          "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-export-torchscript:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523489.9022315,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-conversion-local-f22e706408-export-onnx",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.16272759437561035,
+          "finishedAt": 1792523490.0691743,
+          "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-export-onnx:transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-export-onnx-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523489.9064467,
+          "status": "completed",
+          "transferId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-export-onnx:transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-export-onnx-0"
+        },
+        {
+          "activityId": "showcase-model-conversion-local-f22e706408-export-torchscript",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.16094446182250977,
+          "finishedAt": 1792523490.0688422,
+          "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-export-torchscript:transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-export-torchscript-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523489.9078977,
+          "status": "completed",
+          "transferId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-export-torchscript:transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-export-torchscript-0"
+        },
+        {
+          "activityId": "showcase-model-conversion-local-f22e706408-export-torchscript",
+          "category": "launch",
+          "durationSeconds": 0.1718590259552002,
+          "finishedAt": 1792523490.2407012,
+          "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-export-torchscript:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523490.0688422,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-conversion-local-f22e706408-export-onnx",
+          "category": "launch",
+          "durationSeconds": 0.1758103370666504,
+          "finishedAt": 1792523490.2449846,
+          "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-export-onnx:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523490.0691743,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-conversion-local-f22e706408-export-torchscript",
+          "category": "runtime",
+          "durationSeconds": 1.131432294845581,
+          "finishedAt": 1792523491.3721335,
+          "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-export-torchscript:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523490.2407012,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-conversion-local-f22e706408-export-onnx",
+          "category": "runtime",
+          "durationSeconds": 0.24953651428222656,
+          "finishedAt": 1792523490.4945211,
+          "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-export-onnx:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523490.2449846,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-conversion-local-f22e706408-quantize-cpu",
+          "category": "resource-queue",
+          "durationSeconds": 0.007477521896362305,
+          "finishedAt": 1792523491.9356017,
+          "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-quantize-cpu:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523491.9281242,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-conversion-local-f22e706408-quantize-gpu",
+          "category": "resource-queue",
+          "durationSeconds": 0.007223844528198242,
+          "finishedAt": 1792523491.936917,
+          "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-quantize-gpu:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523491.9296932,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-conversion-local-f22e706408-quantize-cpu",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.20577788352966309,
+          "finishedAt": 1792523492.1413796,
+          "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-quantize-cpu:transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-quantize-cpu-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523491.9356017,
+          "status": "completed",
+          "transferId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-quantize-cpu:transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-quantize-cpu-0"
+        },
+        {
+          "activityId": "showcase-model-conversion-local-f22e706408-quantize-cpu",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.342451810836792,
+          "finishedAt": 1792523492.2780535,
+          "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-quantize-cpu:transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-quantize-cpu-1",
+          "source": "transfer-observation",
+          "startedAt": 1792523491.9356017,
+          "status": "completed",
+          "transferId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-quantize-cpu:transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-quantize-cpu-1"
+        },
+        {
+          "activityId": "showcase-model-conversion-local-f22e706408-quantize-gpu",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.2278456687927246,
+          "finishedAt": 1792523492.1647627,
+          "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-quantize-gpu:transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-quantize-gpu-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523491.936917,
+          "status": "completed",
+          "transferId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-quantize-gpu:transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-quantize-gpu-0"
+        },
+        {
+          "activityId": "showcase-model-conversion-local-f22e706408-quantize-gpu",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.3460562229156494,
+          "finishedAt": 1792523492.2829733,
+          "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-quantize-gpu:transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-quantize-gpu-1",
+          "source": "transfer-observation",
+          "startedAt": 1792523491.936917,
+          "status": "completed",
+          "transferId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-quantize-gpu:transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-quantize-gpu-1"
+        },
+        {
+          "activityId": "showcase-model-conversion-local-f22e706408-quantize-cpu",
+          "category": "launch",
+          "durationSeconds": 0.18014240264892578,
+          "finishedAt": 1792523492.458196,
+          "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-quantize-cpu:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523492.2780535,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-conversion-local-f22e706408-quantize-gpu",
+          "category": "launch",
+          "durationSeconds": 0.18645620346069336,
+          "finishedAt": 1792523492.4694295,
+          "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-quantize-gpu:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523492.2829733,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-conversion-local-f22e706408-quantize-cpu",
+          "category": "runtime",
+          "durationSeconds": 0.17200374603271484,
+          "finishedAt": 1792523492.6301997,
+          "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-quantize-cpu:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523492.458196,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-conversion-local-f22e706408-quantize-gpu",
+          "category": "runtime",
+          "durationSeconds": 0.784243106842041,
+          "finishedAt": 1792523493.2536726,
+          "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-quantize-gpu:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523492.4694295,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-conversion-local-f22e706408-validate-outputs",
+          "category": "resource-queue",
+          "durationSeconds": 0.005760669708251953,
+          "finishedAt": 1792523493.9811857,
+          "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-validate-outputs:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523493.975425,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-conversion-local-f22e706408-validate-outputs",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.19014978408813477,
+          "finishedAt": 1792523494.1713355,
+          "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-validate-outputs:transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-validate-outputs-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523493.9811857,
+          "status": "completed",
+          "transferId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-validate-outputs:transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-validate-outputs-0"
+        },
+        {
+          "activityId": "showcase-model-conversion-local-f22e706408-validate-outputs",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.31429338455200195,
+          "finishedAt": 1792523494.295479,
+          "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-validate-outputs:transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-validate-outputs-1",
+          "source": "transfer-observation",
+          "startedAt": 1792523493.9811857,
+          "status": "completed",
+          "transferId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-validate-outputs:transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-validate-outputs-1"
+        },
+        {
+          "activityId": "showcase-model-conversion-local-f22e706408-validate-outputs",
+          "category": "launch",
+          "durationSeconds": 0.1867351531982422,
+          "finishedAt": 1792523494.4822142,
+          "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-validate-outputs:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523494.295479,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-conversion-local-f22e706408-validate-outputs",
+          "category": "runtime",
+          "durationSeconds": 0.8784592151641846,
+          "finishedAt": 1792523495.3606734,
+          "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-validate-outputs:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523494.4822142,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-conversion-local-f22e706408-publish-variants",
+          "category": "resource-queue",
+          "durationSeconds": 0.0036504268646240234,
+          "finishedAt": 1792523495.8965704,
+          "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-publish-variants:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523495.89292,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-conversion-local-f22e706408-publish-variants",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.16086459159851074,
+          "finishedAt": 1792523496.057435,
+          "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-publish-variants:transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-publish-variants-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523495.8965704,
+          "status": "completed",
+          "transferId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-publish-variants:transfer-workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-publish-variants-0"
+        },
+        {
+          "activityId": "showcase-model-conversion-local-f22e706408-publish-variants",
+          "category": "launch",
+          "durationSeconds": 0.12746548652648926,
+          "finishedAt": 1792523496.1849005,
+          "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-publish-variants:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523496.057435,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-conversion-local-f22e706408-publish-variants",
+          "category": "runtime",
+          "durationSeconds": 0.0280458927154541,
+          "finishedAt": 1792523496.2129464,
+          "id": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000:showcase-model-conversion-local-f22e706408-publish-variants:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523496.1849005,
+          "status": "completed"
+        }
+      ],
+      "startedAt": 1792523488,
+      "totals": {
+        "destroySeconds": 0,
+        "executablePreparationSeconds": 0,
+        "launchSeconds": 1.0284686088562012,
+        "provisionSeconds": 0,
+        "resourceQueueSeconds": 0.17835187911987305,
+        "runtimeSeconds": 3.2716317176818848,
+        "startSeconds": 0,
+        "stopSeconds": 0,
+        "validationSeconds": 0,
+        "workspaceTransferSeconds": 2.1111114025115967
+      },
+      "unclassifiedWallSeconds": 4.327005863189697,
+      "wallSeconds": 9
+    },
+    "workspaceLeases": [
+      {
+        "consumerActivityId": "showcase-model-conversion-local-f22e706408-quantize-cpu",
+        "id": "workspace-lease-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-export-onnx-showcase-model-conversion-local-f22e706408-quantize-cpu",
+        "producerActivityId": "showcase-model-conversion-local-f22e706408-export-onnx",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:11:32.285297846Z",
+        "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "workspaceId": "workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-export-onnx"
+      },
+      {
+        "consumerActivityId": "showcase-model-conversion-local-f22e706408-quantize-gpu",
+        "id": "workspace-lease-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-export-onnx-showcase-model-conversion-local-f22e706408-quantize-gpu",
+        "producerActivityId": "showcase-model-conversion-local-f22e706408-export-onnx",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:11:32.289475346Z",
+        "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "workspaceId": "workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-export-onnx"
+      },
+      {
+        "consumerActivityId": "showcase-model-conversion-local-f22e706408-quantize-cpu",
+        "id": "workspace-lease-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-export-torchscript-showcase-model-conversion-local-f22e706408-quantize-cpu",
+        "producerActivityId": "showcase-model-conversion-local-f22e706408-export-torchscript",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:11:32.285297846Z",
+        "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "workspaceId": "workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-export-torchscript"
+      },
+      {
+        "consumerActivityId": "showcase-model-conversion-local-f22e706408-quantize-gpu",
+        "id": "workspace-lease-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-export-torchscript-showcase-model-conversion-local-f22e706408-quantize-gpu",
+        "producerActivityId": "showcase-model-conversion-local-f22e706408-export-torchscript",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:11:32.289475346Z",
+        "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "workspaceId": "workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-export-torchscript"
+      },
+      {
+        "consumerActivityId": "showcase-model-conversion-local-f22e706408-export-onnx",
+        "id": "workspace-lease-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-load-model-showcase-model-conversion-local-f22e706408-export-onnx",
+        "producerActivityId": "showcase-model-conversion-local-f22e706408-load-model",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:11:30.074744679Z",
+        "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "workspaceId": "workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-load-model"
+      },
+      {
+        "consumerActivityId": "showcase-model-conversion-local-f22e706408-export-torchscript",
+        "id": "workspace-lease-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-load-model-showcase-model-conversion-local-f22e706408-export-torchscript",
+        "producerActivityId": "showcase-model-conversion-local-f22e706408-load-model",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:11:30.074592554Z",
+        "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "workspaceId": "workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-load-model"
+      },
+      {
+        "consumerActivityId": "showcase-model-conversion-local-f22e706408-validate-outputs",
+        "id": "workspace-lease-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-quantize-cpu-showcase-model-conversion-local-f22e706408-validate-outputs",
+        "producerActivityId": "showcase-model-conversion-local-f22e706408-quantize-cpu",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:11:34.309383083Z",
+        "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "workspaceId": "workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-quantize-cpu"
+      },
+      {
+        "consumerActivityId": "showcase-model-conversion-local-f22e706408-validate-outputs",
+        "id": "workspace-lease-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-quantize-gpu-showcase-model-conversion-local-f22e706408-validate-outputs",
+        "producerActivityId": "showcase-model-conversion-local-f22e706408-quantize-gpu",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:11:34.309383083Z",
+        "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "workspaceId": "workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-quantize-gpu"
+      },
+      {
+        "consumerActivityId": "showcase-model-conversion-local-f22e706408-publish-variants",
+        "id": "workspace-lease-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-validate-outputs-showcase-model-conversion-local-f22e706408-publish-variants",
+        "producerActivityId": "showcase-model-conversion-local-f22e706408-validate-outputs",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:11:36.059688125Z",
+        "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "workspaceId": "workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-validate-outputs"
+      }
+    ],
+    "workspaces": [
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-export-onnx",
+        "createdAt": "2026-10-20T19:11:28.618222761Z",
+        "driver": "local",
+        "environmentId": "showcase-model-conversion-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-export-onnx",
+        "fileCount": 3,
+        "id": "workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-export-onnx",
+        "inputBytes": 462,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:33e3564c24027428cc979d833ca013f6aef3b86aebb5b1710d5bccd00f869ff5",
+              "path": "model.onnx",
+              "sizeBytes": 130
+            },
+            {
+              "digest": "sha256:3ede5ebe1d611971b25ac03d7ac1e2e46a28dbb5965da542945e14672e20aebe",
+              "path": "stage-export-onnx.json",
+              "sizeBytes": 394
+            },
+            {
+              "digest": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:33e3564c24027428cc979d833ca013f6aef3b86aebb5b1710d5bccd00f869ff5",
+              "path": "model.onnx",
+              "sizeBytes": 130
+            },
+            {
+              "digest": "sha256:3ede5ebe1d611971b25ac03d7ac1e2e46a28dbb5965da542945e14672e20aebe",
+              "path": "stage-export-onnx.json",
+              "sizeBytes": 394
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-export-onnx",
+        "outputBytes": 524,
+        "pinned": false,
+        "reclaimedBytes": 0,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:11:32.300944055Z",
+        "resourceId": "showcase-model-conversion-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "runtimeId": "showcase-model-conversion-local",
+        "sealedAt": "2026-10-20T19:11:31.916920721Z",
+        "sizeBytes": 986,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-export-onnx"
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-export-torchscript",
+        "createdAt": "2026-10-20T19:11:28.618222761Z",
+        "driver": "local",
+        "environmentId": "showcase-model-conversion-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-export-torchscript",
+        "fileCount": 3,
+        "id": "workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-export-torchscript",
+        "inputBytes": 462,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:312681d101f715e97af1e7165cf66a294cee225619ec5ee289116243f30da033",
+              "path": "model.torchscript.pt",
+              "sizeBytes": 3613
+            },
+            {
+              "digest": "sha256:e257fcfe56811f6dde041c15719e95346f9be8838c57925699fc581fb21127d0",
+              "path": "stage-export-torchscript.json",
+              "sizeBytes": 409
+            },
+            {
+              "digest": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:312681d101f715e97af1e7165cf66a294cee225619ec5ee289116243f30da033",
+              "path": "model.torchscript.pt",
+              "sizeBytes": 3613
+            },
+            {
+              "digest": "sha256:e257fcfe56811f6dde041c15719e95346f9be8838c57925699fc581fb21127d0",
+              "path": "stage-export-torchscript.json",
+              "sizeBytes": 409
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-export-torchscript",
+        "outputBytes": 4022,
+        "pinned": false,
+        "reclaimedBytes": 0,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:11:32.311784971Z",
+        "resourceId": "showcase-model-conversion-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "runtimeId": "showcase-model-conversion-local",
+        "sealedAt": "2026-10-20T19:11:31.923820304Z",
+        "sizeBytes": 4484,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-export-torchscript"
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-load-model",
+        "createdAt": "2026-10-20T19:11:28.618222761Z",
+        "driver": "local",
+        "environmentId": "showcase-model-conversion-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-load-model",
+        "fileCount": 1,
+        "id": "workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-load-model",
+        "inputBytes": 0,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-load-model",
+        "outputBytes": 462,
+        "pinned": false,
+        "reclaimedBytes": 0,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:11:30.083508387Z",
+        "resourceId": "showcase-model-conversion-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "runtimeId": "showcase-model-conversion-local",
+        "sealedAt": "2026-10-20T19:11:29.896273678Z",
+        "sizeBytes": 462,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-load-model"
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-publish-variants",
+        "createdAt": "2026-10-20T19:11:28.618222761Z",
+        "driver": "local",
+        "environmentId": "showcase-model-conversion-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-publish-variants",
+        "fileCount": 1,
+        "id": "workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-publish-variants",
+        "inputBytes": 6816,
+        "isFinal": true,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:7048b37101a3033c1059ea43579e39a159515545427bd0665986ca6a100a7147",
+              "path": "model-fp16.bin",
+              "sizeBytes": 4
+            },
+            {
+              "digest": "sha256:19dfef1b5b1c26d96209057b7c2a254ade24a7e7ab3f73cb87f55de2d09e6334",
+              "path": "model-int8.json",
+              "sizeBytes": 101
+            },
+            {
+              "digest": "sha256:33e3564c24027428cc979d833ca013f6aef3b86aebb5b1710d5bccd00f869ff5",
+              "path": "model.onnx",
+              "sizeBytes": 130
+            },
+            {
+              "digest": "sha256:312681d101f715e97af1e7165cf66a294cee225619ec5ee289116243f30da033",
+              "path": "model.torchscript.pt",
+              "sizeBytes": 3613
+            },
+            {
+              "digest": "sha256:3ede5ebe1d611971b25ac03d7ac1e2e46a28dbb5965da542945e14672e20aebe",
+              "path": "stage-export-onnx.json",
+              "sizeBytes": 394
+            },
+            {
+              "digest": "sha256:e257fcfe56811f6dde041c15719e95346f9be8838c57925699fc581fb21127d0",
+              "path": "stage-export-torchscript.json",
+              "sizeBytes": 409
+            },
+            {
+              "digest": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            },
+            {
+              "digest": "sha256:ee82fba0077c1987cec51a373b239b7042375068a4a940a7688d17d34022d60d",
+              "path": "stage-publish-variants.json",
+              "sizeBytes": 647
+            },
+            {
+              "digest": "sha256:a4323ce9c7f70e1f732edb098f09ff7264ef4cef358dc1ebc271d34ccfe54a9d",
+              "path": "stage-quantize-cpu.json",
+              "sizeBytes": 488
+            },
+            {
+              "digest": "sha256:0582225bfd5c6f694c6ad44cc2d24597d679c9c5c5b14e4707643ab076bd06e0",
+              "path": "stage-quantize-gpu.json",
+              "sizeBytes": 555
+            },
+            {
+              "digest": "sha256:c80769d4b7e6f06b1f0c6eb4608fe78055d845430a014b15aead7ad0a0a1e81e",
+              "path": "stage-validate-outputs.json",
+              "sizeBytes": 497
+            },
+            {
+              "digest": "sha256:cf64adf55bcdebf19110d8d2e8244b6000bbf9fce3b2410574e0fdd1a1277db4",
+              "path": "validation.json",
+              "sizeBytes": 163
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:7048b37101a3033c1059ea43579e39a159515545427bd0665986ca6a100a7147",
+              "path": "model-fp16.bin",
+              "sizeBytes": 4
+            },
+            {
+              "digest": "sha256:19dfef1b5b1c26d96209057b7c2a254ade24a7e7ab3f73cb87f55de2d09e6334",
+              "path": "model-int8.json",
+              "sizeBytes": 101
+            },
+            {
+              "digest": "sha256:33e3564c24027428cc979d833ca013f6aef3b86aebb5b1710d5bccd00f869ff5",
+              "path": "model.onnx",
+              "sizeBytes": 130
+            },
+            {
+              "digest": "sha256:312681d101f715e97af1e7165cf66a294cee225619ec5ee289116243f30da033",
+              "path": "model.torchscript.pt",
+              "sizeBytes": 3613
+            },
+            {
+              "digest": "sha256:3ede5ebe1d611971b25ac03d7ac1e2e46a28dbb5965da542945e14672e20aebe",
+              "path": "stage-export-onnx.json",
+              "sizeBytes": 394
+            },
+            {
+              "digest": "sha256:e257fcfe56811f6dde041c15719e95346f9be8838c57925699fc581fb21127d0",
+              "path": "stage-export-torchscript.json",
+              "sizeBytes": 409
+            },
+            {
+              "digest": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            },
+            {
+              "digest": "sha256:a4323ce9c7f70e1f732edb098f09ff7264ef4cef358dc1ebc271d34ccfe54a9d",
+              "path": "stage-quantize-cpu.json",
+              "sizeBytes": 488
+            },
+            {
+              "digest": "sha256:0582225bfd5c6f694c6ad44cc2d24597d679c9c5c5b14e4707643ab076bd06e0",
+              "path": "stage-quantize-gpu.json",
+              "sizeBytes": 555
+            },
+            {
+              "digest": "sha256:c80769d4b7e6f06b1f0c6eb4608fe78055d845430a014b15aead7ad0a0a1e81e",
+              "path": "stage-validate-outputs.json",
+              "sizeBytes": 497
+            },
+            {
+              "digest": "sha256:cf64adf55bcdebf19110d8d2e8244b6000bbf9fce3b2410574e0fdd1a1277db4",
+              "path": "validation.json",
+              "sizeBytes": 163
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:7048b37101a3033c1059ea43579e39a159515545427bd0665986ca6a100a7147",
+              "path": "model-fp16.bin",
+              "sizeBytes": 4
+            },
+            {
+              "digest": "sha256:19dfef1b5b1c26d96209057b7c2a254ade24a7e7ab3f73cb87f55de2d09e6334",
+              "path": "model-int8.json",
+              "sizeBytes": 101
+            },
+            {
+              "digest": "sha256:33e3564c24027428cc979d833ca013f6aef3b86aebb5b1710d5bccd00f869ff5",
+              "path": "model.onnx",
+              "sizeBytes": 130
+            },
+            {
+              "digest": "sha256:312681d101f715e97af1e7165cf66a294cee225619ec5ee289116243f30da033",
+              "path": "model.torchscript.pt",
+              "sizeBytes": 3613
+            },
+            {
+              "digest": "sha256:3ede5ebe1d611971b25ac03d7ac1e2e46a28dbb5965da542945e14672e20aebe",
+              "path": "stage-export-onnx.json",
+              "sizeBytes": 394
+            },
+            {
+              "digest": "sha256:e257fcfe56811f6dde041c15719e95346f9be8838c57925699fc581fb21127d0",
+              "path": "stage-export-torchscript.json",
+              "sizeBytes": 409
+            },
+            {
+              "digest": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            },
+            {
+              "digest": "sha256:a4323ce9c7f70e1f732edb098f09ff7264ef4cef358dc1ebc271d34ccfe54a9d",
+              "path": "stage-quantize-cpu.json",
+              "sizeBytes": 488
+            },
+            {
+              "digest": "sha256:0582225bfd5c6f694c6ad44cc2d24597d679c9c5c5b14e4707643ab076bd06e0",
+              "path": "stage-quantize-gpu.json",
+              "sizeBytes": 555
+            },
+            {
+              "digest": "sha256:c80769d4b7e6f06b1f0c6eb4608fe78055d845430a014b15aead7ad0a0a1e81e",
+              "path": "stage-validate-outputs.json",
+              "sizeBytes": 497
+            },
+            {
+              "digest": "sha256:cf64adf55bcdebf19110d8d2e8244b6000bbf9fce3b2410574e0fdd1a1277db4",
+              "path": "validation.json",
+              "sizeBytes": 163
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:ee82fba0077c1987cec51a373b239b7042375068a4a940a7688d17d34022d60d",
+              "path": "stage-publish-variants.json",
+              "sizeBytes": 647
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-publish-variants",
+        "outputBytes": 647,
+        "pinned": false,
+        "reclaimedBytes": 6816,
+        "releaseReason": "inherited inputs pruned",
+        "resourceId": "showcase-model-conversion-local-docker",
+        "retention": "final",
+        "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "runtimeId": "showcase-model-conversion-local",
+        "sealedAt": "2026-10-20T19:11:37.89253696Z",
+        "sizeBytes": 647,
+        "state": "sealed",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-publish-variants"
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-quantize-cpu",
+        "createdAt": "2026-10-20T19:11:28.618222761Z",
+        "driver": "local",
+        "environmentId": "showcase-model-conversion-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-quantize-cpu",
+        "fileCount": 7,
+        "id": "workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-quantize-cpu",
+        "inputBytes": 5008,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:19dfef1b5b1c26d96209057b7c2a254ade24a7e7ab3f73cb87f55de2d09e6334",
+              "path": "model-int8.json",
+              "sizeBytes": 101
+            },
+            {
+              "digest": "sha256:33e3564c24027428cc979d833ca013f6aef3b86aebb5b1710d5bccd00f869ff5",
+              "path": "model.onnx",
+              "sizeBytes": 130
+            },
+            {
+              "digest": "sha256:312681d101f715e97af1e7165cf66a294cee225619ec5ee289116243f30da033",
+              "path": "model.torchscript.pt",
+              "sizeBytes": 3613
+            },
+            {
+              "digest": "sha256:3ede5ebe1d611971b25ac03d7ac1e2e46a28dbb5965da542945e14672e20aebe",
+              "path": "stage-export-onnx.json",
+              "sizeBytes": 394
+            },
+            {
+              "digest": "sha256:e257fcfe56811f6dde041c15719e95346f9be8838c57925699fc581fb21127d0",
+              "path": "stage-export-torchscript.json",
+              "sizeBytes": 409
+            },
+            {
+              "digest": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            },
+            {
+              "digest": "sha256:a4323ce9c7f70e1f732edb098f09ff7264ef4cef358dc1ebc271d34ccfe54a9d",
+              "path": "stage-quantize-cpu.json",
+              "sizeBytes": 488
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:33e3564c24027428cc979d833ca013f6aef3b86aebb5b1710d5bccd00f869ff5",
+              "path": "model.onnx",
+              "sizeBytes": 130
+            },
+            {
+              "digest": "sha256:312681d101f715e97af1e7165cf66a294cee225619ec5ee289116243f30da033",
+              "path": "model.torchscript.pt",
+              "sizeBytes": 3613
+            },
+            {
+              "digest": "sha256:3ede5ebe1d611971b25ac03d7ac1e2e46a28dbb5965da542945e14672e20aebe",
+              "path": "stage-export-onnx.json",
+              "sizeBytes": 394
+            },
+            {
+              "digest": "sha256:e257fcfe56811f6dde041c15719e95346f9be8838c57925699fc581fb21127d0",
+              "path": "stage-export-torchscript.json",
+              "sizeBytes": 409
+            },
+            {
+              "digest": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:33e3564c24027428cc979d833ca013f6aef3b86aebb5b1710d5bccd00f869ff5",
+              "path": "model.onnx",
+              "sizeBytes": 130
+            },
+            {
+              "digest": "sha256:312681d101f715e97af1e7165cf66a294cee225619ec5ee289116243f30da033",
+              "path": "model.torchscript.pt",
+              "sizeBytes": 3613
+            },
+            {
+              "digest": "sha256:3ede5ebe1d611971b25ac03d7ac1e2e46a28dbb5965da542945e14672e20aebe",
+              "path": "stage-export-onnx.json",
+              "sizeBytes": 394
+            },
+            {
+              "digest": "sha256:e257fcfe56811f6dde041c15719e95346f9be8838c57925699fc581fb21127d0",
+              "path": "stage-export-torchscript.json",
+              "sizeBytes": 409
+            },
+            {
+              "digest": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:19dfef1b5b1c26d96209057b7c2a254ade24a7e7ab3f73cb87f55de2d09e6334",
+              "path": "model-int8.json",
+              "sizeBytes": 101
+            },
+            {
+              "digest": "sha256:a4323ce9c7f70e1f732edb098f09ff7264ef4cef358dc1ebc271d34ccfe54a9d",
+              "path": "stage-quantize-cpu.json",
+              "sizeBytes": 488
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-quantize-cpu",
+        "outputBytes": 589,
+        "pinned": false,
+        "reclaimedBytes": 5597,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:11:34.325102375Z",
+        "resourceId": "showcase-model-conversion-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "runtimeId": "showcase-model-conversion-local",
+        "sealedAt": "2026-10-20T19:11:33.964931722Z",
+        "sizeBytes": 5597,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-quantize-cpu"
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-quantize-gpu",
+        "createdAt": "2026-10-20T19:11:28.618222761Z",
+        "driver": "local",
+        "environmentId": "showcase-model-conversion-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-quantize-gpu",
+        "fileCount": 7,
+        "id": "workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-quantize-gpu",
+        "inputBytes": 5008,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:7048b37101a3033c1059ea43579e39a159515545427bd0665986ca6a100a7147",
+              "path": "model-fp16.bin",
+              "sizeBytes": 4
+            },
+            {
+              "digest": "sha256:33e3564c24027428cc979d833ca013f6aef3b86aebb5b1710d5bccd00f869ff5",
+              "path": "model.onnx",
+              "sizeBytes": 130
+            },
+            {
+              "digest": "sha256:312681d101f715e97af1e7165cf66a294cee225619ec5ee289116243f30da033",
+              "path": "model.torchscript.pt",
+              "sizeBytes": 3613
+            },
+            {
+              "digest": "sha256:3ede5ebe1d611971b25ac03d7ac1e2e46a28dbb5965da542945e14672e20aebe",
+              "path": "stage-export-onnx.json",
+              "sizeBytes": 394
+            },
+            {
+              "digest": "sha256:e257fcfe56811f6dde041c15719e95346f9be8838c57925699fc581fb21127d0",
+              "path": "stage-export-torchscript.json",
+              "sizeBytes": 409
+            },
+            {
+              "digest": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            },
+            {
+              "digest": "sha256:0582225bfd5c6f694c6ad44cc2d24597d679c9c5c5b14e4707643ab076bd06e0",
+              "path": "stage-quantize-gpu.json",
+              "sizeBytes": 555
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:33e3564c24027428cc979d833ca013f6aef3b86aebb5b1710d5bccd00f869ff5",
+              "path": "model.onnx",
+              "sizeBytes": 130
+            },
+            {
+              "digest": "sha256:312681d101f715e97af1e7165cf66a294cee225619ec5ee289116243f30da033",
+              "path": "model.torchscript.pt",
+              "sizeBytes": 3613
+            },
+            {
+              "digest": "sha256:3ede5ebe1d611971b25ac03d7ac1e2e46a28dbb5965da542945e14672e20aebe",
+              "path": "stage-export-onnx.json",
+              "sizeBytes": 394
+            },
+            {
+              "digest": "sha256:e257fcfe56811f6dde041c15719e95346f9be8838c57925699fc581fb21127d0",
+              "path": "stage-export-torchscript.json",
+              "sizeBytes": 409
+            },
+            {
+              "digest": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:33e3564c24027428cc979d833ca013f6aef3b86aebb5b1710d5bccd00f869ff5",
+              "path": "model.onnx",
+              "sizeBytes": 130
+            },
+            {
+              "digest": "sha256:312681d101f715e97af1e7165cf66a294cee225619ec5ee289116243f30da033",
+              "path": "model.torchscript.pt",
+              "sizeBytes": 3613
+            },
+            {
+              "digest": "sha256:3ede5ebe1d611971b25ac03d7ac1e2e46a28dbb5965da542945e14672e20aebe",
+              "path": "stage-export-onnx.json",
+              "sizeBytes": 394
+            },
+            {
+              "digest": "sha256:e257fcfe56811f6dde041c15719e95346f9be8838c57925699fc581fb21127d0",
+              "path": "stage-export-torchscript.json",
+              "sizeBytes": 409
+            },
+            {
+              "digest": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:7048b37101a3033c1059ea43579e39a159515545427bd0665986ca6a100a7147",
+              "path": "model-fp16.bin",
+              "sizeBytes": 4
+            },
+            {
+              "digest": "sha256:0582225bfd5c6f694c6ad44cc2d24597d679c9c5c5b14e4707643ab076bd06e0",
+              "path": "stage-quantize-gpu.json",
+              "sizeBytes": 555
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-quantize-gpu",
+        "outputBytes": 559,
+        "pinned": false,
+        "reclaimedBytes": 5567,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:11:34.33290425Z",
+        "resourceId": "showcase-model-conversion-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "runtimeId": "showcase-model-conversion-local",
+        "sealedAt": "2026-10-20T19:11:33.970304097Z",
+        "sizeBytes": 5567,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-quantize-gpu"
+      },
+      {
+        "activityId": "showcase-model-conversion-local-f22e706408-validate-outputs",
+        "createdAt": "2026-10-20T19:11:28.618222761Z",
+        "driver": "local",
+        "environmentId": "showcase-model-conversion-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-validate-outputs",
+        "fileCount": 11,
+        "id": "workspace-showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000-showcase-model-conversion-local-f22e706408-validate-outputs",
+        "inputBytes": 6156,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:7048b37101a3033c1059ea43579e39a159515545427bd0665986ca6a100a7147",
+              "path": "model-fp16.bin",
+              "sizeBytes": 4
+            },
+            {
+              "digest": "sha256:19dfef1b5b1c26d96209057b7c2a254ade24a7e7ab3f73cb87f55de2d09e6334",
+              "path": "model-int8.json",
+              "sizeBytes": 101
+            },
+            {
+              "digest": "sha256:33e3564c24027428cc979d833ca013f6aef3b86aebb5b1710d5bccd00f869ff5",
+              "path": "model.onnx",
+              "sizeBytes": 130
+            },
+            {
+              "digest": "sha256:312681d101f715e97af1e7165cf66a294cee225619ec5ee289116243f30da033",
+              "path": "model.torchscript.pt",
+              "sizeBytes": 3613
+            },
+            {
+              "digest": "sha256:3ede5ebe1d611971b25ac03d7ac1e2e46a28dbb5965da542945e14672e20aebe",
+              "path": "stage-export-onnx.json",
+              "sizeBytes": 394
+            },
+            {
+              "digest": "sha256:e257fcfe56811f6dde041c15719e95346f9be8838c57925699fc581fb21127d0",
+              "path": "stage-export-torchscript.json",
+              "sizeBytes": 409
+            },
+            {
+              "digest": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            },
+            {
+              "digest": "sha256:a4323ce9c7f70e1f732edb098f09ff7264ef4cef358dc1ebc271d34ccfe54a9d",
+              "path": "stage-quantize-cpu.json",
+              "sizeBytes": 488
+            },
+            {
+              "digest": "sha256:0582225bfd5c6f694c6ad44cc2d24597d679c9c5c5b14e4707643ab076bd06e0",
+              "path": "stage-quantize-gpu.json",
+              "sizeBytes": 555
+            },
+            {
+              "digest": "sha256:c80769d4b7e6f06b1f0c6eb4608fe78055d845430a014b15aead7ad0a0a1e81e",
+              "path": "stage-validate-outputs.json",
+              "sizeBytes": 497
+            },
+            {
+              "digest": "sha256:cf64adf55bcdebf19110d8d2e8244b6000bbf9fce3b2410574e0fdd1a1277db4",
+              "path": "validation.json",
+              "sizeBytes": 163
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:7048b37101a3033c1059ea43579e39a159515545427bd0665986ca6a100a7147",
+              "path": "model-fp16.bin",
+              "sizeBytes": 4
+            },
+            {
+              "digest": "sha256:19dfef1b5b1c26d96209057b7c2a254ade24a7e7ab3f73cb87f55de2d09e6334",
+              "path": "model-int8.json",
+              "sizeBytes": 101
+            },
+            {
+              "digest": "sha256:33e3564c24027428cc979d833ca013f6aef3b86aebb5b1710d5bccd00f869ff5",
+              "path": "model.onnx",
+              "sizeBytes": 130
+            },
+            {
+              "digest": "sha256:312681d101f715e97af1e7165cf66a294cee225619ec5ee289116243f30da033",
+              "path": "model.torchscript.pt",
+              "sizeBytes": 3613
+            },
+            {
+              "digest": "sha256:3ede5ebe1d611971b25ac03d7ac1e2e46a28dbb5965da542945e14672e20aebe",
+              "path": "stage-export-onnx.json",
+              "sizeBytes": 394
+            },
+            {
+              "digest": "sha256:e257fcfe56811f6dde041c15719e95346f9be8838c57925699fc581fb21127d0",
+              "path": "stage-export-torchscript.json",
+              "sizeBytes": 409
+            },
+            {
+              "digest": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            },
+            {
+              "digest": "sha256:a4323ce9c7f70e1f732edb098f09ff7264ef4cef358dc1ebc271d34ccfe54a9d",
+              "path": "stage-quantize-cpu.json",
+              "sizeBytes": 488
+            },
+            {
+              "digest": "sha256:0582225bfd5c6f694c6ad44cc2d24597d679c9c5c5b14e4707643ab076bd06e0",
+              "path": "stage-quantize-gpu.json",
+              "sizeBytes": 555
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:7048b37101a3033c1059ea43579e39a159515545427bd0665986ca6a100a7147",
+              "path": "model-fp16.bin",
+              "sizeBytes": 4
+            },
+            {
+              "digest": "sha256:19dfef1b5b1c26d96209057b7c2a254ade24a7e7ab3f73cb87f55de2d09e6334",
+              "path": "model-int8.json",
+              "sizeBytes": 101
+            },
+            {
+              "digest": "sha256:33e3564c24027428cc979d833ca013f6aef3b86aebb5b1710d5bccd00f869ff5",
+              "path": "model.onnx",
+              "sizeBytes": 130
+            },
+            {
+              "digest": "sha256:312681d101f715e97af1e7165cf66a294cee225619ec5ee289116243f30da033",
+              "path": "model.torchscript.pt",
+              "sizeBytes": 3613
+            },
+            {
+              "digest": "sha256:3ede5ebe1d611971b25ac03d7ac1e2e46a28dbb5965da542945e14672e20aebe",
+              "path": "stage-export-onnx.json",
+              "sizeBytes": 394
+            },
+            {
+              "digest": "sha256:e257fcfe56811f6dde041c15719e95346f9be8838c57925699fc581fb21127d0",
+              "path": "stage-export-torchscript.json",
+              "sizeBytes": 409
+            },
+            {
+              "digest": "sha256:67cb873bae701a0f0cc0ca694f696e8aaf8aea61f800ddc4dfcdc8987c169d6f",
+              "path": "stage-load-model.json",
+              "sizeBytes": 462
+            },
+            {
+              "digest": "sha256:a4323ce9c7f70e1f732edb098f09ff7264ef4cef358dc1ebc271d34ccfe54a9d",
+              "path": "stage-quantize-cpu.json",
+              "sizeBytes": 488
+            },
+            {
+              "digest": "sha256:0582225bfd5c6f694c6ad44cc2d24597d679c9c5c5b14e4707643ab076bd06e0",
+              "path": "stage-quantize-gpu.json",
+              "sizeBytes": 555
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:c80769d4b7e6f06b1f0c6eb4608fe78055d845430a014b15aead7ad0a0a1e81e",
+              "path": "stage-validate-outputs.json",
+              "sizeBytes": 497
+            },
+            {
+              "digest": "sha256:cf64adf55bcdebf19110d8d2e8244b6000bbf9fce3b2410574e0fdd1a1277db4",
+              "path": "validation.json",
+              "sizeBytes": 163
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-validate-outputs",
+        "outputBytes": 660,
+        "pinned": false,
+        "reclaimedBytes": 6816,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:11:36.064104584Z",
+        "resourceId": "showcase-model-conversion-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+        "runtimeId": "showcase-model-conversion-local",
+        "sealedAt": "2026-10-20T19:11:35.888572792Z",
+        "sizeBytes": 6816,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000/showcase-model-conversion-local-f22e706408-validate-outputs"
+      }
+    ]
+  },
+  "runId": "showcase-model-conversion-local-f22e706408-run-20261020t191128.224915000",
+  "status": "completed",
+  "workflowId": "showcase-model-conversion-local-f22e706408"
+}

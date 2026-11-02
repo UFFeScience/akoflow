@@ -1,0 +1,41 @@
+{
+  "dependencies": [
+    "prepare-objective"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:47.382941Z",
+  "finishedAtUnixNs": 1792523567377861000,
+  "inputDigest": "dbcda11a2ed684a5173f537c9ae17d10529006b4fe53195dbfac5400dbd43784",
+  "result": {
+    "answer": {
+      "count": 8,
+      "maximum": 23,
+      "mean": 16.5,
+      "minimum": 11
+    },
+    "policy": "fixed local numeric tools; no LLM or arbitrary code execution",
+    "steps": 2,
+    "trace": [
+      {
+        "output": {
+          "count": 8,
+          "mean": 16.5
+        },
+        "tool": "measure"
+      },
+      {
+        "output": {
+          "maximum": 23,
+          "minimum": 11
+        },
+        "tool": "detect-extremes"
+      }
+    ]
+  },
+  "showcase": "bounded-agent",
+  "stage": "agent-loop",
+  "startedAt": "2026-10-20T19:12:47.33913Z",
+  "startedAtUnixNs": 1792523567377704000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

@@ -1,0 +1,43 @@
+{
+  "dependencies": [
+    "clean"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:46.642732Z",
+  "finishedAtUnixNs": 1792523566637715000,
+  "inputDigest": "23df4fad9044d17f0db6a2d73a6cd0020efd7db35729ca15965e3f8ba52ac1c2",
+  "result": {
+    "chunks": [
+      {
+        "document": "akoflow",
+        "text": "Akoflow schedules activities using a directed acyclic graph."
+      },
+      {
+        "document": "akoflow",
+        "text": "Each activity publishes artifacts for downstream dependencies."
+      },
+      {
+        "document": "mlflow",
+        "text": "MLflow records experiment parameters and metrics."
+      },
+      {
+        "document": "mlflow",
+        "text": "A local SQLite tracking store preserves model run evidence."
+      },
+      {
+        "document": "montage",
+        "text": "Montage creates astronomical image mosaics from FITS observations."
+      },
+      {
+        "document": "montage",
+        "text": "Projection and background correction precede the final mosaic."
+      }
+    ]
+  },
+  "showcase": "rag-indexing",
+  "stage": "chunk",
+  "startedAt": "2026-10-20T19:12:46.596576Z",
+  "startedAtUnixNs": 1792523566637573000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

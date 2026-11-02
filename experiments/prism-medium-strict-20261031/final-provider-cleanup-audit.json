@@ -1,0 +1,9 @@
+{
+  "auditedAt": "2026-11-01T01:09:18.9596Z",
+  "monitor": "outputs/prism-time-medium-strict-20261031/strict-live-monitor.json",
+  "ownedInstanceCount": 2,
+  "passed": true,
+  "providerSnapshot": "outputs/prism-time-medium-strict-20261031/provider-final",
+  "remainingOwnedResources": [],
+  "scope": "owned instance names, boot-disk names and firewall target tags from complete Google Compute inventories; unrelated active scenarios preserved"
+}

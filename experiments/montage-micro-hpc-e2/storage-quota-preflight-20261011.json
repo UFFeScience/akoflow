@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "issue": "AKO-144",
+  "observedDateUTC": "2026-10-11",
+  "observationSource": "live-posix-filesystem-and-user-quota-v1",
+  "effectiveAvailableBytes": 184320,
+  "reservationModel": "conservative-retain-workspaces-and-input-staging-until-run-end",
+  "reservedUpperBoundBytes": 19710502133,
+  "reservationIsExactPeakPrediction": false,
+  "preflightResponseHTTPStatus": 422,
+  "preflightCreatedRun": false,
+  "activeScientificRunsAfterPreflight": 0,
+  "completedIndependentHoldoutActivitiesBeforeQuotaFailure": 25,
+  "independentHoldoutCompleted": false,
+  "preservedWorkspacesRemoved": false,
+  "limitations": [
+    "The observer covers the mounted filesystem and current user quota; additional group/project quota policies are not yet observed.",
+    "Reservation is a conservative bound, not a modeled time-dependent occupancy peak with verified early releases.",
+    "Legacy resources without an explicit budget remain compatible and must not be presented as quota-validated."
+  ]
+}

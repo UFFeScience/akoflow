@@ -131,13 +131,17 @@ func (a *Adapter) delegateForHandle(
 }
 
 func (a *Adapter) remoteAdapter(instance domain.CloudProvisionedInstance) (ports.RuntimeAdapter, error) {
+	alias, knownHosts, err := instance.VerifiedSSHTrust()
+	if err != nil {
+		return nil, err
+	}
 	connection := domain.EnvironmentConnection{
 		ID: a.environmentID + "-" + instance.ID, EnvironmentID: a.environmentID,
 		Name: instance.Name, Type: domain.ConnectionSSH, Endpoint: instance.PublicAddress,
 		Username: instance.SSHUsername, CredentialRef: instance.SSHCredentialRef,
 		Configuration: map[string]any{
 			"adapter": "ssh-docker", "port": 22, "dynamicHost": true,
-			"hostKeyAlias": instance.ID,
+			"hostKeyAlias": alias, "knownHostsFile": knownHosts, "strictHostKeyChecking": true,
 		},
 	}
 	return (remote.Factory{Executor: a.executor}).Build(domain.EnvironmentRuntime{}, connection)

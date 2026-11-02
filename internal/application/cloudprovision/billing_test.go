@@ -39,3 +39,17 @@ func TestInstanceBillingPauseAndResume(t *testing.T) {
 		t.Fatalf("cost = %v, want %v", instance.Billing.CurrentCost, want)
 	}
 }
+
+func TestBillingDistinguishesMissingPricesFromFreeCompute(t *testing.T) {
+	missing := billingForTarget(domain.CloudCapacityTarget{Configuration: map[string]any{"diskSizeGiB": 30}}, time.Now())
+	if missing.PricingStatus != "incomplete" || len(missing.MissingPrices) != 2 {
+		t.Fatalf("missing tariffs presented as calibrated: %+v", missing)
+	}
+	priced := billingForTarget(domain.CloudCapacityTarget{Configuration: map[string]any{
+		"pricePerHour": 0.032, "diskSizeGiB": 30, "diskPricePerGiBMonth": 0.04,
+		"priceCurrency": "USD", "priceSource": "gcp-public-catalog",
+	}}, time.Now())
+	if priced.PricingStatus != "estimated" || len(priced.MissingPrices) != 0 || priced.PriceCurrency != "USD" || priced.PriceSource != "gcp-public-catalog" {
+		t.Fatalf("tariff provenance lost: %+v", priced)
+	}
+}

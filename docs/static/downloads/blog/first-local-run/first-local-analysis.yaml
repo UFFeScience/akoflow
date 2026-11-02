@@ -1,0 +1,62 @@
+name: first-local-analysis
+spec:
+  namespace: learning
+  activities:
+    - name: prepare
+      cpuLimit: "0.1"
+      memoryLimit: 32Mi
+      command:
+        executable:
+          source:
+            type: oci
+            reference: docker.io/library/busybox:1.36
+          delivery:
+            strategy: auto
+            targetFormat: oci
+        entrypoint: sh
+        arguments:
+          - -c
+          - |
+            printf '2\n4\n6\n' > measurements.txt
+            cat measurements.txt
+      expectedOutputs: [measurements.txt]
+
+    - name: analyze
+      dependsOn: [prepare]
+      cpuLimit: "0.1"
+      memoryLimit: 32Mi
+      command:
+        executable:
+          source:
+            type: oci
+            reference: docker.io/library/busybox:1.36
+          delivery:
+            strategy: auto
+            targetFormat: oci
+        entrypoint: sh
+        arguments:
+          - -c
+          - |
+            awk '{sum += $1; n++} END {printf "%.2f\n", sum/n}' measurements.txt > mean.txt
+            cat mean.txt
+      expectedOutputs: [mean.txt]
+
+    - name: write-report
+      dependsOn: [analyze]
+      cpuLimit: "0.1"
+      memoryLimit: 32Mi
+      command:
+        executable:
+          source:
+            type: oci
+            reference: docker.io/library/busybox:1.36
+          delivery:
+            strategy: auto
+            targetFormat: oci
+        entrypoint: sh
+        arguments:
+          - -c
+          - |
+            printf 'Mean: %s\n' "$(cat mean.txt)" > report.txt
+            cat report.txt
+      expectedOutputs: [report.txt]

@@ -1,0 +1,47 @@
+---
+title: Document Intelligence
+description: Extract and reconcile auditable procurement records from an offline document corpus.
+---
+
+import WorkflowExecutionEvidence from "@site/src/components/WorkflowExecutionEvidence";
+
+import WorkflowLocalRun from "@site/src/components/WorkflowLocalRun";
+
+import {
+  WorkflowDag,
+  WorkflowPatternDetails,
+} from "@site/src/components/WorkflowShowcase";
+
+# Document Intelligence
+
+This example processes synthetic invoices and a purchase order through explicit ingestion, classification, extraction, reconciliation, and reporting activities. It verifies totals and duplicate invoice identifiers rather than stopping after text extraction.
+
+<WorkflowDag
+  title="Document Intelligence"
+  stages={["ingest", "classify", "extract", "reconcile", "report"]}
+/>
+
+<WorkflowPatternDetails
+  inputs={["Versioned semi-structured invoices", "Purchase-order fixture"]}
+  outputs={[
+    "Document inventory",
+    "Classifications",
+    "Extracted fields and line items",
+    "Reconciliation JSON and CSV",
+    "Aggregate report",
+  ]}
+  evidence={[
+    "Source hashes",
+    "Document-to-record mapping",
+    "Balance checks",
+    "Duplicate checks",
+    "Gross total",
+  ]}
+/>
+
+<WorkflowLocalRun examplePath="document-ai/document-intelligence" />
+
+<WorkflowExecutionEvidence
+  title="Document Intelligence"
+  examplePath="document-ai/document-intelligence"
+/>

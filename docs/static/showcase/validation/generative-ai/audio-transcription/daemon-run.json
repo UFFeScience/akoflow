@@ -1,0 +1,3685 @@
+{
+  "activityCount": 7,
+  "completedActivityCount": 7,
+  "image": "ghcr.io/uffescience/akoflow-examples/showcase-audio-transcription:local-ee0e5997e9c4ec28",
+  "imageId": "sha256:ee0e5997e9c4ec28f947a15dfde5d0395773cfc3bdd98020e44498b17b6f76cc",
+  "observedAt": "2026-10-20T19:13:31Z",
+  "planId": "showcase-audio-transcription-local-a18bfb861c-manual-plan-20261020t191318.732334000",
+  "projection": {
+    "activities": [
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-ingest-audio",
+        "allocatedResourceId": "showcase-audio-transcription-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "finishedAt": 1792523599.3824902,
+        "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-ingest-audio",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-audio-transcription-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-audio-transcription-local-a18bfb861c-manual-plan-20261020t191318.732334000-showcase-audio-transcription-local-a18bfb861c-ingest-audio",
+        "plannedResourceId": "showcase-audio-transcription-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523599.149264,
+        "readyAt": 1792523599.149264,
+        "runtimeId": "showcase-audio-transcription-local",
+        "runtimeSeconds": 0.10861778259277344,
+        "startedAt": 1792523599.2738724,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-segment",
+        "allocatedResourceId": "showcase-audio-transcription-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "finishedAt": 1792523600.7961543,
+        "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14263057708740234,
+          "preparationFinishedAt": 1792523600.542997,
+          "preparationStartedAt": 1792523600.3564043,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0009670257568359375,
+          "runtimeId": "showcase-audio-transcription-local",
+          "transferElapsedSeconds": 0.18659257888793945,
+          "transferWorkSeconds": 0.18659257888793945
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-audio-transcription-local-a18bfb861c-manual-plan-20261020t191318.732334000-showcase-audio-transcription-local-a18bfb861c-segment",
+        "plannedResourceId": "showcase-audio-transcription-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523600.3536677,
+        "readyAt": 1792523600.3536677,
+        "runtimeId": "showcase-audio-transcription-local",
+        "runtimeSeconds": 0.11052680015563965,
+        "startedAt": 1792523600.6856275,
+        "status": "completed",
+        "transferBytes": 8230,
+        "transferSeconds": 0.18659257888793945
+      },
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-segment-1",
+        "allocatedResourceId": "showcase-audio-transcription-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "finishedAt": 1792523602.8625212,
+        "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment-1",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.17290973663330078,
+          "preparationFinishedAt": 1792523602.5705256,
+          "preparationStartedAt": 1792523602.3849328,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0029146671295166016,
+          "runtimeId": "showcase-audio-transcription-local",
+          "transferElapsedSeconds": 0.1855928897857666,
+          "transferWorkSeconds": 0.1855928897857666
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-audio-transcription-local-a18bfb861c-manual-plan-20261020t191318.732334000-showcase-audio-transcription-local-a18bfb861c-segment-1",
+        "plannedResourceId": "showcase-audio-transcription-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523602.3778908,
+        "readyAt": 1792523602.3778908,
+        "runtimeId": "showcase-audio-transcription-local",
+        "runtimeSeconds": 0.11908578872680664,
+        "startedAt": 1792523602.7434354,
+        "status": "completed",
+        "transferBytes": 16469,
+        "transferSeconds": 0.1855928897857666
+      },
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-segment-n",
+        "allocatedResourceId": "showcase-audio-transcription-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "finishedAt": 1792523602.8677387,
+        "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment-n",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.18334388732910156,
+          "preparationFinishedAt": 1792523602.5693884,
+          "preparationStartedAt": 1792523602.3870084,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0038640499114990234,
+          "runtimeId": "showcase-audio-transcription-local",
+          "transferElapsedSeconds": 0.18237996101379395,
+          "transferWorkSeconds": 0.18237996101379395
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-audio-transcription-local-a18bfb861c-manual-plan-20261020t191318.732334000-showcase-audio-transcription-local-a18bfb861c-segment-n",
+        "plannedResourceId": "showcase-audio-transcription-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523602.3791516,
+        "readyAt": 1792523602.3791516,
+        "runtimeId": "showcase-audio-transcription-local",
+        "runtimeSeconds": 0.1150064468383789,
+        "startedAt": 1792523602.7527323,
+        "status": "completed",
+        "transferBytes": 16469,
+        "transferSeconds": 0.18237996101379395
+      },
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+        "allocatedResourceId": "showcase-audio-transcription-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "finishedAt": 1792523604.9715323,
+        "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1430215835571289,
+          "preparationFinishedAt": 1792523604.7204442,
+          "preparationStartedAt": 1792523604.4305902,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0032558441162109375,
+          "runtimeId": "showcase-audio-transcription-local",
+          "transferElapsedSeconds": 0.2898540496826172,
+          "transferWorkSeconds": 0.4820423126220703
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-audio-transcription-local-a18bfb861c-manual-plan-20261020t191318.732334000-showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+        "plannedResourceId": "showcase-audio-transcription-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523604.4256501,
+        "readyAt": 1792523604.4256501,
+        "runtimeId": "showcase-audio-transcription-local",
+        "runtimeSeconds": 0.10806655883789062,
+        "startedAt": 1792523604.8634658,
+        "status": "completed",
+        "transferBytes": 17449,
+        "transferSeconds": 0.4820423126220703
+      },
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-summarize",
+        "allocatedResourceId": "showcase-audio-transcription-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "finishedAt": 1792523606.8074749,
+        "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-summarize",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13814973831176758,
+          "preparationFinishedAt": 1792523606.559408,
+          "preparationStartedAt": 1792523606.3921497,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0010256767272949219,
+          "runtimeId": "showcase-audio-transcription-local",
+          "transferElapsedSeconds": 0.16725826263427734,
+          "transferWorkSeconds": 0.16725826263427734
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-audio-transcription-local-a18bfb861c-manual-plan-20261020t191318.732334000-showcase-audio-transcription-local-a18bfb861c-summarize",
+        "plannedResourceId": "showcase-audio-transcription-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523606.3886142,
+        "readyAt": 1792523606.3886142,
+        "runtimeId": "showcase-audio-transcription-local",
+        "runtimeSeconds": 0.10991716384887695,
+        "startedAt": 1792523606.6975577,
+        "status": "completed",
+        "transferBytes": 17941,
+        "transferSeconds": 0.16725826263427734
+      },
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-publish",
+        "allocatedResourceId": "showcase-audio-transcription-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "finishedAt": 1792523608.8275135,
+        "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-publish",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1374359130859375,
+          "preparationFinishedAt": 1792523608.582859,
+          "preparationStartedAt": 1792523608.4154544,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0010097026824951172,
+          "runtimeId": "showcase-audio-transcription-local",
+          "transferElapsedSeconds": 0.1674046516418457,
+          "transferWorkSeconds": 0.1674046516418457
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-audio-transcription-local-a18bfb861c-manual-plan-20261020t191318.732334000-showcase-audio-transcription-local-a18bfb861c-publish",
+        "plannedResourceId": "showcase-audio-transcription-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523608.4121616,
+        "readyAt": 1792523608.4121616,
+        "runtimeId": "showcase-audio-transcription-local",
+        "runtimeSeconds": 0.10721850395202637,
+        "startedAt": 1792523608.720295,
+        "status": "completed",
+        "transferBytes": 18576,
+        "transferSeconds": 0.1674046516418457
+      }
+    ],
+    "activityAttempts": [
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-ingest-audio",
+        "allocatedResourceId": "showcase-audio-transcription-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "finishedAt": 1792523599.3824902,
+        "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-ingest-audio",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-audio-transcription-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-audio-transcription-local-a18bfb861c-manual-plan-20261020t191318.732334000-showcase-audio-transcription-local-a18bfb861c-ingest-audio",
+        "plannedResourceId": "showcase-audio-transcription-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523599.149264,
+        "readyAt": 1792523599.149264,
+        "runtimeId": "showcase-audio-transcription-local",
+        "runtimeSeconds": 0.10861778259277344,
+        "startedAt": 1792523599.2738724,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-segment",
+        "allocatedResourceId": "showcase-audio-transcription-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "finishedAt": 1792523600.7961543,
+        "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14263057708740234,
+          "preparationFinishedAt": 1792523600.542997,
+          "preparationStartedAt": 1792523600.3564043,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0009670257568359375,
+          "runtimeId": "showcase-audio-transcription-local",
+          "transferElapsedSeconds": 0.18659257888793945,
+          "transferWorkSeconds": 0.18659257888793945
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-audio-transcription-local-a18bfb861c-manual-plan-20261020t191318.732334000-showcase-audio-transcription-local-a18bfb861c-segment",
+        "plannedResourceId": "showcase-audio-transcription-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523600.3536677,
+        "readyAt": 1792523600.3536677,
+        "runtimeId": "showcase-audio-transcription-local",
+        "runtimeSeconds": 0.11052680015563965,
+        "startedAt": 1792523600.6856275,
+        "status": "completed",
+        "transferBytes": 8230,
+        "transferSeconds": 0.18659257888793945
+      },
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-segment-1",
+        "allocatedResourceId": "showcase-audio-transcription-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "finishedAt": 1792523602.8625212,
+        "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment-1",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.17290973663330078,
+          "preparationFinishedAt": 1792523602.5705256,
+          "preparationStartedAt": 1792523602.3849328,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0029146671295166016,
+          "runtimeId": "showcase-audio-transcription-local",
+          "transferElapsedSeconds": 0.1855928897857666,
+          "transferWorkSeconds": 0.1855928897857666
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-audio-transcription-local-a18bfb861c-manual-plan-20261020t191318.732334000-showcase-audio-transcription-local-a18bfb861c-segment-1",
+        "plannedResourceId": "showcase-audio-transcription-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523602.3778908,
+        "readyAt": 1792523602.3778908,
+        "runtimeId": "showcase-audio-transcription-local",
+        "runtimeSeconds": 0.11908578872680664,
+        "startedAt": 1792523602.7434354,
+        "status": "completed",
+        "transferBytes": 16469,
+        "transferSeconds": 0.1855928897857666
+      },
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-segment-n",
+        "allocatedResourceId": "showcase-audio-transcription-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "finishedAt": 1792523602.8677387,
+        "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment-n",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.18334388732910156,
+          "preparationFinishedAt": 1792523602.5693884,
+          "preparationStartedAt": 1792523602.3870084,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0038640499114990234,
+          "runtimeId": "showcase-audio-transcription-local",
+          "transferElapsedSeconds": 0.18237996101379395,
+          "transferWorkSeconds": 0.18237996101379395
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-audio-transcription-local-a18bfb861c-manual-plan-20261020t191318.732334000-showcase-audio-transcription-local-a18bfb861c-segment-n",
+        "plannedResourceId": "showcase-audio-transcription-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523602.3791516,
+        "readyAt": 1792523602.3791516,
+        "runtimeId": "showcase-audio-transcription-local",
+        "runtimeSeconds": 0.1150064468383789,
+        "startedAt": 1792523602.7527323,
+        "status": "completed",
+        "transferBytes": 16469,
+        "transferSeconds": 0.18237996101379395
+      },
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+        "allocatedResourceId": "showcase-audio-transcription-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "finishedAt": 1792523604.9715323,
+        "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1430215835571289,
+          "preparationFinishedAt": 1792523604.7204442,
+          "preparationStartedAt": 1792523604.4305902,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0032558441162109375,
+          "runtimeId": "showcase-audio-transcription-local",
+          "transferElapsedSeconds": 0.2898540496826172,
+          "transferWorkSeconds": 0.4820423126220703
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-audio-transcription-local-a18bfb861c-manual-plan-20261020t191318.732334000-showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+        "plannedResourceId": "showcase-audio-transcription-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523604.4256501,
+        "readyAt": 1792523604.4256501,
+        "runtimeId": "showcase-audio-transcription-local",
+        "runtimeSeconds": 0.10806655883789062,
+        "startedAt": 1792523604.8634658,
+        "status": "completed",
+        "transferBytes": 17449,
+        "transferSeconds": 0.4820423126220703
+      },
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-summarize",
+        "allocatedResourceId": "showcase-audio-transcription-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "finishedAt": 1792523606.8074749,
+        "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-summarize",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13814973831176758,
+          "preparationFinishedAt": 1792523606.559408,
+          "preparationStartedAt": 1792523606.3921497,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0010256767272949219,
+          "runtimeId": "showcase-audio-transcription-local",
+          "transferElapsedSeconds": 0.16725826263427734,
+          "transferWorkSeconds": 0.16725826263427734
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-audio-transcription-local-a18bfb861c-manual-plan-20261020t191318.732334000-showcase-audio-transcription-local-a18bfb861c-summarize",
+        "plannedResourceId": "showcase-audio-transcription-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523606.3886142,
+        "readyAt": 1792523606.3886142,
+        "runtimeId": "showcase-audio-transcription-local",
+        "runtimeSeconds": 0.10991716384887695,
+        "startedAt": 1792523606.6975577,
+        "status": "completed",
+        "transferBytes": 17941,
+        "transferSeconds": 0.16725826263427734
+      },
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-publish",
+        "allocatedResourceId": "showcase-audio-transcription-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "finishedAt": 1792523608.8275135,
+        "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-publish",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1374359130859375,
+          "preparationFinishedAt": 1792523608.582859,
+          "preparationStartedAt": 1792523608.4154544,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0010097026824951172,
+          "runtimeId": "showcase-audio-transcription-local",
+          "transferElapsedSeconds": 0.1674046516418457,
+          "transferWorkSeconds": 0.1674046516418457
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-audio-transcription-local-a18bfb861c-manual-plan-20261020t191318.732334000-showcase-audio-transcription-local-a18bfb861c-publish",
+        "plannedResourceId": "showcase-audio-transcription-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523608.4121616,
+        "readyAt": 1792523608.4121616,
+        "runtimeId": "showcase-audio-transcription-local",
+        "runtimeSeconds": 0.10721850395202637,
+        "startedAt": 1792523608.720295,
+        "status": "completed",
+        "transferBytes": 18576,
+        "transferSeconds": 0.1674046516418457
+      }
+    ],
+    "artifactMaterializations": null,
+    "artifactTransferRuns": [
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+        "durationSeconds": 0.19218826293945312,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "filesTransferred": 6,
+        "finishedAt": 1792523604.6227784,
+        "id": "transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-merge-transcript-0",
+        "logicalBytes": 16959,
+        "planId": "transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-merge-transcript-0",
+        "route": {
+          "consumerActivityId": "showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+          "filesTransferred": 6,
+          "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment-1",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.093808083,
+          "sourceEnvironmentId": "showcase-audio-transcription-v1",
+          "sourceResourceId": "showcase-audio-transcription-local-docker",
+          "sshChannelWaitSeconds": 3.34e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-audio-transcription-v1",
+          "targetResourceId": "showcase-audio-transcription-local-docker"
+        },
+        "startedAt": 1792523604.4305902,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 16959
+      },
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+        "durationSeconds": 0.2898540496826172,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523604.7204442,
+        "id": "transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-merge-transcript-1",
+        "logicalBytes": 16959,
+        "planId": "transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-merge-transcript-1",
+        "route": {
+          "consumerActivityId": "showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment-n",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.073244584,
+          "sourceEnvironmentId": "showcase-audio-transcription-v1",
+          "sourceResourceId": "showcase-audio-transcription-local-docker",
+          "sshChannelWaitSeconds": 4.17e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-audio-transcription-v1",
+          "targetResourceId": "showcase-audio-transcription-local-docker"
+        },
+        "startedAt": 1792523604.4305902,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 490
+      },
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-publish",
+        "durationSeconds": 0.1674046516418457,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "filesTransferred": 9,
+        "finishedAt": 1792523608.582859,
+        "id": "transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-publish-0",
+        "logicalBytes": 18576,
+        "planId": "transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-publish-0",
+        "route": {
+          "consumerActivityId": "showcase-audio-transcription-local-a18bfb861c-publish",
+          "filesTransferred": 9,
+          "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-summarize",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.07011758400000001,
+          "sourceEnvironmentId": "showcase-audio-transcription-v1",
+          "sourceResourceId": "showcase-audio-transcription-local-docker",
+          "sshChannelWaitSeconds": 4.17e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-audio-transcription-v1",
+          "targetResourceId": "showcase-audio-transcription-local-docker"
+        },
+        "startedAt": 1792523608.4154544,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 18576
+      },
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-segment",
+        "durationSeconds": 0.18659257888793945,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "filesTransferred": 2,
+        "finishedAt": 1792523600.542997,
+        "id": "transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-segment-0",
+        "logicalBytes": 8230,
+        "planId": "transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-segment-0",
+        "route": {
+          "consumerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-ingest-audio",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.094574709,
+          "sourceEnvironmentId": "showcase-audio-transcription-v1",
+          "sourceResourceId": "showcase-audio-transcription-local-docker",
+          "sshChannelWaitSeconds": 6.26e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-audio-transcription-v1",
+          "targetResourceId": "showcase-audio-transcription-local-docker"
+        },
+        "startedAt": 1792523600.3564043,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 8230
+      },
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-segment-1",
+        "durationSeconds": 0.1855928897857666,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "filesTransferred": 5,
+        "finishedAt": 1792523602.5705256,
+        "id": "transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-segment-1-0",
+        "logicalBytes": 16469,
+        "planId": "transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-segment-1-0",
+        "route": {
+          "consumerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment-1",
+          "filesTransferred": 5,
+          "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09424608300000001,
+          "sourceEnvironmentId": "showcase-audio-transcription-v1",
+          "sourceResourceId": "showcase-audio-transcription-local-docker",
+          "sshChannelWaitSeconds": 1.68e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-audio-transcription-v1",
+          "targetResourceId": "showcase-audio-transcription-local-docker"
+        },
+        "startedAt": 1792523602.3849328,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 16469
+      },
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-segment-n",
+        "durationSeconds": 0.18237996101379395,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "filesTransferred": 5,
+        "finishedAt": 1792523602.5693884,
+        "id": "transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-segment-n-0",
+        "logicalBytes": 16469,
+        "planId": "transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-segment-n-0",
+        "route": {
+          "consumerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment-n",
+          "filesTransferred": 5,
+          "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09216358399999999,
+          "sourceEnvironmentId": "showcase-audio-transcription-v1",
+          "sourceResourceId": "showcase-audio-transcription-local-docker",
+          "sshChannelWaitSeconds": 4.17e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-audio-transcription-v1",
+          "targetResourceId": "showcase-audio-transcription-local-docker"
+        },
+        "startedAt": 1792523602.3870084,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 16469
+      },
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-summarize",
+        "durationSeconds": 0.16725826263427734,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "filesTransferred": 8,
+        "finishedAt": 1792523606.559408,
+        "id": "transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-summarize-0",
+        "logicalBytes": 17941,
+        "planId": "transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-summarize-0",
+        "route": {
+          "consumerActivityId": "showcase-audio-transcription-local-a18bfb861c-summarize",
+          "filesTransferred": 8,
+          "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.072879416,
+          "sourceEnvironmentId": "showcase-audio-transcription-v1",
+          "sourceResourceId": "showcase-audio-transcription-local-docker",
+          "sshChannelWaitSeconds": 5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-audio-transcription-v1",
+          "targetResourceId": "showcase-audio-transcription-local-docker"
+        },
+        "startedAt": 1792523606.3921497,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 17941
+      }
+    ],
+    "cloudBilling": {
+      "asOf": "2026-10-20T19:13:31.112515971Z",
+      "costBasis": "VM compute and boot-disk lifecycle at on-demand marginal rates; not a provider invoice",
+      "estimatedCost": 0,
+      "excludedCosts": [
+        "network-egress",
+        "public-ipv4",
+        "image-storage",
+        "discounts-and-tax"
+      ],
+      "instances": [],
+      "knownCost": 0,
+      "status": "estimated"
+    },
+    "dataLocations": [
+      {
+        "dataObjectInstanceId": "2205768dda8810d3b0e594fd24a2d06c",
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "id": "cc4955cc6706c5c90fbde596c6da6401",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-audio-transcription-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "ff6f11f357967d45cf70a2aff4ef6e65",
+        "uri": "file:///akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-ingest-audio/input.wav"
+      },
+      {
+        "dataObjectInstanceId": "59bde7659473383a0a8d61b202d146fe",
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "id": "63f4299600a0bf52f5804a9b4839da66",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-audio-transcription-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "ff6f11f357967d45cf70a2aff4ef6e65",
+        "uri": "file:///akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-ingest-audio/stage-ingest-audio.json"
+      },
+      {
+        "dataObjectInstanceId": "877742c273933b8c145ff681f826e19e",
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "id": "8bc89a51533681d32845b5d7d43caecb",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-audio-transcription-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "ff6f11f357967d45cf70a2aff4ef6e65",
+        "uri": "file:///akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-merge-transcript/stage-merge-transcript.json"
+      },
+      {
+        "dataObjectInstanceId": "58761d25ba32c0ae90bb68027a2d937c",
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "id": "ad902785adc58c5d794ddb8cd9d69b79",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-audio-transcription-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "ff6f11f357967d45cf70a2aff4ef6e65",
+        "uri": "file:///akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-publish/stage-publish.json"
+      },
+      {
+        "dataObjectInstanceId": "982a066acae03dffa96403d161b5b9ab",
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "id": "58830040b80964ce64cce20ac163e4c3",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-audio-transcription-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "ff6f11f357967d45cf70a2aff4ef6e65",
+        "uri": "file:///akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-publish/summary.md"
+      },
+      {
+        "dataObjectInstanceId": "516ca2f7eeb0765da4c2cf9b5bc88b90",
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "id": "763a55e7b01142dbbf2ebae0f6cec7cb",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-audio-transcription-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "ff6f11f357967d45cf70a2aff4ef6e65",
+        "uri": "file:///akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-publish/transcript.txt"
+      },
+      {
+        "dataObjectInstanceId": "85fc98c3df7e88cc3f60a877c07e3644",
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "id": "d293b2824157f24fa267add5ea428a0a",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-audio-transcription-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "ff6f11f357967d45cf70a2aff4ef6e65",
+        "uri": "file:///akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-segment-1/stage-segment-1.json"
+      },
+      {
+        "dataObjectInstanceId": "3acc0767ebebb1e42c39a2e818c3d466",
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "id": "1e0e88457d78a2e132567330de2aacc5",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-audio-transcription-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "ff6f11f357967d45cf70a2aff4ef6e65",
+        "uri": "file:///akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-segment-n/stage-segment-n.json"
+      },
+      {
+        "dataObjectInstanceId": "c5206018233c70099f2be23e96f37938",
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "id": "a8f5232de345eb4fec5f443c9fb83396",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-audio-transcription-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "ff6f11f357967d45cf70a2aff4ef6e65",
+        "uri": "file:///akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-segment/segment-1.wav"
+      },
+      {
+        "dataObjectInstanceId": "536ec9ac99249ffd0990aaff9fa0056f",
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "id": "874fe00c91fdd7bf88c9f3acc552be23",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-audio-transcription-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "ff6f11f357967d45cf70a2aff4ef6e65",
+        "uri": "file:///akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-segment/segment-n.wav"
+      },
+      {
+        "dataObjectInstanceId": "af0f8ab4fb14d991a5987d2e71e7a1c1",
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "id": "2c41e71236621f897c1254b136da566d",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-audio-transcription-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "ff6f11f357967d45cf70a2aff4ef6e65",
+        "uri": "file:///akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-segment/stage-segment.json"
+      },
+      {
+        "dataObjectInstanceId": "b43c296baf4942f5a92424eda8e24e87",
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "id": "b6132d06a6557742e2f1c04fdfc5fd47",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-audio-transcription-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "ff6f11f357967d45cf70a2aff4ef6e65",
+        "uri": "file:///akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-summarize/stage-summarize.json"
+      }
+    ],
+    "dataObjects": [
+      {
+        "attempt": 1,
+        "checksum": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+        "dataObjectId": "d5e70cb3136eef250627dc51d93c4aa4",
+        "discovered": true,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "id": "2205768dda8810d3b0e594fd24a2d06c",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-ingest-audio",
+        "relativePath": "input.wav",
+        "sizeBytes": 7724
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+        "dataObjectId": "fb5c66c3cf0417901c17825ba12d5a32",
+        "discovered": true,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "id": "59bde7659473383a0a8d61b202d146fe",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-ingest-audio",
+        "relativePath": "stage-ingest-audio.json",
+        "sizeBytes": 506
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:61df65329694dd49f2ca2aa17287e69cf780c81c00c69a7b0f15f01c102a6d89",
+        "dataObjectId": "86b95d0b1d2a044ea29e32ab78ec2a63",
+        "discovered": true,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "id": "877742c273933b8c145ff681f826e19e",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+        "relativePath": "stage-merge-transcript.json",
+        "sizeBytes": 492
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:79653b0322ec3dcc0abd453d2bdae45d350887942fd5fdbfbdbc82a16d80d312",
+        "dataObjectId": "012480996c3625dab47735e32b7a3464",
+        "discovered": true,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "id": "58761d25ba32c0ae90bb68027a2d937c",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-publish",
+        "relativePath": "stage-publish.json",
+        "sizeBytes": 477
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:689122270303fadd8d78b21a88297bfb962e44ad4b1f1f8d16c0a02e9e92586d",
+        "dataObjectId": "5093afe7537855f304bc6b73b7312ad0",
+        "discovered": true,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "id": "982a066acae03dffa96403d161b5b9ab",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-publish",
+        "relativePath": "summary.md",
+        "sizeBytes": 102
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:68802bc43347d2bc2995ff6c6b0b26494a85ee8acb087f82500326f2967f8a4f",
+        "dataObjectId": "4e42650de07991e74dae1bb0117b072c",
+        "discovered": true,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "id": "516ca2f7eeb0765da4c2cf9b5bc88b90",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-publish",
+        "relativePath": "transcript.txt",
+        "sizeBytes": 38
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:24736f1ec43ffbd65cc1669b7257f19649a2c894867c20828e8066cccc18c63b",
+        "dataObjectId": "37882ee56cbe480321770b5166fa649c",
+        "discovered": true,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "id": "c5206018233c70099f2be23e96f37938",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment",
+        "relativePath": "segment-1.wav",
+        "sizeBytes": 3884
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:aaef07716e63378da4a17ec59199e48633f53ee49a78d0ffff7900d55d11d40e",
+        "dataObjectId": "26fd2c422b4d47e42fb367b5c82d2e7b",
+        "discovered": true,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "id": "536ec9ac99249ffd0990aaff9fa0056f",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment",
+        "relativePath": "segment-n.wav",
+        "sizeBytes": 3884
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:c4ab4190c60515cf8bc3bb73cccb7d3e3b50d0a6e8320f3dbceddbda38105b45",
+        "dataObjectId": "41f7be4b697808090a7209e7584fcae6",
+        "discovered": true,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "id": "af0f8ab4fb14d991a5987d2e71e7a1c1",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment",
+        "relativePath": "stage-segment.json",
+        "sizeBytes": 471
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:93011697daf0406f2484a200a957ef39b1a607e001ef23479f6c431ce11355d4",
+        "dataObjectId": "4072fd175eb63e3ed3a585ad1796fff2",
+        "discovered": true,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "id": "85fc98c3df7e88cc3f60a877c07e3644",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment-1",
+        "relativePath": "stage-segment-1.json",
+        "sizeBytes": 490
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:40171f8ce2cba97f30ae63884af5fb5de464d4cf1d8ccc8434eb6d87f8c7079d",
+        "dataObjectId": "86508ec28b774ec246479b10c69a42d2",
+        "discovered": true,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "id": "3acc0767ebebb1e42c39a2e818c3d466",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment-n",
+        "relativePath": "stage-segment-n.json",
+        "sizeBytes": 490
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:146ea54c3d3dca172e07ba4fde5882a77d08c875645f8ec587a4d0dbb0027861",
+        "dataObjectId": "62dcf7e8fa3e15127ce825f43758efc0",
+        "discovered": true,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "id": "b43c296baf4942f5a92424eda8e24e87",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-summarize",
+        "relativePath": "stage-summarize.json",
+        "sizeBytes": 635
+      }
+    ],
+    "dataTransfers": [
+      {
+        "bytes": 8230,
+        "consumerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment",
+        "cost": 0,
+        "durationSeconds": 0.18659257888793945,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "finishedAt": 1792523600.542997,
+        "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment:transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-segment-0",
+        "logicalBytes": 8230,
+        "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-ingest-audio",
+        "route": {
+          "consumerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-ingest-audio",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.094574709,
+          "sourceEnvironmentId": "showcase-audio-transcription-v1",
+          "sourceResourceId": "showcase-audio-transcription-local-docker",
+          "sshChannelWaitSeconds": 6.26e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-audio-transcription-v1",
+          "targetResourceId": "showcase-audio-transcription-local-docker"
+        },
+        "sourceResourceId": "showcase-audio-transcription-local-docker",
+        "startedAt": 1792523600.3564043,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-audio-transcription-local-docker"
+      },
+      {
+        "bytes": 16469,
+        "consumerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment-1",
+        "cost": 0,
+        "durationSeconds": 0.1855928897857666,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "finishedAt": 1792523602.5705256,
+        "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment-1:transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-segment-1-0",
+        "logicalBytes": 16469,
+        "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment",
+        "route": {
+          "consumerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment-1",
+          "filesTransferred": 5,
+          "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09424608300000001,
+          "sourceEnvironmentId": "showcase-audio-transcription-v1",
+          "sourceResourceId": "showcase-audio-transcription-local-docker",
+          "sshChannelWaitSeconds": 1.68e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-audio-transcription-v1",
+          "targetResourceId": "showcase-audio-transcription-local-docker"
+        },
+        "sourceResourceId": "showcase-audio-transcription-local-docker",
+        "startedAt": 1792523602.3849328,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-audio-transcription-local-docker"
+      },
+      {
+        "bytes": 16469,
+        "consumerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment-n",
+        "cost": 0,
+        "durationSeconds": 0.18237996101379395,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "finishedAt": 1792523602.5693884,
+        "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment-n:transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-segment-n-0",
+        "logicalBytes": 16469,
+        "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment",
+        "route": {
+          "consumerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment-n",
+          "filesTransferred": 5,
+          "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09216358399999999,
+          "sourceEnvironmentId": "showcase-audio-transcription-v1",
+          "sourceResourceId": "showcase-audio-transcription-local-docker",
+          "sshChannelWaitSeconds": 4.17e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-audio-transcription-v1",
+          "targetResourceId": "showcase-audio-transcription-local-docker"
+        },
+        "sourceResourceId": "showcase-audio-transcription-local-docker",
+        "startedAt": 1792523602.3870084,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-audio-transcription-local-docker"
+      },
+      {
+        "bytes": 16959,
+        "consumerActivityId": "showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+        "cost": 0,
+        "durationSeconds": 0.19218826293945312,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "finishedAt": 1792523604.6227784,
+        "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-merge-transcript:transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-merge-transcript-0",
+        "logicalBytes": 16959,
+        "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment-1",
+        "route": {
+          "consumerActivityId": "showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+          "filesTransferred": 6,
+          "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment-1",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.093808083,
+          "sourceEnvironmentId": "showcase-audio-transcription-v1",
+          "sourceResourceId": "showcase-audio-transcription-local-docker",
+          "sshChannelWaitSeconds": 3.34e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-audio-transcription-v1",
+          "targetResourceId": "showcase-audio-transcription-local-docker"
+        },
+        "sourceResourceId": "showcase-audio-transcription-local-docker",
+        "startedAt": 1792523604.4305902,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-audio-transcription-local-docker"
+      },
+      {
+        "bytes": 490,
+        "consumerActivityId": "showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+        "cost": 0,
+        "durationSeconds": 0.2898540496826172,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "finishedAt": 1792523604.7204442,
+        "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-merge-transcript:transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-merge-transcript-1",
+        "logicalBytes": 16959,
+        "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment-n",
+        "route": {
+          "consumerActivityId": "showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment-n",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.073244584,
+          "sourceEnvironmentId": "showcase-audio-transcription-v1",
+          "sourceResourceId": "showcase-audio-transcription-local-docker",
+          "sshChannelWaitSeconds": 4.17e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-audio-transcription-v1",
+          "targetResourceId": "showcase-audio-transcription-local-docker"
+        },
+        "sourceResourceId": "showcase-audio-transcription-local-docker",
+        "startedAt": 1792523604.4305902,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-audio-transcription-local-docker"
+      },
+      {
+        "bytes": 17941,
+        "consumerActivityId": "showcase-audio-transcription-local-a18bfb861c-summarize",
+        "cost": 0,
+        "durationSeconds": 0.16725826263427734,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "finishedAt": 1792523606.559408,
+        "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-summarize:transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-summarize-0",
+        "logicalBytes": 17941,
+        "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+        "route": {
+          "consumerActivityId": "showcase-audio-transcription-local-a18bfb861c-summarize",
+          "filesTransferred": 8,
+          "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.072879416,
+          "sourceEnvironmentId": "showcase-audio-transcription-v1",
+          "sourceResourceId": "showcase-audio-transcription-local-docker",
+          "sshChannelWaitSeconds": 5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-audio-transcription-v1",
+          "targetResourceId": "showcase-audio-transcription-local-docker"
+        },
+        "sourceResourceId": "showcase-audio-transcription-local-docker",
+        "startedAt": 1792523606.3921497,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-audio-transcription-local-docker"
+      },
+      {
+        "bytes": 18576,
+        "consumerActivityId": "showcase-audio-transcription-local-a18bfb861c-publish",
+        "cost": 0,
+        "durationSeconds": 0.1674046516418457,
+        "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "finishedAt": 1792523608.582859,
+        "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-publish:transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-publish-0",
+        "logicalBytes": 18576,
+        "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-summarize",
+        "route": {
+          "consumerActivityId": "showcase-audio-transcription-local-a18bfb861c-publish",
+          "filesTransferred": 9,
+          "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-summarize",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.07011758400000001,
+          "sourceEnvironmentId": "showcase-audio-transcription-v1",
+          "sourceResourceId": "showcase-audio-transcription-local-docker",
+          "sshChannelWaitSeconds": 4.17e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-audio-transcription-v1",
+          "targetResourceId": "showcase-audio-transcription-local-docker"
+        },
+        "sourceResourceId": "showcase-audio-transcription-local-docker",
+        "startedAt": 1792523608.4154544,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-audio-transcription-local-docker"
+      }
+    ],
+    "events": [
+      {
+        "aggregateId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.started",
+        "id": "debcda71250b8671974737b3d5cfb06d",
+        "occurredAt": "2026-10-20T19:13:19.112171007Z",
+        "payload": {
+          "mode": "real",
+          "schedulePlanId": "showcase-audio-transcription-local-a18bfb861c-manual-plan-20261020t191318.732334000"
+        }
+      },
+      {
+        "aggregateId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-ingest-audio",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "45d7786b084061b41310c9e073a2f14e",
+        "occurredAt": "2026-10-20T19:13:20.294633091Z",
+        "payload": {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-ingest-audio",
+          "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-ingest-audio",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "44c12b1a939721e5b7e406bec2bac084",
+        "occurredAt": "2026-10-20T19:13:20.352401216Z",
+        "payload": {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-ingest-audio",
+          "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+          "failureReason": "",
+          "runtimeSeconds": 0.10861778259277344,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "de50bc012634b4139ef698f5fd09e510",
+        "occurredAt": "2026-10-20T19:13:22.312794175Z",
+        "payload": {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-segment",
+          "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "13319e7a630cff9101b5e37504b66c3d",
+        "occurredAt": "2026-10-20T19:13:22.3753818Z",
+        "payload": {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-segment",
+          "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11052680015563965,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment-n",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "298764bc5219a56824ee8cafe6459066",
+        "occurredAt": "2026-10-20T19:13:24.314397134Z",
+        "payload": {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-segment-n",
+          "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment-1",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "17a694b2ec06593f2b4f8b3b3c2d1c54",
+        "occurredAt": "2026-10-20T19:13:24.319021467Z",
+        "payload": {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-segment-1",
+          "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment-n",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "0c3dfe76a976e14cb9ef1dbb962c6a88",
+        "occurredAt": "2026-10-20T19:13:24.419993468Z",
+        "payload": {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-segment-n",
+          "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+          "failureReason": "",
+          "runtimeSeconds": 0.1150064468383789,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment-1",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "7a745f4299f180a15eb7dee33251c432",
+        "occurredAt": "2026-10-20T19:13:24.424293093Z",
+        "payload": {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-segment-1",
+          "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11908578872680664,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "e2557db0744e6d04f5508ea4ad4f6b80",
+        "occurredAt": "2026-10-20T19:13:26.318093968Z",
+        "payload": {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+          "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "3ab68edc0f9e837b02edb435e9663e9d",
+        "occurredAt": "2026-10-20T19:13:26.386758635Z",
+        "payload": {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+          "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+          "failureReason": "",
+          "runtimeSeconds": 0.10806655883789062,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-summarize",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "d13132a173559cc97521ce224be31878",
+        "occurredAt": "2026-10-20T19:13:28.332425636Z",
+        "payload": {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-summarize",
+          "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-summarize",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "9200ec46f2e90da79c7a0ab1f00af049",
+        "occurredAt": "2026-10-20T19:13:28.410222303Z",
+        "payload": {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-summarize",
+          "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+          "failureReason": "",
+          "runtimeSeconds": 0.10991716384887695,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-publish",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "1aff49b2c0143f4188a5e1379ebc72d4",
+        "occurredAt": "2026-10-20T19:13:30.341002929Z",
+        "payload": {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-publish",
+          "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-publish",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "57c8e6bdf3b3d0def7101f596e0e57c2",
+        "occurredAt": "2026-10-20T19:13:30.435567429Z",
+        "payload": {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-publish",
+          "executionRunId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+          "failureReason": "",
+          "runtimeSeconds": 0.10721850395202637,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.completed",
+        "id": "d6f4be16e57372bda8295da537a1dbd5",
+        "occurredAt": "2026-10-20T19:13:30.438695387Z",
+        "payload": {
+          "cost": 0,
+          "makespanSeconds": 9.553641080856323
+        }
+      }
+    ],
+    "handles": [
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-ingest-audio",
+        "artifacts": {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-ingest-audio",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "modifiedUnixNano": 1792523599377619000,
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "modifiedUnixNano": 1792523599377619000,
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "modifiedUnixNano": 1792523599377619000,
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "checksum": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "modifiedUnixNano": 1792523599377619000,
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            }
+          ],
+          "finishedAt": 1792523599.3824902,
+          "phases": [
+            {
+              "durationSeconds": 0.10861778259277344,
+              "finishedAt": 1792523599.3824902,
+              "phase": "execution",
+              "startedAt": 1792523599.2738724,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-ingest-audio",
+          "runId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+          "runtime": "showcase-audio-transcription-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523599.2738724,
+          "summary": {
+            "createdFiles": 2,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 0,
+            "modifiedFiles": 0,
+            "outputBytes": 8230
+          }
+        },
+        "exitCode": 0,
+        "externalId": "cee2b5253f893f976f36af012af59e1c960d9d3bc90be1e9c7a16c276bffe3d5",
+        "finishedAt": 1792523599.3824902,
+        "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-ingest-audio",
+        "log": "{\"activity\": \"ingest-audio\", \"status\": \"success\", \"resultKeys\": [\"audio\", \"samples\", \"rate\", \"samplesPerToken\", \"recognizer\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-audio-transcription-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-ingest-audio",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523599.2738779,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-ingest-audio",
+          "submittedAt": 1792523599.2738724
+        },
+        "resourceId": "showcase-audio-transcription-local-docker",
+        "runId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "runtimeId": "showcase-audio-transcription-local",
+        "startedAt": 1792523599.2738724,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+        "artifacts": {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:61df65329694dd49f2ca2aa17287e69cf780c81c00c69a7b0f15f01c102a6d89",
+              "modifiedUnixNano": 1792523604965619000,
+              "path": "stage-merge-transcript.json",
+              "sizeBytes": 492
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "modifiedUnixNano": 1792523604579619000,
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "checksum": "sha256:24736f1ec43ffbd65cc1669b7257f19649a2c894867c20828e8066cccc18c63b",
+              "modifiedUnixNano": 1792523604579619000,
+              "path": "segment-1.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "checksum": "sha256:aaef07716e63378da4a17ec59199e48633f53ee49a78d0ffff7900d55d11d40e",
+              "modifiedUnixNano": 1792523604579619000,
+              "path": "segment-n.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "checksum": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "modifiedUnixNano": 1792523604579619000,
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            },
+            {
+              "checksum": "sha256:61df65329694dd49f2ca2aa17287e69cf780c81c00c69a7b0f15f01c102a6d89",
+              "modifiedUnixNano": 1792523604965619000,
+              "path": "stage-merge-transcript.json",
+              "sizeBytes": 492
+            },
+            {
+              "checksum": "sha256:93011697daf0406f2484a200a957ef39b1a607e001ef23479f6c431ce11355d4",
+              "modifiedUnixNano": 1792523604579619000,
+              "path": "stage-segment-1.json",
+              "sizeBytes": 490
+            },
+            {
+              "checksum": "sha256:40171f8ce2cba97f30ae63884af5fb5de464d4cf1d8ccc8434eb6d87f8c7079d",
+              "modifiedUnixNano": 1792523604695619000,
+              "path": "stage-segment-n.json",
+              "sizeBytes": 490
+            },
+            {
+              "checksum": "sha256:c4ab4190c60515cf8bc3bb73cccb7d3e3b50d0a6e8320f3dbceddbda38105b45",
+              "modifiedUnixNano": 1792523604579619000,
+              "path": "stage-segment.json",
+              "sizeBytes": 471
+            }
+          ],
+          "finishedAt": 1792523604.9715323,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "modifiedUnixNano": 1792523604579619000,
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "checksum": "sha256:24736f1ec43ffbd65cc1669b7257f19649a2c894867c20828e8066cccc18c63b",
+              "modifiedUnixNano": 1792523604579619000,
+              "path": "segment-1.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "checksum": "sha256:aaef07716e63378da4a17ec59199e48633f53ee49a78d0ffff7900d55d11d40e",
+              "modifiedUnixNano": 1792523604579619000,
+              "path": "segment-n.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "checksum": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "modifiedUnixNano": 1792523604579619000,
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            },
+            {
+              "checksum": "sha256:93011697daf0406f2484a200a957ef39b1a607e001ef23479f6c431ce11355d4",
+              "modifiedUnixNano": 1792523604579619000,
+              "path": "stage-segment-1.json",
+              "sizeBytes": 490
+            },
+            {
+              "checksum": "sha256:40171f8ce2cba97f30ae63884af5fb5de464d4cf1d8ccc8434eb6d87f8c7079d",
+              "modifiedUnixNano": 1792523604695619000,
+              "path": "stage-segment-n.json",
+              "sizeBytes": 490
+            },
+            {
+              "checksum": "sha256:c4ab4190c60515cf8bc3bb73cccb7d3e3b50d0a6e8320f3dbceddbda38105b45",
+              "modifiedUnixNano": 1792523604579619000,
+              "path": "stage-segment.json",
+              "sizeBytes": 471
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.10806655883789062,
+              "finishedAt": 1792523604.9715323,
+              "phase": "execution",
+              "startedAt": 1792523604.8634658,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+          "runId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+          "runtime": "showcase-audio-transcription-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523604.8634658,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 8,
+            "initialFiles": 7,
+            "modifiedFiles": 0,
+            "outputBytes": 492
+          }
+        },
+        "exitCode": 0,
+        "externalId": "06c87c8456db441ab8ccadbc88c94fb09010761c9c958bfedbd5e5cb64d219f6",
+        "finishedAt": 1792523604.9715323,
+        "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+        "log": "{\"activity\": \"merge-transcript\", \"status\": \"success\", \"resultKeys\": [\"tokens\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-audio-transcription-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523604.863471,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+          "submittedAt": 1792523604.8634658
+        },
+        "resourceId": "showcase-audio-transcription-local-docker",
+        "runId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "runtimeId": "showcase-audio-transcription-local",
+        "startedAt": 1792523604.8634658,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-publish",
+        "artifacts": {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-publish",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:79653b0322ec3dcc0abd453d2bdae45d350887942fd5fdbfbdbc82a16d80d312",
+              "modifiedUnixNano": 1792523608821619000,
+              "path": "stage-publish.json",
+              "sizeBytes": 477
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:689122270303fadd8d78b21a88297bfb962e44ad4b1f1f8d16c0a02e9e92586d",
+              "modifiedUnixNano": 1792523608821619000,
+              "path": "summary.md",
+              "sizeBytes": 102
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:68802bc43347d2bc2995ff6c6b0b26494a85ee8acb087f82500326f2967f8a4f",
+              "modifiedUnixNano": 1792523608821619000,
+              "path": "transcript.txt",
+              "sizeBytes": 38
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "modifiedUnixNano": 1792523608539619000,
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "checksum": "sha256:24736f1ec43ffbd65cc1669b7257f19649a2c894867c20828e8066cccc18c63b",
+              "modifiedUnixNano": 1792523608539619000,
+              "path": "segment-1.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "checksum": "sha256:aaef07716e63378da4a17ec59199e48633f53ee49a78d0ffff7900d55d11d40e",
+              "modifiedUnixNano": 1792523608539619000,
+              "path": "segment-n.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "checksum": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "modifiedUnixNano": 1792523608539619000,
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            },
+            {
+              "checksum": "sha256:61df65329694dd49f2ca2aa17287e69cf780c81c00c69a7b0f15f01c102a6d89",
+              "modifiedUnixNano": 1792523608539619000,
+              "path": "stage-merge-transcript.json",
+              "sizeBytes": 492
+            },
+            {
+              "checksum": "sha256:79653b0322ec3dcc0abd453d2bdae45d350887942fd5fdbfbdbc82a16d80d312",
+              "modifiedUnixNano": 1792523608821619000,
+              "path": "stage-publish.json",
+              "sizeBytes": 477
+            },
+            {
+              "checksum": "sha256:93011697daf0406f2484a200a957ef39b1a607e001ef23479f6c431ce11355d4",
+              "modifiedUnixNano": 1792523608539619000,
+              "path": "stage-segment-1.json",
+              "sizeBytes": 490
+            },
+            {
+              "checksum": "sha256:40171f8ce2cba97f30ae63884af5fb5de464d4cf1d8ccc8434eb6d87f8c7079d",
+              "modifiedUnixNano": 1792523608539619000,
+              "path": "stage-segment-n.json",
+              "sizeBytes": 490
+            },
+            {
+              "checksum": "sha256:c4ab4190c60515cf8bc3bb73cccb7d3e3b50d0a6e8320f3dbceddbda38105b45",
+              "modifiedUnixNano": 1792523608539619000,
+              "path": "stage-segment.json",
+              "sizeBytes": 471
+            },
+            {
+              "checksum": "sha256:146ea54c3d3dca172e07ba4fde5882a77d08c875645f8ec587a4d0dbb0027861",
+              "modifiedUnixNano": 1792523608539619000,
+              "path": "stage-summarize.json",
+              "sizeBytes": 635
+            },
+            {
+              "checksum": "sha256:689122270303fadd8d78b21a88297bfb962e44ad4b1f1f8d16c0a02e9e92586d",
+              "modifiedUnixNano": 1792523608821619000,
+              "path": "summary.md",
+              "sizeBytes": 102
+            },
+            {
+              "checksum": "sha256:68802bc43347d2bc2995ff6c6b0b26494a85ee8acb087f82500326f2967f8a4f",
+              "modifiedUnixNano": 1792523608821619000,
+              "path": "transcript.txt",
+              "sizeBytes": 38
+            }
+          ],
+          "finishedAt": 1792523608.8275135,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "modifiedUnixNano": 1792523608539619000,
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "checksum": "sha256:24736f1ec43ffbd65cc1669b7257f19649a2c894867c20828e8066cccc18c63b",
+              "modifiedUnixNano": 1792523608539619000,
+              "path": "segment-1.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "checksum": "sha256:aaef07716e63378da4a17ec59199e48633f53ee49a78d0ffff7900d55d11d40e",
+              "modifiedUnixNano": 1792523608539619000,
+              "path": "segment-n.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "checksum": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "modifiedUnixNano": 1792523608539619000,
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            },
+            {
+              "checksum": "sha256:61df65329694dd49f2ca2aa17287e69cf780c81c00c69a7b0f15f01c102a6d89",
+              "modifiedUnixNano": 1792523608539619000,
+              "path": "stage-merge-transcript.json",
+              "sizeBytes": 492
+            },
+            {
+              "checksum": "sha256:93011697daf0406f2484a200a957ef39b1a607e001ef23479f6c431ce11355d4",
+              "modifiedUnixNano": 1792523608539619000,
+              "path": "stage-segment-1.json",
+              "sizeBytes": 490
+            },
+            {
+              "checksum": "sha256:40171f8ce2cba97f30ae63884af5fb5de464d4cf1d8ccc8434eb6d87f8c7079d",
+              "modifiedUnixNano": 1792523608539619000,
+              "path": "stage-segment-n.json",
+              "sizeBytes": 490
+            },
+            {
+              "checksum": "sha256:c4ab4190c60515cf8bc3bb73cccb7d3e3b50d0a6e8320f3dbceddbda38105b45",
+              "modifiedUnixNano": 1792523608539619000,
+              "path": "stage-segment.json",
+              "sizeBytes": 471
+            },
+            {
+              "checksum": "sha256:146ea54c3d3dca172e07ba4fde5882a77d08c875645f8ec587a4d0dbb0027861",
+              "modifiedUnixNano": 1792523608539619000,
+              "path": "stage-summarize.json",
+              "sizeBytes": 635
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.10721850395202637,
+              "finishedAt": 1792523608.8275135,
+              "phase": "execution",
+              "startedAt": 1792523608.720295,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-publish",
+          "runId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+          "runtime": "showcase-audio-transcription-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523608.720295,
+          "summary": {
+            "createdFiles": 3,
+            "deletedFiles": 0,
+            "finalFiles": 12,
+            "initialFiles": 9,
+            "modifiedFiles": 0,
+            "outputBytes": 617
+          }
+        },
+        "exitCode": 0,
+        "externalId": "bc68cd1b45790443cd2051c511a6c6f8be239e978f9f20408a12d12a51acae7c",
+        "finishedAt": 1792523608.8275135,
+        "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-publish",
+        "log": "{\"activity\": \"publish\", \"status\": \"success\", \"resultKeys\": [\"decodedTokens\", \"exactMatch\", \"counts\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-audio-transcription-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-publish",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523608.7203033,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-publish",
+          "submittedAt": 1792523608.720295
+        },
+        "resourceId": "showcase-audio-transcription-local-docker",
+        "runId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "runtimeId": "showcase-audio-transcription-local",
+        "startedAt": 1792523608.720295,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-segment",
+        "artifacts": {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-segment",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:24736f1ec43ffbd65cc1669b7257f19649a2c894867c20828e8066cccc18c63b",
+              "modifiedUnixNano": 1792523600790619000,
+              "path": "segment-1.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:aaef07716e63378da4a17ec59199e48633f53ee49a78d0ffff7900d55d11d40e",
+              "modifiedUnixNano": 1792523600790619000,
+              "path": "segment-n.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:c4ab4190c60515cf8bc3bb73cccb7d3e3b50d0a6e8320f3dbceddbda38105b45",
+              "modifiedUnixNano": 1792523600790619000,
+              "path": "stage-segment.json",
+              "sizeBytes": 471
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "modifiedUnixNano": 1792523600497619000,
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "checksum": "sha256:24736f1ec43ffbd65cc1669b7257f19649a2c894867c20828e8066cccc18c63b",
+              "modifiedUnixNano": 1792523600790619000,
+              "path": "segment-1.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "checksum": "sha256:aaef07716e63378da4a17ec59199e48633f53ee49a78d0ffff7900d55d11d40e",
+              "modifiedUnixNano": 1792523600790619000,
+              "path": "segment-n.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "checksum": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "modifiedUnixNano": 1792523600497619000,
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            },
+            {
+              "checksum": "sha256:c4ab4190c60515cf8bc3bb73cccb7d3e3b50d0a6e8320f3dbceddbda38105b45",
+              "modifiedUnixNano": 1792523600790619000,
+              "path": "stage-segment.json",
+              "sizeBytes": 471
+            }
+          ],
+          "finishedAt": 1792523600.7961543,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "modifiedUnixNano": 1792523600497619000,
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "checksum": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "modifiedUnixNano": 1792523600497619000,
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11052680015563965,
+              "finishedAt": 1792523600.7961543,
+              "phase": "execution",
+              "startedAt": 1792523600.6856275,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-segment",
+          "runId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+          "runtime": "showcase-audio-transcription-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523600.6856275,
+          "summary": {
+            "createdFiles": 3,
+            "deletedFiles": 0,
+            "finalFiles": 5,
+            "initialFiles": 2,
+            "modifiedFiles": 0,
+            "outputBytes": 8239
+          }
+        },
+        "exitCode": 0,
+        "externalId": "732c08e47d9e9e299ad14820624349d4a902e5b70feb0950890b34bab2a2b956",
+        "finishedAt": 1792523600.7961543,
+        "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment",
+        "log": "{\"activity\": \"segment\", \"status\": \"success\", \"resultKeys\": [\"segments\", \"samplesPerToken\", \"rate\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-audio-transcription-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-segment",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523600.685652,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-segment",
+          "submittedAt": 1792523600.6856275
+        },
+        "resourceId": "showcase-audio-transcription-local-docker",
+        "runId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "runtimeId": "showcase-audio-transcription-local",
+        "startedAt": 1792523600.6856275,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-segment-1",
+        "artifacts": {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-segment-1",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:93011697daf0406f2484a200a957ef39b1a607e001ef23479f6c431ce11355d4",
+              "modifiedUnixNano": 1792523602854619100,
+              "path": "stage-segment-1.json",
+              "sizeBytes": 490
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "modifiedUnixNano": 1792523602524619000,
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "checksum": "sha256:24736f1ec43ffbd65cc1669b7257f19649a2c894867c20828e8066cccc18c63b",
+              "modifiedUnixNano": 1792523602524619000,
+              "path": "segment-1.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "checksum": "sha256:aaef07716e63378da4a17ec59199e48633f53ee49a78d0ffff7900d55d11d40e",
+              "modifiedUnixNano": 1792523602524619000,
+              "path": "segment-n.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "checksum": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "modifiedUnixNano": 1792523602524619000,
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            },
+            {
+              "checksum": "sha256:93011697daf0406f2484a200a957ef39b1a607e001ef23479f6c431ce11355d4",
+              "modifiedUnixNano": 1792523602854619100,
+              "path": "stage-segment-1.json",
+              "sizeBytes": 490
+            },
+            {
+              "checksum": "sha256:c4ab4190c60515cf8bc3bb73cccb7d3e3b50d0a6e8320f3dbceddbda38105b45",
+              "modifiedUnixNano": 1792523602524619000,
+              "path": "stage-segment.json",
+              "sizeBytes": 471
+            }
+          ],
+          "finishedAt": 1792523602.8625212,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "modifiedUnixNano": 1792523602524619000,
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "checksum": "sha256:24736f1ec43ffbd65cc1669b7257f19649a2c894867c20828e8066cccc18c63b",
+              "modifiedUnixNano": 1792523602524619000,
+              "path": "segment-1.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "checksum": "sha256:aaef07716e63378da4a17ec59199e48633f53ee49a78d0ffff7900d55d11d40e",
+              "modifiedUnixNano": 1792523602524619000,
+              "path": "segment-n.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "checksum": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "modifiedUnixNano": 1792523602524619000,
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            },
+            {
+              "checksum": "sha256:c4ab4190c60515cf8bc3bb73cccb7d3e3b50d0a6e8320f3dbceddbda38105b45",
+              "modifiedUnixNano": 1792523602524619000,
+              "path": "stage-segment.json",
+              "sizeBytes": 471
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11908578872680664,
+              "finishedAt": 1792523602.8625212,
+              "phase": "execution",
+              "startedAt": 1792523602.7434354,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-segment-1",
+          "runId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+          "runtime": "showcase-audio-transcription-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523602.7434354,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 6,
+            "initialFiles": 5,
+            "modifiedFiles": 0,
+            "outputBytes": 490
+          }
+        },
+        "exitCode": 0,
+        "externalId": "7840404b126407d75db91a504009defd24c7d7fd0bc9e4e2024b2b5d52dd073d",
+        "finishedAt": 1792523602.8625212,
+        "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment-1",
+        "log": "{\"activity\": \"segment-1\", \"status\": \"success\", \"resultKeys\": [\"tokens\", \"transcript\", \"audio\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-audio-transcription-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-segment-1",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523602.7434433,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-segment-1",
+          "submittedAt": 1792523602.7434354
+        },
+        "resourceId": "showcase-audio-transcription-local-docker",
+        "runId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "runtimeId": "showcase-audio-transcription-local",
+        "startedAt": 1792523602.7434354,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-segment-n",
+        "artifacts": {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-segment-n",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:40171f8ce2cba97f30ae63884af5fb5de464d4cf1d8ccc8434eb6d87f8c7079d",
+              "modifiedUnixNano": 1792523602862619100,
+              "path": "stage-segment-n.json",
+              "sizeBytes": 490
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "modifiedUnixNano": 1792523602523619000,
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "checksum": "sha256:24736f1ec43ffbd65cc1669b7257f19649a2c894867c20828e8066cccc18c63b",
+              "modifiedUnixNano": 1792523602523619000,
+              "path": "segment-1.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "checksum": "sha256:aaef07716e63378da4a17ec59199e48633f53ee49a78d0ffff7900d55d11d40e",
+              "modifiedUnixNano": 1792523602523619000,
+              "path": "segment-n.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "checksum": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "modifiedUnixNano": 1792523602523619000,
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            },
+            {
+              "checksum": "sha256:40171f8ce2cba97f30ae63884af5fb5de464d4cf1d8ccc8434eb6d87f8c7079d",
+              "modifiedUnixNano": 1792523602862619100,
+              "path": "stage-segment-n.json",
+              "sizeBytes": 490
+            },
+            {
+              "checksum": "sha256:c4ab4190c60515cf8bc3bb73cccb7d3e3b50d0a6e8320f3dbceddbda38105b45",
+              "modifiedUnixNano": 1792523602523619000,
+              "path": "stage-segment.json",
+              "sizeBytes": 471
+            }
+          ],
+          "finishedAt": 1792523602.8677387,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "modifiedUnixNano": 1792523602523619000,
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "checksum": "sha256:24736f1ec43ffbd65cc1669b7257f19649a2c894867c20828e8066cccc18c63b",
+              "modifiedUnixNano": 1792523602523619000,
+              "path": "segment-1.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "checksum": "sha256:aaef07716e63378da4a17ec59199e48633f53ee49a78d0ffff7900d55d11d40e",
+              "modifiedUnixNano": 1792523602523619000,
+              "path": "segment-n.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "checksum": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "modifiedUnixNano": 1792523602523619000,
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            },
+            {
+              "checksum": "sha256:c4ab4190c60515cf8bc3bb73cccb7d3e3b50d0a6e8320f3dbceddbda38105b45",
+              "modifiedUnixNano": 1792523602523619000,
+              "path": "stage-segment.json",
+              "sizeBytes": 471
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.1150064468383789,
+              "finishedAt": 1792523602.8677387,
+              "phase": "execution",
+              "startedAt": 1792523602.7527323,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-segment-n",
+          "runId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+          "runtime": "showcase-audio-transcription-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523602.7527323,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 6,
+            "initialFiles": 5,
+            "modifiedFiles": 0,
+            "outputBytes": 490
+          }
+        },
+        "exitCode": 0,
+        "externalId": "4d0f27ea2bd42b9a2ce22bd48826e03fc3e3982db312b0fb400e863f6aceb0a8",
+        "finishedAt": 1792523602.8677387,
+        "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment-n",
+        "log": "{\"activity\": \"segment-n\", \"status\": \"success\", \"resultKeys\": [\"tokens\", \"transcript\", \"audio\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-audio-transcription-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-segment-n",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523602.7527373,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-segment-n",
+          "submittedAt": 1792523602.7527323
+        },
+        "resourceId": "showcase-audio-transcription-local-docker",
+        "runId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "runtimeId": "showcase-audio-transcription-local",
+        "startedAt": 1792523602.7527323,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-summarize",
+        "artifacts": {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-summarize",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:146ea54c3d3dca172e07ba4fde5882a77d08c875645f8ec587a4d0dbb0027861",
+              "modifiedUnixNano": 1792523606801619000,
+              "path": "stage-summarize.json",
+              "sizeBytes": 635
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "modifiedUnixNano": 1792523606536619000,
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "checksum": "sha256:24736f1ec43ffbd65cc1669b7257f19649a2c894867c20828e8066cccc18c63b",
+              "modifiedUnixNano": 1792523606536619000,
+              "path": "segment-1.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "checksum": "sha256:aaef07716e63378da4a17ec59199e48633f53ee49a78d0ffff7900d55d11d40e",
+              "modifiedUnixNano": 1792523606536619000,
+              "path": "segment-n.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "checksum": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "modifiedUnixNano": 1792523606536619000,
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            },
+            {
+              "checksum": "sha256:61df65329694dd49f2ca2aa17287e69cf780c81c00c69a7b0f15f01c102a6d89",
+              "modifiedUnixNano": 1792523606536619000,
+              "path": "stage-merge-transcript.json",
+              "sizeBytes": 492
+            },
+            {
+              "checksum": "sha256:93011697daf0406f2484a200a957ef39b1a607e001ef23479f6c431ce11355d4",
+              "modifiedUnixNano": 1792523606536619000,
+              "path": "stage-segment-1.json",
+              "sizeBytes": 490
+            },
+            {
+              "checksum": "sha256:40171f8ce2cba97f30ae63884af5fb5de464d4cf1d8ccc8434eb6d87f8c7079d",
+              "modifiedUnixNano": 1792523606536619000,
+              "path": "stage-segment-n.json",
+              "sizeBytes": 490
+            },
+            {
+              "checksum": "sha256:c4ab4190c60515cf8bc3bb73cccb7d3e3b50d0a6e8320f3dbceddbda38105b45",
+              "modifiedUnixNano": 1792523606536619000,
+              "path": "stage-segment.json",
+              "sizeBytes": 471
+            },
+            {
+              "checksum": "sha256:146ea54c3d3dca172e07ba4fde5882a77d08c875645f8ec587a4d0dbb0027861",
+              "modifiedUnixNano": 1792523606801619000,
+              "path": "stage-summarize.json",
+              "sizeBytes": 635
+            }
+          ],
+          "finishedAt": 1792523606.8074749,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "modifiedUnixNano": 1792523606536619000,
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "checksum": "sha256:24736f1ec43ffbd65cc1669b7257f19649a2c894867c20828e8066cccc18c63b",
+              "modifiedUnixNano": 1792523606536619000,
+              "path": "segment-1.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "checksum": "sha256:aaef07716e63378da4a17ec59199e48633f53ee49a78d0ffff7900d55d11d40e",
+              "modifiedUnixNano": 1792523606536619000,
+              "path": "segment-n.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "checksum": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "modifiedUnixNano": 1792523606536619000,
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            },
+            {
+              "checksum": "sha256:61df65329694dd49f2ca2aa17287e69cf780c81c00c69a7b0f15f01c102a6d89",
+              "modifiedUnixNano": 1792523606536619000,
+              "path": "stage-merge-transcript.json",
+              "sizeBytes": 492
+            },
+            {
+              "checksum": "sha256:93011697daf0406f2484a200a957ef39b1a607e001ef23479f6c431ce11355d4",
+              "modifiedUnixNano": 1792523606536619000,
+              "path": "stage-segment-1.json",
+              "sizeBytes": 490
+            },
+            {
+              "checksum": "sha256:40171f8ce2cba97f30ae63884af5fb5de464d4cf1d8ccc8434eb6d87f8c7079d",
+              "modifiedUnixNano": 1792523606536619000,
+              "path": "stage-segment-n.json",
+              "sizeBytes": 490
+            },
+            {
+              "checksum": "sha256:c4ab4190c60515cf8bc3bb73cccb7d3e3b50d0a6e8320f3dbceddbda38105b45",
+              "modifiedUnixNano": 1792523606536619000,
+              "path": "stage-segment.json",
+              "sizeBytes": 471
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.10991716384887695,
+              "finishedAt": 1792523606.8074749,
+              "phase": "execution",
+              "startedAt": 1792523606.6975577,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-summarize",
+          "runId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+          "runtime": "showcase-audio-transcription-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523606.6975577,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 9,
+            "initialFiles": 8,
+            "modifiedFiles": 0,
+            "outputBytes": 635
+          }
+        },
+        "exitCode": 0,
+        "externalId": "813784d66866d95c40c67ad86e2e76b661c7f5384216fad40f471bca7d7d011e",
+        "finishedAt": 1792523606.8074749,
+        "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-summarize",
+        "log": "{\"activity\": \"summarize\", \"status\": \"success\", \"resultKeys\": [\"tokens\", \"summary\", \"counts\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-audio-transcription-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-summarize",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523606.697563,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-summarize",
+          "submittedAt": 1792523606.6975577
+        },
+        "resourceId": "showcase-audio-transcription-local-docker",
+        "runId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "runtimeId": "showcase-audio-transcription-local",
+        "startedAt": 1792523606.6975577,
+        "status": "completed"
+      }
+    ],
+    "infrastructureRuns": [],
+    "operationEvents": [],
+    "run": {
+      "activityCount": 7,
+      "breakdown": {
+        "computeSeconds": 0.7784390449523926,
+        "interferenceSeconds": 0,
+        "overheadSeconds": 0,
+        "queueSeconds": 0,
+        "transferSeconds": 1.3712706565856934
+      },
+      "completedActivityCount": 7,
+      "cost": 0,
+      "finishedAt": "2026-10-20T19:13:30Z",
+      "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+      "kind": "workflow",
+      "makespanSeconds": 9.553641080856323,
+      "mode": "real",
+      "schedulePlanId": "showcase-audio-transcription-local-a18bfb861c-manual-plan-20261020t191318.732334000",
+      "seed": 0,
+      "startedAt": "2026-10-20T19:13:19Z",
+      "status": "completed",
+      "title": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+      "transferredBytes": 95134
+    },
+    "timeline": {
+      "computeMakespanSeconds": 9.553641080856323,
+      "coveredWallSeconds": 2.5456552505493164,
+      "finishedAt": 1792523610,
+      "phases": [
+        {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-ingest-audio",
+          "category": "resource-queue",
+          "durationSeconds": 0.12460827827453613,
+          "finishedAt": 1792523599.2738724,
+          "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-ingest-audio:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523599.149264,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-ingest-audio",
+          "category": "runtime",
+          "durationSeconds": 0.10861778259277344,
+          "finishedAt": 1792523599.3824902,
+          "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-ingest-audio:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523599.2738724,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-segment",
+          "category": "resource-queue",
+          "durationSeconds": 0.0027365684509277344,
+          "finishedAt": 1792523600.3564043,
+          "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523600.3536677,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-segment",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.18659257888793945,
+          "finishedAt": 1792523600.542997,
+          "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment:transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-segment-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523600.3564043,
+          "status": "completed",
+          "transferId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment:transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-segment-0"
+        },
+        {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-segment",
+          "category": "launch",
+          "durationSeconds": 0.14263057708740234,
+          "finishedAt": 1792523600.6856275,
+          "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523600.542997,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-segment",
+          "category": "runtime",
+          "durationSeconds": 0.11052680015563965,
+          "finishedAt": 1792523600.7961543,
+          "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523600.6856275,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-segment-1",
+          "category": "resource-queue",
+          "durationSeconds": 0.00704193115234375,
+          "finishedAt": 1792523602.3849328,
+          "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment-1:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523602.3778908,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-segment-n",
+          "category": "resource-queue",
+          "durationSeconds": 0.00785684585571289,
+          "finishedAt": 1792523602.3870084,
+          "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment-n:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523602.3791516,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-segment-1",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.1855928897857666,
+          "finishedAt": 1792523602.5705256,
+          "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment-1:transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-segment-1-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523602.3849328,
+          "status": "completed",
+          "transferId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment-1:transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-segment-1-0"
+        },
+        {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-segment-n",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.18237996101379395,
+          "finishedAt": 1792523602.5693884,
+          "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment-n:transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-segment-n-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523602.3870084,
+          "status": "completed",
+          "transferId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment-n:transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-segment-n-0"
+        },
+        {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-segment-n",
+          "category": "launch",
+          "durationSeconds": 0.18334388732910156,
+          "finishedAt": 1792523602.7527323,
+          "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment-n:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523602.5693884,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-segment-1",
+          "category": "launch",
+          "durationSeconds": 0.17290973663330078,
+          "finishedAt": 1792523602.7434354,
+          "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment-1:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523602.5705256,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-segment-1",
+          "category": "runtime",
+          "durationSeconds": 0.11908578872680664,
+          "finishedAt": 1792523602.8625212,
+          "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment-1:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523602.7434354,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-segment-n",
+          "category": "runtime",
+          "durationSeconds": 0.1150064468383789,
+          "finishedAt": 1792523602.8677387,
+          "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-segment-n:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523602.7527323,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+          "category": "resource-queue",
+          "durationSeconds": 0.004940032958984375,
+          "finishedAt": 1792523604.4305902,
+          "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-merge-transcript:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523604.4256501,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.19218826293945312,
+          "finishedAt": 1792523604.6227784,
+          "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-merge-transcript:transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-merge-transcript-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523604.4305902,
+          "status": "completed",
+          "transferId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-merge-transcript:transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-merge-transcript-0"
+        },
+        {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.2898540496826172,
+          "finishedAt": 1792523604.7204442,
+          "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-merge-transcript:transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-merge-transcript-1",
+          "source": "transfer-observation",
+          "startedAt": 1792523604.4305902,
+          "status": "completed",
+          "transferId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-merge-transcript:transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-merge-transcript-1"
+        },
+        {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+          "category": "launch",
+          "durationSeconds": 0.1430215835571289,
+          "finishedAt": 1792523604.8634658,
+          "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-merge-transcript:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523604.7204442,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+          "category": "runtime",
+          "durationSeconds": 0.10806655883789062,
+          "finishedAt": 1792523604.9715323,
+          "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-merge-transcript:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523604.8634658,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-summarize",
+          "category": "resource-queue",
+          "durationSeconds": 0.0035355091094970703,
+          "finishedAt": 1792523606.3921497,
+          "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-summarize:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523606.3886142,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-summarize",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.16725826263427734,
+          "finishedAt": 1792523606.559408,
+          "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-summarize:transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-summarize-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523606.3921497,
+          "status": "completed",
+          "transferId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-summarize:transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-summarize-0"
+        },
+        {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-summarize",
+          "category": "launch",
+          "durationSeconds": 0.13814973831176758,
+          "finishedAt": 1792523606.6975577,
+          "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-summarize:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523606.559408,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-summarize",
+          "category": "runtime",
+          "durationSeconds": 0.10991716384887695,
+          "finishedAt": 1792523606.8074749,
+          "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-summarize:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523606.6975577,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-publish",
+          "category": "resource-queue",
+          "durationSeconds": 0.0032927989959716797,
+          "finishedAt": 1792523608.4154544,
+          "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-publish:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523608.4121616,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-publish",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.1674046516418457,
+          "finishedAt": 1792523608.582859,
+          "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-publish:transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-publish-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523608.4154544,
+          "status": "completed",
+          "transferId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-publish:transfer-workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-publish-0"
+        },
+        {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-publish",
+          "category": "launch",
+          "durationSeconds": 0.1374359130859375,
+          "finishedAt": 1792523608.720295,
+          "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-publish:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523608.582859,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-audio-transcription-local-a18bfb861c-publish",
+          "category": "runtime",
+          "durationSeconds": 0.10721850395202637,
+          "finishedAt": 1792523608.8275135,
+          "id": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000:showcase-audio-transcription-local-a18bfb861c-publish:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523608.720295,
+          "status": "completed"
+        }
+      ],
+      "startedAt": 1792523599,
+      "totals": {
+        "destroySeconds": 0,
+        "executablePreparationSeconds": 0,
+        "launchSeconds": 0.9174914360046387,
+        "provisionSeconds": 0,
+        "resourceQueueSeconds": 0.15401196479797363,
+        "runtimeSeconds": 0.7784390449523926,
+        "startSeconds": 0,
+        "stopSeconds": 0,
+        "validationSeconds": 0,
+        "workspaceTransferSeconds": 1.3712706565856934
+      },
+      "unclassifiedWallSeconds": 8.454344749450684,
+      "wallSeconds": 11
+    },
+    "workspaceLeases": [
+      {
+        "consumerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment",
+        "id": "workspace-lease-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-ingest-audio-showcase-audio-transcription-local-a18bfb861c-segment",
+        "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-ingest-audio",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:13:20.546758966Z",
+        "runId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "workspaceId": "workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-ingest-audio"
+      },
+      {
+        "consumerActivityId": "showcase-audio-transcription-local-a18bfb861c-summarize",
+        "id": "workspace-lease-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-merge-transcript-showcase-audio-transcription-local-a18bfb861c-summarize",
+        "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:13:26.562734344Z",
+        "runId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "workspaceId": "workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-merge-transcript"
+      },
+      {
+        "consumerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment-1",
+        "id": "workspace-lease-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-segment-showcase-audio-transcription-local-a18bfb861c-segment-1",
+        "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:13:22.576181758Z",
+        "runId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "workspaceId": "workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-segment"
+      },
+      {
+        "consumerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment-n",
+        "id": "workspace-lease-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-segment-showcase-audio-transcription-local-a18bfb861c-segment-n",
+        "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:13:22.576056425Z",
+        "runId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "workspaceId": "workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-segment"
+      },
+      {
+        "consumerActivityId": "showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+        "id": "workspace-lease-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-segment-1-showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+        "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment-1",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:13:24.725830426Z",
+        "runId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "workspaceId": "workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-segment-1"
+      },
+      {
+        "consumerActivityId": "showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+        "id": "workspace-lease-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-segment-n-showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+        "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-segment-n",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:13:24.725830426Z",
+        "runId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "workspaceId": "workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-segment-n"
+      },
+      {
+        "consumerActivityId": "showcase-audio-transcription-local-a18bfb861c-publish",
+        "id": "workspace-lease-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-summarize-showcase-audio-transcription-local-a18bfb861c-publish",
+        "producerActivityId": "showcase-audio-transcription-local-a18bfb861c-summarize",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:13:28.585950553Z",
+        "runId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "workspaceId": "workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-summarize"
+      }
+    ],
+    "workspaces": [
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-ingest-audio",
+        "createdAt": "2026-10-20T19:13:19.115557382Z",
+        "driver": "local",
+        "environmentId": "showcase-audio-transcription-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-ingest-audio",
+        "fileCount": 2,
+        "id": "workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-ingest-audio",
+        "inputBytes": 0,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "digest": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "digest": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-ingest-audio",
+        "outputBytes": 8230,
+        "pinned": false,
+        "reclaimedBytes": 8230,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:13:20.554474841Z",
+        "resourceId": "showcase-audio-transcription-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "runtimeId": "showcase-audio-transcription-local",
+        "sealedAt": "2026-10-20T19:13:20.349546257Z",
+        "sizeBytes": 8230,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-ingest-audio"
+      },
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+        "createdAt": "2026-10-20T19:13:19.115557382Z",
+        "driver": "local",
+        "environmentId": "showcase-audio-transcription-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+        "fileCount": 8,
+        "id": "workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+        "inputBytes": 17449,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "digest": "sha256:24736f1ec43ffbd65cc1669b7257f19649a2c894867c20828e8066cccc18c63b",
+              "path": "segment-1.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:aaef07716e63378da4a17ec59199e48633f53ee49a78d0ffff7900d55d11d40e",
+              "path": "segment-n.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            },
+            {
+              "digest": "sha256:61df65329694dd49f2ca2aa17287e69cf780c81c00c69a7b0f15f01c102a6d89",
+              "path": "stage-merge-transcript.json",
+              "sizeBytes": 492
+            },
+            {
+              "digest": "sha256:93011697daf0406f2484a200a957ef39b1a607e001ef23479f6c431ce11355d4",
+              "path": "stage-segment-1.json",
+              "sizeBytes": 490
+            },
+            {
+              "digest": "sha256:40171f8ce2cba97f30ae63884af5fb5de464d4cf1d8ccc8434eb6d87f8c7079d",
+              "path": "stage-segment-n.json",
+              "sizeBytes": 490
+            },
+            {
+              "digest": "sha256:c4ab4190c60515cf8bc3bb73cccb7d3e3b50d0a6e8320f3dbceddbda38105b45",
+              "path": "stage-segment.json",
+              "sizeBytes": 471
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "digest": "sha256:24736f1ec43ffbd65cc1669b7257f19649a2c894867c20828e8066cccc18c63b",
+              "path": "segment-1.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:aaef07716e63378da4a17ec59199e48633f53ee49a78d0ffff7900d55d11d40e",
+              "path": "segment-n.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            },
+            {
+              "digest": "sha256:93011697daf0406f2484a200a957ef39b1a607e001ef23479f6c431ce11355d4",
+              "path": "stage-segment-1.json",
+              "sizeBytes": 490
+            },
+            {
+              "digest": "sha256:40171f8ce2cba97f30ae63884af5fb5de464d4cf1d8ccc8434eb6d87f8c7079d",
+              "path": "stage-segment-n.json",
+              "sizeBytes": 490
+            },
+            {
+              "digest": "sha256:c4ab4190c60515cf8bc3bb73cccb7d3e3b50d0a6e8320f3dbceddbda38105b45",
+              "path": "stage-segment.json",
+              "sizeBytes": 471
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "digest": "sha256:24736f1ec43ffbd65cc1669b7257f19649a2c894867c20828e8066cccc18c63b",
+              "path": "segment-1.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:aaef07716e63378da4a17ec59199e48633f53ee49a78d0ffff7900d55d11d40e",
+              "path": "segment-n.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            },
+            {
+              "digest": "sha256:93011697daf0406f2484a200a957ef39b1a607e001ef23479f6c431ce11355d4",
+              "path": "stage-segment-1.json",
+              "sizeBytes": 490
+            },
+            {
+              "digest": "sha256:40171f8ce2cba97f30ae63884af5fb5de464d4cf1d8ccc8434eb6d87f8c7079d",
+              "path": "stage-segment-n.json",
+              "sizeBytes": 490
+            },
+            {
+              "digest": "sha256:c4ab4190c60515cf8bc3bb73cccb7d3e3b50d0a6e8320f3dbceddbda38105b45",
+              "path": "stage-segment.json",
+              "sizeBytes": 471
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:61df65329694dd49f2ca2aa17287e69cf780c81c00c69a7b0f15f01c102a6d89",
+              "path": "stage-merge-transcript.json",
+              "sizeBytes": 492
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-merge-transcript",
+        "outputBytes": 492,
+        "pinned": false,
+        "reclaimedBytes": 17941,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:13:26.567876219Z",
+        "resourceId": "showcase-audio-transcription-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "runtimeId": "showcase-audio-transcription-local",
+        "sealedAt": "2026-10-20T19:13:26.384211718Z",
+        "sizeBytes": 17941,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-merge-transcript"
+      },
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-publish",
+        "createdAt": "2026-10-20T19:13:19.115557382Z",
+        "driver": "local",
+        "environmentId": "showcase-audio-transcription-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-publish",
+        "fileCount": 3,
+        "id": "workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-publish",
+        "inputBytes": 18576,
+        "isFinal": true,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "digest": "sha256:24736f1ec43ffbd65cc1669b7257f19649a2c894867c20828e8066cccc18c63b",
+              "path": "segment-1.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:aaef07716e63378da4a17ec59199e48633f53ee49a78d0ffff7900d55d11d40e",
+              "path": "segment-n.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            },
+            {
+              "digest": "sha256:61df65329694dd49f2ca2aa17287e69cf780c81c00c69a7b0f15f01c102a6d89",
+              "path": "stage-merge-transcript.json",
+              "sizeBytes": 492
+            },
+            {
+              "digest": "sha256:79653b0322ec3dcc0abd453d2bdae45d350887942fd5fdbfbdbc82a16d80d312",
+              "path": "stage-publish.json",
+              "sizeBytes": 477
+            },
+            {
+              "digest": "sha256:93011697daf0406f2484a200a957ef39b1a607e001ef23479f6c431ce11355d4",
+              "path": "stage-segment-1.json",
+              "sizeBytes": 490
+            },
+            {
+              "digest": "sha256:40171f8ce2cba97f30ae63884af5fb5de464d4cf1d8ccc8434eb6d87f8c7079d",
+              "path": "stage-segment-n.json",
+              "sizeBytes": 490
+            },
+            {
+              "digest": "sha256:c4ab4190c60515cf8bc3bb73cccb7d3e3b50d0a6e8320f3dbceddbda38105b45",
+              "path": "stage-segment.json",
+              "sizeBytes": 471
+            },
+            {
+              "digest": "sha256:146ea54c3d3dca172e07ba4fde5882a77d08c875645f8ec587a4d0dbb0027861",
+              "path": "stage-summarize.json",
+              "sizeBytes": 635
+            },
+            {
+              "digest": "sha256:689122270303fadd8d78b21a88297bfb962e44ad4b1f1f8d16c0a02e9e92586d",
+              "path": "summary.md",
+              "sizeBytes": 102
+            },
+            {
+              "digest": "sha256:68802bc43347d2bc2995ff6c6b0b26494a85ee8acb087f82500326f2967f8a4f",
+              "path": "transcript.txt",
+              "sizeBytes": 38
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "digest": "sha256:24736f1ec43ffbd65cc1669b7257f19649a2c894867c20828e8066cccc18c63b",
+              "path": "segment-1.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:aaef07716e63378da4a17ec59199e48633f53ee49a78d0ffff7900d55d11d40e",
+              "path": "segment-n.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            },
+            {
+              "digest": "sha256:61df65329694dd49f2ca2aa17287e69cf780c81c00c69a7b0f15f01c102a6d89",
+              "path": "stage-merge-transcript.json",
+              "sizeBytes": 492
+            },
+            {
+              "digest": "sha256:93011697daf0406f2484a200a957ef39b1a607e001ef23479f6c431ce11355d4",
+              "path": "stage-segment-1.json",
+              "sizeBytes": 490
+            },
+            {
+              "digest": "sha256:40171f8ce2cba97f30ae63884af5fb5de464d4cf1d8ccc8434eb6d87f8c7079d",
+              "path": "stage-segment-n.json",
+              "sizeBytes": 490
+            },
+            {
+              "digest": "sha256:c4ab4190c60515cf8bc3bb73cccb7d3e3b50d0a6e8320f3dbceddbda38105b45",
+              "path": "stage-segment.json",
+              "sizeBytes": 471
+            },
+            {
+              "digest": "sha256:146ea54c3d3dca172e07ba4fde5882a77d08c875645f8ec587a4d0dbb0027861",
+              "path": "stage-summarize.json",
+              "sizeBytes": 635
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "digest": "sha256:24736f1ec43ffbd65cc1669b7257f19649a2c894867c20828e8066cccc18c63b",
+              "path": "segment-1.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:aaef07716e63378da4a17ec59199e48633f53ee49a78d0ffff7900d55d11d40e",
+              "path": "segment-n.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            },
+            {
+              "digest": "sha256:61df65329694dd49f2ca2aa17287e69cf780c81c00c69a7b0f15f01c102a6d89",
+              "path": "stage-merge-transcript.json",
+              "sizeBytes": 492
+            },
+            {
+              "digest": "sha256:93011697daf0406f2484a200a957ef39b1a607e001ef23479f6c431ce11355d4",
+              "path": "stage-segment-1.json",
+              "sizeBytes": 490
+            },
+            {
+              "digest": "sha256:40171f8ce2cba97f30ae63884af5fb5de464d4cf1d8ccc8434eb6d87f8c7079d",
+              "path": "stage-segment-n.json",
+              "sizeBytes": 490
+            },
+            {
+              "digest": "sha256:c4ab4190c60515cf8bc3bb73cccb7d3e3b50d0a6e8320f3dbceddbda38105b45",
+              "path": "stage-segment.json",
+              "sizeBytes": 471
+            },
+            {
+              "digest": "sha256:146ea54c3d3dca172e07ba4fde5882a77d08c875645f8ec587a4d0dbb0027861",
+              "path": "stage-summarize.json",
+              "sizeBytes": 635
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:79653b0322ec3dcc0abd453d2bdae45d350887942fd5fdbfbdbc82a16d80d312",
+              "path": "stage-publish.json",
+              "sizeBytes": 477
+            },
+            {
+              "digest": "sha256:689122270303fadd8d78b21a88297bfb962e44ad4b1f1f8d16c0a02e9e92586d",
+              "path": "summary.md",
+              "sizeBytes": 102
+            },
+            {
+              "digest": "sha256:68802bc43347d2bc2995ff6c6b0b26494a85ee8acb087f82500326f2967f8a4f",
+              "path": "transcript.txt",
+              "sizeBytes": 38
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-publish",
+        "outputBytes": 617,
+        "pinned": false,
+        "reclaimedBytes": 18576,
+        "releaseReason": "inherited inputs pruned",
+        "resourceId": "showcase-audio-transcription-local-docker",
+        "retention": "final",
+        "runId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "runtimeId": "showcase-audio-transcription-local",
+        "sealedAt": "2026-10-20T19:13:30.432285637Z",
+        "sizeBytes": 617,
+        "state": "sealed",
+        "uri": "file:///akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-publish"
+      },
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-segment",
+        "createdAt": "2026-10-20T19:13:19.115557382Z",
+        "driver": "local",
+        "environmentId": "showcase-audio-transcription-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-segment",
+        "fileCount": 5,
+        "id": "workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-segment",
+        "inputBytes": 8230,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "digest": "sha256:24736f1ec43ffbd65cc1669b7257f19649a2c894867c20828e8066cccc18c63b",
+              "path": "segment-1.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:aaef07716e63378da4a17ec59199e48633f53ee49a78d0ffff7900d55d11d40e",
+              "path": "segment-n.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            },
+            {
+              "digest": "sha256:c4ab4190c60515cf8bc3bb73cccb7d3e3b50d0a6e8320f3dbceddbda38105b45",
+              "path": "stage-segment.json",
+              "sizeBytes": 471
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "digest": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "digest": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:24736f1ec43ffbd65cc1669b7257f19649a2c894867c20828e8066cccc18c63b",
+              "path": "segment-1.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:aaef07716e63378da4a17ec59199e48633f53ee49a78d0ffff7900d55d11d40e",
+              "path": "segment-n.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:c4ab4190c60515cf8bc3bb73cccb7d3e3b50d0a6e8320f3dbceddbda38105b45",
+              "path": "stage-segment.json",
+              "sizeBytes": 471
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-segment",
+        "outputBytes": 8239,
+        "pinned": false,
+        "reclaimedBytes": 0,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:13:22.587193258Z",
+        "resourceId": "showcase-audio-transcription-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "runtimeId": "showcase-audio-transcription-local",
+        "sealedAt": "2026-10-20T19:13:22.372311342Z",
+        "sizeBytes": 16469,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-segment"
+      },
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-segment-1",
+        "createdAt": "2026-10-20T19:13:19.115557382Z",
+        "driver": "local",
+        "environmentId": "showcase-audio-transcription-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-segment-1",
+        "fileCount": 6,
+        "id": "workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-segment-1",
+        "inputBytes": 16469,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "digest": "sha256:24736f1ec43ffbd65cc1669b7257f19649a2c894867c20828e8066cccc18c63b",
+              "path": "segment-1.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:aaef07716e63378da4a17ec59199e48633f53ee49a78d0ffff7900d55d11d40e",
+              "path": "segment-n.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            },
+            {
+              "digest": "sha256:93011697daf0406f2484a200a957ef39b1a607e001ef23479f6c431ce11355d4",
+              "path": "stage-segment-1.json",
+              "sizeBytes": 490
+            },
+            {
+              "digest": "sha256:c4ab4190c60515cf8bc3bb73cccb7d3e3b50d0a6e8320f3dbceddbda38105b45",
+              "path": "stage-segment.json",
+              "sizeBytes": 471
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "digest": "sha256:24736f1ec43ffbd65cc1669b7257f19649a2c894867c20828e8066cccc18c63b",
+              "path": "segment-1.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:aaef07716e63378da4a17ec59199e48633f53ee49a78d0ffff7900d55d11d40e",
+              "path": "segment-n.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            },
+            {
+              "digest": "sha256:c4ab4190c60515cf8bc3bb73cccb7d3e3b50d0a6e8320f3dbceddbda38105b45",
+              "path": "stage-segment.json",
+              "sizeBytes": 471
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "digest": "sha256:24736f1ec43ffbd65cc1669b7257f19649a2c894867c20828e8066cccc18c63b",
+              "path": "segment-1.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:aaef07716e63378da4a17ec59199e48633f53ee49a78d0ffff7900d55d11d40e",
+              "path": "segment-n.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            },
+            {
+              "digest": "sha256:c4ab4190c60515cf8bc3bb73cccb7d3e3b50d0a6e8320f3dbceddbda38105b45",
+              "path": "stage-segment.json",
+              "sizeBytes": 471
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:93011697daf0406f2484a200a957ef39b1a607e001ef23479f6c431ce11355d4",
+              "path": "stage-segment-1.json",
+              "sizeBytes": 490
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-segment-1",
+        "outputBytes": 490,
+        "pinned": false,
+        "reclaimedBytes": 16959,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:13:24.731428176Z",
+        "resourceId": "showcase-audio-transcription-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "runtimeId": "showcase-audio-transcription-local",
+        "sealedAt": "2026-10-20T19:13:24.421881718Z",
+        "sizeBytes": 16959,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-segment-1"
+      },
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-segment-n",
+        "createdAt": "2026-10-20T19:13:19.115557382Z",
+        "driver": "local",
+        "environmentId": "showcase-audio-transcription-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-segment-n",
+        "fileCount": 6,
+        "id": "workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-segment-n",
+        "inputBytes": 16469,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "digest": "sha256:24736f1ec43ffbd65cc1669b7257f19649a2c894867c20828e8066cccc18c63b",
+              "path": "segment-1.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:aaef07716e63378da4a17ec59199e48633f53ee49a78d0ffff7900d55d11d40e",
+              "path": "segment-n.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            },
+            {
+              "digest": "sha256:40171f8ce2cba97f30ae63884af5fb5de464d4cf1d8ccc8434eb6d87f8c7079d",
+              "path": "stage-segment-n.json",
+              "sizeBytes": 490
+            },
+            {
+              "digest": "sha256:c4ab4190c60515cf8bc3bb73cccb7d3e3b50d0a6e8320f3dbceddbda38105b45",
+              "path": "stage-segment.json",
+              "sizeBytes": 471
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "digest": "sha256:24736f1ec43ffbd65cc1669b7257f19649a2c894867c20828e8066cccc18c63b",
+              "path": "segment-1.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:aaef07716e63378da4a17ec59199e48633f53ee49a78d0ffff7900d55d11d40e",
+              "path": "segment-n.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            },
+            {
+              "digest": "sha256:c4ab4190c60515cf8bc3bb73cccb7d3e3b50d0a6e8320f3dbceddbda38105b45",
+              "path": "stage-segment.json",
+              "sizeBytes": 471
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "digest": "sha256:24736f1ec43ffbd65cc1669b7257f19649a2c894867c20828e8066cccc18c63b",
+              "path": "segment-1.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:aaef07716e63378da4a17ec59199e48633f53ee49a78d0ffff7900d55d11d40e",
+              "path": "segment-n.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            },
+            {
+              "digest": "sha256:c4ab4190c60515cf8bc3bb73cccb7d3e3b50d0a6e8320f3dbceddbda38105b45",
+              "path": "stage-segment.json",
+              "sizeBytes": 471
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:40171f8ce2cba97f30ae63884af5fb5de464d4cf1d8ccc8434eb6d87f8c7079d",
+              "path": "stage-segment-n.json",
+              "sizeBytes": 490
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-segment-n",
+        "outputBytes": 490,
+        "pinned": false,
+        "reclaimedBytes": 16959,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:13:24.739223176Z",
+        "resourceId": "showcase-audio-transcription-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "runtimeId": "showcase-audio-transcription-local",
+        "sealedAt": "2026-10-20T19:13:24.416654884Z",
+        "sizeBytes": 16959,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-segment-n"
+      },
+      {
+        "activityId": "showcase-audio-transcription-local-a18bfb861c-summarize",
+        "createdAt": "2026-10-20T19:13:19.115557382Z",
+        "driver": "local",
+        "environmentId": "showcase-audio-transcription-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-summarize",
+        "fileCount": 9,
+        "id": "workspace-showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000-showcase-audio-transcription-local-a18bfb861c-summarize",
+        "inputBytes": 17941,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "digest": "sha256:24736f1ec43ffbd65cc1669b7257f19649a2c894867c20828e8066cccc18c63b",
+              "path": "segment-1.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:aaef07716e63378da4a17ec59199e48633f53ee49a78d0ffff7900d55d11d40e",
+              "path": "segment-n.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            },
+            {
+              "digest": "sha256:61df65329694dd49f2ca2aa17287e69cf780c81c00c69a7b0f15f01c102a6d89",
+              "path": "stage-merge-transcript.json",
+              "sizeBytes": 492
+            },
+            {
+              "digest": "sha256:93011697daf0406f2484a200a957ef39b1a607e001ef23479f6c431ce11355d4",
+              "path": "stage-segment-1.json",
+              "sizeBytes": 490
+            },
+            {
+              "digest": "sha256:40171f8ce2cba97f30ae63884af5fb5de464d4cf1d8ccc8434eb6d87f8c7079d",
+              "path": "stage-segment-n.json",
+              "sizeBytes": 490
+            },
+            {
+              "digest": "sha256:c4ab4190c60515cf8bc3bb73cccb7d3e3b50d0a6e8320f3dbceddbda38105b45",
+              "path": "stage-segment.json",
+              "sizeBytes": 471
+            },
+            {
+              "digest": "sha256:146ea54c3d3dca172e07ba4fde5882a77d08c875645f8ec587a4d0dbb0027861",
+              "path": "stage-summarize.json",
+              "sizeBytes": 635
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "digest": "sha256:24736f1ec43ffbd65cc1669b7257f19649a2c894867c20828e8066cccc18c63b",
+              "path": "segment-1.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:aaef07716e63378da4a17ec59199e48633f53ee49a78d0ffff7900d55d11d40e",
+              "path": "segment-n.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            },
+            {
+              "digest": "sha256:61df65329694dd49f2ca2aa17287e69cf780c81c00c69a7b0f15f01c102a6d89",
+              "path": "stage-merge-transcript.json",
+              "sizeBytes": 492
+            },
+            {
+              "digest": "sha256:93011697daf0406f2484a200a957ef39b1a607e001ef23479f6c431ce11355d4",
+              "path": "stage-segment-1.json",
+              "sizeBytes": 490
+            },
+            {
+              "digest": "sha256:40171f8ce2cba97f30ae63884af5fb5de464d4cf1d8ccc8434eb6d87f8c7079d",
+              "path": "stage-segment-n.json",
+              "sizeBytes": 490
+            },
+            {
+              "digest": "sha256:c4ab4190c60515cf8bc3bb73cccb7d3e3b50d0a6e8320f3dbceddbda38105b45",
+              "path": "stage-segment.json",
+              "sizeBytes": 471
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:c1f40745758920df696739dd9dc729a6e16b34ca40c1e355cf80d3da994e2d8d",
+              "path": "input.wav",
+              "sizeBytes": 7724
+            },
+            {
+              "digest": "sha256:24736f1ec43ffbd65cc1669b7257f19649a2c894867c20828e8066cccc18c63b",
+              "path": "segment-1.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:aaef07716e63378da4a17ec59199e48633f53ee49a78d0ffff7900d55d11d40e",
+              "path": "segment-n.wav",
+              "sizeBytes": 3884
+            },
+            {
+              "digest": "sha256:4f6383169823f9852dfad57b493fdc8a5cbe0b2a5e73d1041d9c4b17d5eb0eaf",
+              "path": "stage-ingest-audio.json",
+              "sizeBytes": 506
+            },
+            {
+              "digest": "sha256:61df65329694dd49f2ca2aa17287e69cf780c81c00c69a7b0f15f01c102a6d89",
+              "path": "stage-merge-transcript.json",
+              "sizeBytes": 492
+            },
+            {
+              "digest": "sha256:93011697daf0406f2484a200a957ef39b1a607e001ef23479f6c431ce11355d4",
+              "path": "stage-segment-1.json",
+              "sizeBytes": 490
+            },
+            {
+              "digest": "sha256:40171f8ce2cba97f30ae63884af5fb5de464d4cf1d8ccc8434eb6d87f8c7079d",
+              "path": "stage-segment-n.json",
+              "sizeBytes": 490
+            },
+            {
+              "digest": "sha256:c4ab4190c60515cf8bc3bb73cccb7d3e3b50d0a6e8320f3dbceddbda38105b45",
+              "path": "stage-segment.json",
+              "sizeBytes": 471
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:146ea54c3d3dca172e07ba4fde5882a77d08c875645f8ec587a4d0dbb0027861",
+              "path": "stage-summarize.json",
+              "sizeBytes": 635
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-summarize",
+        "outputBytes": 635,
+        "pinned": false,
+        "reclaimedBytes": 18576,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:13:28.592836511Z",
+        "resourceId": "showcase-audio-transcription-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+        "runtimeId": "showcase-audio-transcription-local",
+        "sealedAt": "2026-10-20T19:13:28.406944386Z",
+        "sizeBytes": 18576,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000/showcase-audio-transcription-local-a18bfb861c-summarize"
+      }
+    ]
+  },
+  "runId": "showcase-audio-transcription-local-a18bfb861c-run-20261020t191318.737733000",
+  "status": "completed",
+  "workflowId": "showcase-audio-transcription-local-a18bfb861c"
+}

@@ -256,6 +256,7 @@ type TransferLocation = execution.TransferLocation
 type BlobDescriptor = execution.BlobDescriptor
 type TransferEndpoint = execution.TransferEndpoint
 type TransferRoute = execution.TransferRoute
+type TransferPhase = execution.TransferPhase
 type TransferConnectorBinding = execution.ConnectorBinding
 type ArtifactVersion = execution.ArtifactVersion
 type ArtifactLocation = execution.ArtifactLocation

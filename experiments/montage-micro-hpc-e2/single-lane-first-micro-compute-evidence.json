@@ -1,0 +1,22 @@
+{
+  "runId": "montage-micro-hpc-e2-real-20261008-single-lane-v1",
+  "status": "partial_running_measurement",
+  "activityId": "montage-58-fog-hpc-e2-20261006-mprojectid0000002",
+  "resourceId": "montage-gcp-fog-e2-micro-04",
+  "executionAttempt": 2,
+  "activityStatus": "completed",
+  "handleStatus": "completed",
+  "source": "Matching execution-attempt task and native handle timestamps from daemon API; selected plan assignment",
+  "startedAtUnixSeconds": 1791445903.2506673,
+  "finishedAtUnixSeconds": 1791447535.248157,
+  "validatedHandleRuntimeSeconds": 1631.997490,
+  "plannedRuntimeSeconds": 1656,
+  "differenceSeconds": -24.002510,
+  "differencePercent": -1.449427,
+  "limitations": [
+    "One completed micro activity; not proof that all 58 activities match the plan.",
+    "This compares scientific execution duration, excluding provisioning and workspace preparation.",
+    "The overall run includes recovery and is not an uninterrupted makespan benchmark.",
+    "The micro speed factor remains approximate and the cloud price remains uncalibrated."
+  ]
+}

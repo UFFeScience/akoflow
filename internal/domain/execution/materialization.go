@@ -69,14 +69,18 @@ func (m ArtifactMaterialization) Committed() bool {
 }
 
 type TransferLocation struct {
-	ResourceID      string `json:"resourceId,omitempty"`
-	EnvironmentID   string `json:"environmentId,omitempty"`
-	RuntimeID       string `json:"runtimeId,omitempty"`
-	ConnectionID    string `json:"connectionId,omitempty"`
-	CloudInstanceID string `json:"cloudInstanceId,omitempty"`
-	NetworkDomain   string `json:"networkDomain,omitempty"`
-	URI             string `json:"uri"`
-	Path            string `json:"path,omitempty"`
+	// Snapshot identity is issued only for a fully checksummed, sealed producer
+	// workspace. Missing identity disables archive reuse, not synchronization.
+	WorkspaceSnapshotID      string           `json:"workspaceSnapshotId,omitempty"`
+	WorkspaceSnapshotEntries []WorkspaceEntry `json:"workspaceSnapshotEntries,omitempty"`
+	ResourceID               string           `json:"resourceId,omitempty"`
+	EnvironmentID            string           `json:"environmentId,omitempty"`
+	RuntimeID                string           `json:"runtimeId,omitempty"`
+	ConnectionID             string           `json:"connectionId,omitempty"`
+	CloudInstanceID          string           `json:"cloudInstanceId,omitempty"`
+	NetworkDomain            string           `json:"networkDomain,omitempty"`
+	URI                      string           `json:"uri"`
+	Path                     string           `json:"path,omitempty"`
 }
 type ArtifactVersion struct {
 	ID         string       `json:"id"`
@@ -96,34 +100,86 @@ type ArtifactLocation struct {
 	Available  bool         `json:"available"`
 }
 type TransferEndpoint struct {
-	ID              string            `json:"id"`
-	Kind            string            `json:"kind"`
-	URI             string            `json:"uri"`
-	ResourceID      string            `json:"resourceId,omitempty"`
-	EnvironmentID   string            `json:"environmentId,omitempty"`
-	RuntimeID       string            `json:"runtimeId,omitempty"`
-	ConnectionID    string            `json:"connectionId,omitempty"`
-	CloudInstanceID string            `json:"cloudInstanceId,omitempty"`
-	NetworkDomain   string            `json:"networkDomain,omitempty"`
-	Configuration   map[string]string `json:"configuration,omitempty"`
+	WorkspaceSnapshotID      string            `json:"workspaceSnapshotId,omitempty"`
+	WorkspaceSnapshotEntries []WorkspaceEntry  `json:"workspaceSnapshotEntries,omitempty"`
+	ID                       string            `json:"id"`
+	Kind                     string            `json:"kind"`
+	URI                      string            `json:"uri"`
+	ResourceID               string            `json:"resourceId,omitempty"`
+	EnvironmentID            string            `json:"environmentId,omitempty"`
+	RuntimeID                string            `json:"runtimeId,omitempty"`
+	ConnectionID             string            `json:"connectionId,omitempty"`
+	CloudInstanceID          string            `json:"cloudInstanceId,omitempty"`
+	NetworkDomain            string            `json:"networkDomain,omitempty"`
+	Configuration            map[string]string `json:"configuration,omitempty"`
 }
 
 type TransferRoute struct {
-	Strategy              TransferStrategy `json:"strategy"`
-	ProducerActivityID    string           `json:"producerActivityId,omitempty"`
-	ConsumerActivityID    string           `json:"consumerActivityId,omitempty"`
-	SourceResourceID      string           `json:"sourceResourceId,omitempty"`
-	TargetResourceID      string           `json:"targetResourceId,omitempty"`
-	SourceEnvironmentID   string           `json:"sourceEnvironmentId,omitempty"`
-	TargetEnvironmentID   string           `json:"targetEnvironmentId,omitempty"`
-	SourceAddress         string           `json:"sourceAddress,omitempty"`
-	TargetAddress         string           `json:"targetAddress,omitempty"`
-	SourceCloudInstanceID string           `json:"sourceCloudInstanceId,omitempty"`
-	TargetCloudInstanceID string           `json:"targetCloudInstanceId,omitempty"`
-	FilesTransferred      int64            `json:"filesTransferred,omitempty"`
-	NetworkDomain         string           `json:"networkDomain,omitempty"`
-	Fallback              TransferStrategy `json:"fallback,omitempty"`
-	Reason                string           `json:"reason"`
+	Phases                                   []TransferPhase  `json:"phases,omitempty"`
+	ArchiveBytes                             int64            `json:"archiveBytes,omitempty"`
+	Packaging                                string           `json:"packaging,omitempty"`
+	PreparationStartedAt                     float64          `json:"preparationStartedAt,omitempty"`
+	PreparationFinishedAt                    float64          `json:"preparationFinishedAt,omitempty"`
+	PreparationSeconds                       float64          `json:"preparationSeconds,omitempty"`
+	Strategy                                 TransferStrategy `json:"strategy"`
+	ProducerActivityID                       string           `json:"producerActivityId,omitempty"`
+	ConsumerActivityID                       string           `json:"consumerActivityId,omitempty"`
+	SourceResourceID                         string           `json:"sourceResourceId,omitempty"`
+	TargetResourceID                         string           `json:"targetResourceId,omitempty"`
+	SourceEnvironmentID                      string           `json:"sourceEnvironmentId,omitempty"`
+	TargetEnvironmentID                      string           `json:"targetEnvironmentId,omitempty"`
+	SourceAddress                            string           `json:"sourceAddress,omitempty"`
+	TargetAddress                            string           `json:"targetAddress,omitempty"`
+	SourceCloudInstanceID                    string           `json:"sourceCloudInstanceId,omitempty"`
+	TargetCloudInstanceID                    string           `json:"targetCloudInstanceId,omitempty"`
+	FilesTransferred                         int64            `json:"filesTransferred,omitempty"`
+	NetworkDomain                            string           `json:"networkDomain,omitempty"`
+	SharedFilesystem                         string           `json:"sharedFilesystem,omitempty"`
+	SharedFilesystemID                       string           `json:"sharedFilesystemId,omitempty"`
+	SharedStorageProofFailure                string           `json:"sharedStorageProofFailure,omitempty"`
+	RetryCount                               int              `json:"retryCount,omitempty"`
+	SSHChannelWaitSeconds                    float64          `json:"sshChannelWaitSeconds,omitempty"`
+	SourcePackPreflightSeconds               float64          `json:"sourcePackPreflightSeconds,omitempty"`
+	SourcePackPreflightSSHChannelWaitSeconds float64          `json:"sourcePackPreflightSshChannelWaitSeconds,omitempty"`
+	SourcePackPreflightServiceSeconds        float64          `json:"sourcePackPreflightServiceSeconds,omitempty"`
+	SourcePackSSHChannelWaitSeconds          float64          `json:"sourcePackSshChannelWaitSeconds,omitempty"`
+	SourcePackExecutionSeconds               float64          `json:"sourcePackExecutionSeconds,omitempty"`
+	RsyncExecutionSeconds                    float64          `json:"rsyncExecutionSeconds,omitempty"`
+	MergeCheckSeconds                        float64          `json:"mergeCheckSeconds,omitempty"`
+	MergeCopySeconds                         float64          `json:"mergeCopySeconds,omitempty"`
+	MergeVerifySeconds                       float64          `json:"mergeVerifySeconds,omitempty"`
+	MergeSSHChannelWaitSeconds               float64          `json:"mergeSshChannelWaitSeconds,omitempty"`
+	MergeExecutionSeconds                    float64          `json:"mergeExecutionSeconds,omitempty"`
+	MergeCommandOverheadSeconds              float64          `json:"mergeCommandOverheadSeconds,omitempty"`
+	LastRetryError                           string           `json:"lastRetryError,omitempty"`
+	NetworkBytesIncomplete                   bool             `json:"networkBytesIncomplete,omitempty"`
+	ServerNetworkBytes                       *int64           `json:"serverNetworkBytes,omitempty"`
+	Fallback                                 TransferStrategy `json:"fallback,omitempty"`
+	Reason                                   string           `json:"reason"`
+	PeerProbeFailure                         string           `json:"peerProbeFailure,omitempty"`
+	SnapshotReused                           bool             `json:"snapshotReused,omitempty"`
+	// Diagnostics, not additive phases. Build wall time includes SSH admission;
+	// a reused caller's acquisition wait may overlap that same shared build.
+	SnapshotBuildWallSeconds    float64  `json:"snapshotBuildWallSeconds,omitempty"`
+	SnapshotBuildSSHWaitSeconds *float64 `json:"snapshotBuildSshWaitSeconds,omitempty"`
+	SnapshotBuildCommandSeconds *float64 `json:"snapshotBuildCommandSeconds,omitempty"`
+	SnapshotBuildServiceSeconds *float64 `json:"snapshotBuildServiceSeconds,omitempty"`
+	SnapshotBuildCPUSeconds     *float64 `json:"snapshotBuildCpuSeconds,omitempty"`
+	SnapshotAcquireWaitSeconds  float64  `json:"snapshotAcquireWaitSeconds,omitempty"`
+	PeerReceiverServiceSeconds  *float64 `json:"peerReceiverServiceSeconds,omitempty"`
+	PeerReceiverCPUSeconds      *float64 `json:"peerReceiverCpuSeconds,omitempty"`
+}
+
+// TransferPhase is elapsed wall time, not exclusive work: concurrent origins
+// and the shared publication barrier must not be summed as consumer latency.
+type TransferPhase struct {
+	Name                  string   `json:"name"`
+	StartedAt             float64  `json:"startedAt"`
+	FinishedAt            float64  `json:"finishedAt"`
+	DurationSeconds       float64  `json:"durationSeconds"`
+	SSHChannelWaitSeconds *float64 `json:"sshChannelWaitSeconds,omitempty"`
+	ExecutionSeconds      *float64 `json:"executionSeconds,omitempty"`
+	Failed                bool     `json:"failed,omitempty"`
 }
 type ConnectorBinding struct {
 	ID            string `json:"id"`

@@ -1,0 +1,3245 @@
+{
+  "schemaVersion": 1,
+  "issue": "AKO-151",
+  "realExecutionStarted": false,
+  "daemonRestarted": false,
+  "validationMode": "native SimGrid offline; exact production export; fixed frozen observed placement and compute",
+  "previousForecastFilesSHA256": {
+    "montage-clean-simulation-20261011-v1-request.json": "f094195c7d3ba6f5a7fddde0c5e6a94097603c2b390bd3f48d5f773fc434001c",
+    "selected-plan.json": "88202b434c5b2ab7da139de1a2ae97d1faee3e6e9e0ac871832fd99f98bc8c0a",
+    "simulation-results.json": "3d69d698523bc6de4ee98152449a47cf57fc667ccaa9d1f7e472a7aec58456a3"
+  },
+  "cases": [
+    {
+      "schemaVersion": 1,
+      "comparisonRole": "original-frozen-forecast",
+      "observedRunId": "montage-clean-real-20261011-v1",
+      "modelSource": "montage-docker-image-real-20261010-v2:sha256:833f3e2da6cbbe87baf8e2e5b6db3a1e875604c3fe1612e2bf75cd49ae6f8318",
+      "simulatedMakespanSeconds": 1203.8392300266385,
+      "observedMakespanSeconds": 3150.6341450214386,
+      "makespanErrorPercent": -61.79057375071878,
+      "withinInitialMakespanTolerance": false,
+      "predictedNetworkBytes": 4925802756,
+      "observedNetworkBytes": 4399426793,
+      "networkBytesErrorPercent": 11.964648754640614,
+      "routeMismatchCount": 0,
+      "dominantTransfers": [
+        {
+          "producer": "montage-independent-work-v1-mdifffitid0000025",
+          "consumer": "montage-independent-work-v1-mconcatfitid0000030",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 242510991,
+          "predictedNetworkBytes": 276780410,
+          "observedDependencyPhaseSeconds": 458.625032877,
+          "predictedDependencySeconds": 75.46213107697815,
+          "durationErrorPercent": -83.54600694087787,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mdifffitid0000028",
+          "consumer": "montage-independent-work-v1-mconcatfitid0000030",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 230333020,
+          "predictedNetworkBytes": 262115992,
+          "observedDependencyPhaseSeconds": 457.641658918,
+          "predictedDependencySeconds": 73.10218777470078,
+          "durationErrorPercent": -84.02632576161534,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mdifffitid0000027",
+          "consumer": "montage-independent-work-v1-mconcatfitid0000030",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 220934982,
+          "predictedNetworkBytes": 251628190,
+          "observedDependencyPhaseSeconds": 439.837226243,
+          "predictedDependencySeconds": 70.32254016207133,
+          "durationErrorPercent": -84.0116897874352,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mconcatfitid0000049",
+          "consumer": "montage-independent-work-v1-mbgmodelid0000050",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 555568726,
+          "predictedNetworkBytes": 622425076,
+          "observedDependencyPhaseSeconds": 314.390931602,
+          "predictedDependencySeconds": 122.0913303430417,
+          "durationErrorPercent": -61.16575954627026,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-maddid0000056",
+          "consumer": "montage-independent-work-v1-mviewerid0000058",
+          "observedStrategy": "direct-runtime",
+          "executorStrategy": "direct-runtime",
+          "predictedStrategy": "direct-runtime",
+          "observedNetworkBytes": 619673320,
+          "predictedNetworkBytes": 641398880,
+          "observedDependencyPhaseSeconds": 302.049842513,
+          "predictedDependencySeconds": 145.0865769752395,
+          "durationErrorPercent": -51.96601469209669,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mconcatfitid0000011",
+          "consumer": "montage-independent-work-v1-mbgmodelid0000012",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 559032552,
+          "predictedNetworkBytes": 624143308,
+          "observedDependencyPhaseSeconds": 296.56120751,
+          "predictedDependencySeconds": 122.42477741296159,
+          "durationErrorPercent": -58.71854635308853,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mdifffitid0000024",
+          "consumer": "montage-independent-work-v1-mconcatfitid0000030",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 240230880,
+          "predictedNetworkBytes": 276787022,
+          "observedDependencyPhaseSeconds": 172.51386337099999,
+          "predictedDependencySeconds": 75.46308819650238,
+          "durationErrorPercent": -56.256797730965474,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mdifffitid0000029",
+          "consumer": "montage-independent-work-v1-mconcatfitid0000030",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 232804610,
+          "predictedNetworkBytes": 261977210,
+          "observedDependencyPhaseSeconds": 170.45803487,
+          "predictedDependencySeconds": 73.07476693457124,
+          "durationErrorPercent": -57.130347659878986,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mdifffitid0000026",
+          "consumer": "montage-independent-work-v1-mconcatfitid0000030",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 218669206,
+          "predictedNetworkBytes": 251595146,
+          "observedDependencyPhaseSeconds": 169.27667491,
+          "predictedDependencySeconds": 70.3117093349369,
+          "durationErrorPercent": -58.46343899871628,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mprojectid0000042",
+          "consumer": "montage-independent-work-v1-mbackgroundid0000054",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 108668676,
+          "predictedNetworkBytes": 121637318,
+          "observedDependencyPhaseSeconds": 117.85378738499999,
+          "predictedDependencySeconds": 27.965600578986823,
+          "durationErrorPercent": -76.27093604753665,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mprojectid0000020",
+          "consumer": "montage-independent-work-v1-mbackgroundid0000032",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 102529126,
+          "predictedNetworkBytes": 120553514,
+          "observedDependencyPhaseSeconds": 102.231519922,
+          "predictedDependencySeconds": 27.725130147655875,
+          "durationErrorPercent": -72.88005678795597,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mprojectid0000001",
+          "consumer": "montage-independent-work-v1-mbackgroundid0000013",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 105617907,
+          "predictedNetworkBytes": 122060266,
+          "observedDependencyPhaseSeconds": 98.08221692,
+          "predictedDependencySeconds": 28.057277005251763,
+          "durationErrorPercent": -71.3941243516789,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mprojectid0000023",
+          "consumer": "montage-independent-work-v1-mbackgroundid0000035",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 106193023,
+          "predictedNetworkBytes": 120553514,
+          "observedDependencyPhaseSeconds": 92.910540916,
+          "predictedDependencySeconds": 27.725130147655875,
+          "durationErrorPercent": -70.15932759155709,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mprojectid0000002",
+          "consumer": "montage-independent-work-v1-mbackgroundid0000014",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 107170830,
+          "predictedNetworkBytes": 122014006,
+          "observedDependencyPhaseSeconds": 89.978375582,
+          "predictedDependencySeconds": 28.048585295110684,
+          "durationErrorPercent": -68.82741534987018,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mprojectid0000039",
+          "consumer": "montage-independent-work-v1-mbackgroundid0000051",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 103997683,
+          "predictedNetworkBytes": 121637318,
+          "observedDependencyPhaseSeconds": 83.832037956,
+          "predictedDependencySeconds": 27.965600578986823,
+          "durationErrorPercent": -66.64091526241457,
+          "predictedServiceWaitSeconds": 0.0
+        }
+      ],
+      "accepted": false,
+      "limitations": [
+        "Makespan tolerance alone is insufficient; dominant transfer residuals must also be reviewed.",
+        "Historical phase wall times may include unseparated queues; no additional bulk slot queue is fitted from these samples.",
+        "No summed parallel phase durations are treated as makespan.",
+        "Compute, ordering and provisioning assumptions retained from the frozen original request.",
+        "Observed comparison run was not used to fit these transfer coefficients; this remains a retrospective test, not a new prospective real validation."
+      ]
+    },
+    {
+      "schemaVersion": 1,
+      "comparisonRole": "historical-calibration-completed-run-holdout",
+      "observedRunId": "montage-clean-real-20261011-v1",
+      "modelSource": "montage-docker-image-real-20261010-v2:sha256:f54d5050efe2dcd74329b77c41dc7bcf1a3d533e89ee91d351ac77120a0f4392",
+      "simulatedMakespanSeconds": 1483.9818720184553,
+      "observedMakespanSeconds": 3150.6341450214386,
+      "makespanErrorPercent": -52.89894657037822,
+      "withinInitialMakespanTolerance": false,
+      "predictedNetworkBytes": 4925802756,
+      "observedNetworkBytes": 4399426793,
+      "networkBytesErrorPercent": 11.964648754640614,
+      "routeMismatchCount": 0,
+      "dominantTransfers": [
+        {
+          "producer": "montage-independent-work-v1-mdifffitid0000025",
+          "consumer": "montage-independent-work-v1-mconcatfitid0000030",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 242510991,
+          "predictedNetworkBytes": 276780410,
+          "observedDependencyPhaseSeconds": 458.625032877,
+          "predictedDependencySeconds": 97.56337293918989,
+          "durationErrorPercent": -78.72698480343185,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mdifffitid0000028",
+          "consumer": "montage-independent-work-v1-mconcatfitid0000030",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 230333020,
+          "predictedNetworkBytes": 262115992,
+          "observedDependencyPhaseSeconds": 457.641658918,
+          "predictedDependencySeconds": 93.72191713519663,
+          "durationErrorPercent": -79.52067620837165,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mdifffitid0000027",
+          "consumer": "montage-independent-work-v1-mconcatfitid0000030",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 220934982,
+          "predictedNetworkBytes": 251628190,
+          "observedDependencyPhaseSeconds": 439.837226243,
+          "predictedDependencySeconds": 90.4845919760927,
+          "durationErrorPercent": -79.42770948493977,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mconcatfitid0000049",
+          "consumer": "montage-independent-work-v1-mbgmodelid0000050",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 555568726,
+          "predictedNetworkBytes": 622425076,
+          "observedDependencyPhaseSeconds": 314.390931602,
+          "predictedDependencySeconds": 174.19739334300954,
+          "durationErrorPercent": -44.59210624957436,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-maddid0000056",
+          "consumer": "montage-independent-work-v1-mviewerid0000058",
+          "observedStrategy": "direct-runtime",
+          "executorStrategy": "direct-runtime",
+          "predictedStrategy": "direct-runtime",
+          "observedNetworkBytes": 619673320,
+          "predictedNetworkBytes": 641398880,
+          "observedDependencyPhaseSeconds": 302.049842513,
+          "predictedDependencySeconds": 385.8238161543371,
+          "durationErrorPercent": 27.735148922559553,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mconcatfitid0000011",
+          "consumer": "montage-independent-work-v1-mbgmodelid0000012",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 559032552,
+          "predictedNetworkBytes": 624143308,
+          "observedDependencyPhaseSeconds": 296.56120751,
+          "predictedDependencySeconds": 174.67468154617995,
+          "durationErrorPercent": -41.099956055348216,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mdifffitid0000024",
+          "consumer": "montage-independent-work-v1-mconcatfitid0000030",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 240230880,
+          "predictedNetworkBytes": 276787022,
+          "observedDependencyPhaseSeconds": 172.51386337099999,
+          "predictedDependencySeconds": 97.56498389980356,
+          "durationErrorPercent": -43.445134209309884,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mdifffitid0000029",
+          "consumer": "montage-independent-work-v1-mconcatfitid0000030",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 232804610,
+          "predictedNetworkBytes": 261977210,
+          "observedDependencyPhaseSeconds": 170.45803487,
+          "predictedDependencySeconds": 93.68336655128815,
+          "durationErrorPercent": -45.04021671801165,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mdifffitid0000026",
+          "consumer": "montage-independent-work-v1-mconcatfitid0000030",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 218669206,
+          "predictedNetworkBytes": 251595146,
+          "observedDependencyPhaseSeconds": 169.27667491,
+          "predictedDependencySeconds": 90.47235703991237,
+          "durationErrorPercent": -46.55355967500297,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mprojectid0000042",
+          "consumer": "montage-independent-work-v1-mbackgroundid0000054",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 108668676,
+          "predictedNetworkBytes": 121637318,
+          "observedDependencyPhaseSeconds": 117.85378738499999,
+          "predictedDependencySeconds": 36.64008095338909,
+          "durationErrorPercent": -68.91056132655733,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mprojectid0000020",
+          "consumer": "montage-independent-work-v1-mbackgroundid0000032",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 102529126,
+          "predictedNetworkBytes": 120553514,
+          "observedDependencyPhaseSeconds": 102.231519922,
+          "predictedDependencySeconds": 36.32354205254501,
+          "durationErrorPercent": -64.46933188486396,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mprojectid0000001",
+          "consumer": "montage-independent-work-v1-mbackgroundid0000013",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 105617907,
+          "predictedNetworkBytes": 122060266,
+          "observedDependencyPhaseSeconds": 98.08221692,
+          "predictedDependencySeconds": 36.76237220978078,
+          "durationErrorPercent": -62.518820063207045,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mprojectid0000023",
+          "consumer": "montage-independent-work-v1-mbackgroundid0000035",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 106193023,
+          "predictedNetworkBytes": 120553514,
+          "observedDependencyPhaseSeconds": 92.910540916,
+          "predictedDependencySeconds": 36.32354205254501,
+          "durationErrorPercent": -60.90482124586385,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mprojectid0000002",
+          "consumer": "montage-independent-work-v1-mbackgroundid0000014",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 107170830,
+          "predictedNetworkBytes": 122014006,
+          "observedDependencyPhaseSeconds": 89.978375582,
+          "predictedDependencySeconds": 36.74952217157488,
+          "durationErrorPercent": -59.15738427831036,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mprojectid0000039",
+          "consumer": "montage-independent-work-v1-mbackgroundid0000051",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 103997683,
+          "predictedNetworkBytes": 121637318,
+          "observedDependencyPhaseSeconds": 83.832037956,
+          "predictedDependencySeconds": 36.64008095338909,
+          "durationErrorPercent": -56.2934626823459,
+          "predictedServiceWaitSeconds": 0.0
+        }
+      ],
+      "accepted": false,
+      "limitations": [
+        "Makespan tolerance alone is insufficient; dominant transfer residuals must also be reviewed.",
+        "Historical phase wall times may include unseparated queues; no additional bulk slot queue is fitted from these samples.",
+        "No summed parallel phase durations are treated as makespan.",
+        "Compute, ordering and provisioning assumptions retained from the frozen original request.",
+        "Observed comparison run was not used to fit these transfer coefficients; this remains a retrospective test, not a new prospective real validation."
+      ]
+    },
+    {
+      "schemaVersion": 1,
+      "comparisonRole": "calibration-fit-not-independent-validation",
+      "observedRunId": "montage-clean-real-20261011-v1",
+      "modelSource": "montage-clean-real-20261011-v1:sha256:f9d8a572c3ef77242bd9b10587f65eab6d75d06c838ab27f34ba101bb0489a7d",
+      "simulatedMakespanSeconds": 1737.7270017743192,
+      "observedMakespanSeconds": 3150.6341450214386,
+      "makespanErrorPercent": -44.84516697947185,
+      "withinInitialMakespanTolerance": false,
+      "predictedNetworkBytes": 4383304054,
+      "observedNetworkBytes": 4399426793,
+      "networkBytesErrorPercent": -0.36647362846571635,
+      "routeMismatchCount": 0,
+      "dominantTransfers": [
+        {
+          "producer": "montage-independent-work-v1-mdifffitid0000025",
+          "consumer": "montage-independent-work-v1-mconcatfitid0000030",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 242510991,
+          "predictedNetworkBytes": 243134592,
+          "observedDependencyPhaseSeconds": 458.625032877,
+          "predictedDependencySeconds": 220.03391805996426,
+          "durationErrorPercent": -52.023133870458445,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mdifffitid0000028",
+          "consumer": "montage-independent-work-v1-mconcatfitid0000030",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 230333020,
+          "predictedNetworkBytes": 230252800,
+          "observedDependencyPhaseSeconds": 457.641658918,
+          "predictedDependencySeconds": 211.05106020173486,
+          "durationErrorPercent": -53.88290028038053,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mdifffitid0000027",
+          "consumer": "montage-independent-work-v1-mconcatfitid0000030",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 220934982,
+          "predictedNetworkBytes": 221039910,
+          "observedDependencyPhaseSeconds": 439.837226243,
+          "predictedDependencySeconds": 200.51739745926903,
+          "durationErrorPercent": -54.41099900250649,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mconcatfitid0000049",
+          "consumer": "montage-independent-work-v1-mbgmodelid0000050",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 555568726,
+          "predictedNetworkBytes": 546762200,
+          "observedDependencyPhaseSeconds": 314.390931602,
+          "predictedDependencySeconds": 487.8831880165262,
+          "durationErrorPercent": 55.18360708767419,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-maddid0000056",
+          "consumer": "montage-independent-work-v1-mviewerid0000058",
+          "observedStrategy": "direct-runtime",
+          "executorStrategy": "direct-runtime",
+          "predictedStrategy": "direct-runtime",
+          "observedNetworkBytes": 619673320,
+          "predictedNetworkBytes": 619718380,
+          "observedDependencyPhaseSeconds": 302.049842513,
+          "predictedDependencySeconds": 302.08458283221194,
+          "durationErrorPercent": 0.011501518730457027,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mconcatfitid0000011",
+          "consumer": "montage-independent-work-v1-mbgmodelid0000012",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 559032552,
+          "predictedNetworkBytes": 548271562,
+          "observedDependencyPhaseSeconds": 296.56120751,
+          "predictedDependencySeconds": 489.2264203421446,
+          "durationErrorPercent": 64.9664244524119,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mdifffitid0000024",
+          "consumer": "montage-independent-work-v1-mconcatfitid0000030",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 240230880,
+          "predictedNetworkBytes": 243140400,
+          "observedDependencyPhaseSeconds": 172.51386337099999,
+          "predictedDependencySeconds": 220.037923618119,
+          "durationErrorPercent": 27.547965895886335,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mdifffitid0000029",
+          "consumer": "montage-independent-work-v1-mconcatfitid0000030",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 232804610,
+          "predictedNetworkBytes": 230130890,
+          "observedDependencyPhaseSeconds": 170.45803487,
+          "predictedDependencySeconds": 210.9406517999475,
+          "durationErrorPercent": 23.74931575435654,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mdifffitid0000026",
+          "consumer": "montage-independent-work-v1-mconcatfitid0000030",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 218669206,
+          "predictedNetworkBytes": 221010882,
+          "observedDependencyPhaseSeconds": 169.27667491,
+          "predictedDependencySeconds": 200.4834380431082,
+          "durationErrorPercent": 18.435359242317368,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mprojectid0000042",
+          "consumer": "montage-independent-work-v1-mbackgroundid0000054",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 108668676,
+          "predictedNetworkBytes": 106850914,
+          "observedDependencyPhaseSeconds": 117.85378738499999,
+          "predictedDependencySeconds": 100.35879799425697,
+          "durationErrorPercent": -14.844656059793047,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mprojectid0000020",
+          "consumer": "montage-independent-work-v1-mbackgroundid0000032",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 102529126,
+          "predictedNetworkBytes": 105898858,
+          "observedDependencyPhaseSeconds": 102.231519922,
+          "predictedDependencySeconds": 99.47236424922312,
+          "durationErrorPercent": -2.698928544623076,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mprojectid0000001",
+          "consumer": "montage-independent-work-v1-mbackgroundid0000013",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 105617907,
+          "predictedNetworkBytes": 107222448,
+          "observedDependencyPhaseSeconds": 98.08221692,
+          "predictedDependencySeconds": 100.70798261212713,
+          "durationErrorPercent": 2.6771067932414474,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mprojectid0000023",
+          "consumer": "montage-independent-work-v1-mbackgroundid0000035",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 106193023,
+          "predictedNetworkBytes": 105898858,
+          "observedDependencyPhaseSeconds": 92.910540916,
+          "predictedDependencySeconds": 99.47236424922312,
+          "durationErrorPercent": 7.062517630971099,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mprojectid0000002",
+          "consumer": "montage-independent-work-v1-mbackgroundid0000014",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 107170830,
+          "predictedNetworkBytes": 107181812,
+          "observedDependencyPhaseSeconds": 89.978375582,
+          "predictedDependencySeconds": 100.6799575183311,
+          "durationErrorPercent": 11.893504263786605,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mprojectid0000039",
+          "consumer": "montage-independent-work-v1-mbackgroundid0000051",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 103997683,
+          "predictedNetworkBytes": 106850914,
+          "observedDependencyPhaseSeconds": 83.832037956,
+          "predictedDependencySeconds": 100.35879799425697,
+          "durationErrorPercent": 19.714133690667524,
+          "predictedServiceWaitSeconds": 0.0
+        }
+      ],
+      "accepted": false,
+      "limitations": [
+        "Makespan tolerance alone is insufficient; dominant transfer residuals must also be reviewed.",
+        "Historical phase wall times may include unseparated queues; no additional bulk slot queue is fitted from these samples.",
+        "No summed parallel phase durations are treated as makespan.",
+        "Compute, ordering and provisioning assumptions retained from the frozen original request.",
+        "This comparison reuses calibration data and is not independent validation."
+      ]
+    },
+    {
+      "schemaVersion": 1,
+      "comparisonRole": "calibration-fit-not-independent-validation",
+      "observedRunId": "montage-clean-real-20261011-v1",
+      "modelSource": "montage-clean-real-20261011-v1:sha256:0ab9d1bd45fbce2ed8b847b07f9e190f34be31709df3c48bfd7f93102426ded3",
+      "simulatedMakespanSeconds": 2835.6021967566785,
+      "observedMakespanSeconds": 3150.6341450214386,
+      "makespanErrorPercent": -9.999001272888714,
+      "withinInitialMakespanTolerance": true,
+      "predictedNetworkBytes": 4383304054,
+      "observedNetworkBytes": 4399426793,
+      "networkBytesErrorPercent": -0.36647362846571635,
+      "routeMismatchCount": 0,
+      "dominantTransfers": [
+        {
+          "producer": "montage-independent-work-v1-mdifffitid0000025",
+          "consumer": "montage-independent-work-v1-mconcatfitid0000030",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 242510991,
+          "predictedNetworkBytes": 243134592,
+          "observedDependencyPhaseSeconds": 458.625032877,
+          "predictedDependencySeconds": 364.8038058380528,
+          "durationErrorPercent": -20.457066298888527,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mdifffitid0000028",
+          "consumer": "montage-independent-work-v1-mconcatfitid0000030",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 230333020,
+          "predictedNetworkBytes": 230252800,
+          "observedDependencyPhaseSeconds": 457.641658918,
+          "predictedDependencySeconds": 681.5487379458395,
+          "durationErrorPercent": 48.92628865064906,
+          "predictedServiceWaitSeconds": 348.94570559301445
+        },
+        {
+          "producer": "montage-independent-work-v1-mdifffitid0000027",
+          "consumer": "montage-independent-work-v1-mconcatfitid0000030",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 220934982,
+          "predictedNetworkBytes": 221039910,
+          "observedDependencyPhaseSeconds": 439.837226243,
+          "predictedDependencySeconds": 332.9376934434027,
+          "durationErrorPercent": -24.304339519578942,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mconcatfitid0000049",
+          "consumer": "montage-independent-work-v1-mbgmodelid0000050",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 555568726,
+          "predictedNetworkBytes": 546762200,
+          "observedDependencyPhaseSeconds": 314.390931602,
+          "predictedDependencySeconds": 757.8083899092965,
+          "durationErrorPercent": 141.04015534030614,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-maddid0000056",
+          "consumer": "montage-independent-work-v1-mviewerid0000058",
+          "observedStrategy": "direct-runtime",
+          "executorStrategy": "direct-runtime",
+          "predictedStrategy": "direct-runtime",
+          "observedNetworkBytes": 619673320,
+          "predictedNetworkBytes": 619718380,
+          "observedDependencyPhaseSeconds": 302.049842513,
+          "predictedDependencySeconds": 302.08458283221216,
+          "durationErrorPercent": 0.011501518730532304,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mconcatfitid0000011",
+          "consumer": "montage-independent-work-v1-mbgmodelid0000012",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 559032552,
+          "predictedNetworkBytes": 548271562,
+          "observedDependencyPhaseSeconds": 296.56120751,
+          "predictedDependencySeconds": 758.8805461359234,
+          "durationErrorPercent": 155.89339634393488,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mdifffitid0000024",
+          "consumer": "montage-independent-work-v1-mconcatfitid0000030",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 240230880,
+          "predictedNetworkBytes": 243140400,
+          "observedDependencyPhaseSeconds": 172.51386337099999,
+          "predictedDependencySeconds": 364.8097348575456,
+          "durationErrorPercent": 111.46690922630572,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mdifffitid0000029",
+          "consumer": "montage-independent-work-v1-mconcatfitid0000030",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 232804610,
+          "predictedNetworkBytes": 230130890,
+          "observedDependencyPhaseSeconds": 170.45803487,
+          "predictedDependencySeconds": 661.8891873144828,
+          "durationErrorPercent": 288.30037423537897,
+          "predictedServiceWaitSeconds": 318.46157297674966
+        },
+        {
+          "producer": "montage-independent-work-v1-mdifffitid0000026",
+          "consumer": "montage-independent-work-v1-mconcatfitid0000030",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 218669206,
+          "predictedNetworkBytes": 221010882,
+          "observedDependencyPhaseSeconds": 169.27667491,
+          "predictedDependencySeconds": 674.9876108725307,
+          "durationErrorPercent": 298.74815076052505,
+          "predictedServiceWaitSeconds": 348.95127133002956
+        },
+        {
+          "producer": "montage-independent-work-v1-mprojectid0000042",
+          "consumer": "montage-independent-work-v1-mbackgroundid0000054",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 108668676,
+          "predictedNetworkBytes": 106850914,
+          "observedDependencyPhaseSeconds": 117.85378738499999,
+          "predictedDependencySeconds": 316.5188645576445,
+          "durationErrorPercent": 168.56910717994452,
+          "predictedServiceWaitSeconds": 154.61636908982086
+        },
+        {
+          "producer": "montage-independent-work-v1-mprojectid0000020",
+          "consumer": "montage-independent-work-v1-mbackgroundid0000032",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 102529126,
+          "predictedNetworkBytes": 105898858,
+          "observedDependencyPhaseSeconds": 102.231519922,
+          "predictedDependencySeconds": 160.52457167759258,
+          "durationErrorPercent": 57.02062514581477,
+          "predictedServiceWaitSeconds": 0.0
+        },
+        {
+          "producer": "montage-independent-work-v1-mprojectid0000001",
+          "consumer": "montage-independent-work-v1-mbackgroundid0000013",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 105617907,
+          "predictedNetworkBytes": 107222448,
+          "observedDependencyPhaseSeconds": 98.08221692,
+          "predictedDependencySeconds": 253.8837125207799,
+          "durationErrorPercent": 158.84785284559607,
+          "predictedServiceWaitSeconds": 91.59574461526995
+        },
+        {
+          "producer": "montage-independent-work-v1-mprojectid0000023",
+          "consumer": "montage-independent-work-v1-mbackgroundid0000035",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 106193023,
+          "predictedNetworkBytes": 105898858,
+          "observedDependencyPhaseSeconds": 92.910540916,
+          "predictedDependencySeconds": 620.2671474056713,
+          "durationErrorPercent": 567.5960997433564,
+          "predictedServiceWaitSeconds": 459.7425757280787
+        },
+        {
+          "producer": "montage-independent-work-v1-mprojectid0000002",
+          "consumer": "montage-independent-work-v1-mbackgroundid0000014",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 107170830,
+          "predictedNetworkBytes": 107181812,
+          "observedDependencyPhaseSeconds": 89.978375582,
+          "predictedDependencySeconds": 253.85484724124376,
+          "durationErrorPercent": 182.12872881873514,
+          "predictedServiceWaitSeconds": 91.59574461526995
+        },
+        {
+          "producer": "montage-independent-work-v1-mprojectid0000039",
+          "consumer": "montage-independent-work-v1-mbackgroundid0000051",
+          "observedStrategy": "gateway",
+          "executorStrategy": "gateway",
+          "predictedStrategy": "gateway",
+          "observedNetworkBytes": 103997683,
+          "predictedNetworkBytes": 106850914,
+          "observedDependencyPhaseSeconds": 83.832037956,
+          "predictedDependencySeconds": 163.61756127540298,
+          "durationErrorPercent": 95.17306898978066,
+          "predictedServiceWaitSeconds": 0.0
+        }
+      ],
+      "accepted": false,
+      "limitations": [
+        "Makespan tolerance alone is insufficient; dominant transfer residuals must also be reviewed.",
+        "Historical receiver phases may include unseparated queues; destination bulk pools must remain disabled until service is separately identified.",
+        "No summed parallel phase durations are treated as makespan.",
+        "Compute, ordering and provisioning assumptions retained from the frozen original request.",
+        "This comparison reuses calibration data and is not independent validation."
+      ]
+    }
+  ],
+  "provenance": {
+    "ako151-clean-v2-calibration": {
+      "sha256": "f9d8a572c3ef77242bd9b10587f65eab6d75d06c838ab27f34ba101bb0489a7d",
+      "evidence": {
+        "schemaVersion": 1,
+        "baselineRunId": "montage-clean-real-20261011-v1",
+        "baselineSHA256": "c55d80f3cf734f6486c3937b17a743cf2da6faade447fdd2d15e18e24d9d5e4f",
+        "computeWorkBasis": null,
+        "synchronizationContract": "whole-workspace-v1",
+        "workspaceVolumeBasis": "producer-final-snapshot-manifest",
+        "computeObservations": [
+          {
+            "activityFamily": "madd",
+            "resourceClass": "e2-micro",
+            "runtimeSeconds": {
+              "samples": 3,
+              "median": 0.9227643013000488,
+              "minimum": 0.9206876754760742,
+              "maximum": 8.156338691711426
+            },
+            "taskRuntimeFallbackSamples": 0,
+            "wallSecondsPerReferenceSecond": {
+              "samples": 3,
+              "median": 0.10252936681111653,
+              "minimum": 0.10229863060845269,
+              "maximum": 4.078169345855713
+            },
+            "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+          },
+          {
+            "activityFamily": "mbackground",
+            "resourceClass": "e2-micro",
+            "runtimeSeconds": {
+              "samples": 12,
+              "median": 1.0978449583053589,
+              "minimum": 0.7738721370697021,
+              "maximum": 9.189680099487305
+            },
+            "taskRuntimeFallbackSamples": 0,
+            "wallSecondsPerReferenceSecond": {
+              "samples": 12,
+              "median": 0.3890828953848945,
+              "minimum": 0.04005753475686778,
+              "maximum": 1.1718418598175049
+            },
+            "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+          },
+          {
+            "activityFamily": "mbgmodel",
+            "resourceClass": "e2-micro",
+            "runtimeSeconds": {
+              "samples": 3,
+              "median": 1.7851626873016357,
+              "minimum": 0.42560553550720215,
+              "maximum": 8.379759788513184
+            },
+            "taskRuntimeFallbackSamples": 0,
+            "wallSecondsPerReferenceSecond": {
+              "samples": 3,
+              "median": 0.19835140970018175,
+              "minimum": 0.060800790786743164,
+              "maximum": 0.4189879894256592
+            },
+            "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+          },
+          {
+            "activityFamily": "mconcatfit",
+            "resourceClass": "hpc",
+            "runtimeSeconds": {
+              "samples": 2,
+              "median": 2.273337483406067,
+              "minimum": 2.2540571689605713,
+              "maximum": 2.2926177978515625
+            },
+            "taskRuntimeFallbackSamples": 2,
+            "wallSecondsPerReferenceSecond": {
+              "samples": 2,
+              "median": 0.2955575788722319,
+              "minimum": 0.13259159817415125,
+              "maximum": 0.4585235595703125
+            },
+            "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+          },
+          {
+            "activityFamily": "mconcatfit",
+            "resourceClass": "e2-micro",
+            "runtimeSeconds": {
+              "samples": 1,
+              "median": 0.5490996837615967,
+              "minimum": 0.5490996837615967,
+              "maximum": 0.5490996837615967
+            },
+            "taskRuntimeFallbackSamples": 0,
+            "wallSecondsPerReferenceSecond": {
+              "samples": 1,
+              "median": 0.06101107597351074,
+              "minimum": 0.06101107597351074,
+              "maximum": 0.06101107597351074
+            },
+            "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+          },
+          {
+            "activityFamily": "mdifffit",
+            "resourceClass": "hpc",
+            "runtimeSeconds": {
+              "samples": 18,
+              "median": 2.216379404067993,
+              "minimum": 1.6275734901428223,
+              "maximum": 3.6220107078552246
+            },
+            "taskRuntimeFallbackSamples": 18,
+            "wallSecondsPerReferenceSecond": {
+              "samples": 18,
+              "median": 0.12864546605518884,
+              "minimum": 0.07348955670992534,
+              "maximum": 0.27002583850513806
+            },
+            "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+          },
+          {
+            "activityFamily": "mimgtbl",
+            "resourceClass": "e2-micro",
+            "runtimeSeconds": {
+              "samples": 3,
+              "median": 0.10982584953308105,
+              "minimum": 0.09377503395080566,
+              "maximum": 1.9788739681243896
+            },
+            "taskRuntimeFallbackSamples": 0,
+            "wallSecondsPerReferenceSecond": {
+              "samples": 3,
+              "median": 0.0043930339813232425,
+              "minimum": 0.004262501543218439,
+              "maximum": 0.2198748853471544
+            },
+            "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+          },
+          {
+            "activityFamily": "mproject",
+            "resourceClass": "hpc",
+            "runtimeSeconds": {
+              "samples": 12,
+              "median": 429.2951464653015,
+              "minimum": 296.09501814842224,
+              "maximum": 480.9227578639984
+            },
+            "taskRuntimeFallbackSamples": 12,
+            "wallSecondsPerReferenceSecond": {
+              "samples": 12,
+              "median": 0.4244157270059439,
+              "minimum": 0.26437055191823416,
+              "maximum": 1.1530097625105853
+            },
+            "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+          },
+          {
+            "activityFamily": "mviewer",
+            "resourceClass": "e2-micro",
+            "runtimeSeconds": {
+              "samples": 4,
+              "median": 2.4596585035324097,
+              "minimum": 1.3308792114257812,
+              "maximum": 22.134554862976074
+            },
+            "taskRuntimeFallbackSamples": 0,
+            "wallSecondsPerReferenceSecond": {
+              "samples": 4,
+              "median": 0.3088648319244385,
+              "minimum": 0.10351345118354349,
+              "maximum": 22.134554862976074
+            },
+            "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+          }
+        ],
+        "materializationPhaseObservations": [
+          {
+            "strategy": "gateway",
+            "sourceClass": "hpc",
+            "targetClass": "e2-micro",
+            "phase": "pack-and-receive",
+            "seconds": {
+              "samples": 20,
+              "median": 93.477485043,
+              "minimum": 23.984320886,
+              "maximum": 443.228494495
+            },
+            "secondsBases": [
+              "combined-phase-wall-includes-unseparated-service-queue"
+            ],
+            "pooledArchiveServiceRate": {
+              "samples": 20,
+              "bytes": 1889644770,
+              "serviceSeconds": 3107.49033925,
+              "bytesPerSecond": 608093.5300529591,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "pooledWorkspaceServiceRate": {
+              "samples": 20,
+              "bytes": 3734106599,
+              "serviceSeconds": 3107.49033925,
+              "bytesPerSecond": 1201647.0499796423,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "phaseChannelWaitSeconds": null,
+            "sourceChannelWaitSeconds": null,
+            "sourcePreflightSeconds": null,
+            "sourcePreflightServiceSeconds": null,
+            "sourcePreflightChannelWaitSeconds": null,
+            "logicalBytes": {
+              "samples": 8,
+              "median": 125191004.0,
+              "minimum": 9175961.0,
+              "maximum": 543960288.0
+            },
+            "archiveBytes": {
+              "samples": 20,
+              "median": 54575715.5,
+              "minimum": 51258241.0,
+              "maximum": 279482093.0
+            },
+            "workspaceBytes": {
+              "samples": 20,
+              "median": 106346880.0,
+              "minimum": 105027840.0,
+              "maximum": 543960288.0
+            },
+            "archiveToWorkspaceRatio": {
+              "samples": 20,
+              "median": 0.5039255042100858,
+              "minimum": 0.48783029128445954,
+              "maximum": 0.516872580582045
+            },
+            "effectiveWorkspaceBytesPerSecond": {
+              "samples": 20,
+              "median": 1467064.2688254993,
+              "minimum": 514336.08762021107,
+              "maximum": 4379020.798596232
+            },
+            "files": {
+              "samples": 8,
+              "median": 5.0,
+              "minimum": 3.0,
+              "maximum": 27.0
+            },
+            "effectiveArchiveBytesPerSecond": {
+              "samples": 20,
+              "median": 743603.5823995736,
+              "minimum": 259032.26729615868,
+              "maximum": 2223122.1494006827
+            },
+            "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+          },
+          {
+            "strategy": "gateway",
+            "sourceClass": "hpc",
+            "targetClass": "e2-micro",
+            "phase": "archive-validation",
+            "seconds": {
+              "samples": 20,
+              "median": 0.5623665840000001,
+              "minimum": 0.514497417,
+              "maximum": 2.844069335
+            },
+            "secondsBases": [
+              "combined-phase-wall-includes-unseparated-service-queue"
+            ],
+            "pooledArchiveServiceRate": {
+              "samples": 20,
+              "bytes": 1889644770,
+              "serviceSeconds": 19.35844647,
+              "bytesPerSecond": 97613451.20996168,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "pooledWorkspaceServiceRate": {
+              "samples": 20,
+              "bytes": 3734106599,
+              "serviceSeconds": 19.35844647,
+              "bytesPerSecond": 192892885.53122208,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "phaseChannelWaitSeconds": null,
+            "sourceChannelWaitSeconds": null,
+            "sourcePreflightSeconds": null,
+            "sourcePreflightServiceSeconds": null,
+            "sourcePreflightChannelWaitSeconds": null,
+            "logicalBytes": {
+              "samples": 8,
+              "median": 125191004.0,
+              "minimum": 9175961.0,
+              "maximum": 543960288.0
+            },
+            "archiveBytes": {
+              "samples": 20,
+              "median": 54575715.5,
+              "minimum": 51258241.0,
+              "maximum": 279482093.0
+            },
+            "workspaceBytes": {
+              "samples": 20,
+              "median": 106346880.0,
+              "minimum": 105027840.0,
+              "maximum": 543960288.0
+            },
+            "archiveToWorkspaceRatio": {
+              "samples": 20,
+              "median": 0.5039255042100858,
+              "minimum": 0.48783029128445954,
+              "maximum": 0.516872580582045
+            },
+            "effectiveWorkspaceBytesPerSecond": {
+              "samples": 20,
+              "median": 191117125.75011408,
+              "minimum": 184823674.3538846,
+              "maximum": 204136768.2901312
+            },
+            "files": {
+              "samples": 8,
+              "median": 5.0,
+              "minimum": 3.0,
+              "maximum": 27.0
+            },
+            "effectiveArchiveBytesPerSecond": {
+              "samples": 20,
+              "median": 97510235.9022452,
+              "minimum": 92780099.73707034,
+              "maximum": 104536040.47379948
+            },
+            "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+          },
+          {
+            "strategy": "gateway",
+            "sourceClass": "hpc",
+            "targetClass": "e2-micro",
+            "phase": "archive-upload",
+            "seconds": {
+              "samples": 20,
+              "median": 5.228915211,
+              "minimum": 4.934585543,
+              "maximum": 23.754565511
+            },
+            "secondsBases": [
+              "phase-command-execution-excludes-channel-queue"
+            ],
+            "pooledArchiveServiceRate": {
+              "samples": 20,
+              "bytes": 1889644770,
+              "serviceSeconds": 186.044580421,
+              "bytesPerSecond": 10156946.070258675,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "pooledWorkspaceServiceRate": {
+              "samples": 20,
+              "bytes": 3734106599,
+              "serviceSeconds": 186.044580421,
+              "bytesPerSecond": 20071031.31168936,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "phaseChannelWaitSeconds": {
+              "samples": 20,
+              "median": 3.13335e-05,
+              "minimum": 5.542e-06,
+              "maximum": 9.775e-05
+            },
+            "sourceChannelWaitSeconds": null,
+            "sourcePreflightSeconds": null,
+            "sourcePreflightServiceSeconds": null,
+            "sourcePreflightChannelWaitSeconds": null,
+            "logicalBytes": {
+              "samples": 8,
+              "median": 125191004.0,
+              "minimum": 9175961.0,
+              "maximum": 543960288.0
+            },
+            "archiveBytes": {
+              "samples": 20,
+              "median": 54575715.5,
+              "minimum": 51258241.0,
+              "maximum": 279482093.0
+            },
+            "workspaceBytes": {
+              "samples": 20,
+              "median": 106346880.0,
+              "minimum": 105027840.0,
+              "maximum": 543960288.0
+            },
+            "archiveToWorkspaceRatio": {
+              "samples": 20,
+              "median": 0.5039255042100858,
+              "minimum": 0.48783029128445954,
+              "maximum": 0.516872580582045
+            },
+            "effectiveWorkspaceBytesPerSecond": {
+              "samples": 20,
+              "median": 20885862.053935025,
+              "minimum": 13516582.554276312,
+              "maximum": 24103060.74761127
+            },
+            "files": {
+              "samples": 8,
+              "median": 5.0,
+              "minimum": 3.0,
+              "maximum": 27.0
+            },
+            "effectiveArchiveBytesPerSecond": {
+              "samples": 20,
+              "median": 10513116.819752198,
+              "minimum": 6809813.146297475,
+              "maximum": 12341189.114952732
+            },
+            "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+          },
+          {
+            "strategy": "gateway",
+            "sourceClass": "hpc",
+            "targetClass": "e2-micro",
+            "phase": "receiver-verify-and-extract",
+            "seconds": {
+              "samples": 20,
+              "median": 1.6460796675,
+              "minimum": 1.158808168,
+              "maximum": 7.398465045
+            },
+            "secondsBases": [
+              "combined-phase-wall-includes-unseparated-service-queue"
+            ],
+            "pooledArchiveServiceRate": {
+              "samples": 20,
+              "bytes": 1889644770,
+              "serviceSeconds": 50.131346858,
+              "bytesPerSecond": 37693875.95654532,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "pooledWorkspaceServiceRate": {
+              "samples": 20,
+              "bytes": 3734106599,
+              "serviceSeconds": 50.131346858,
+              "bytesPerSecond": 74486460.7283957,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "phaseChannelWaitSeconds": null,
+            "sourceChannelWaitSeconds": null,
+            "sourcePreflightSeconds": null,
+            "sourcePreflightServiceSeconds": null,
+            "sourcePreflightChannelWaitSeconds": null,
+            "logicalBytes": {
+              "samples": 8,
+              "median": 125191004.0,
+              "minimum": 9175961.0,
+              "maximum": 543960288.0
+            },
+            "archiveBytes": {
+              "samples": 20,
+              "median": 54575715.5,
+              "minimum": 51258241.0,
+              "maximum": 279482093.0
+            },
+            "workspaceBytes": {
+              "samples": 20,
+              "median": 106346880.0,
+              "minimum": 105027840.0,
+              "maximum": 543960288.0
+            },
+            "archiveToWorkspaceRatio": {
+              "samples": 20,
+              "median": 0.5039255042100858,
+              "minimum": 0.48783029128445954,
+              "maximum": 0.516872580582045
+            },
+            "effectiveWorkspaceBytesPerSecond": {
+              "samples": 20,
+              "median": 81212680.52997111,
+              "minimum": 52652765.7823724,
+              "maximum": 100003423.27378607
+            },
+            "files": {
+              "samples": 8,
+              "median": 5.0,
+              "minimum": 3.0,
+              "maximum": 27.0
+            },
+            "effectiveArchiveBytesPerSecond": {
+              "samples": 20,
+              "median": 40677336.46764976,
+              "minimum": 26838049.28921842,
+              "maximum": 50364176.44315483
+            },
+            "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+          },
+          {
+            "strategy": "direct-runtime",
+            "sourceClass": "e2-micro",
+            "targetClass": "e2-micro",
+            "phase": "peer-authenticated-connectivity-probe",
+            "seconds": {
+              "samples": 1,
+              "median": 3.210240794,
+              "minimum": 3.210240794,
+              "maximum": 3.210240794
+            },
+            "secondsBases": [
+              "combined-phase-wall-includes-unseparated-service-queue"
+            ],
+            "pooledArchiveServiceRate": {
+              "samples": 1,
+              "bytes": 619673320,
+              "serviceSeconds": 3.210240794,
+              "bytesPerSecond": 193030168.06657648,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "pooledWorkspaceServiceRate": {
+              "samples": 1,
+              "bytes": 1108977176,
+              "serviceSeconds": 3.210240794,
+              "bytesPerSecond": 345449842.2899301,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "phaseChannelWaitSeconds": null,
+            "sourceChannelWaitSeconds": null,
+            "sourcePreflightSeconds": null,
+            "sourcePreflightServiceSeconds": null,
+            "sourcePreflightChannelWaitSeconds": null,
+            "logicalBytes": {
+              "samples": 1,
+              "median": 1018425874.0,
+              "minimum": 1018425874.0,
+              "maximum": 1018425874.0
+            },
+            "archiveBytes": {
+              "samples": 1,
+              "median": 619673320.0,
+              "minimum": 619673320.0,
+              "maximum": 619673320.0
+            },
+            "workspaceBytes": {
+              "samples": 1,
+              "median": 1108977176.0,
+              "minimum": 1108977176.0,
+              "maximum": 1108977176.0
+            },
+            "archiveToWorkspaceRatio": {
+              "samples": 1,
+              "median": 0.5587791465962506,
+              "minimum": 0.5587791465962506,
+              "maximum": 0.5587791465962506
+            },
+            "effectiveWorkspaceBytesPerSecond": {
+              "samples": 1,
+              "median": 345449842.2899301,
+              "minimum": 345449842.2899301,
+              "maximum": 345449842.2899301
+            },
+            "files": {
+              "samples": 1,
+              "median": 39.0,
+              "minimum": 39.0,
+              "maximum": 39.0
+            },
+            "effectiveArchiveBytesPerSecond": {
+              "samples": 1,
+              "median": 193030168.06657648,
+              "minimum": 193030168.06657648,
+              "maximum": 193030168.06657648
+            },
+            "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+          },
+          {
+            "strategy": "direct-runtime",
+            "sourceClass": "e2-micro",
+            "targetClass": "e2-micro",
+            "phase": "peer-snapshot-acquire",
+            "seconds": {
+              "samples": 1,
+              "median": 250.851621405,
+              "minimum": 250.851621405,
+              "maximum": 250.851621405
+            },
+            "secondsBases": [
+              "combined-phase-wall-includes-unseparated-service-queue"
+            ],
+            "pooledArchiveServiceRate": {
+              "samples": 1,
+              "bytes": 619673320,
+              "serviceSeconds": 250.851621405,
+              "bytesPerSecond": 2470278.312451237,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "pooledWorkspaceServiceRate": {
+              "samples": 1,
+              "bytes": 1108977176,
+              "serviceSeconds": 250.851621405,
+              "bytesPerSecond": 4420849.144959506,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "phaseChannelWaitSeconds": null,
+            "sourceChannelWaitSeconds": null,
+            "sourcePreflightSeconds": null,
+            "sourcePreflightServiceSeconds": null,
+            "sourcePreflightChannelWaitSeconds": null,
+            "logicalBytes": {
+              "samples": 1,
+              "median": 1018425874.0,
+              "minimum": 1018425874.0,
+              "maximum": 1018425874.0
+            },
+            "archiveBytes": {
+              "samples": 1,
+              "median": 619673320.0,
+              "minimum": 619673320.0,
+              "maximum": 619673320.0
+            },
+            "workspaceBytes": {
+              "samples": 1,
+              "median": 1108977176.0,
+              "minimum": 1108977176.0,
+              "maximum": 1108977176.0
+            },
+            "archiveToWorkspaceRatio": {
+              "samples": 1,
+              "median": 0.5587791465962506,
+              "minimum": 0.5587791465962506,
+              "maximum": 0.5587791465962506
+            },
+            "effectiveWorkspaceBytesPerSecond": {
+              "samples": 1,
+              "median": 4420849.144959506,
+              "minimum": 4420849.144959506,
+              "maximum": 4420849.144959506
+            },
+            "files": {
+              "samples": 1,
+              "median": 39.0,
+              "minimum": 39.0,
+              "maximum": 39.0
+            },
+            "effectiveArchiveBytesPerSecond": {
+              "samples": 1,
+              "median": 2470278.312451237,
+              "minimum": 2470278.312451237,
+              "maximum": 2470278.312451237
+            },
+            "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+          },
+          {
+            "strategy": "direct-runtime",
+            "sourceClass": "e2-micro",
+            "targetClass": "e2-micro",
+            "phase": "peer-private-upload",
+            "seconds": {
+              "samples": 1,
+              "median": 28.724556513,
+              "minimum": 28.724556513,
+              "maximum": 28.724556513
+            },
+            "secondsBases": [
+              "combined-phase-wall-includes-unseparated-service-queue"
+            ],
+            "pooledArchiveServiceRate": {
+              "samples": 1,
+              "bytes": 619673320,
+              "serviceSeconds": 28.724556513,
+              "bytesPerSecond": 21572946.468975134,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "pooledWorkspaceServiceRate": {
+              "samples": 1,
+              "bytes": 1108977176,
+              "serviceSeconds": 28.724556513,
+              "bytesPerSecond": 38607286.26038509,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "phaseChannelWaitSeconds": null,
+            "sourceChannelWaitSeconds": null,
+            "sourcePreflightSeconds": null,
+            "sourcePreflightServiceSeconds": null,
+            "sourcePreflightChannelWaitSeconds": null,
+            "logicalBytes": {
+              "samples": 1,
+              "median": 1018425874.0,
+              "minimum": 1018425874.0,
+              "maximum": 1018425874.0
+            },
+            "archiveBytes": {
+              "samples": 1,
+              "median": 619673320.0,
+              "minimum": 619673320.0,
+              "maximum": 619673320.0
+            },
+            "workspaceBytes": {
+              "samples": 1,
+              "median": 1108977176.0,
+              "minimum": 1108977176.0,
+              "maximum": 1108977176.0
+            },
+            "archiveToWorkspaceRatio": {
+              "samples": 1,
+              "median": 0.5587791465962506,
+              "minimum": 0.5587791465962506,
+              "maximum": 0.5587791465962506
+            },
+            "effectiveWorkspaceBytesPerSecond": {
+              "samples": 1,
+              "median": 38607286.26038509,
+              "minimum": 38607286.26038509,
+              "maximum": 38607286.26038509
+            },
+            "files": {
+              "samples": 1,
+              "median": 39.0,
+              "minimum": 39.0,
+              "maximum": 39.0
+            },
+            "effectiveArchiveBytesPerSecond": {
+              "samples": 1,
+              "median": 21572946.468975134,
+              "minimum": 21572946.468975134,
+              "maximum": 21572946.468975134
+            },
+            "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+          },
+          {
+            "strategy": "direct-runtime",
+            "sourceClass": "e2-micro",
+            "targetClass": "e2-micro",
+            "phase": "peer-receiver-verify-and-extract",
+            "seconds": {
+              "samples": 1,
+              "median": 19.263423801,
+              "minimum": 19.263423801,
+              "maximum": 19.263423801
+            },
+            "secondsBases": [
+              "combined-phase-wall-includes-unseparated-service-queue"
+            ],
+            "pooledArchiveServiceRate": {
+              "samples": 1,
+              "bytes": 619673320,
+              "serviceSeconds": 19.263423801,
+              "bytesPerSecond": 32168389.503418997,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "pooledWorkspaceServiceRate": {
+              "samples": 1,
+              "bytes": 1108977176,
+              "serviceSeconds": 19.263423801,
+              "bytesPerSecond": 57569058.722698666,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "phaseChannelWaitSeconds": null,
+            "sourceChannelWaitSeconds": null,
+            "sourcePreflightSeconds": null,
+            "sourcePreflightServiceSeconds": null,
+            "sourcePreflightChannelWaitSeconds": null,
+            "logicalBytes": {
+              "samples": 1,
+              "median": 1018425874.0,
+              "minimum": 1018425874.0,
+              "maximum": 1018425874.0
+            },
+            "archiveBytes": {
+              "samples": 1,
+              "median": 619673320.0,
+              "minimum": 619673320.0,
+              "maximum": 619673320.0
+            },
+            "workspaceBytes": {
+              "samples": 1,
+              "median": 1108977176.0,
+              "minimum": 1108977176.0,
+              "maximum": 1108977176.0
+            },
+            "archiveToWorkspaceRatio": {
+              "samples": 1,
+              "median": 0.5587791465962506,
+              "minimum": 0.5587791465962506,
+              "maximum": 0.5587791465962506
+            },
+            "effectiveWorkspaceBytesPerSecond": {
+              "samples": 1,
+              "median": 57569058.722698666,
+              "minimum": 57569058.722698666,
+              "maximum": 57569058.722698666
+            },
+            "files": {
+              "samples": 1,
+              "median": 39.0,
+              "minimum": 39.0,
+              "maximum": 39.0
+            },
+            "effectiveArchiveBytesPerSecond": {
+              "samples": 1,
+              "median": 32168389.503418997,
+              "minimum": 32168389.503418997,
+              "maximum": 32168389.503418997
+            },
+            "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+          }
+        ],
+        "consumerMergeObservations": [
+          {
+            "activityFamily": "madd",
+            "resourceClass": "e2-micro",
+            "mergeSeconds": {
+              "samples": 3,
+              "median": 67.094164362,
+              "minimum": 66.79656049,
+              "maximum": 219.086229683
+            },
+            "checkSeconds": {
+              "samples": 3,
+              "median": 25.7431940460001,
+              "minimum": 25.456530666999925,
+              "maximum": 121.27468780899994
+            },
+            "copySeconds": {
+              "samples": 3,
+              "median": 34.58182319599996,
+              "minimum": 33.813945880999654,
+              "maximum": 62.06325912700004
+            },
+            "verifySeconds": {
+              "samples": 3,
+              "median": 6.73655051500009,
+              "minimum": 6.551817965000055,
+              "maximum": 35.192216692999864
+            }
+          },
+          {
+            "activityFamily": "mbackground",
+            "resourceClass": "e2-micro",
+            "mergeSeconds": {
+              "samples": 12,
+              "median": 18.883627134,
+              "minimum": 17.8304088,
+              "maximum": 19.754857759
+            },
+            "checkSeconds": {
+              "samples": 12,
+              "median": 4.557633406999969,
+              "minimum": 3.6671020270000554,
+              "maximum": 4.961447119000013
+            },
+            "copySeconds": {
+              "samples": 12,
+              "median": 10.148011529499968,
+              "minimum": 9.761975659999962,
+              "maximum": 10.434541308000007
+            },
+            "verifySeconds": {
+              "samples": 12,
+              "median": 3.693423046499902,
+              "minimum": 2.9794699060000767,
+              "maximum": 4.000663433
+            }
+          },
+          {
+            "activityFamily": "mbgmodel",
+            "resourceClass": "e2-micro",
+            "mergeSeconds": {
+              "samples": 3,
+              "median": 15.077407549,
+              "minimum": 14.266392464,
+              "maximum": 15.232841298
+            },
+            "checkSeconds": {
+              "samples": 3,
+              "median": 2.53756751800006,
+              "minimum": 2.5070188539998526,
+              "maximum": 2.962898128000006
+            },
+            "copySeconds": {
+              "samples": 3,
+              "median": 8.130230359999814,
+              "minimum": 8.074467681999977,
+              "maximum": 9.150769504999971
+            },
+            "verifySeconds": {
+              "samples": 3,
+              "median": 3.020684265,
+              "minimum": 3.0046015890000035,
+              "maximum": 3.463600305
+            }
+          },
+          {
+            "activityFamily": "mconcatfit",
+            "resourceClass": "hpc",
+            "mergeSeconds": {
+              "samples": 2,
+              "median": 18.891379676,
+              "minimum": 17.266011092,
+              "maximum": 20.51674826
+            },
+            "checkSeconds": {
+              "samples": 2,
+              "median": 6.206628285348415,
+              "minimum": 5.660585141740739,
+              "maximum": 6.752671428956091
+            },
+            "copySeconds": {
+              "samples": 2,
+              "median": 6.046090563759208,
+              "minimum": 5.871328831650317,
+              "maximum": 6.220852295868099
+            },
+            "verifySeconds": {
+              "samples": 2,
+              "median": 4.663542255293578,
+              "minimum": 4.222140168771148,
+              "maximum": 5.104944341816008
+            }
+          },
+          {
+            "activityFamily": "mconcatfit",
+            "resourceClass": "e2-micro",
+            "mergeSeconds": {
+              "samples": 1,
+              "median": 24.153126054,
+              "minimum": 24.153126054,
+              "maximum": 24.153126054
+            },
+            "checkSeconds": {
+              "samples": 1,
+              "median": 8.702594806999969,
+              "minimum": 8.702594806999969,
+              "maximum": 8.702594806999969
+            },
+            "copySeconds": {
+              "samples": 1,
+              "median": 11.903956375999996,
+              "minimum": 11.903956375999996,
+              "maximum": 11.903956375999996
+            },
+            "verifySeconds": {
+              "samples": 1,
+              "median": 3.0493237859999454,
+              "minimum": 3.0493237859999454,
+              "maximum": 3.0493237859999454
+            }
+          },
+          {
+            "activityFamily": "mdifffit",
+            "resourceClass": "hpc",
+            "mergeSeconds": {
+              "samples": 18,
+              "median": 10.650899734,
+              "minimum": 5.614199461,
+              "maximum": 21.22848251
+            },
+            "checkSeconds": {
+              "samples": 18,
+              "median": 1.4091542228125036,
+              "minimum": 0.677861861884594,
+              "maximum": 3.194015149027109
+            },
+            "copySeconds": {
+              "samples": 18,
+              "median": 1.472872169688344,
+              "minimum": 1.2712753061205149,
+              "maximum": 1.878188787959516
+            },
+            "verifySeconds": {
+              "samples": 18,
+              "median": 4.185988076031208,
+              "minimum": 1.6743122031912208,
+              "maximum": 5.521449169144034
+            }
+          },
+          {
+            "activityFamily": "mimgtbl",
+            "resourceClass": "e2-micro",
+            "mergeSeconds": {
+              "samples": 3,
+              "median": 53.298720149,
+              "minimum": 51.926005982,
+              "maximum": 53.377830025
+            },
+            "checkSeconds": {
+              "samples": 3,
+              "median": 18.728920129000016,
+              "minimum": 17.38217044000021,
+              "maximum": 18.955533912999954
+            },
+            "copySeconds": {
+              "samples": 3,
+              "median": 27.39036550999981,
+              "minimum": 27.380674623000004,
+              "maximum": 27.65483295599995
+            },
+            "verifySeconds": {
+              "samples": 3,
+              "median": 6.6541218470001695,
+              "minimum": 6.2337451810000175,
+              "maximum": 6.684228208999912
+            }
+          },
+          {
+            "activityFamily": "mviewer",
+            "resourceClass": "e2-micro",
+            "mergeSeconds": {
+              "samples": 4,
+              "median": 60.991183819,
+              "minimum": 29.459673139,
+              "maximum": 104.951331755
+            },
+            "checkSeconds": {
+              "samples": 4,
+              "median": 13.8288311230001,
+              "minimum": 5.738225310999951,
+              "maximum": 34.67292259200008
+            },
+            "copySeconds": {
+              "samples": 4,
+              "median": 25.007742583499976,
+              "minimum": 16.94268330900013,
+              "maximum": 49.24239904699971
+            },
+            "verifySeconds": {
+              "samples": 4,
+              "median": 13.40475499099989,
+              "minimum": 6.247800998000002,
+              "maximum": 36.95691540500002
+            }
+          }
+        ],
+        "mergeRateObservations": [
+          {
+            "targetClass": "e2-micro",
+            "source": "baseline:montage-clean-real-20261011-v1",
+            "observations": {
+              "checkSecondsPerInputByte": {
+                "samples": 26,
+                "median": 6.2190376479285e-09,
+                "minimum": 4.04158434198331e-09,
+                "maximum": 3.1265677366835255e-08
+              },
+              "copySecondsPerUniqueByte": {
+                "samples": 26,
+                "median": 1.6090916291863342e-08,
+                "minimum": 1.4574432595848423e-08,
+                "maximum": 5.8709123754770746e-08
+              },
+              "verifySecondsPerUniqueByte": {
+                "samples": 26,
+                "median": 5.9409084403851915e-09,
+                "minimum": 4.745400286178283e-09,
+                "maximum": 3.3325226348030825e-08
+              }
+            },
+            "commandOverheadSeconds": null,
+            "channelWaitSeconds": null
+          },
+          {
+            "targetClass": "hpc",
+            "source": "baseline:montage-clean-real-20261011-v1",
+            "observations": {
+              "checkSecondsPerInputByte": {
+                "samples": 20,
+                "median": 6.241897995174089e-09,
+                "minimum": 3.225024006512041e-09,
+                "maximum": 1.5199312527158336e-08
+              },
+              "copySecondsPerUniqueByte": {
+                "samples": 20,
+                "median": 7.273321197353105e-09,
+                "minimum": 5.994391983044094e-09,
+                "maximum": 1.1467828457107587e-08
+              },
+              "verifySecondsPerUniqueByte": {
+                "samples": 20,
+                "median": 1.9239898531383915e-08,
+                "minimum": 7.761874480480946e-09,
+                "maximum": 2.5959619920885475e-08
+              }
+            },
+            "commandOverheadSeconds": null,
+            "channelWaitSeconds": null
+          }
+        ],
+        "limitations": [
+          "Single baseline; ranges are observations, not confidence intervals.",
+          "Do not replay per-activity durations or total makespan as a holdout prediction.",
+          "No destination cache hit or shared-storage route may be assumed without evidence.",
+          "Workspace manifests and topology-specific contention are required before applying these observations.",
+          "Compute samples are contention-conditioned; do not apply interference slowdown a second time."
+        ]
+      }
+    },
+    "ako151-source-pool-v3-calibration": {
+      "sha256": "0ab9d1bd45fbce2ed8b847b07f9e190f34be31709df3c48bfd7f93102426ded3",
+      "evidence": {
+        "schemaVersion": 1,
+        "baselineRunId": "montage-clean-real-20261011-v1",
+        "baselineSHA256": "c55d80f3cf734f6486c3937b17a743cf2da6faade447fdd2d15e18e24d9d5e4f",
+        "computeWorkBasis": null,
+        "synchronizationContract": "whole-workspace-v1",
+        "workspaceVolumeBasis": "producer-final-snapshot-manifest",
+        "computeObservations": [
+          {
+            "activityFamily": "madd",
+            "resourceClass": "e2-micro",
+            "runtimeSeconds": {
+              "samples": 3,
+              "median": 0.9227643013000488,
+              "minimum": 0.9206876754760742,
+              "maximum": 8.156338691711426
+            },
+            "taskRuntimeFallbackSamples": 0,
+            "wallSecondsPerReferenceSecond": {
+              "samples": 3,
+              "median": 0.10252936681111653,
+              "minimum": 0.10229863060845269,
+              "maximum": 4.078169345855713
+            },
+            "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+          },
+          {
+            "activityFamily": "mbackground",
+            "resourceClass": "e2-micro",
+            "runtimeSeconds": {
+              "samples": 12,
+              "median": 1.0978449583053589,
+              "minimum": 0.7738721370697021,
+              "maximum": 9.189680099487305
+            },
+            "taskRuntimeFallbackSamples": 0,
+            "wallSecondsPerReferenceSecond": {
+              "samples": 12,
+              "median": 0.3890828953848945,
+              "minimum": 0.04005753475686778,
+              "maximum": 1.1718418598175049
+            },
+            "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+          },
+          {
+            "activityFamily": "mbgmodel",
+            "resourceClass": "e2-micro",
+            "runtimeSeconds": {
+              "samples": 3,
+              "median": 1.7851626873016357,
+              "minimum": 0.42560553550720215,
+              "maximum": 8.379759788513184
+            },
+            "taskRuntimeFallbackSamples": 0,
+            "wallSecondsPerReferenceSecond": {
+              "samples": 3,
+              "median": 0.19835140970018175,
+              "minimum": 0.060800790786743164,
+              "maximum": 0.4189879894256592
+            },
+            "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+          },
+          {
+            "activityFamily": "mconcatfit",
+            "resourceClass": "hpc",
+            "runtimeSeconds": {
+              "samples": 2,
+              "median": 2.273337483406067,
+              "minimum": 2.2540571689605713,
+              "maximum": 2.2926177978515625
+            },
+            "taskRuntimeFallbackSamples": 2,
+            "wallSecondsPerReferenceSecond": {
+              "samples": 2,
+              "median": 0.2955575788722319,
+              "minimum": 0.13259159817415125,
+              "maximum": 0.4585235595703125
+            },
+            "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+          },
+          {
+            "activityFamily": "mconcatfit",
+            "resourceClass": "e2-micro",
+            "runtimeSeconds": {
+              "samples": 1,
+              "median": 0.5490996837615967,
+              "minimum": 0.5490996837615967,
+              "maximum": 0.5490996837615967
+            },
+            "taskRuntimeFallbackSamples": 0,
+            "wallSecondsPerReferenceSecond": {
+              "samples": 1,
+              "median": 0.06101107597351074,
+              "minimum": 0.06101107597351074,
+              "maximum": 0.06101107597351074
+            },
+            "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+          },
+          {
+            "activityFamily": "mdifffit",
+            "resourceClass": "hpc",
+            "runtimeSeconds": {
+              "samples": 18,
+              "median": 2.216379404067993,
+              "minimum": 1.6275734901428223,
+              "maximum": 3.6220107078552246
+            },
+            "taskRuntimeFallbackSamples": 18,
+            "wallSecondsPerReferenceSecond": {
+              "samples": 18,
+              "median": 0.12864546605518884,
+              "minimum": 0.07348955670992534,
+              "maximum": 0.27002583850513806
+            },
+            "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+          },
+          {
+            "activityFamily": "mimgtbl",
+            "resourceClass": "e2-micro",
+            "runtimeSeconds": {
+              "samples": 3,
+              "median": 0.10982584953308105,
+              "minimum": 0.09377503395080566,
+              "maximum": 1.9788739681243896
+            },
+            "taskRuntimeFallbackSamples": 0,
+            "wallSecondsPerReferenceSecond": {
+              "samples": 3,
+              "median": 0.0043930339813232425,
+              "minimum": 0.004262501543218439,
+              "maximum": 0.2198748853471544
+            },
+            "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+          },
+          {
+            "activityFamily": "mproject",
+            "resourceClass": "hpc",
+            "runtimeSeconds": {
+              "samples": 12,
+              "median": 429.2951464653015,
+              "minimum": 296.09501814842224,
+              "maximum": 480.9227578639984
+            },
+            "taskRuntimeFallbackSamples": 12,
+            "wallSecondsPerReferenceSecond": {
+              "samples": 12,
+              "median": 0.4244157270059439,
+              "minimum": 0.26437055191823416,
+              "maximum": 1.1530097625105853
+            },
+            "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+          },
+          {
+            "activityFamily": "mviewer",
+            "resourceClass": "e2-micro",
+            "runtimeSeconds": {
+              "samples": 4,
+              "median": 2.4596585035324097,
+              "minimum": 1.3308792114257812,
+              "maximum": 22.134554862976074
+            },
+            "taskRuntimeFallbackSamples": 0,
+            "wallSecondsPerReferenceSecond": {
+              "samples": 4,
+              "median": 0.3088648319244385,
+              "minimum": 0.10351345118354349,
+              "maximum": 22.134554862976074
+            },
+            "interpretation": "observed wall runtime; includes physical sharing, not clean CPU service demand"
+          }
+        ],
+        "materializationPhaseObservations": [
+          {
+            "strategy": "gateway",
+            "sourceClass": "hpc",
+            "targetClass": "e2-micro",
+            "phase": "pack-and-receive",
+            "seconds": {
+              "samples": 9,
+              "median": 99.334554129,
+              "minimum": 15.046990423,
+              "maximum": 329.915067318
+            },
+            "secondsBases": [
+              "source-command-execution-excludes-channel-queue"
+            ],
+            "pooledArchiveServiceRate": {
+              "samples": 9,
+              "bytes": 1073826598,
+              "serviceSeconds": 1380.179567089,
+              "bytesPerSecond": 778033.9773214125,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "pooledWorkspaceServiceRate": {
+              "samples": 9,
+              "bytes": 2130542471,
+              "serviceSeconds": 1380.179567089,
+              "bytesPerSecond": 1543670.4917271198,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "phaseChannelWaitSeconds": null,
+            "sourceChannelWaitSeconds": {
+              "samples": 9,
+              "median": 0.652852501,
+              "minimum": 8.7709e-05,
+              "maximum": 329.915110567
+            },
+            "sourcePreflightSeconds": null,
+            "sourcePreflightServiceSeconds": {
+              "samples": 9,
+              "median": 0.649784334,
+              "minimum": 0.643699041,
+              "maximum": 3.3186203760000126
+            },
+            "sourcePreflightChannelWaitSeconds": null,
+            "logicalBytes": {
+              "samples": 8,
+              "median": 125191004.0,
+              "minimum": 9175961.0,
+              "maximum": 543960288.0
+            },
+            "archiveBytes": {
+              "samples": 20,
+              "median": 54575715.5,
+              "minimum": 51258241.0,
+              "maximum": 279482093.0
+            },
+            "workspaceBytes": {
+              "samples": 20,
+              "median": 106346880.0,
+              "minimum": 105027840.0,
+              "maximum": 543960288.0
+            },
+            "archiveToWorkspaceRatio": {
+              "samples": 20,
+              "median": 0.5039255042100858,
+              "minimum": 0.48783029128445954,
+              "maximum": 0.516872580582045
+            },
+            "effectiveWorkspaceBytesPerSecond": {
+              "samples": 20,
+              "median": 1467064.2688254993,
+              "minimum": 514336.08762021107,
+              "maximum": 4379020.798596232
+            },
+            "files": {
+              "samples": 8,
+              "median": 5.0,
+              "minimum": 3.0,
+              "maximum": 27.0
+            },
+            "effectiveArchiveBytesPerSecond": {
+              "samples": 20,
+              "median": 743603.5823995736,
+              "minimum": 259032.26729615868,
+              "maximum": 2223122.1494006827
+            },
+            "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+          },
+          {
+            "strategy": "gateway",
+            "sourceClass": "hpc",
+            "targetClass": "e2-micro",
+            "phase": "archive-validation",
+            "seconds": {
+              "samples": 20,
+              "median": 0.5623665840000001,
+              "minimum": 0.514497417,
+              "maximum": 2.844069335
+            },
+            "secondsBases": [
+              "combined-phase-wall-includes-unseparated-service-queue"
+            ],
+            "pooledArchiveServiceRate": {
+              "samples": 20,
+              "bytes": 1889644770,
+              "serviceSeconds": 19.35844647,
+              "bytesPerSecond": 97613451.20996168,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "pooledWorkspaceServiceRate": {
+              "samples": 20,
+              "bytes": 3734106599,
+              "serviceSeconds": 19.35844647,
+              "bytesPerSecond": 192892885.53122208,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "phaseChannelWaitSeconds": null,
+            "sourceChannelWaitSeconds": null,
+            "sourcePreflightSeconds": null,
+            "sourcePreflightServiceSeconds": null,
+            "sourcePreflightChannelWaitSeconds": null,
+            "logicalBytes": {
+              "samples": 8,
+              "median": 125191004.0,
+              "minimum": 9175961.0,
+              "maximum": 543960288.0
+            },
+            "archiveBytes": {
+              "samples": 20,
+              "median": 54575715.5,
+              "minimum": 51258241.0,
+              "maximum": 279482093.0
+            },
+            "workspaceBytes": {
+              "samples": 20,
+              "median": 106346880.0,
+              "minimum": 105027840.0,
+              "maximum": 543960288.0
+            },
+            "archiveToWorkspaceRatio": {
+              "samples": 20,
+              "median": 0.5039255042100858,
+              "minimum": 0.48783029128445954,
+              "maximum": 0.516872580582045
+            },
+            "effectiveWorkspaceBytesPerSecond": {
+              "samples": 20,
+              "median": 191117125.75011408,
+              "minimum": 184823674.3538846,
+              "maximum": 204136768.2901312
+            },
+            "files": {
+              "samples": 8,
+              "median": 5.0,
+              "minimum": 3.0,
+              "maximum": 27.0
+            },
+            "effectiveArchiveBytesPerSecond": {
+              "samples": 20,
+              "median": 97510235.9022452,
+              "minimum": 92780099.73707034,
+              "maximum": 104536040.47379948
+            },
+            "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+          },
+          {
+            "strategy": "gateway",
+            "sourceClass": "hpc",
+            "targetClass": "e2-micro",
+            "phase": "archive-upload",
+            "seconds": {
+              "samples": 20,
+              "median": 5.228915211,
+              "minimum": 4.934585543,
+              "maximum": 23.754565511
+            },
+            "secondsBases": [
+              "phase-command-execution-excludes-channel-queue"
+            ],
+            "pooledArchiveServiceRate": {
+              "samples": 20,
+              "bytes": 1889644770,
+              "serviceSeconds": 186.044580421,
+              "bytesPerSecond": 10156946.070258675,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "pooledWorkspaceServiceRate": {
+              "samples": 20,
+              "bytes": 3734106599,
+              "serviceSeconds": 186.044580421,
+              "bytesPerSecond": 20071031.31168936,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "phaseChannelWaitSeconds": {
+              "samples": 20,
+              "median": 3.13335e-05,
+              "minimum": 5.542e-06,
+              "maximum": 9.775e-05
+            },
+            "sourceChannelWaitSeconds": null,
+            "sourcePreflightSeconds": null,
+            "sourcePreflightServiceSeconds": null,
+            "sourcePreflightChannelWaitSeconds": null,
+            "logicalBytes": {
+              "samples": 8,
+              "median": 125191004.0,
+              "minimum": 9175961.0,
+              "maximum": 543960288.0
+            },
+            "archiveBytes": {
+              "samples": 20,
+              "median": 54575715.5,
+              "minimum": 51258241.0,
+              "maximum": 279482093.0
+            },
+            "workspaceBytes": {
+              "samples": 20,
+              "median": 106346880.0,
+              "minimum": 105027840.0,
+              "maximum": 543960288.0
+            },
+            "archiveToWorkspaceRatio": {
+              "samples": 20,
+              "median": 0.5039255042100858,
+              "minimum": 0.48783029128445954,
+              "maximum": 0.516872580582045
+            },
+            "effectiveWorkspaceBytesPerSecond": {
+              "samples": 20,
+              "median": 20885862.053935025,
+              "minimum": 13516582.554276312,
+              "maximum": 24103060.74761127
+            },
+            "files": {
+              "samples": 8,
+              "median": 5.0,
+              "minimum": 3.0,
+              "maximum": 27.0
+            },
+            "effectiveArchiveBytesPerSecond": {
+              "samples": 20,
+              "median": 10513116.819752198,
+              "minimum": 6809813.146297475,
+              "maximum": 12341189.114952732
+            },
+            "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+          },
+          {
+            "strategy": "gateway",
+            "sourceClass": "hpc",
+            "targetClass": "e2-micro",
+            "phase": "receiver-verify-and-extract",
+            "seconds": {
+              "samples": 20,
+              "median": 1.6460796675,
+              "minimum": 1.158808168,
+              "maximum": 7.398465045
+            },
+            "secondsBases": [
+              "combined-phase-wall-includes-unseparated-service-queue"
+            ],
+            "pooledArchiveServiceRate": {
+              "samples": 20,
+              "bytes": 1889644770,
+              "serviceSeconds": 50.131346858,
+              "bytesPerSecond": 37693875.95654532,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "pooledWorkspaceServiceRate": {
+              "samples": 20,
+              "bytes": 3734106599,
+              "serviceSeconds": 50.131346858,
+              "bytesPerSecond": 74486460.7283957,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "phaseChannelWaitSeconds": null,
+            "sourceChannelWaitSeconds": null,
+            "sourcePreflightSeconds": null,
+            "sourcePreflightServiceSeconds": null,
+            "sourcePreflightChannelWaitSeconds": null,
+            "logicalBytes": {
+              "samples": 8,
+              "median": 125191004.0,
+              "minimum": 9175961.0,
+              "maximum": 543960288.0
+            },
+            "archiveBytes": {
+              "samples": 20,
+              "median": 54575715.5,
+              "minimum": 51258241.0,
+              "maximum": 279482093.0
+            },
+            "workspaceBytes": {
+              "samples": 20,
+              "median": 106346880.0,
+              "minimum": 105027840.0,
+              "maximum": 543960288.0
+            },
+            "archiveToWorkspaceRatio": {
+              "samples": 20,
+              "median": 0.5039255042100858,
+              "minimum": 0.48783029128445954,
+              "maximum": 0.516872580582045
+            },
+            "effectiveWorkspaceBytesPerSecond": {
+              "samples": 20,
+              "median": 81212680.52997111,
+              "minimum": 52652765.7823724,
+              "maximum": 100003423.27378607
+            },
+            "files": {
+              "samples": 8,
+              "median": 5.0,
+              "minimum": 3.0,
+              "maximum": 27.0
+            },
+            "effectiveArchiveBytesPerSecond": {
+              "samples": 20,
+              "median": 40677336.46764976,
+              "minimum": 26838049.28921842,
+              "maximum": 50364176.44315483
+            },
+            "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+          },
+          {
+            "strategy": "direct-runtime",
+            "sourceClass": "e2-micro",
+            "targetClass": "e2-micro",
+            "phase": "peer-authenticated-connectivity-probe",
+            "seconds": {
+              "samples": 1,
+              "median": 3.210240794,
+              "minimum": 3.210240794,
+              "maximum": 3.210240794
+            },
+            "secondsBases": [
+              "combined-phase-wall-includes-unseparated-service-queue"
+            ],
+            "pooledArchiveServiceRate": {
+              "samples": 1,
+              "bytes": 619673320,
+              "serviceSeconds": 3.210240794,
+              "bytesPerSecond": 193030168.06657648,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "pooledWorkspaceServiceRate": {
+              "samples": 1,
+              "bytes": 1108977176,
+              "serviceSeconds": 3.210240794,
+              "bytesPerSecond": 345449842.2899301,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "phaseChannelWaitSeconds": null,
+            "sourceChannelWaitSeconds": null,
+            "sourcePreflightSeconds": null,
+            "sourcePreflightServiceSeconds": null,
+            "sourcePreflightChannelWaitSeconds": null,
+            "logicalBytes": {
+              "samples": 1,
+              "median": 1018425874.0,
+              "minimum": 1018425874.0,
+              "maximum": 1018425874.0
+            },
+            "archiveBytes": {
+              "samples": 1,
+              "median": 619673320.0,
+              "minimum": 619673320.0,
+              "maximum": 619673320.0
+            },
+            "workspaceBytes": {
+              "samples": 1,
+              "median": 1108977176.0,
+              "minimum": 1108977176.0,
+              "maximum": 1108977176.0
+            },
+            "archiveToWorkspaceRatio": {
+              "samples": 1,
+              "median": 0.5587791465962506,
+              "minimum": 0.5587791465962506,
+              "maximum": 0.5587791465962506
+            },
+            "effectiveWorkspaceBytesPerSecond": {
+              "samples": 1,
+              "median": 345449842.2899301,
+              "minimum": 345449842.2899301,
+              "maximum": 345449842.2899301
+            },
+            "files": {
+              "samples": 1,
+              "median": 39.0,
+              "minimum": 39.0,
+              "maximum": 39.0
+            },
+            "effectiveArchiveBytesPerSecond": {
+              "samples": 1,
+              "median": 193030168.06657648,
+              "minimum": 193030168.06657648,
+              "maximum": 193030168.06657648
+            },
+            "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+          },
+          {
+            "strategy": "direct-runtime",
+            "sourceClass": "e2-micro",
+            "targetClass": "e2-micro",
+            "phase": "peer-snapshot-acquire",
+            "seconds": {
+              "samples": 1,
+              "median": 250.851621405,
+              "minimum": 250.851621405,
+              "maximum": 250.851621405
+            },
+            "secondsBases": [
+              "combined-phase-wall-includes-unseparated-service-queue"
+            ],
+            "pooledArchiveServiceRate": {
+              "samples": 1,
+              "bytes": 619673320,
+              "serviceSeconds": 250.851621405,
+              "bytesPerSecond": 2470278.312451237,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "pooledWorkspaceServiceRate": {
+              "samples": 1,
+              "bytes": 1108977176,
+              "serviceSeconds": 250.851621405,
+              "bytesPerSecond": 4420849.144959506,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "phaseChannelWaitSeconds": null,
+            "sourceChannelWaitSeconds": null,
+            "sourcePreflightSeconds": null,
+            "sourcePreflightServiceSeconds": null,
+            "sourcePreflightChannelWaitSeconds": null,
+            "logicalBytes": {
+              "samples": 1,
+              "median": 1018425874.0,
+              "minimum": 1018425874.0,
+              "maximum": 1018425874.0
+            },
+            "archiveBytes": {
+              "samples": 1,
+              "median": 619673320.0,
+              "minimum": 619673320.0,
+              "maximum": 619673320.0
+            },
+            "workspaceBytes": {
+              "samples": 1,
+              "median": 1108977176.0,
+              "minimum": 1108977176.0,
+              "maximum": 1108977176.0
+            },
+            "archiveToWorkspaceRatio": {
+              "samples": 1,
+              "median": 0.5587791465962506,
+              "minimum": 0.5587791465962506,
+              "maximum": 0.5587791465962506
+            },
+            "effectiveWorkspaceBytesPerSecond": {
+              "samples": 1,
+              "median": 4420849.144959506,
+              "minimum": 4420849.144959506,
+              "maximum": 4420849.144959506
+            },
+            "files": {
+              "samples": 1,
+              "median": 39.0,
+              "minimum": 39.0,
+              "maximum": 39.0
+            },
+            "effectiveArchiveBytesPerSecond": {
+              "samples": 1,
+              "median": 2470278.312451237,
+              "minimum": 2470278.312451237,
+              "maximum": 2470278.312451237
+            },
+            "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+          },
+          {
+            "strategy": "direct-runtime",
+            "sourceClass": "e2-micro",
+            "targetClass": "e2-micro",
+            "phase": "peer-private-upload",
+            "seconds": {
+              "samples": 1,
+              "median": 28.724556513,
+              "minimum": 28.724556513,
+              "maximum": 28.724556513
+            },
+            "secondsBases": [
+              "combined-phase-wall-includes-unseparated-service-queue"
+            ],
+            "pooledArchiveServiceRate": {
+              "samples": 1,
+              "bytes": 619673320,
+              "serviceSeconds": 28.724556513,
+              "bytesPerSecond": 21572946.468975134,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "pooledWorkspaceServiceRate": {
+              "samples": 1,
+              "bytes": 1108977176,
+              "serviceSeconds": 28.724556513,
+              "bytesPerSecond": 38607286.26038509,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "phaseChannelWaitSeconds": null,
+            "sourceChannelWaitSeconds": null,
+            "sourcePreflightSeconds": null,
+            "sourcePreflightServiceSeconds": null,
+            "sourcePreflightChannelWaitSeconds": null,
+            "logicalBytes": {
+              "samples": 1,
+              "median": 1018425874.0,
+              "minimum": 1018425874.0,
+              "maximum": 1018425874.0
+            },
+            "archiveBytes": {
+              "samples": 1,
+              "median": 619673320.0,
+              "minimum": 619673320.0,
+              "maximum": 619673320.0
+            },
+            "workspaceBytes": {
+              "samples": 1,
+              "median": 1108977176.0,
+              "minimum": 1108977176.0,
+              "maximum": 1108977176.0
+            },
+            "archiveToWorkspaceRatio": {
+              "samples": 1,
+              "median": 0.5587791465962506,
+              "minimum": 0.5587791465962506,
+              "maximum": 0.5587791465962506
+            },
+            "effectiveWorkspaceBytesPerSecond": {
+              "samples": 1,
+              "median": 38607286.26038509,
+              "minimum": 38607286.26038509,
+              "maximum": 38607286.26038509
+            },
+            "files": {
+              "samples": 1,
+              "median": 39.0,
+              "minimum": 39.0,
+              "maximum": 39.0
+            },
+            "effectiveArchiveBytesPerSecond": {
+              "samples": 1,
+              "median": 21572946.468975134,
+              "minimum": 21572946.468975134,
+              "maximum": 21572946.468975134
+            },
+            "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+          },
+          {
+            "strategy": "direct-runtime",
+            "sourceClass": "e2-micro",
+            "targetClass": "e2-micro",
+            "phase": "peer-receiver-verify-and-extract",
+            "seconds": {
+              "samples": 1,
+              "median": 19.263423801,
+              "minimum": 19.263423801,
+              "maximum": 19.263423801
+            },
+            "secondsBases": [
+              "combined-phase-wall-includes-unseparated-service-queue"
+            ],
+            "pooledArchiveServiceRate": {
+              "samples": 1,
+              "bytes": 619673320,
+              "serviceSeconds": 19.263423801,
+              "bytesPerSecond": 32168389.503418997,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "pooledWorkspaceServiceRate": {
+              "samples": 1,
+              "bytes": 1108977176,
+              "serviceSeconds": 19.263423801,
+              "bytesPerSecond": 57569058.722698666,
+              "interpretation": "byte-weighted per-command service coefficient; summed service is not concurrent wall time"
+            },
+            "phaseChannelWaitSeconds": null,
+            "sourceChannelWaitSeconds": null,
+            "sourcePreflightSeconds": null,
+            "sourcePreflightServiceSeconds": null,
+            "sourcePreflightChannelWaitSeconds": null,
+            "logicalBytes": {
+              "samples": 1,
+              "median": 1018425874.0,
+              "minimum": 1018425874.0,
+              "maximum": 1018425874.0
+            },
+            "archiveBytes": {
+              "samples": 1,
+              "median": 619673320.0,
+              "minimum": 619673320.0,
+              "maximum": 619673320.0
+            },
+            "workspaceBytes": {
+              "samples": 1,
+              "median": 1108977176.0,
+              "minimum": 1108977176.0,
+              "maximum": 1108977176.0
+            },
+            "archiveToWorkspaceRatio": {
+              "samples": 1,
+              "median": 0.5587791465962506,
+              "minimum": 0.5587791465962506,
+              "maximum": 0.5587791465962506
+            },
+            "effectiveWorkspaceBytesPerSecond": {
+              "samples": 1,
+              "median": 57569058.722698666,
+              "minimum": 57569058.722698666,
+              "maximum": 57569058.722698666
+            },
+            "files": {
+              "samples": 1,
+              "median": 39.0,
+              "minimum": 39.0,
+              "maximum": 39.0
+            },
+            "effectiveArchiveBytesPerSecond": {
+              "samples": 1,
+              "median": 32168389.503418997,
+              "minimum": 32168389.503418997,
+              "maximum": 32168389.503418997
+            },
+            "interpretation": "concurrency-conditioned effective phase rates; not isolated link bandwidth"
+          }
+        ],
+        "consumerMergeObservations": [
+          {
+            "activityFamily": "madd",
+            "resourceClass": "e2-micro",
+            "mergeSeconds": {
+              "samples": 3,
+              "median": 67.094164362,
+              "minimum": 66.79656049,
+              "maximum": 219.086229683
+            },
+            "checkSeconds": {
+              "samples": 3,
+              "median": 25.7431940460001,
+              "minimum": 25.456530666999925,
+              "maximum": 121.27468780899994
+            },
+            "copySeconds": {
+              "samples": 3,
+              "median": 34.58182319599996,
+              "minimum": 33.813945880999654,
+              "maximum": 62.06325912700004
+            },
+            "verifySeconds": {
+              "samples": 3,
+              "median": 6.73655051500009,
+              "minimum": 6.551817965000055,
+              "maximum": 35.192216692999864
+            }
+          },
+          {
+            "activityFamily": "mbackground",
+            "resourceClass": "e2-micro",
+            "mergeSeconds": {
+              "samples": 12,
+              "median": 18.883627134,
+              "minimum": 17.8304088,
+              "maximum": 19.754857759
+            },
+            "checkSeconds": {
+              "samples": 12,
+              "median": 4.557633406999969,
+              "minimum": 3.6671020270000554,
+              "maximum": 4.961447119000013
+            },
+            "copySeconds": {
+              "samples": 12,
+              "median": 10.148011529499968,
+              "minimum": 9.761975659999962,
+              "maximum": 10.434541308000007
+            },
+            "verifySeconds": {
+              "samples": 12,
+              "median": 3.693423046499902,
+              "minimum": 2.9794699060000767,
+              "maximum": 4.000663433
+            }
+          },
+          {
+            "activityFamily": "mbgmodel",
+            "resourceClass": "e2-micro",
+            "mergeSeconds": {
+              "samples": 3,
+              "median": 15.077407549,
+              "minimum": 14.266392464,
+              "maximum": 15.232841298
+            },
+            "checkSeconds": {
+              "samples": 3,
+              "median": 2.53756751800006,
+              "minimum": 2.5070188539998526,
+              "maximum": 2.962898128000006
+            },
+            "copySeconds": {
+              "samples": 3,
+              "median": 8.130230359999814,
+              "minimum": 8.074467681999977,
+              "maximum": 9.150769504999971
+            },
+            "verifySeconds": {
+              "samples": 3,
+              "median": 3.020684265,
+              "minimum": 3.0046015890000035,
+              "maximum": 3.463600305
+            }
+          },
+          {
+            "activityFamily": "mconcatfit",
+            "resourceClass": "hpc",
+            "mergeSeconds": {
+              "samples": 2,
+              "median": 18.891379676,
+              "minimum": 17.266011092,
+              "maximum": 20.51674826
+            },
+            "checkSeconds": {
+              "samples": 2,
+              "median": 6.206628285348415,
+              "minimum": 5.660585141740739,
+              "maximum": 6.752671428956091
+            },
+            "copySeconds": {
+              "samples": 2,
+              "median": 6.046090563759208,
+              "minimum": 5.871328831650317,
+              "maximum": 6.220852295868099
+            },
+            "verifySeconds": {
+              "samples": 2,
+              "median": 4.663542255293578,
+              "minimum": 4.222140168771148,
+              "maximum": 5.104944341816008
+            }
+          },
+          {
+            "activityFamily": "mconcatfit",
+            "resourceClass": "e2-micro",
+            "mergeSeconds": {
+              "samples": 1,
+              "median": 24.153126054,
+              "minimum": 24.153126054,
+              "maximum": 24.153126054
+            },
+            "checkSeconds": {
+              "samples": 1,
+              "median": 8.702594806999969,
+              "minimum": 8.702594806999969,
+              "maximum": 8.702594806999969
+            },
+            "copySeconds": {
+              "samples": 1,
+              "median": 11.903956375999996,
+              "minimum": 11.903956375999996,
+              "maximum": 11.903956375999996
+            },
+            "verifySeconds": {
+              "samples": 1,
+              "median": 3.0493237859999454,
+              "minimum": 3.0493237859999454,
+              "maximum": 3.0493237859999454
+            }
+          },
+          {
+            "activityFamily": "mdifffit",
+            "resourceClass": "hpc",
+            "mergeSeconds": {
+              "samples": 18,
+              "median": 10.650899734,
+              "minimum": 5.614199461,
+              "maximum": 21.22848251
+            },
+            "checkSeconds": {
+              "samples": 18,
+              "median": 1.4091542228125036,
+              "minimum": 0.677861861884594,
+              "maximum": 3.194015149027109
+            },
+            "copySeconds": {
+              "samples": 18,
+              "median": 1.472872169688344,
+              "minimum": 1.2712753061205149,
+              "maximum": 1.878188787959516
+            },
+            "verifySeconds": {
+              "samples": 18,
+              "median": 4.185988076031208,
+              "minimum": 1.6743122031912208,
+              "maximum": 5.521449169144034
+            }
+          },
+          {
+            "activityFamily": "mimgtbl",
+            "resourceClass": "e2-micro",
+            "mergeSeconds": {
+              "samples": 3,
+              "median": 53.298720149,
+              "minimum": 51.926005982,
+              "maximum": 53.377830025
+            },
+            "checkSeconds": {
+              "samples": 3,
+              "median": 18.728920129000016,
+              "minimum": 17.38217044000021,
+              "maximum": 18.955533912999954
+            },
+            "copySeconds": {
+              "samples": 3,
+              "median": 27.39036550999981,
+              "minimum": 27.380674623000004,
+              "maximum": 27.65483295599995
+            },
+            "verifySeconds": {
+              "samples": 3,
+              "median": 6.6541218470001695,
+              "minimum": 6.2337451810000175,
+              "maximum": 6.684228208999912
+            }
+          },
+          {
+            "activityFamily": "mviewer",
+            "resourceClass": "e2-micro",
+            "mergeSeconds": {
+              "samples": 4,
+              "median": 60.991183819,
+              "minimum": 29.459673139,
+              "maximum": 104.951331755
+            },
+            "checkSeconds": {
+              "samples": 4,
+              "median": 13.8288311230001,
+              "minimum": 5.738225310999951,
+              "maximum": 34.67292259200008
+            },
+            "copySeconds": {
+              "samples": 4,
+              "median": 25.007742583499976,
+              "minimum": 16.94268330900013,
+              "maximum": 49.24239904699971
+            },
+            "verifySeconds": {
+              "samples": 4,
+              "median": 13.40475499099989,
+              "minimum": 6.247800998000002,
+              "maximum": 36.95691540500002
+            }
+          }
+        ],
+        "mergeRateObservations": [
+          {
+            "targetClass": "e2-micro",
+            "source": "baseline:montage-clean-real-20261011-v1",
+            "observations": {
+              "checkSecondsPerInputByte": {
+                "samples": 26,
+                "median": 6.2190376479285e-09,
+                "minimum": 4.04158434198331e-09,
+                "maximum": 3.1265677366835255e-08
+              },
+              "copySecondsPerUniqueByte": {
+                "samples": 26,
+                "median": 1.6090916291863342e-08,
+                "minimum": 1.4574432595848423e-08,
+                "maximum": 5.8709123754770746e-08
+              },
+              "verifySecondsPerUniqueByte": {
+                "samples": 26,
+                "median": 5.9409084403851915e-09,
+                "minimum": 4.745400286178283e-09,
+                "maximum": 3.3325226348030825e-08
+              }
+            },
+            "commandOverheadSeconds": null,
+            "channelWaitSeconds": null
+          },
+          {
+            "targetClass": "hpc",
+            "source": "baseline:montage-clean-real-20261011-v1",
+            "observations": {
+              "checkSecondsPerInputByte": {
+                "samples": 20,
+                "median": 6.1298139012793435e-09,
+                "minimum": 3.1751234028133156e-09,
+                "maximum": 1.2935774743283055e-08
+              },
+              "copySecondsPerUniqueByte": {
+                "samples": 20,
+                "median": 6.6847097203047835e-09,
+                "minimum": 6.024563031240022e-09,
+                "maximum": 1.2348273488129912e-08
+              },
+              "verifySecondsPerUniqueByte": {
+                "samples": 20,
+                "median": 1.6028533003778777e-08,
+                "minimum": 8.072685871648882e-09,
+                "maximum": 2.3498275561055637e-08
+              }
+            },
+            "commandOverheadSeconds": {
+              "samples": 20,
+              "median": 1.2050064484193266,
+              "minimum": 0.8645295389928158,
+              "maximum": 1.4323608704028086
+            },
+            "channelWaitSeconds": {
+              "samples": 20,
+              "median": 2.3327023555000004,
+              "minimum": 8.0375e-05,
+              "maximum": 11.018675047
+            }
+          }
+        ],
+        "limitations": [
+          "Single baseline; ranges are observations, not confidence intervals.",
+          "Do not replay per-activity durations or total makespan as a holdout prediction.",
+          "No destination cache hit or shared-storage route may be assumed without evidence.",
+          "Workspace manifests and topology-specific contention are required before applying these observations.",
+          "Compute samples are contention-conditioned; do not apply interference slowdown a second time."
+        ],
+        "auxiliarySourceServiceEvidence": {
+          "runId": "montage-calibration-real-20261011-v1",
+          "sha256": "56fe504f6d8491ed12b53a954c2ad33cc0776a655cb18c23620bc57108e5057d",
+          "completedTransferSamples": 9,
+          "role": "completed commands from interrupted diagnostic; not independent validation",
+          "queueNotAddedToService": true,
+          "completedHPCMergeSamples": 20
+        }
+      }
+    },
+    "ako151-source-pool-v3-model": {
+      "sha256": "f0ddab1065b6f1b07a05d287f4ee718f6d66e47b3d596b8611a7beaa29a2e9e9",
+      "evidence": {
+        "schemaVersion": 1,
+        "source": "montage-clean-real-20261011-v1:sha256:0ab9d1bd45fbce2ed8b847b07f9e190f34be31709df3c48bfd7f93102426ded3",
+        "relayResourceId": "montage-relay-controller",
+        "resources": {
+          "montage-relay-controller": {
+            "class": "relay",
+            "domain": "relay"
+          },
+          "montage-gcp-e2-medium-1": {
+            "class": "e2-medium",
+            "domain": "cloud"
+          },
+          "montage-gcp-e2-medium-2": {
+            "class": "e2-medium",
+            "domain": "cloud"
+          },
+          "montage-gcp-fog-e2-micro-01": {
+            "class": "e2-micro",
+            "domain": "cloud"
+          },
+          "montage-gcp-fog-e2-micro-02": {
+            "class": "e2-micro",
+            "domain": "cloud"
+          },
+          "montage-gcp-fog-e2-micro-03": {
+            "class": "e2-micro",
+            "domain": "cloud"
+          },
+          "montage-gcp-fog-e2-micro-04": {
+            "class": "e2-micro",
+            "domain": "cloud"
+          },
+          "montage-gcp-fog-e2-micro-05": {
+            "class": "e2-micro",
+            "domain": "cloud"
+          },
+          "montage-gcp-fog-e2-micro-06": {
+            "class": "e2-micro",
+            "domain": "cloud"
+          },
+          "montage-gcp-fog-e2-micro-07": {
+            "class": "e2-micro",
+            "domain": "cloud"
+          },
+          "montage-gcp-fog-e2-micro-08": {
+            "class": "e2-micro",
+            "domain": "cloud"
+          },
+          "montage-gcp-fog-e2-micro-09": {
+            "class": "e2-micro",
+            "domain": "cloud"
+          },
+          "montage-gcp-fog-e2-micro-10": {
+            "class": "e2-micro",
+            "domain": "cloud"
+          },
+          "plafrim-execution-ssh-node-bora001": {
+            "class": "hpc",
+            "domain": "hpc",
+            "bulkServiceGroupId": "plafrim-reference-ssh-bulk",
+            "bulkServiceSlots": 3,
+            "bulkServiceSource": "AKO-148 SSHChannelLimit4 reserve1; diagnostic source waits prove two waves of three"
+          },
+          "plafrim-execution-ssh-node-diablo03": {
+            "class": "hpc",
+            "domain": "hpc",
+            "bulkServiceGroupId": "plafrim-reference-ssh-bulk",
+            "bulkServiceSlots": 3,
+            "bulkServiceSource": "AKO-148 SSHChannelLimit4 reserve1; diagnostic source waits prove two waves of three"
+          }
+        },
+        "profiles": [
+          {
+            "strategy": "gateway",
+            "sourceClass": "hpc",
+            "targetClass": "e2-micro",
+            "source": "montage-clean-real-20261011-v1:sha256:0ab9d1bd45fbce2ed8b847b07f9e190f34be31709df3c48bfd7f93102426ded3",
+            "samples": 20,
+            "archiveToWorkspaceRatio": 0.5039255042100858,
+            "uploadArchiveBytesPerSecond": 10156946.070258675,
+            "ingressArchiveBytesPerSecond": 778033.9773214125,
+            "probeSeconds": 0.649784334,
+            "ingressIncludesSourcePreparation": true,
+            "validationSecondsPerByte": 5.1842243805209585e-09,
+            "receiverSecondsPerByte": 1.3425258633865797e-08
+          },
+          {
+            "strategy": "direct-runtime",
+            "sourceClass": "e2-micro",
+            "targetClass": "e2-micro",
+            "source": "montage-clean-real-20261011-v1:sha256:0ab9d1bd45fbce2ed8b847b07f9e190f34be31709df3c48bfd7f93102426ded3",
+            "samples": 1,
+            "archiveToWorkspaceRatio": 0.5587791465962506,
+            "uploadArchiveBytesPerSecond": 21572946.468975134,
+            "probeSeconds": 3.210240794,
+            "snapshotSecondsPerByte": 2.2620088747886009e-07,
+            "receiverSecondsPerByte": 1.7370442077520265e-08
+          }
+        ],
+        "mergeProfiles": [
+          {
+            "targetClass": "e2-micro",
+            "source": "montage-clean-real-20261011-v1:sha256:0ab9d1bd45fbce2ed8b847b07f9e190f34be31709df3c48bfd7f93102426ded3",
+            "samples": 26,
+            "checkSecondsPerInputByte": 6.2190376479285e-09,
+            "copySecondsPerUniqueByte": 1.6090916291863342e-08,
+            "verifySecondsPerUniqueByte": 5.9409084403851915e-09
+          },
+          {
+            "targetClass": "hpc",
+            "source": "montage-clean-real-20261011-v1:sha256:0ab9d1bd45fbce2ed8b847b07f9e190f34be31709df3c48bfd7f93102426ded3",
+            "samples": 20,
+            "checkSecondsPerInputByte": 6.1298139012793435e-09,
+            "copySecondsPerUniqueByte": 6.6847097203047835e-09,
+            "verifySecondsPerUniqueByte": 1.6028533003778777e-08,
+            "commandOverheadSeconds": 1.2050064484193266
+          }
+        ]
+      }
+    },
+    "ako151-shared-source-v2-capacity": {
+      "sha256": "7435b48a745043efeb9316f5faf618873efcf742582e3f6662ca69e6d86b1362",
+      "evidence": {
+        "samples": 9,
+        "busySeconds": 527.3644335269928,
+        "concurrentCommandsMaximum": 3,
+        "durationWeightedMedianBytesPerSecond": 1081607.64706648,
+        "minimumBytesPerSecond": 358234.9543482617,
+        "maximumBytesPerSecond": 5569715.58658991,
+        "interpretation": "Aggregate source pack/ingress service, NOT NIC bandwidth; assumes uniform byte progress within each queue-free command.",
+        "limitations": [
+          "Small auxiliary diagnostic sample; capacity is conditioned on workload and concurrent source work.",
+          "Admission queue excluded from command intervals."
+        ],
+        "runId": "montage-calibration-real-20261011-v1",
+        "sha256": "56fe504f6d8491ed12b53a954c2ad33cc0776a655cb18c23620bc57108e5057d"
+      }
+    }
+  },
+  "gate": {
+    "accepted": false,
+    "newPlanningReleased": false,
+    "independentRealPrepared": false,
+    "reason": "Shared source-capacity fit meets makespan tolerance but dominant dependency residuals still exceed 100%; do not accept compensating errors."
+  },
+  "remainingLimitations": [
+    "Receiver command service is not identifiable separately from queue in completed references. No destination pool is added to those mixed samples.",
+    "Nine completed source commands and measured HPC merges from an interrupted diagnostic are auxiliary calibration evidence, not a completed-run benchmark.",
+    "Aggregate source capacity varies with workload/concurrency; constant-rate fit cannot explain every dominant dependency.",
+    "New planning must retain only evidenced route classes. Unobserved placement/storage identity must not be silently inferred.",
+    "Provisioning and orchestration timing retained from the frozen original forecast; not yet independently validated.",
+    "Compute and lifecycle cost bases unchanged; e2-medium interference remains extrapolated and network/public-IP billing remains incomplete."
+  ]
+}

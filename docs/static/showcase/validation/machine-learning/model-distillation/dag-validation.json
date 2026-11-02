@@ -1,0 +1,28 @@
+{
+  "artifactSha256": {
+    "distillation-report.json": "01fdee90598195998b027df5b0e65fec27e26c2e07dd85374e8616497533f3ad",
+    "student.pkl": "1e177084937b55e44ff5851872b2a3551fc2eaaa9031f4e902eb869de2f0836e"
+  },
+  "completedActivities": 6,
+  "dependencyWaves": [
+    [
+      "load-teacher"
+    ],
+    [
+      "soft-labels"
+    ],
+    [
+      "train-student"
+    ],
+    [
+      "quality",
+      "latency"
+    ],
+    [
+      "publish"
+    ]
+  ],
+  "executionMode": "local-process",
+  "mode": "local-workload",
+  "schedulingPolicy": "ready activities with bounded concurrency"
+}

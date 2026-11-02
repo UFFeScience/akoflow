@@ -89,15 +89,7 @@ func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferP
 	if err != nil {
 		return failed(target, run, err)
 	}
-	strategy := plan.Strategy
-	route := plan.Route
-	if strategy == "" {
-		route = m.Strategies.Resolve(source, destination)
-		strategy = route.Strategy
-	} else if route.Strategy == "" {
-		route = domain.TransferRoute{Strategy: strategy, Fallback: domain.TransferGateway, Reason: "strategy explicitly selected by the transfer plan"}
-	}
-	route = routeWithEndpoints(route, plan)
+	strategy, route := m.materializationRoute(plan, source, destination)
 	// Destination pull requires an agent on the destination.
 	if strategy == domain.TransferDestinationPull {
 		run.Strategy, run.Route = strategy, route
@@ -156,7 +148,11 @@ func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferP
 			}, func() error {
 				// Re-check after taking ownership: another request may have committed
 				// the same immutable object while this caller was waiting.
-				if ok, verifyErr := m.verify(ctx, dc, destination, final, blob.Digest); verifyErr == nil && ok {
+				ok, verifyErr := m.verify(ctx, dc, destination, final, blob.Digest)
+				if verifyErr != nil {
+					return fmt.Errorf("verify existing artifact: %w", verifyErr)
+				}
+				if ok {
 					usedExisting = true
 					return nil
 				}
@@ -182,7 +178,7 @@ func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferP
 				if routed && sizeBytes > offset {
 					run.TransferredBytes += sizeBytes - offset
 				}
-				ok, verifyErr := m.verify(ctx, dc, destination, partial, blob.Digest)
+				ok, verifyErr = m.verify(ctx, dc, destination, partial, blob.Digest)
 				if verifyErr != nil {
 					return verifyErr
 				}
@@ -222,6 +218,17 @@ func (m Materializer) Materialize(ctx context.Context, plan domain.DataTransferP
 	target.Status = domain.MaterializationCommitted
 	target.VerifiedDigest = target.Digest
 	return target, run, nil
+}
+
+func (m Materializer) materializationRoute(plan domain.DataTransferPlan, source, destination domain.TransferEndpoint) (domain.TransferStrategy, domain.TransferRoute) {
+	strategy, route := plan.Strategy, plan.Route
+	if strategy == "" {
+		route = m.Strategies.Resolve(source, destination)
+		strategy = route.Strategy
+	} else if route.Strategy == "" {
+		route = domain.TransferRoute{Strategy: strategy, Fallback: domain.TransferGateway, Reason: "strategy explicitly selected by the transfer plan"}
+	}
+	return strategy, routeWithEndpoints(route, plan)
 }
 
 func shortArtifactDigest(digest string) string {
@@ -473,6 +480,11 @@ func (m Materializer) verify(ctx context.Context, c ports.TransferConnector, end
 	exists, err := c.Exists(ctx, endpoint, name)
 	if err != nil || !exists {
 		return false, err
+	}
+	if verifier, ok := c.(interface {
+		VerifyDigest(context.Context, domain.TransferEndpoint, string, string) (bool, error)
+	}); ok {
+		return verifier.VerifyDigest(ctx, endpoint, name, expected)
 	}
 	r, err := c.Open(ctx, endpoint, name, 0)
 	if err != nil {

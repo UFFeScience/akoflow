@@ -1,6 +1,7 @@
 package execution
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/UFFeScience/akoflow/internal/domain/planning"
@@ -73,6 +74,11 @@ type ExecutionRun struct {
 	ConnectionID           string                 `json:"connectionId,omitempty"`
 	ActorID                string                 `json:"actorId,omitempty"`
 	Command                string                 `json:"command,omitempty"`
+	WorkflowID             string                 `json:"workflowId,omitempty"`
+	WorkflowVersionID      string                 `json:"workflowVersionId,omitempty"`
+	WorkflowName           string                 `json:"workflowName,omitempty"`
+	ResourceName           string                 `json:"resourceName,omitempty"`
+	EnvironmentNames       []string               `json:"environmentNames,omitempty"`
 	StartedAt              *time.Time             `json:"startedAt,omitempty"`
 	FinishedAt             *time.Time             `json:"finishedAt,omitempty"`
 }
@@ -209,6 +215,7 @@ type DataTransfer struct {
 }
 
 type ActivityExecutionContext struct {
+	Attempt    int                      `json:"attempt,omitempty"`
 	Run        ExecutionRun             `json:"run"`
 	Workflow   workflow.WorkflowVersion `json:"workflow"`
 	Activity   workflow.Activity        `json:"activity"`
@@ -220,6 +227,16 @@ type ActivityExecutionContext struct {
 	// activity has executable or workspace requirements. Providers must not
 	// start work until it is committed.
 	Preparation *PreparationGate `json:"preparation,omitempty"`
+}
+
+// HandleID is stable within an attempt, but never reuses a prior attempt's
+// failed handle when the workflow is explicitly recovered.
+func (e ActivityExecutionContext) HandleID() string {
+	id := e.Run.ID + ":" + e.Activity.ID
+	if e.Attempt > 1 {
+		id += fmt.Sprintf(":attempt-%d", e.Attempt)
+	}
+	return id
 }
 
 // ActivityHandle is the runtime-independent identity of a started activity.

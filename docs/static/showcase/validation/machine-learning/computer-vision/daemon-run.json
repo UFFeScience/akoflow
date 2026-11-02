@@ -1,0 +1,2582 @@
+{
+  "activityCount": 6,
+  "completedActivityCount": 6,
+  "image": "ghcr.io/uffescience/akoflow-examples/showcase-computer-vision:local-5ae230ade335bec1",
+  "imageId": "sha256:5ae230ade335bec12791e0017113bb770b37c07afb887eb51952644853fb237b",
+  "observedAt": "2026-10-20T19:09:54Z",
+  "planId": "showcase-computer-vision-local-6db51a739c-manual-plan-20261020t190942.320293000",
+  "projection": {
+    "activities": [
+      {
+        "activityId": "showcase-computer-vision-local-6db51a739c-collect-images",
+        "allocatedResourceId": "showcase-computer-vision-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "finishedAt": 1792523382.875218,
+        "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-collect-images",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-computer-vision-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-computer-vision-local-6db51a739c-manual-plan-20261020t190942.320293000-showcase-computer-vision-local-6db51a739c-collect-images",
+        "plannedResourceId": "showcase-computer-vision-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523382.6339116,
+        "readyAt": 1792523382.6339116,
+        "runtimeId": "showcase-computer-vision-local",
+        "runtimeSeconds": 0.10851049423217773,
+        "startedAt": 1792523382.7667074,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-computer-vision-local-6db51a739c-import-labels",
+        "allocatedResourceId": "showcase-computer-vision-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "finishedAt": 1792523384.3056264,
+        "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-import-labels",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13248348236083984,
+          "preparationFinishedAt": 1792523384.0646832,
+          "preparationStartedAt": 1792523383.8770719,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.001146554946899414,
+          "runtimeId": "showcase-computer-vision-local",
+          "transferElapsedSeconds": 0.18761134147644043,
+          "transferWorkSeconds": 0.18761134147644043
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-computer-vision-local-6db51a739c-manual-plan-20261020t190942.320293000-showcase-computer-vision-local-6db51a739c-import-labels",
+        "plannedResourceId": "showcase-computer-vision-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523383.8736775,
+        "readyAt": 1792523383.8736775,
+        "runtimeId": "showcase-computer-vision-local",
+        "runtimeSeconds": 0.1084597110748291,
+        "startedAt": 1792523384.1971667,
+        "status": "completed",
+        "transferBytes": 75117,
+        "transferSeconds": 0.18761134147644043
+      },
+      {
+        "activityId": "showcase-computer-vision-local-6db51a739c-augment",
+        "allocatedResourceId": "showcase-computer-vision-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "finishedAt": 1792523386.2683535,
+        "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-augment",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1208648681640625,
+          "preparationFinishedAt": 1792523386.0342073,
+          "preparationStartedAt": 1792523385.8871076,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0010251998901367188,
+          "runtimeId": "showcase-computer-vision-local",
+          "transferElapsedSeconds": 0.14709973335266113,
+          "transferWorkSeconds": 0.14709973335266113
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-computer-vision-local-6db51a739c-manual-plan-20261020t190942.320293000-showcase-computer-vision-local-6db51a739c-augment",
+        "plannedResourceId": "showcase-computer-vision-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523385.88424,
+        "readyAt": 1792523385.88424,
+        "runtimeId": "showcase-computer-vision-local",
+        "runtimeSeconds": 0.11328125,
+        "startedAt": 1792523386.1550722,
+        "status": "completed",
+        "transferBytes": 150257,
+        "transferSeconds": 0.14709973335266113
+      },
+      {
+        "activityId": "showcase-computer-vision-local-6db51a739c-train-detector",
+        "allocatedResourceId": "showcase-computer-vision-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "finishedAt": 1792523388.2965775,
+        "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-train-detector",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.12818622589111328,
+          "preparationFinishedAt": 1792523388.0567124,
+          "preparationStartedAt": 1792523387.8901498,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0008540153503417969,
+          "runtimeId": "showcase-computer-vision-local",
+          "transferElapsedSeconds": 0.16656255722045898,
+          "transferWorkSeconds": 0.16656255722045898
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-computer-vision-local-6db51a739c-manual-plan-20261020t190942.320293000-showcase-computer-vision-local-6db51a739c-train-detector",
+        "plannedResourceId": "showcase-computer-vision-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523387.8872433,
+        "readyAt": 1792523387.8872433,
+        "runtimeId": "showcase-computer-vision-local",
+        "runtimeSeconds": 0.1116788387298584,
+        "startedAt": 1792523388.1848986,
+        "status": "completed",
+        "transferBytes": 282332,
+        "transferSeconds": 0.16656255722045898
+      },
+      {
+        "activityId": "showcase-computer-vision-local-6db51a739c-evaluate",
+        "allocatedResourceId": "showcase-computer-vision-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "finishedAt": 1792523390.2985134,
+        "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-evaluate",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1167137622833252,
+          "preparationFinishedAt": 1792523390.0700572,
+          "preparationStartedAt": 1792523389.8918629,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0012440681457519531,
+          "runtimeId": "showcase-computer-vision-local",
+          "transferElapsedSeconds": 0.17819428443908691,
+          "transferWorkSeconds": 0.17819428443908691
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-computer-vision-local-6db51a739c-manual-plan-20261020t190942.320293000-showcase-computer-vision-local-6db51a739c-evaluate",
+        "plannedResourceId": "showcase-computer-vision-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523389.8878546,
+        "readyAt": 1792523389.8878546,
+        "runtimeId": "showcase-computer-vision-local",
+        "runtimeSeconds": 0.11174249649047852,
+        "startedAt": 1792523390.186771,
+        "status": "completed",
+        "transferBytes": 305727,
+        "transferSeconds": 0.17819428443908691
+      },
+      {
+        "activityId": "showcase-computer-vision-local-6db51a739c-package-model",
+        "allocatedResourceId": "showcase-computer-vision-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "finishedAt": 1792523392.2914693,
+        "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-package-model",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1303117275238037,
+          "preparationFinishedAt": 1792523392.0529377,
+          "preparationStartedAt": 1792523391.8822417,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0010957717895507812,
+          "runtimeId": "showcase-computer-vision-local",
+          "transferElapsedSeconds": 0.17069602012634277,
+          "transferWorkSeconds": 0.17069602012634277
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-computer-vision-local-6db51a739c-manual-plan-20261020t190942.320293000-showcase-computer-vision-local-6db51a739c-package-model",
+        "plannedResourceId": "showcase-computer-vision-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523391.8793426,
+        "readyAt": 1792523391.8793426,
+        "runtimeId": "showcase-computer-vision-local",
+        "runtimeSeconds": 0.10821986198425293,
+        "startedAt": 1792523392.1832495,
+        "status": "completed",
+        "transferBytes": 310475,
+        "transferSeconds": 0.17069602012634277
+      }
+    ],
+    "activityAttempts": [
+      {
+        "activityId": "showcase-computer-vision-local-6db51a739c-collect-images",
+        "allocatedResourceId": "showcase-computer-vision-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "finishedAt": 1792523382.875218,
+        "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-collect-images",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-computer-vision-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-computer-vision-local-6db51a739c-manual-plan-20261020t190942.320293000-showcase-computer-vision-local-6db51a739c-collect-images",
+        "plannedResourceId": "showcase-computer-vision-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523382.6339116,
+        "readyAt": 1792523382.6339116,
+        "runtimeId": "showcase-computer-vision-local",
+        "runtimeSeconds": 0.10851049423217773,
+        "startedAt": 1792523382.7667074,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-computer-vision-local-6db51a739c-import-labels",
+        "allocatedResourceId": "showcase-computer-vision-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "finishedAt": 1792523384.3056264,
+        "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-import-labels",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13248348236083984,
+          "preparationFinishedAt": 1792523384.0646832,
+          "preparationStartedAt": 1792523383.8770719,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.001146554946899414,
+          "runtimeId": "showcase-computer-vision-local",
+          "transferElapsedSeconds": 0.18761134147644043,
+          "transferWorkSeconds": 0.18761134147644043
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-computer-vision-local-6db51a739c-manual-plan-20261020t190942.320293000-showcase-computer-vision-local-6db51a739c-import-labels",
+        "plannedResourceId": "showcase-computer-vision-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523383.8736775,
+        "readyAt": 1792523383.8736775,
+        "runtimeId": "showcase-computer-vision-local",
+        "runtimeSeconds": 0.1084597110748291,
+        "startedAt": 1792523384.1971667,
+        "status": "completed",
+        "transferBytes": 75117,
+        "transferSeconds": 0.18761134147644043
+      },
+      {
+        "activityId": "showcase-computer-vision-local-6db51a739c-augment",
+        "allocatedResourceId": "showcase-computer-vision-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "finishedAt": 1792523386.2683535,
+        "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-augment",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1208648681640625,
+          "preparationFinishedAt": 1792523386.0342073,
+          "preparationStartedAt": 1792523385.8871076,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0010251998901367188,
+          "runtimeId": "showcase-computer-vision-local",
+          "transferElapsedSeconds": 0.14709973335266113,
+          "transferWorkSeconds": 0.14709973335266113
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-computer-vision-local-6db51a739c-manual-plan-20261020t190942.320293000-showcase-computer-vision-local-6db51a739c-augment",
+        "plannedResourceId": "showcase-computer-vision-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523385.88424,
+        "readyAt": 1792523385.88424,
+        "runtimeId": "showcase-computer-vision-local",
+        "runtimeSeconds": 0.11328125,
+        "startedAt": 1792523386.1550722,
+        "status": "completed",
+        "transferBytes": 150257,
+        "transferSeconds": 0.14709973335266113
+      },
+      {
+        "activityId": "showcase-computer-vision-local-6db51a739c-train-detector",
+        "allocatedResourceId": "showcase-computer-vision-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "finishedAt": 1792523388.2965775,
+        "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-train-detector",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.12818622589111328,
+          "preparationFinishedAt": 1792523388.0567124,
+          "preparationStartedAt": 1792523387.8901498,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0008540153503417969,
+          "runtimeId": "showcase-computer-vision-local",
+          "transferElapsedSeconds": 0.16656255722045898,
+          "transferWorkSeconds": 0.16656255722045898
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-computer-vision-local-6db51a739c-manual-plan-20261020t190942.320293000-showcase-computer-vision-local-6db51a739c-train-detector",
+        "plannedResourceId": "showcase-computer-vision-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523387.8872433,
+        "readyAt": 1792523387.8872433,
+        "runtimeId": "showcase-computer-vision-local",
+        "runtimeSeconds": 0.1116788387298584,
+        "startedAt": 1792523388.1848986,
+        "status": "completed",
+        "transferBytes": 282332,
+        "transferSeconds": 0.16656255722045898
+      },
+      {
+        "activityId": "showcase-computer-vision-local-6db51a739c-evaluate",
+        "allocatedResourceId": "showcase-computer-vision-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "finishedAt": 1792523390.2985134,
+        "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-evaluate",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1167137622833252,
+          "preparationFinishedAt": 1792523390.0700572,
+          "preparationStartedAt": 1792523389.8918629,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0012440681457519531,
+          "runtimeId": "showcase-computer-vision-local",
+          "transferElapsedSeconds": 0.17819428443908691,
+          "transferWorkSeconds": 0.17819428443908691
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-computer-vision-local-6db51a739c-manual-plan-20261020t190942.320293000-showcase-computer-vision-local-6db51a739c-evaluate",
+        "plannedResourceId": "showcase-computer-vision-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523389.8878546,
+        "readyAt": 1792523389.8878546,
+        "runtimeId": "showcase-computer-vision-local",
+        "runtimeSeconds": 0.11174249649047852,
+        "startedAt": 1792523390.186771,
+        "status": "completed",
+        "transferBytes": 305727,
+        "transferSeconds": 0.17819428443908691
+      },
+      {
+        "activityId": "showcase-computer-vision-local-6db51a739c-package-model",
+        "allocatedResourceId": "showcase-computer-vision-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "finishedAt": 1792523392.2914693,
+        "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-package-model",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1303117275238037,
+          "preparationFinishedAt": 1792523392.0529377,
+          "preparationStartedAt": 1792523391.8822417,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0010957717895507812,
+          "runtimeId": "showcase-computer-vision-local",
+          "transferElapsedSeconds": 0.17069602012634277,
+          "transferWorkSeconds": 0.17069602012634277
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-computer-vision-local-6db51a739c-manual-plan-20261020t190942.320293000-showcase-computer-vision-local-6db51a739c-package-model",
+        "plannedResourceId": "showcase-computer-vision-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523391.8793426,
+        "readyAt": 1792523391.8793426,
+        "runtimeId": "showcase-computer-vision-local",
+        "runtimeSeconds": 0.10821986198425293,
+        "startedAt": 1792523392.1832495,
+        "status": "completed",
+        "transferBytes": 310475,
+        "transferSeconds": 0.17069602012634277
+      }
+    ],
+    "artifactMaterializations": null,
+    "artifactTransferRuns": [
+      {
+        "activityId": "showcase-computer-vision-local-6db51a739c-augment",
+        "durationSeconds": 0.14709973335266113,
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "filesTransferred": 2,
+        "finishedAt": 1792523386.0342073,
+        "id": "transfer-workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-augment-0",
+        "logicalBytes": 150257,
+        "planId": "transfer-workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-augment-0",
+        "route": {
+          "consumerActivityId": "showcase-computer-vision-local-6db51a739c-augment",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-computer-vision-local-6db51a739c-import-labels",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.075377708,
+          "sourceEnvironmentId": "showcase-computer-vision-v1",
+          "sourceResourceId": "showcase-computer-vision-local-docker",
+          "sshChannelWaitSeconds": 2.93e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-computer-vision-v1",
+          "targetResourceId": "showcase-computer-vision-local-docker"
+        },
+        "startedAt": 1792523385.8871076,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 150257
+      },
+      {
+        "activityId": "showcase-computer-vision-local-6db51a739c-evaluate",
+        "durationSeconds": 0.17819428443908691,
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "filesTransferred": 4,
+        "finishedAt": 1792523390.0700572,
+        "id": "transfer-workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-evaluate-0",
+        "logicalBytes": 305727,
+        "planId": "transfer-workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-evaluate-0",
+        "route": {
+          "consumerActivityId": "showcase-computer-vision-local-6db51a739c-evaluate",
+          "filesTransferred": 4,
+          "producerActivityId": "showcase-computer-vision-local-6db51a739c-train-detector",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.088864833,
+          "sourceEnvironmentId": "showcase-computer-vision-v1",
+          "sourceResourceId": "showcase-computer-vision-local-docker",
+          "sshChannelWaitSeconds": 3.33e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-computer-vision-v1",
+          "targetResourceId": "showcase-computer-vision-local-docker"
+        },
+        "startedAt": 1792523389.8918629,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 305727
+      },
+      {
+        "activityId": "showcase-computer-vision-local-6db51a739c-import-labels",
+        "durationSeconds": 0.18761134147644043,
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523384.0646832,
+        "id": "transfer-workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-import-labels-0",
+        "logicalBytes": 75117,
+        "planId": "transfer-workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-import-labels-0",
+        "route": {
+          "consumerActivityId": "showcase-computer-vision-local-6db51a739c-import-labels",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-computer-vision-local-6db51a739c-collect-images",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09298875100000001,
+          "sourceEnvironmentId": "showcase-computer-vision-v1",
+          "sourceResourceId": "showcase-computer-vision-local-docker",
+          "sshChannelWaitSeconds": 4.16e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-computer-vision-v1",
+          "targetResourceId": "showcase-computer-vision-local-docker"
+        },
+        "startedAt": 1792523383.8770719,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 75117
+      },
+      {
+        "activityId": "showcase-computer-vision-local-6db51a739c-package-model",
+        "durationSeconds": 0.17069602012634277,
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "filesTransferred": 6,
+        "finishedAt": 1792523392.0529377,
+        "id": "transfer-workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-package-model-0",
+        "logicalBytes": 310475,
+        "planId": "transfer-workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-package-model-0",
+        "route": {
+          "consumerActivityId": "showcase-computer-vision-local-6db51a739c-package-model",
+          "filesTransferred": 6,
+          "producerActivityId": "showcase-computer-vision-local-6db51a739c-evaluate",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.095707125,
+          "sourceEnvironmentId": "showcase-computer-vision-v1",
+          "sourceResourceId": "showcase-computer-vision-local-docker",
+          "sshChannelWaitSeconds": 4.17e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-computer-vision-v1",
+          "targetResourceId": "showcase-computer-vision-local-docker"
+        },
+        "startedAt": 1792523391.8822417,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 310475
+      },
+      {
+        "activityId": "showcase-computer-vision-local-6db51a739c-train-detector",
+        "durationSeconds": 0.16656255722045898,
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "filesTransferred": 3,
+        "finishedAt": 1792523388.0567124,
+        "id": "transfer-workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-train-detector-0",
+        "logicalBytes": 282332,
+        "planId": "transfer-workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-train-detector-0",
+        "route": {
+          "consumerActivityId": "showcase-computer-vision-local-6db51a739c-train-detector",
+          "filesTransferred": 3,
+          "producerActivityId": "showcase-computer-vision-local-6db51a739c-augment",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.071883083,
+          "sourceEnvironmentId": "showcase-computer-vision-v1",
+          "sourceResourceId": "showcase-computer-vision-local-docker",
+          "sshChannelWaitSeconds": 4.18e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-computer-vision-v1",
+          "targetResourceId": "showcase-computer-vision-local-docker"
+        },
+        "startedAt": 1792523387.8901498,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 282332
+      }
+    ],
+    "cloudBilling": {
+      "asOf": "2026-10-20T19:09:54.765698593Z",
+      "costBasis": "VM compute and boot-disk lifecycle at on-demand marginal rates; not a provider invoice",
+      "estimatedCost": 0,
+      "excludedCosts": [
+        "network-egress",
+        "public-ipv4",
+        "image-storage",
+        "discounts-and-tax"
+      ],
+      "instances": [],
+      "knownCost": 0,
+      "status": "estimated"
+    },
+    "dataLocations": [
+      {
+        "dataObjectInstanceId": "03996943046f0da460be35231b19ad16",
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "id": "b63a909d8efe5f0e3692edf0f84a5a6e",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-computer-vision-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "00cb84b5ba3de3b5328c4b227d4b551c",
+        "uri": "file:///akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-augment/stage-augment.json"
+      },
+      {
+        "dataObjectInstanceId": "0f6d759bcd299d4d610f5d147ed51fdf",
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "id": "b5b48bb34455bcaea79ff5358f19d3a3",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-computer-vision-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "00cb84b5ba3de3b5328c4b227d4b551c",
+        "uri": "file:///akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-collect-images/stage-collect-images.json"
+      },
+      {
+        "dataObjectInstanceId": "649fba0977a9137c52645c71b1a26aa4",
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "id": "f6b97c8ae1bd26695b64f703dc5457a0",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-computer-vision-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "00cb84b5ba3de3b5328c4b227d4b551c",
+        "uri": "file:///akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-evaluate/stage-evaluate.json"
+      },
+      {
+        "dataObjectInstanceId": "f2357ba608d6e815658bbda61d59a4b2",
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "id": "850c59264864054088f42bbe2ce48dca",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-computer-vision-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "00cb84b5ba3de3b5328c4b227d4b551c",
+        "uri": "file:///akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-evaluate/vision-metrics.json"
+      },
+      {
+        "dataObjectInstanceId": "2454efd24170437794eb36f9a40f0be9",
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "id": "d7b00ae2db08dc91e9d1bb2278a575fa",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-computer-vision-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "00cb84b5ba3de3b5328c4b227d4b551c",
+        "uri": "file:///akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-import-labels/stage-import-labels.json"
+      },
+      {
+        "dataObjectInstanceId": "f090c19560c2e23c70649163b07d62e1",
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "id": "59c310c2a54a6cc2780a5abce3367bc8",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-computer-vision-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "00cb84b5ba3de3b5328c4b227d4b551c",
+        "uri": "file:///akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-package-model/model.pkl"
+      },
+      {
+        "dataObjectInstanceId": "369d58e45748180f8ed1187fd1fbf353",
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "id": "d73c18db82a34599289d1f8b11ff2d17",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-computer-vision-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "00cb84b5ba3de3b5328c4b227d4b551c",
+        "uri": "file:///akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-package-model/stage-package-model.json"
+      },
+      {
+        "dataObjectInstanceId": "c141f8050377d3e973bb139879f3df72",
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "id": "b4bbaf8257f82993687ec07c8201fd23",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-computer-vision-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "00cb84b5ba3de3b5328c4b227d4b551c",
+        "uri": "file:///akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-train-detector/stage-train-detector.json"
+      }
+    ],
+    "dataObjects": [
+      {
+        "attempt": 1,
+        "checksum": "sha256:4bd456388fc094231ceb4bf9dcaf68628b16f32ed983ece9a50556a70ae80ab3",
+        "dataObjectId": "e76dcfbc5f1941b3d18756a4844ec021",
+        "discovered": true,
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "id": "03996943046f0da460be35231b19ad16",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-computer-vision-local-6db51a739c-augment",
+        "relativePath": "stage-augment.json",
+        "sizeBytes": 132075
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:70dfb5a2ad4b712185d8dd1ad25638a764dfcfea5a55b29f1fc05632c59e38ca",
+        "dataObjectId": "a605c0ce3c102992ca36939189ea1085",
+        "discovered": true,
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "id": "0f6d759bcd299d4d610f5d147ed51fdf",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-computer-vision-local-6db51a739c-collect-images",
+        "relativePath": "stage-collect-images.json",
+        "sizeBytes": 75117
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:91d7bec4dbf5be574ae5d1065ebb1bc2fb24b2fabc425119ba8925e22683bc02",
+        "dataObjectId": "c3e83242493c28f0923e11b8d93955c8",
+        "discovered": true,
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "id": "649fba0977a9137c52645c71b1a26aa4",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-computer-vision-local-6db51a739c-evaluate",
+        "relativePath": "stage-evaluate.json",
+        "sizeBytes": 4642
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:910c2d990c0b77b91a9837e90009ac9d1baa68558a165396a65ee636a2e8055f",
+        "dataObjectId": "8a5547cbace0337c9ee8415f23013e09",
+        "discovered": true,
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "id": "f2357ba608d6e815658bbda61d59a4b2",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-computer-vision-local-6db51a739c-evaluate",
+        "relativePath": "vision-metrics.json",
+        "sizeBytes": 106
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:865de9c1d6a968700a2f81d55e918e5bcb675cd93dd104302fe37f07ee8b44c8",
+        "dataObjectId": "f3b4f2381e5e28d3636692d21d019a00",
+        "discovered": true,
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "id": "2454efd24170437794eb36f9a40f0be9",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-computer-vision-local-6db51a739c-import-labels",
+        "relativePath": "stage-import-labels.json",
+        "sizeBytes": 75140
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:7318593cd9221187b06bbf7a14e3cba2c9c40cada1cd3de7bb41e46aa3731f2a",
+        "dataObjectId": "776f4d6bafb26031224c5535b1c0c1fa",
+        "discovered": true,
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "id": "f090c19560c2e23c70649163b07d62e1",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-computer-vision-local-6db51a739c-package-model",
+        "relativePath": "model.pkl",
+        "sizeBytes": 1252
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:5454fcc75fd86f71946c7e4312ae68b23061d2550e012c18b77b55a3895581be",
+        "dataObjectId": "5a8af306b6e3421377bccf9da0249154",
+        "discovered": true,
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "id": "369d58e45748180f8ed1187fd1fbf353",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-computer-vision-local-6db51a739c-package-model",
+        "relativePath": "stage-package-model.json",
+        "sizeBytes": 462
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:337c09516b7d76cd414e360db241c494ab4da4f8aca1fff717c346152ed6f7ac",
+        "dataObjectId": "f63ac216682bd18b6936a118a0a3388e",
+        "discovered": true,
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "id": "c141f8050377d3e973bb139879f3df72",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-computer-vision-local-6db51a739c-train-detector",
+        "relativePath": "stage-train-detector.json",
+        "sizeBytes": 23395
+      }
+    ],
+    "dataTransfers": [
+      {
+        "bytes": 75117,
+        "consumerActivityId": "showcase-computer-vision-local-6db51a739c-import-labels",
+        "cost": 0,
+        "durationSeconds": 0.18761134147644043,
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "finishedAt": 1792523384.0646832,
+        "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-import-labels:transfer-workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-import-labels-0",
+        "logicalBytes": 75117,
+        "producerActivityId": "showcase-computer-vision-local-6db51a739c-collect-images",
+        "route": {
+          "consumerActivityId": "showcase-computer-vision-local-6db51a739c-import-labels",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-computer-vision-local-6db51a739c-collect-images",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09298875100000001,
+          "sourceEnvironmentId": "showcase-computer-vision-v1",
+          "sourceResourceId": "showcase-computer-vision-local-docker",
+          "sshChannelWaitSeconds": 4.16e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-computer-vision-v1",
+          "targetResourceId": "showcase-computer-vision-local-docker"
+        },
+        "sourceResourceId": "showcase-computer-vision-local-docker",
+        "startedAt": 1792523383.8770719,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-computer-vision-local-docker"
+      },
+      {
+        "bytes": 150257,
+        "consumerActivityId": "showcase-computer-vision-local-6db51a739c-augment",
+        "cost": 0,
+        "durationSeconds": 0.14709973335266113,
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "finishedAt": 1792523386.0342073,
+        "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-augment:transfer-workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-augment-0",
+        "logicalBytes": 150257,
+        "producerActivityId": "showcase-computer-vision-local-6db51a739c-import-labels",
+        "route": {
+          "consumerActivityId": "showcase-computer-vision-local-6db51a739c-augment",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-computer-vision-local-6db51a739c-import-labels",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.075377708,
+          "sourceEnvironmentId": "showcase-computer-vision-v1",
+          "sourceResourceId": "showcase-computer-vision-local-docker",
+          "sshChannelWaitSeconds": 2.93e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-computer-vision-v1",
+          "targetResourceId": "showcase-computer-vision-local-docker"
+        },
+        "sourceResourceId": "showcase-computer-vision-local-docker",
+        "startedAt": 1792523385.8871076,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-computer-vision-local-docker"
+      },
+      {
+        "bytes": 282332,
+        "consumerActivityId": "showcase-computer-vision-local-6db51a739c-train-detector",
+        "cost": 0,
+        "durationSeconds": 0.16656255722045898,
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "finishedAt": 1792523388.0567124,
+        "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-train-detector:transfer-workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-train-detector-0",
+        "logicalBytes": 282332,
+        "producerActivityId": "showcase-computer-vision-local-6db51a739c-augment",
+        "route": {
+          "consumerActivityId": "showcase-computer-vision-local-6db51a739c-train-detector",
+          "filesTransferred": 3,
+          "producerActivityId": "showcase-computer-vision-local-6db51a739c-augment",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.071883083,
+          "sourceEnvironmentId": "showcase-computer-vision-v1",
+          "sourceResourceId": "showcase-computer-vision-local-docker",
+          "sshChannelWaitSeconds": 4.18e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-computer-vision-v1",
+          "targetResourceId": "showcase-computer-vision-local-docker"
+        },
+        "sourceResourceId": "showcase-computer-vision-local-docker",
+        "startedAt": 1792523387.8901498,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-computer-vision-local-docker"
+      },
+      {
+        "bytes": 305727,
+        "consumerActivityId": "showcase-computer-vision-local-6db51a739c-evaluate",
+        "cost": 0,
+        "durationSeconds": 0.17819428443908691,
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "finishedAt": 1792523390.0700572,
+        "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-evaluate:transfer-workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-evaluate-0",
+        "logicalBytes": 305727,
+        "producerActivityId": "showcase-computer-vision-local-6db51a739c-train-detector",
+        "route": {
+          "consumerActivityId": "showcase-computer-vision-local-6db51a739c-evaluate",
+          "filesTransferred": 4,
+          "producerActivityId": "showcase-computer-vision-local-6db51a739c-train-detector",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.088864833,
+          "sourceEnvironmentId": "showcase-computer-vision-v1",
+          "sourceResourceId": "showcase-computer-vision-local-docker",
+          "sshChannelWaitSeconds": 3.33e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-computer-vision-v1",
+          "targetResourceId": "showcase-computer-vision-local-docker"
+        },
+        "sourceResourceId": "showcase-computer-vision-local-docker",
+        "startedAt": 1792523389.8918629,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-computer-vision-local-docker"
+      },
+      {
+        "bytes": 310475,
+        "consumerActivityId": "showcase-computer-vision-local-6db51a739c-package-model",
+        "cost": 0,
+        "durationSeconds": 0.17069602012634277,
+        "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "finishedAt": 1792523392.0529377,
+        "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-package-model:transfer-workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-package-model-0",
+        "logicalBytes": 310475,
+        "producerActivityId": "showcase-computer-vision-local-6db51a739c-evaluate",
+        "route": {
+          "consumerActivityId": "showcase-computer-vision-local-6db51a739c-package-model",
+          "filesTransferred": 6,
+          "producerActivityId": "showcase-computer-vision-local-6db51a739c-evaluate",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.095707125,
+          "sourceEnvironmentId": "showcase-computer-vision-v1",
+          "sourceResourceId": "showcase-computer-vision-local-docker",
+          "sshChannelWaitSeconds": 4.17e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-computer-vision-v1",
+          "targetResourceId": "showcase-computer-vision-local-docker"
+        },
+        "sourceResourceId": "showcase-computer-vision-local-docker",
+        "startedAt": 1792523391.8822417,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-computer-vision-local-docker"
+      }
+    ],
+    "events": [
+      {
+        "aggregateId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.started",
+        "id": "9a54bede7ce280bd531f2ced5c230693",
+        "occurredAt": "2026-10-20T19:09:42.609659629Z",
+        "payload": {
+          "mode": "real",
+          "schedulePlanId": "showcase-computer-vision-local-6db51a739c-manual-plan-20261020t190942.320293000"
+        }
+      },
+      {
+        "aggregateId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-collect-images",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "bd46c55bb12ae5328bafafde9cb2682d",
+        "occurredAt": "2026-10-20T19:09:43.795814421Z",
+        "payload": {
+          "activityId": "showcase-computer-vision-local-6db51a739c-collect-images",
+          "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-collect-images",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "1e123f8fdcfd771025696100d0b341ba",
+        "occurredAt": "2026-10-20T19:09:43.872457504Z",
+        "payload": {
+          "activityId": "showcase-computer-vision-local-6db51a739c-collect-images",
+          "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+          "failureReason": "",
+          "runtimeSeconds": 0.10851049423217773,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-import-labels",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "a7b7247ea6d995b9afd029987ba8f981",
+        "occurredAt": "2026-10-20T19:09:45.803167838Z",
+        "payload": {
+          "activityId": "showcase-computer-vision-local-6db51a739c-import-labels",
+          "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-import-labels",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "909d8cecf07a3b51ebaaf92f0470318d",
+        "occurredAt": "2026-10-20T19:09:45.881813338Z",
+        "payload": {
+          "activityId": "showcase-computer-vision-local-6db51a739c-import-labels",
+          "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+          "failureReason": "",
+          "runtimeSeconds": 0.1084597110748291,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-augment",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "a48e989f15fbfaf4f7be033f434fd8a8",
+        "occurredAt": "2026-10-20T19:09:47.809523214Z",
+        "payload": {
+          "activityId": "showcase-computer-vision-local-6db51a739c-augment",
+          "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-augment",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "ba56ed598d4dd64294734fac8164245a",
+        "occurredAt": "2026-10-20T19:09:47.885290714Z",
+        "payload": {
+          "activityId": "showcase-computer-vision-local-6db51a739c-augment",
+          "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11328125,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-train-detector",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "8af390bc47c48b5cb6fcd8fabbb9fd1f",
+        "occurredAt": "2026-10-20T19:09:49.813981882Z",
+        "payload": {
+          "activityId": "showcase-computer-vision-local-6db51a739c-train-detector",
+          "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-train-detector",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "1577eed7f608cc0efa82b0c837473a7b",
+        "occurredAt": "2026-10-20T19:09:49.886256424Z",
+        "payload": {
+          "activityId": "showcase-computer-vision-local-6db51a739c-train-detector",
+          "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+          "failureReason": "",
+          "runtimeSeconds": 0.1116788387298584,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-evaluate",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "0ea9b586fa5b89329659dcda6edf091c",
+        "occurredAt": "2026-10-20T19:09:51.8096298Z",
+        "payload": {
+          "activityId": "showcase-computer-vision-local-6db51a739c-evaluate",
+          "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-evaluate",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "ff82f5ffe0581ddcd7421dff72975638",
+        "occurredAt": "2026-10-20T19:09:51.877245383Z",
+        "payload": {
+          "activityId": "showcase-computer-vision-local-6db51a739c-evaluate",
+          "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11174249649047852,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-package-model",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "6f2283daff90804ce7cc47b58becdf1b",
+        "occurredAt": "2026-10-20T19:09:53.808483176Z",
+        "payload": {
+          "activityId": "showcase-computer-vision-local-6db51a739c-package-model",
+          "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-package-model",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "71cfbb55eed56a151e6c19717a13dc73",
+        "occurredAt": "2026-10-20T19:09:53.867710176Z",
+        "payload": {
+          "activityId": "showcase-computer-vision-local-6db51a739c-package-model",
+          "executionRunId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+          "failureReason": "",
+          "runtimeSeconds": 0.10821986198425293,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.completed",
+        "id": "88696b1c13e08e4cc6878c2191ab3b33",
+        "occurredAt": "2026-10-20T19:09:53.870478009Z",
+        "payload": {
+          "cost": 0,
+          "makespanSeconds": 9.52476191520691
+        }
+      }
+    ],
+    "handles": [
+      {
+        "activityId": "showcase-computer-vision-local-6db51a739c-augment",
+        "artifacts": {
+          "activityId": "showcase-computer-vision-local-6db51a739c-augment",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:4bd456388fc094231ceb4bf9dcaf68628b16f32ed983ece9a50556a70ae80ab3",
+              "modifiedUnixNano": 1792523386262110000,
+              "path": "stage-augment.json",
+              "sizeBytes": 132075
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:4bd456388fc094231ceb4bf9dcaf68628b16f32ed983ece9a50556a70ae80ab3",
+              "modifiedUnixNano": 1792523386262110000,
+              "path": "stage-augment.json",
+              "sizeBytes": 132075
+            },
+            {
+              "checksum": "sha256:70dfb5a2ad4b712185d8dd1ad25638a764dfcfea5a55b29f1fc05632c59e38ca",
+              "modifiedUnixNano": 1792523386008110000,
+              "path": "stage-collect-images.json",
+              "sizeBytes": 75117
+            },
+            {
+              "checksum": "sha256:865de9c1d6a968700a2f81d55e918e5bcb675cd93dd104302fe37f07ee8b44c8",
+              "modifiedUnixNano": 1792523386009110000,
+              "path": "stage-import-labels.json",
+              "sizeBytes": 75140
+            }
+          ],
+          "finishedAt": 1792523386.2683535,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:70dfb5a2ad4b712185d8dd1ad25638a764dfcfea5a55b29f1fc05632c59e38ca",
+              "modifiedUnixNano": 1792523386008110000,
+              "path": "stage-collect-images.json",
+              "sizeBytes": 75117
+            },
+            {
+              "checksum": "sha256:865de9c1d6a968700a2f81d55e918e5bcb675cd93dd104302fe37f07ee8b44c8",
+              "modifiedUnixNano": 1792523386009110000,
+              "path": "stage-import-labels.json",
+              "sizeBytes": 75140
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11328125,
+              "finishedAt": 1792523386.2683535,
+              "phase": "execution",
+              "startedAt": 1792523386.1550722,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-augment",
+          "runId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+          "runtime": "showcase-computer-vision-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523386.1550722,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 3,
+            "initialFiles": 2,
+            "modifiedFiles": 0,
+            "outputBytes": 132075
+          }
+        },
+        "exitCode": 0,
+        "externalId": "f7ba6e32e14b24cf3fd155e08f4af845dfe90fbf7808a61776c41eed615e03c4",
+        "finishedAt": 1792523386.2683535,
+        "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-augment",
+        "log": "{\"activity\": \"augment\", \"status\": \"success\", \"resultKeys\": [\"images\", \"shape\", \"augmentedCount\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-computer-vision-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-augment",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523386.155078,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-augment",
+          "submittedAt": 1792523386.1550722
+        },
+        "resourceId": "showcase-computer-vision-local-docker",
+        "runId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "runtimeId": "showcase-computer-vision-local",
+        "startedAt": 1792523386.1550722,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-computer-vision-local-6db51a739c-collect-images",
+        "artifacts": {
+          "activityId": "showcase-computer-vision-local-6db51a739c-collect-images",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:70dfb5a2ad4b712185d8dd1ad25638a764dfcfea5a55b29f1fc05632c59e38ca",
+              "modifiedUnixNano": 1792523382868110000,
+              "path": "stage-collect-images.json",
+              "sizeBytes": 75117
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:70dfb5a2ad4b712185d8dd1ad25638a764dfcfea5a55b29f1fc05632c59e38ca",
+              "modifiedUnixNano": 1792523382868110000,
+              "path": "stage-collect-images.json",
+              "sizeBytes": 75117
+            }
+          ],
+          "finishedAt": 1792523382.875218,
+          "phases": [
+            {
+              "durationSeconds": 0.10851049423217773,
+              "finishedAt": 1792523382.875218,
+              "phase": "execution",
+              "startedAt": 1792523382.7667074,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-collect-images",
+          "runId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+          "runtime": "showcase-computer-vision-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523382.7667074,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 1,
+            "initialFiles": 0,
+            "modifiedFiles": 0,
+            "outputBytes": 75117
+          }
+        },
+        "exitCode": 0,
+        "externalId": "cd947df2c941eed89d0997da640c41cd86bf6cefcefffee46001b327a3573f9c",
+        "finishedAt": 1792523382.875218,
+        "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-collect-images",
+        "log": "{\"activity\": \"collect-images\", \"status\": \"success\", \"resultKeys\": [\"images\", \"shape\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-computer-vision-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-collect-images",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523382.7667267,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-collect-images",
+          "submittedAt": 1792523382.7667074
+        },
+        "resourceId": "showcase-computer-vision-local-docker",
+        "runId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "runtimeId": "showcase-computer-vision-local",
+        "startedAt": 1792523382.7667074,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-computer-vision-local-6db51a739c-evaluate",
+        "artifacts": {
+          "activityId": "showcase-computer-vision-local-6db51a739c-evaluate",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:91d7bec4dbf5be574ae5d1065ebb1bc2fb24b2fabc425119ba8925e22683bc02",
+              "modifiedUnixNano": 1792523390291110000,
+              "path": "stage-evaluate.json",
+              "sizeBytes": 4642
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:910c2d990c0b77b91a9837e90009ac9d1baa68558a165396a65ee636a2e8055f",
+              "modifiedUnixNano": 1792523390291110000,
+              "path": "vision-metrics.json",
+              "sizeBytes": 106
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:4bd456388fc094231ceb4bf9dcaf68628b16f32ed983ece9a50556a70ae80ab3",
+              "modifiedUnixNano": 1792523390026110000,
+              "path": "stage-augment.json",
+              "sizeBytes": 132075
+            },
+            {
+              "checksum": "sha256:70dfb5a2ad4b712185d8dd1ad25638a764dfcfea5a55b29f1fc05632c59e38ca",
+              "modifiedUnixNano": 1792523390027110000,
+              "path": "stage-collect-images.json",
+              "sizeBytes": 75117
+            },
+            {
+              "checksum": "sha256:91d7bec4dbf5be574ae5d1065ebb1bc2fb24b2fabc425119ba8925e22683bc02",
+              "modifiedUnixNano": 1792523390291110000,
+              "path": "stage-evaluate.json",
+              "sizeBytes": 4642
+            },
+            {
+              "checksum": "sha256:865de9c1d6a968700a2f81d55e918e5bcb675cd93dd104302fe37f07ee8b44c8",
+              "modifiedUnixNano": 1792523390027110000,
+              "path": "stage-import-labels.json",
+              "sizeBytes": 75140
+            },
+            {
+              "checksum": "sha256:337c09516b7d76cd414e360db241c494ab4da4f8aca1fff717c346152ed6f7ac",
+              "modifiedUnixNano": 1792523390027110000,
+              "path": "stage-train-detector.json",
+              "sizeBytes": 23395
+            },
+            {
+              "checksum": "sha256:910c2d990c0b77b91a9837e90009ac9d1baa68558a165396a65ee636a2e8055f",
+              "modifiedUnixNano": 1792523390291110000,
+              "path": "vision-metrics.json",
+              "sizeBytes": 106
+            }
+          ],
+          "finishedAt": 1792523390.2985134,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:4bd456388fc094231ceb4bf9dcaf68628b16f32ed983ece9a50556a70ae80ab3",
+              "modifiedUnixNano": 1792523390026110000,
+              "path": "stage-augment.json",
+              "sizeBytes": 132075
+            },
+            {
+              "checksum": "sha256:70dfb5a2ad4b712185d8dd1ad25638a764dfcfea5a55b29f1fc05632c59e38ca",
+              "modifiedUnixNano": 1792523390027110000,
+              "path": "stage-collect-images.json",
+              "sizeBytes": 75117
+            },
+            {
+              "checksum": "sha256:865de9c1d6a968700a2f81d55e918e5bcb675cd93dd104302fe37f07ee8b44c8",
+              "modifiedUnixNano": 1792523390027110000,
+              "path": "stage-import-labels.json",
+              "sizeBytes": 75140
+            },
+            {
+              "checksum": "sha256:337c09516b7d76cd414e360db241c494ab4da4f8aca1fff717c346152ed6f7ac",
+              "modifiedUnixNano": 1792523390027110000,
+              "path": "stage-train-detector.json",
+              "sizeBytes": 23395
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11174249649047852,
+              "finishedAt": 1792523390.2985134,
+              "phase": "execution",
+              "startedAt": 1792523390.186771,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-evaluate",
+          "runId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+          "runtime": "showcase-computer-vision-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523390.186771,
+          "summary": {
+            "createdFiles": 2,
+            "deletedFiles": 0,
+            "finalFiles": 6,
+            "initialFiles": 4,
+            "modifiedFiles": 0,
+            "outputBytes": 4748
+          }
+        },
+        "exitCode": 0,
+        "externalId": "93119a79692dab3571bd3cb150dc82d514ef137f694fc42ccb8262de51781e6a",
+        "finishedAt": 1792523390.2985134,
+        "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-evaluate",
+        "log": "{\"activity\": \"evaluate\", \"status\": \"success\", \"resultKeys\": [\"model\", \"metrics\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-computer-vision-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-evaluate",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523390.1867752,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-evaluate",
+          "submittedAt": 1792523390.186771
+        },
+        "resourceId": "showcase-computer-vision-local-docker",
+        "runId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "runtimeId": "showcase-computer-vision-local",
+        "startedAt": 1792523390.186771,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-computer-vision-local-6db51a739c-import-labels",
+        "artifacts": {
+          "activityId": "showcase-computer-vision-local-6db51a739c-import-labels",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:865de9c1d6a968700a2f81d55e918e5bcb675cd93dd104302fe37f07ee8b44c8",
+              "modifiedUnixNano": 1792523384300110000,
+              "path": "stage-import-labels.json",
+              "sizeBytes": 75140
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:70dfb5a2ad4b712185d8dd1ad25638a764dfcfea5a55b29f1fc05632c59e38ca",
+              "modifiedUnixNano": 1792523384020110000,
+              "path": "stage-collect-images.json",
+              "sizeBytes": 75117
+            },
+            {
+              "checksum": "sha256:865de9c1d6a968700a2f81d55e918e5bcb675cd93dd104302fe37f07ee8b44c8",
+              "modifiedUnixNano": 1792523384300110000,
+              "path": "stage-import-labels.json",
+              "sizeBytes": 75140
+            }
+          ],
+          "finishedAt": 1792523384.3056264,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:70dfb5a2ad4b712185d8dd1ad25638a764dfcfea5a55b29f1fc05632c59e38ca",
+              "modifiedUnixNano": 1792523384020110000,
+              "path": "stage-collect-images.json",
+              "sizeBytes": 75117
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.1084597110748291,
+              "finishedAt": 1792523384.3056264,
+              "phase": "execution",
+              "startedAt": 1792523384.1971667,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-import-labels",
+          "runId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+          "runtime": "showcase-computer-vision-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523384.1971667,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 75140
+          }
+        },
+        "exitCode": 0,
+        "externalId": "3f2b53dc57940c173fafd26be3af381bc365b55621a9244e81a61a7fa0dff435",
+        "finishedAt": 1792523384.3056264,
+        "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-import-labels",
+        "log": "{\"activity\": \"import-labels\", \"status\": \"success\", \"resultKeys\": [\"images\", \"shape\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-computer-vision-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-import-labels",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523384.1971712,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-import-labels",
+          "submittedAt": 1792523384.1971667
+        },
+        "resourceId": "showcase-computer-vision-local-docker",
+        "runId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "runtimeId": "showcase-computer-vision-local",
+        "startedAt": 1792523384.1971667,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-computer-vision-local-6db51a739c-package-model",
+        "artifacts": {
+          "activityId": "showcase-computer-vision-local-6db51a739c-package-model",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:7318593cd9221187b06bbf7a14e3cba2c9c40cada1cd3de7bb41e46aa3731f2a",
+              "modifiedUnixNano": 1792523392286110000,
+              "path": "model.pkl",
+              "sizeBytes": 1252
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:5454fcc75fd86f71946c7e4312ae68b23061d2550e012c18b77b55a3895581be",
+              "modifiedUnixNano": 1792523392286110000,
+              "path": "stage-package-model.json",
+              "sizeBytes": 462
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:7318593cd9221187b06bbf7a14e3cba2c9c40cada1cd3de7bb41e46aa3731f2a",
+              "modifiedUnixNano": 1792523392286110000,
+              "path": "model.pkl",
+              "sizeBytes": 1252
+            },
+            {
+              "checksum": "sha256:4bd456388fc094231ceb4bf9dcaf68628b16f32ed983ece9a50556a70ae80ab3",
+              "modifiedUnixNano": 1792523392008110000,
+              "path": "stage-augment.json",
+              "sizeBytes": 132075
+            },
+            {
+              "checksum": "sha256:70dfb5a2ad4b712185d8dd1ad25638a764dfcfea5a55b29f1fc05632c59e38ca",
+              "modifiedUnixNano": 1792523392008110000,
+              "path": "stage-collect-images.json",
+              "sizeBytes": 75117
+            },
+            {
+              "checksum": "sha256:91d7bec4dbf5be574ae5d1065ebb1bc2fb24b2fabc425119ba8925e22683bc02",
+              "modifiedUnixNano": 1792523392008110000,
+              "path": "stage-evaluate.json",
+              "sizeBytes": 4642
+            },
+            {
+              "checksum": "sha256:865de9c1d6a968700a2f81d55e918e5bcb675cd93dd104302fe37f07ee8b44c8",
+              "modifiedUnixNano": 1792523392008110000,
+              "path": "stage-import-labels.json",
+              "sizeBytes": 75140
+            },
+            {
+              "checksum": "sha256:5454fcc75fd86f71946c7e4312ae68b23061d2550e012c18b77b55a3895581be",
+              "modifiedUnixNano": 1792523392286110000,
+              "path": "stage-package-model.json",
+              "sizeBytes": 462
+            },
+            {
+              "checksum": "sha256:337c09516b7d76cd414e360db241c494ab4da4f8aca1fff717c346152ed6f7ac",
+              "modifiedUnixNano": 1792523392008110000,
+              "path": "stage-train-detector.json",
+              "sizeBytes": 23395
+            },
+            {
+              "checksum": "sha256:910c2d990c0b77b91a9837e90009ac9d1baa68558a165396a65ee636a2e8055f",
+              "modifiedUnixNano": 1792523392008110000,
+              "path": "vision-metrics.json",
+              "sizeBytes": 106
+            }
+          ],
+          "finishedAt": 1792523392.2914693,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:4bd456388fc094231ceb4bf9dcaf68628b16f32ed983ece9a50556a70ae80ab3",
+              "modifiedUnixNano": 1792523392008110000,
+              "path": "stage-augment.json",
+              "sizeBytes": 132075
+            },
+            {
+              "checksum": "sha256:70dfb5a2ad4b712185d8dd1ad25638a764dfcfea5a55b29f1fc05632c59e38ca",
+              "modifiedUnixNano": 1792523392008110000,
+              "path": "stage-collect-images.json",
+              "sizeBytes": 75117
+            },
+            {
+              "checksum": "sha256:91d7bec4dbf5be574ae5d1065ebb1bc2fb24b2fabc425119ba8925e22683bc02",
+              "modifiedUnixNano": 1792523392008110000,
+              "path": "stage-evaluate.json",
+              "sizeBytes": 4642
+            },
+            {
+              "checksum": "sha256:865de9c1d6a968700a2f81d55e918e5bcb675cd93dd104302fe37f07ee8b44c8",
+              "modifiedUnixNano": 1792523392008110000,
+              "path": "stage-import-labels.json",
+              "sizeBytes": 75140
+            },
+            {
+              "checksum": "sha256:337c09516b7d76cd414e360db241c494ab4da4f8aca1fff717c346152ed6f7ac",
+              "modifiedUnixNano": 1792523392008110000,
+              "path": "stage-train-detector.json",
+              "sizeBytes": 23395
+            },
+            {
+              "checksum": "sha256:910c2d990c0b77b91a9837e90009ac9d1baa68558a165396a65ee636a2e8055f",
+              "modifiedUnixNano": 1792523392008110000,
+              "path": "vision-metrics.json",
+              "sizeBytes": 106
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.10821986198425293,
+              "finishedAt": 1792523392.2914693,
+              "phase": "execution",
+              "startedAt": 1792523392.1832495,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-package-model",
+          "runId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+          "runtime": "showcase-computer-vision-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523392.1832495,
+          "summary": {
+            "createdFiles": 2,
+            "deletedFiles": 0,
+            "finalFiles": 8,
+            "initialFiles": 6,
+            "modifiedFiles": 0,
+            "outputBytes": 1714
+          }
+        },
+        "exitCode": 0,
+        "externalId": "e63394708f685058c22663f99c4cf08c5ce96024e9433e3fb5f418cc046e6677",
+        "finishedAt": 1792523392.2914693,
+        "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-package-model",
+        "log": "{\"activity\": \"package-model\", \"status\": \"success\", \"resultKeys\": [\"dataset\", \"accuracy\", \"testImages\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-computer-vision-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-package-model",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523392.1832538,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-package-model",
+          "submittedAt": 1792523392.1832495
+        },
+        "resourceId": "showcase-computer-vision-local-docker",
+        "runId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "runtimeId": "showcase-computer-vision-local",
+        "startedAt": 1792523392.1832495,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-computer-vision-local-6db51a739c-train-detector",
+        "artifacts": {
+          "activityId": "showcase-computer-vision-local-6db51a739c-train-detector",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:337c09516b7d76cd414e360db241c494ab4da4f8aca1fff717c346152ed6f7ac",
+              "modifiedUnixNano": 1792523388291110000,
+              "path": "stage-train-detector.json",
+              "sizeBytes": 23395
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:4bd456388fc094231ceb4bf9dcaf68628b16f32ed983ece9a50556a70ae80ab3",
+              "modifiedUnixNano": 1792523388033110000,
+              "path": "stage-augment.json",
+              "sizeBytes": 132075
+            },
+            {
+              "checksum": "sha256:70dfb5a2ad4b712185d8dd1ad25638a764dfcfea5a55b29f1fc05632c59e38ca",
+              "modifiedUnixNano": 1792523388033110000,
+              "path": "stage-collect-images.json",
+              "sizeBytes": 75117
+            },
+            {
+              "checksum": "sha256:865de9c1d6a968700a2f81d55e918e5bcb675cd93dd104302fe37f07ee8b44c8",
+              "modifiedUnixNano": 1792523388034110000,
+              "path": "stage-import-labels.json",
+              "sizeBytes": 75140
+            },
+            {
+              "checksum": "sha256:337c09516b7d76cd414e360db241c494ab4da4f8aca1fff717c346152ed6f7ac",
+              "modifiedUnixNano": 1792523388291110000,
+              "path": "stage-train-detector.json",
+              "sizeBytes": 23395
+            }
+          ],
+          "finishedAt": 1792523388.2965775,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:4bd456388fc094231ceb4bf9dcaf68628b16f32ed983ece9a50556a70ae80ab3",
+              "modifiedUnixNano": 1792523388033110000,
+              "path": "stage-augment.json",
+              "sizeBytes": 132075
+            },
+            {
+              "checksum": "sha256:70dfb5a2ad4b712185d8dd1ad25638a764dfcfea5a55b29f1fc05632c59e38ca",
+              "modifiedUnixNano": 1792523388033110000,
+              "path": "stage-collect-images.json",
+              "sizeBytes": 75117
+            },
+            {
+              "checksum": "sha256:865de9c1d6a968700a2f81d55e918e5bcb675cd93dd104302fe37f07ee8b44c8",
+              "modifiedUnixNano": 1792523388034110000,
+              "path": "stage-import-labels.json",
+              "sizeBytes": 75140
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.1116788387298584,
+              "finishedAt": 1792523388.2965775,
+              "phase": "execution",
+              "startedAt": 1792523388.1848986,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-train-detector",
+          "runId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+          "runtime": "showcase-computer-vision-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523388.1848986,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 4,
+            "initialFiles": 3,
+            "modifiedFiles": 0,
+            "outputBytes": 23395
+          }
+        },
+        "exitCode": 0,
+        "externalId": "fd424ea6cb547b9287d081efd698671e6533e211e9178d8aefde5d33dc3b66ff",
+        "finishedAt": 1792523388.2965775,
+        "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-train-detector",
+        "log": "{\"activity\": \"train-detector\", \"status\": \"success\", \"resultKeys\": [\"model\", \"test\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-computer-vision-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-train-detector",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523388.1849036,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-train-detector",
+          "submittedAt": 1792523388.1848986
+        },
+        "resourceId": "showcase-computer-vision-local-docker",
+        "runId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "runtimeId": "showcase-computer-vision-local",
+        "startedAt": 1792523388.1848986,
+        "status": "completed"
+      }
+    ],
+    "infrastructureRuns": [],
+    "operationEvents": [],
+    "run": {
+      "activityCount": 6,
+      "breakdown": {
+        "computeSeconds": 0.6618926525115967,
+        "interferenceSeconds": 0,
+        "overheadSeconds": 0,
+        "queueSeconds": 0,
+        "transferSeconds": 0.8501639366149902
+      },
+      "completedActivityCount": 6,
+      "cost": 0,
+      "finishedAt": "2026-10-20T19:09:53Z",
+      "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+      "kind": "workflow",
+      "makespanSeconds": 9.52476191520691,
+      "mode": "real",
+      "schedulePlanId": "showcase-computer-vision-local-6db51a739c-manual-plan-20261020t190942.320293000",
+      "seed": 0,
+      "startedAt": "2026-10-20T19:09:42Z",
+      "status": "completed",
+      "title": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+      "transferredBytes": 1123908
+    },
+    "timeline": {
+      "computeMakespanSeconds": 9.52476191520691,
+      "coveredWallSeconds": 2.2894885540008545,
+      "finishedAt": 1792523393,
+      "phases": [
+        {
+          "activityId": "showcase-computer-vision-local-6db51a739c-collect-images",
+          "category": "resource-queue",
+          "durationSeconds": 0.1327958106994629,
+          "finishedAt": 1792523382.7667074,
+          "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-collect-images:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523382.6339116,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-computer-vision-local-6db51a739c-collect-images",
+          "category": "runtime",
+          "durationSeconds": 0.10851049423217773,
+          "finishedAt": 1792523382.875218,
+          "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-collect-images:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523382.7667074,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-computer-vision-local-6db51a739c-import-labels",
+          "category": "resource-queue",
+          "durationSeconds": 0.0033943653106689453,
+          "finishedAt": 1792523383.8770719,
+          "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-import-labels:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523383.8736775,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-computer-vision-local-6db51a739c-import-labels",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.18761134147644043,
+          "finishedAt": 1792523384.0646832,
+          "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-import-labels:transfer-workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-import-labels-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523383.8770719,
+          "status": "completed",
+          "transferId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-import-labels:transfer-workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-import-labels-0"
+        },
+        {
+          "activityId": "showcase-computer-vision-local-6db51a739c-import-labels",
+          "category": "launch",
+          "durationSeconds": 0.13248348236083984,
+          "finishedAt": 1792523384.1971667,
+          "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-import-labels:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523384.0646832,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-computer-vision-local-6db51a739c-import-labels",
+          "category": "runtime",
+          "durationSeconds": 0.1084597110748291,
+          "finishedAt": 1792523384.3056264,
+          "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-import-labels:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523384.1971667,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-computer-vision-local-6db51a739c-augment",
+          "category": "resource-queue",
+          "durationSeconds": 0.0028676986694335938,
+          "finishedAt": 1792523385.8871076,
+          "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-augment:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523385.88424,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-computer-vision-local-6db51a739c-augment",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.14709973335266113,
+          "finishedAt": 1792523386.0342073,
+          "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-augment:transfer-workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-augment-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523385.8871076,
+          "status": "completed",
+          "transferId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-augment:transfer-workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-augment-0"
+        },
+        {
+          "activityId": "showcase-computer-vision-local-6db51a739c-augment",
+          "category": "launch",
+          "durationSeconds": 0.1208648681640625,
+          "finishedAt": 1792523386.1550722,
+          "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-augment:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523386.0342073,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-computer-vision-local-6db51a739c-augment",
+          "category": "runtime",
+          "durationSeconds": 0.11328125,
+          "finishedAt": 1792523386.2683535,
+          "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-augment:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523386.1550722,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-computer-vision-local-6db51a739c-train-detector",
+          "category": "resource-queue",
+          "durationSeconds": 0.0029065608978271484,
+          "finishedAt": 1792523387.8901498,
+          "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-train-detector:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523387.8872433,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-computer-vision-local-6db51a739c-train-detector",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.16656255722045898,
+          "finishedAt": 1792523388.0567124,
+          "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-train-detector:transfer-workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-train-detector-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523387.8901498,
+          "status": "completed",
+          "transferId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-train-detector:transfer-workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-train-detector-0"
+        },
+        {
+          "activityId": "showcase-computer-vision-local-6db51a739c-train-detector",
+          "category": "launch",
+          "durationSeconds": 0.12818622589111328,
+          "finishedAt": 1792523388.1848986,
+          "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-train-detector:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523388.0567124,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-computer-vision-local-6db51a739c-train-detector",
+          "category": "runtime",
+          "durationSeconds": 0.1116788387298584,
+          "finishedAt": 1792523388.2965775,
+          "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-train-detector:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523388.1848986,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-computer-vision-local-6db51a739c-evaluate",
+          "category": "resource-queue",
+          "durationSeconds": 0.004008293151855469,
+          "finishedAt": 1792523389.8918629,
+          "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-evaluate:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523389.8878546,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-computer-vision-local-6db51a739c-evaluate",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.17819428443908691,
+          "finishedAt": 1792523390.0700572,
+          "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-evaluate:transfer-workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-evaluate-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523389.8918629,
+          "status": "completed",
+          "transferId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-evaluate:transfer-workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-evaluate-0"
+        },
+        {
+          "activityId": "showcase-computer-vision-local-6db51a739c-evaluate",
+          "category": "launch",
+          "durationSeconds": 0.1167137622833252,
+          "finishedAt": 1792523390.186771,
+          "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-evaluate:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523390.0700572,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-computer-vision-local-6db51a739c-evaluate",
+          "category": "runtime",
+          "durationSeconds": 0.11174249649047852,
+          "finishedAt": 1792523390.2985134,
+          "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-evaluate:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523390.186771,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-computer-vision-local-6db51a739c-package-model",
+          "category": "resource-queue",
+          "durationSeconds": 0.002899169921875,
+          "finishedAt": 1792523391.8822417,
+          "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-package-model:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523391.8793426,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-computer-vision-local-6db51a739c-package-model",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.17069602012634277,
+          "finishedAt": 1792523392.0529377,
+          "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-package-model:transfer-workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-package-model-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523391.8822417,
+          "status": "completed",
+          "transferId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-package-model:transfer-workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-package-model-0"
+        },
+        {
+          "activityId": "showcase-computer-vision-local-6db51a739c-package-model",
+          "category": "launch",
+          "durationSeconds": 0.1303117275238037,
+          "finishedAt": 1792523392.1832495,
+          "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-package-model:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523392.0529377,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-computer-vision-local-6db51a739c-package-model",
+          "category": "runtime",
+          "durationSeconds": 0.10821986198425293,
+          "finishedAt": 1792523392.2914693,
+          "id": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000:showcase-computer-vision-local-6db51a739c-package-model:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523392.1832495,
+          "status": "completed"
+        }
+      ],
+      "startedAt": 1792523382,
+      "totals": {
+        "destroySeconds": 0,
+        "executablePreparationSeconds": 0,
+        "launchSeconds": 0.6285600662231445,
+        "provisionSeconds": 0,
+        "resourceQueueSeconds": 0.14887189865112305,
+        "runtimeSeconds": 0.6618926525115967,
+        "startSeconds": 0,
+        "stopSeconds": 0,
+        "validationSeconds": 0,
+        "workspaceTransferSeconds": 0.8501639366149902
+      },
+      "unclassifiedWallSeconds": 8.710511445999146,
+      "wallSeconds": 11
+    },
+    "workspaceLeases": [
+      {
+        "consumerActivityId": "showcase-computer-vision-local-6db51a739c-train-detector",
+        "id": "workspace-lease-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-augment-showcase-computer-vision-local-6db51a739c-train-detector",
+        "producerActivityId": "showcase-computer-vision-local-6db51a739c-augment",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:09:48.05861759Z",
+        "runId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "workspaceId": "workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-augment"
+      },
+      {
+        "consumerActivityId": "showcase-computer-vision-local-6db51a739c-import-labels",
+        "id": "workspace-lease-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-collect-images-showcase-computer-vision-local-6db51a739c-import-labels",
+        "producerActivityId": "showcase-computer-vision-local-6db51a739c-collect-images",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:09:44.065992963Z",
+        "runId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "workspaceId": "workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-collect-images"
+      },
+      {
+        "consumerActivityId": "showcase-computer-vision-local-6db51a739c-package-model",
+        "id": "workspace-lease-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-evaluate-showcase-computer-vision-local-6db51a739c-package-model",
+        "producerActivityId": "showcase-computer-vision-local-6db51a739c-evaluate",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:09:52.054662841Z",
+        "runId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "workspaceId": "workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-evaluate"
+      },
+      {
+        "consumerActivityId": "showcase-computer-vision-local-6db51a739c-augment",
+        "id": "workspace-lease-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-import-labels-showcase-computer-vision-local-6db51a739c-augment",
+        "producerActivityId": "showcase-computer-vision-local-6db51a739c-import-labels",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:09:46.035764714Z",
+        "runId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "workspaceId": "workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-import-labels"
+      },
+      {
+        "consumerActivityId": "showcase-computer-vision-local-6db51a739c-evaluate",
+        "id": "workspace-lease-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-train-detector-showcase-computer-vision-local-6db51a739c-evaluate",
+        "producerActivityId": "showcase-computer-vision-local-6db51a739c-train-detector",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:09:50.071740507Z",
+        "runId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "workspaceId": "workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-train-detector"
+      }
+    ],
+    "workspaces": [
+      {
+        "activityId": "showcase-computer-vision-local-6db51a739c-augment",
+        "createdAt": "2026-10-20T19:09:42.61210117Z",
+        "driver": "local",
+        "environmentId": "showcase-computer-vision-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-augment",
+        "fileCount": 3,
+        "id": "workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-augment",
+        "inputBytes": 150257,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:4bd456388fc094231ceb4bf9dcaf68628b16f32ed983ece9a50556a70ae80ab3",
+              "path": "stage-augment.json",
+              "sizeBytes": 132075
+            },
+            {
+              "digest": "sha256:70dfb5a2ad4b712185d8dd1ad25638a764dfcfea5a55b29f1fc05632c59e38ca",
+              "path": "stage-collect-images.json",
+              "sizeBytes": 75117
+            },
+            {
+              "digest": "sha256:865de9c1d6a968700a2f81d55e918e5bcb675cd93dd104302fe37f07ee8b44c8",
+              "path": "stage-import-labels.json",
+              "sizeBytes": 75140
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:70dfb5a2ad4b712185d8dd1ad25638a764dfcfea5a55b29f1fc05632c59e38ca",
+              "path": "stage-collect-images.json",
+              "sizeBytes": 75117
+            },
+            {
+              "digest": "sha256:865de9c1d6a968700a2f81d55e918e5bcb675cd93dd104302fe37f07ee8b44c8",
+              "path": "stage-import-labels.json",
+              "sizeBytes": 75140
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:70dfb5a2ad4b712185d8dd1ad25638a764dfcfea5a55b29f1fc05632c59e38ca",
+              "path": "stage-collect-images.json",
+              "sizeBytes": 75117
+            },
+            {
+              "digest": "sha256:865de9c1d6a968700a2f81d55e918e5bcb675cd93dd104302fe37f07ee8b44c8",
+              "path": "stage-import-labels.json",
+              "sizeBytes": 75140
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:4bd456388fc094231ceb4bf9dcaf68628b16f32ed983ece9a50556a70ae80ab3",
+              "path": "stage-augment.json",
+              "sizeBytes": 132075
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-augment",
+        "outputBytes": 132075,
+        "pinned": false,
+        "reclaimedBytes": 282332,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:09:48.06184484Z",
+        "resourceId": "showcase-computer-vision-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "runtimeId": "showcase-computer-vision-local",
+        "sealedAt": "2026-10-20T19:09:47.882263464Z",
+        "sizeBytes": 282332,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-augment"
+      },
+      {
+        "activityId": "showcase-computer-vision-local-6db51a739c-collect-images",
+        "createdAt": "2026-10-20T19:09:42.61210117Z",
+        "driver": "local",
+        "environmentId": "showcase-computer-vision-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-collect-images",
+        "fileCount": 1,
+        "id": "workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-collect-images",
+        "inputBytes": 0,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:70dfb5a2ad4b712185d8dd1ad25638a764dfcfea5a55b29f1fc05632c59e38ca",
+              "path": "stage-collect-images.json",
+              "sizeBytes": 75117
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:70dfb5a2ad4b712185d8dd1ad25638a764dfcfea5a55b29f1fc05632c59e38ca",
+              "path": "stage-collect-images.json",
+              "sizeBytes": 75117
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-collect-images",
+        "outputBytes": 75117,
+        "pinned": false,
+        "reclaimedBytes": 75117,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:09:44.069926879Z",
+        "resourceId": "showcase-computer-vision-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "runtimeId": "showcase-computer-vision-local",
+        "sealedAt": "2026-10-20T19:09:43.870067379Z",
+        "sizeBytes": 75117,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-collect-images"
+      },
+      {
+        "activityId": "showcase-computer-vision-local-6db51a739c-evaluate",
+        "createdAt": "2026-10-20T19:09:42.61210117Z",
+        "driver": "local",
+        "environmentId": "showcase-computer-vision-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-evaluate",
+        "fileCount": 6,
+        "id": "workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-evaluate",
+        "inputBytes": 305727,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:4bd456388fc094231ceb4bf9dcaf68628b16f32ed983ece9a50556a70ae80ab3",
+              "path": "stage-augment.json",
+              "sizeBytes": 132075
+            },
+            {
+              "digest": "sha256:70dfb5a2ad4b712185d8dd1ad25638a764dfcfea5a55b29f1fc05632c59e38ca",
+              "path": "stage-collect-images.json",
+              "sizeBytes": 75117
+            },
+            {
+              "digest": "sha256:91d7bec4dbf5be574ae5d1065ebb1bc2fb24b2fabc425119ba8925e22683bc02",
+              "path": "stage-evaluate.json",
+              "sizeBytes": 4642
+            },
+            {
+              "digest": "sha256:865de9c1d6a968700a2f81d55e918e5bcb675cd93dd104302fe37f07ee8b44c8",
+              "path": "stage-import-labels.json",
+              "sizeBytes": 75140
+            },
+            {
+              "digest": "sha256:337c09516b7d76cd414e360db241c494ab4da4f8aca1fff717c346152ed6f7ac",
+              "path": "stage-train-detector.json",
+              "sizeBytes": 23395
+            },
+            {
+              "digest": "sha256:910c2d990c0b77b91a9837e90009ac9d1baa68558a165396a65ee636a2e8055f",
+              "path": "vision-metrics.json",
+              "sizeBytes": 106
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:4bd456388fc094231ceb4bf9dcaf68628b16f32ed983ece9a50556a70ae80ab3",
+              "path": "stage-augment.json",
+              "sizeBytes": 132075
+            },
+            {
+              "digest": "sha256:70dfb5a2ad4b712185d8dd1ad25638a764dfcfea5a55b29f1fc05632c59e38ca",
+              "path": "stage-collect-images.json",
+              "sizeBytes": 75117
+            },
+            {
+              "digest": "sha256:865de9c1d6a968700a2f81d55e918e5bcb675cd93dd104302fe37f07ee8b44c8",
+              "path": "stage-import-labels.json",
+              "sizeBytes": 75140
+            },
+            {
+              "digest": "sha256:337c09516b7d76cd414e360db241c494ab4da4f8aca1fff717c346152ed6f7ac",
+              "path": "stage-train-detector.json",
+              "sizeBytes": 23395
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:4bd456388fc094231ceb4bf9dcaf68628b16f32ed983ece9a50556a70ae80ab3",
+              "path": "stage-augment.json",
+              "sizeBytes": 132075
+            },
+            {
+              "digest": "sha256:70dfb5a2ad4b712185d8dd1ad25638a764dfcfea5a55b29f1fc05632c59e38ca",
+              "path": "stage-collect-images.json",
+              "sizeBytes": 75117
+            },
+            {
+              "digest": "sha256:865de9c1d6a968700a2f81d55e918e5bcb675cd93dd104302fe37f07ee8b44c8",
+              "path": "stage-import-labels.json",
+              "sizeBytes": 75140
+            },
+            {
+              "digest": "sha256:337c09516b7d76cd414e360db241c494ab4da4f8aca1fff717c346152ed6f7ac",
+              "path": "stage-train-detector.json",
+              "sizeBytes": 23395
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:91d7bec4dbf5be574ae5d1065ebb1bc2fb24b2fabc425119ba8925e22683bc02",
+              "path": "stage-evaluate.json",
+              "sizeBytes": 4642
+            },
+            {
+              "digest": "sha256:910c2d990c0b77b91a9837e90009ac9d1baa68558a165396a65ee636a2e8055f",
+              "path": "vision-metrics.json",
+              "sizeBytes": 106
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-evaluate",
+        "outputBytes": 4748,
+        "pinned": false,
+        "reclaimedBytes": 310475,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:09:52.058889383Z",
+        "resourceId": "showcase-computer-vision-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "runtimeId": "showcase-computer-vision-local",
+        "sealedAt": "2026-10-20T19:09:51.87452755Z",
+        "sizeBytes": 310475,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-evaluate"
+      },
+      {
+        "activityId": "showcase-computer-vision-local-6db51a739c-import-labels",
+        "createdAt": "2026-10-20T19:09:42.61210117Z",
+        "driver": "local",
+        "environmentId": "showcase-computer-vision-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-import-labels",
+        "fileCount": 2,
+        "id": "workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-import-labels",
+        "inputBytes": 75117,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:70dfb5a2ad4b712185d8dd1ad25638a764dfcfea5a55b29f1fc05632c59e38ca",
+              "path": "stage-collect-images.json",
+              "sizeBytes": 75117
+            },
+            {
+              "digest": "sha256:865de9c1d6a968700a2f81d55e918e5bcb675cd93dd104302fe37f07ee8b44c8",
+              "path": "stage-import-labels.json",
+              "sizeBytes": 75140
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:70dfb5a2ad4b712185d8dd1ad25638a764dfcfea5a55b29f1fc05632c59e38ca",
+              "path": "stage-collect-images.json",
+              "sizeBytes": 75117
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:70dfb5a2ad4b712185d8dd1ad25638a764dfcfea5a55b29f1fc05632c59e38ca",
+              "path": "stage-collect-images.json",
+              "sizeBytes": 75117
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:865de9c1d6a968700a2f81d55e918e5bcb675cd93dd104302fe37f07ee8b44c8",
+              "path": "stage-import-labels.json",
+              "sizeBytes": 75140
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-import-labels",
+        "outputBytes": 75140,
+        "pinned": false,
+        "reclaimedBytes": 150257,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:09:46.038846089Z",
+        "resourceId": "showcase-computer-vision-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "runtimeId": "showcase-computer-vision-local",
+        "sealedAt": "2026-10-20T19:09:45.878009922Z",
+        "sizeBytes": 150257,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-import-labels"
+      },
+      {
+        "activityId": "showcase-computer-vision-local-6db51a739c-package-model",
+        "createdAt": "2026-10-20T19:09:42.61210117Z",
+        "driver": "local",
+        "environmentId": "showcase-computer-vision-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-package-model",
+        "fileCount": 2,
+        "id": "workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-package-model",
+        "inputBytes": 310475,
+        "isFinal": true,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:7318593cd9221187b06bbf7a14e3cba2c9c40cada1cd3de7bb41e46aa3731f2a",
+              "path": "model.pkl",
+              "sizeBytes": 1252
+            },
+            {
+              "digest": "sha256:4bd456388fc094231ceb4bf9dcaf68628b16f32ed983ece9a50556a70ae80ab3",
+              "path": "stage-augment.json",
+              "sizeBytes": 132075
+            },
+            {
+              "digest": "sha256:70dfb5a2ad4b712185d8dd1ad25638a764dfcfea5a55b29f1fc05632c59e38ca",
+              "path": "stage-collect-images.json",
+              "sizeBytes": 75117
+            },
+            {
+              "digest": "sha256:91d7bec4dbf5be574ae5d1065ebb1bc2fb24b2fabc425119ba8925e22683bc02",
+              "path": "stage-evaluate.json",
+              "sizeBytes": 4642
+            },
+            {
+              "digest": "sha256:865de9c1d6a968700a2f81d55e918e5bcb675cd93dd104302fe37f07ee8b44c8",
+              "path": "stage-import-labels.json",
+              "sizeBytes": 75140
+            },
+            {
+              "digest": "sha256:5454fcc75fd86f71946c7e4312ae68b23061d2550e012c18b77b55a3895581be",
+              "path": "stage-package-model.json",
+              "sizeBytes": 462
+            },
+            {
+              "digest": "sha256:337c09516b7d76cd414e360db241c494ab4da4f8aca1fff717c346152ed6f7ac",
+              "path": "stage-train-detector.json",
+              "sizeBytes": 23395
+            },
+            {
+              "digest": "sha256:910c2d990c0b77b91a9837e90009ac9d1baa68558a165396a65ee636a2e8055f",
+              "path": "vision-metrics.json",
+              "sizeBytes": 106
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:4bd456388fc094231ceb4bf9dcaf68628b16f32ed983ece9a50556a70ae80ab3",
+              "path": "stage-augment.json",
+              "sizeBytes": 132075
+            },
+            {
+              "digest": "sha256:70dfb5a2ad4b712185d8dd1ad25638a764dfcfea5a55b29f1fc05632c59e38ca",
+              "path": "stage-collect-images.json",
+              "sizeBytes": 75117
+            },
+            {
+              "digest": "sha256:91d7bec4dbf5be574ae5d1065ebb1bc2fb24b2fabc425119ba8925e22683bc02",
+              "path": "stage-evaluate.json",
+              "sizeBytes": 4642
+            },
+            {
+              "digest": "sha256:865de9c1d6a968700a2f81d55e918e5bcb675cd93dd104302fe37f07ee8b44c8",
+              "path": "stage-import-labels.json",
+              "sizeBytes": 75140
+            },
+            {
+              "digest": "sha256:337c09516b7d76cd414e360db241c494ab4da4f8aca1fff717c346152ed6f7ac",
+              "path": "stage-train-detector.json",
+              "sizeBytes": 23395
+            },
+            {
+              "digest": "sha256:910c2d990c0b77b91a9837e90009ac9d1baa68558a165396a65ee636a2e8055f",
+              "path": "vision-metrics.json",
+              "sizeBytes": 106
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:4bd456388fc094231ceb4bf9dcaf68628b16f32ed983ece9a50556a70ae80ab3",
+              "path": "stage-augment.json",
+              "sizeBytes": 132075
+            },
+            {
+              "digest": "sha256:70dfb5a2ad4b712185d8dd1ad25638a764dfcfea5a55b29f1fc05632c59e38ca",
+              "path": "stage-collect-images.json",
+              "sizeBytes": 75117
+            },
+            {
+              "digest": "sha256:91d7bec4dbf5be574ae5d1065ebb1bc2fb24b2fabc425119ba8925e22683bc02",
+              "path": "stage-evaluate.json",
+              "sizeBytes": 4642
+            },
+            {
+              "digest": "sha256:865de9c1d6a968700a2f81d55e918e5bcb675cd93dd104302fe37f07ee8b44c8",
+              "path": "stage-import-labels.json",
+              "sizeBytes": 75140
+            },
+            {
+              "digest": "sha256:337c09516b7d76cd414e360db241c494ab4da4f8aca1fff717c346152ed6f7ac",
+              "path": "stage-train-detector.json",
+              "sizeBytes": 23395
+            },
+            {
+              "digest": "sha256:910c2d990c0b77b91a9837e90009ac9d1baa68558a165396a65ee636a2e8055f",
+              "path": "vision-metrics.json",
+              "sizeBytes": 106
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:7318593cd9221187b06bbf7a14e3cba2c9c40cada1cd3de7bb41e46aa3731f2a",
+              "path": "model.pkl",
+              "sizeBytes": 1252
+            },
+            {
+              "digest": "sha256:5454fcc75fd86f71946c7e4312ae68b23061d2550e012c18b77b55a3895581be",
+              "path": "stage-package-model.json",
+              "sizeBytes": 462
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-package-model",
+        "outputBytes": 1714,
+        "pinned": false,
+        "reclaimedBytes": 310475,
+        "releaseReason": "inherited inputs pruned",
+        "resourceId": "showcase-computer-vision-local-docker",
+        "retention": "final",
+        "runId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "runtimeId": "showcase-computer-vision-local",
+        "sealedAt": "2026-10-20T19:09:53.863655342Z",
+        "sizeBytes": 1714,
+        "state": "sealed",
+        "uri": "file:///akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-package-model"
+      },
+      {
+        "activityId": "showcase-computer-vision-local-6db51a739c-train-detector",
+        "createdAt": "2026-10-20T19:09:42.61210117Z",
+        "driver": "local",
+        "environmentId": "showcase-computer-vision-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-train-detector",
+        "fileCount": 4,
+        "id": "workspace-showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000-showcase-computer-vision-local-6db51a739c-train-detector",
+        "inputBytes": 282332,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:4bd456388fc094231ceb4bf9dcaf68628b16f32ed983ece9a50556a70ae80ab3",
+              "path": "stage-augment.json",
+              "sizeBytes": 132075
+            },
+            {
+              "digest": "sha256:70dfb5a2ad4b712185d8dd1ad25638a764dfcfea5a55b29f1fc05632c59e38ca",
+              "path": "stage-collect-images.json",
+              "sizeBytes": 75117
+            },
+            {
+              "digest": "sha256:865de9c1d6a968700a2f81d55e918e5bcb675cd93dd104302fe37f07ee8b44c8",
+              "path": "stage-import-labels.json",
+              "sizeBytes": 75140
+            },
+            {
+              "digest": "sha256:337c09516b7d76cd414e360db241c494ab4da4f8aca1fff717c346152ed6f7ac",
+              "path": "stage-train-detector.json",
+              "sizeBytes": 23395
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:4bd456388fc094231ceb4bf9dcaf68628b16f32ed983ece9a50556a70ae80ab3",
+              "path": "stage-augment.json",
+              "sizeBytes": 132075
+            },
+            {
+              "digest": "sha256:70dfb5a2ad4b712185d8dd1ad25638a764dfcfea5a55b29f1fc05632c59e38ca",
+              "path": "stage-collect-images.json",
+              "sizeBytes": 75117
+            },
+            {
+              "digest": "sha256:865de9c1d6a968700a2f81d55e918e5bcb675cd93dd104302fe37f07ee8b44c8",
+              "path": "stage-import-labels.json",
+              "sizeBytes": 75140
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:4bd456388fc094231ceb4bf9dcaf68628b16f32ed983ece9a50556a70ae80ab3",
+              "path": "stage-augment.json",
+              "sizeBytes": 132075
+            },
+            {
+              "digest": "sha256:70dfb5a2ad4b712185d8dd1ad25638a764dfcfea5a55b29f1fc05632c59e38ca",
+              "path": "stage-collect-images.json",
+              "sizeBytes": 75117
+            },
+            {
+              "digest": "sha256:865de9c1d6a968700a2f81d55e918e5bcb675cd93dd104302fe37f07ee8b44c8",
+              "path": "stage-import-labels.json",
+              "sizeBytes": 75140
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:337c09516b7d76cd414e360db241c494ab4da4f8aca1fff717c346152ed6f7ac",
+              "path": "stage-train-detector.json",
+              "sizeBytes": 23395
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-train-detector",
+        "outputBytes": 23395,
+        "pinned": false,
+        "reclaimedBytes": 305727,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:09:50.076248632Z",
+        "resourceId": "showcase-computer-vision-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+        "runtimeId": "showcase-computer-vision-local",
+        "sealedAt": "2026-10-20T19:09:49.883149507Z",
+        "sizeBytes": 305727,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000/showcase-computer-vision-local-6db51a739c-train-detector"
+      }
+    ]
+  },
+  "runId": "showcase-computer-vision-local-6db51a739c-run-20261020t190942.323554000",
+  "status": "completed",
+  "workflowId": "showcase-computer-vision-local-6db51a739c"
+}

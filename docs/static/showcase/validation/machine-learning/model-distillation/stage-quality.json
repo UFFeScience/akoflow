@@ -1,0 +1,19 @@
+{
+  "dependencies": [
+    "train-student"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:43.372033Z",
+  "finishedAtUnixNs": 1792523563366921000,
+  "inputDigest": "75dc55a6c6545bcde9fd6c272e4b0f2b3ca18c17c8d0452f6bffa555d3a2635b",
+  "result": {
+    "heldOutSamples": 20,
+    "rmse": 0.007508675311268377
+  },
+  "showcase": "model-distillation",
+  "stage": "quality",
+  "startedAt": "2026-10-20T19:12:43.327408Z",
+  "startedAtUnixNs": 1792523563366774000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

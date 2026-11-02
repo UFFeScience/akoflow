@@ -1,0 +1,229 @@
+{
+  "results": [
+    {
+      "activities": 6,
+      "declaredActivities": 6,
+      "executionMode": "local-process",
+      "path": "machine-learning/hyperparameter-search",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 7,
+      "declaredActivities": 7,
+      "executionMode": "local-process",
+      "path": "machine-learning/model-conversion",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 6,
+      "declaredActivities": 6,
+      "executionMode": "local-process",
+      "path": "scientific-ai/experiment-feedback-loop",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 7,
+      "declaredActivities": 7,
+      "executionMode": "local-process",
+      "path": "generative-ai/document-extraction",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 6,
+      "declaredActivities": 6,
+      "executionMode": "local-process",
+      "path": "machine-learning/anomaly-detection",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 6,
+      "declaredActivities": 6,
+      "executionMode": "local-process",
+      "path": "machine-learning/inference-benchmark",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 6,
+      "declaredActivities": 6,
+      "executionMode": "local-process",
+      "path": "machine-learning/model-comparison",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 7,
+      "declaredActivities": 7,
+      "executionMode": "local-process",
+      "path": "machine-learning/model-ensemble",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 6,
+      "declaredActivities": 6,
+      "executionMode": "local-process",
+      "path": "machine-learning/training-with-mlflow",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 6,
+      "declaredActivities": 6,
+      "executionMode": "local-process",
+      "path": "media/video-intelligence",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 0,
+      "declaredActivities": 58,
+      "executionMode": "daemon-local-docker",
+      "path": "scientific-workflows/montage-050",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "running"
+    },
+    {
+      "activities": 5,
+      "declaredActivities": 5,
+      "executionMode": "local-process",
+      "path": "agentic-workflows/bounded-agent",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 7,
+      "declaredActivities": 7,
+      "executionMode": "local-process",
+      "path": "generative-ai/audio-transcription",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 6,
+      "declaredActivities": 6,
+      "executionMode": "local-process",
+      "path": "machine-learning/lora-fine-tuning",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 6,
+      "declaredActivities": 6,
+      "executionMode": "local-process",
+      "path": "machine-learning/model-distillation",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 7,
+      "declaredActivities": 7,
+      "executionMode": "local-process",
+      "path": "scientific-ai/surrogate-model",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 5,
+      "declaredActivities": 5,
+      "executionMode": "local-container",
+      "path": "rendering/blender-render-farm",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 6,
+      "declaredActivities": 6,
+      "executionMode": "local-process",
+      "path": "agentic-workflows/supervised-tool-loop",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 5,
+      "declaredActivities": 5,
+      "executionMode": "local-process",
+      "path": "generative-ai/video-studio",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 6,
+      "declaredActivities": 6,
+      "executionMode": "local-process",
+      "path": "machine-learning/computer-vision",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 7,
+      "declaredActivities": 7,
+      "executionMode": "local-process",
+      "path": "machine-learning/infrastructure-selection",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 7,
+      "declaredActivities": 7,
+      "executionMode": "local-process",
+      "path": "scientific-ai/ai-assisted-analysis",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 5,
+      "declaredActivities": 5,
+      "executionMode": "local-process",
+      "path": "document-ai/document-intelligence",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 7,
+      "declaredActivities": 7,
+      "executionMode": "local-process",
+      "path": "agentic-workflows/multi-agent-review",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 6,
+      "declaredActivities": 6,
+      "executionMode": "local-process",
+      "path": "generative-ai/local-rag",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 8,
+      "declaredActivities": 8,
+      "executionMode": "local-process",
+      "path": "generative-ai/rag-indexing",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 8,
+      "declaredActivities": 8,
+      "executionMode": "local-process",
+      "path": "generative-ai/synthetic-dataset",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    },
+    {
+      "activities": 7,
+      "declaredActivities": 7,
+      "executionMode": "local-process",
+      "path": "machine-learning/batch-inference",
+      "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
+      "status": "passed"
+    }
+  ],
+  "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4"
+}

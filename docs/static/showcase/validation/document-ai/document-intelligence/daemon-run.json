@@ -1,0 +1,2106 @@
+{
+  "activityCount": 5,
+  "completedActivityCount": 5,
+  "image": "ghcr.io/uffescience/akoflow-examples/document-intelligence:v1",
+  "imageId": "sha256:185883e22354895a1a7be4706f4d9b0ffe382547a9a55ea0911a906698050b1f",
+  "planId": "document-intelligence-local-cf7251f56a-manual-plan-20261020t182628",
+  "projection": {
+    "activities": [
+      {
+        "activityId": "document-intelligence-local-cf7251f56a-ingest",
+        "allocatedResourceId": "document-intelligence-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "finishedAt": 1792520789.3435352,
+        "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-ingest",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "document-intelligence-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "document-intelligence-local-cf7251f56a-manual-plan-20261020t182628-document-intelligence-local-cf7251f56a-ingest",
+        "plannedResourceId": "document-intelligence-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520789.1355443,
+        "readyAt": 1792520789.1355443,
+        "runtimeId": "document-intelligence-local",
+        "runtimeSeconds": 0.08216261863708496,
+        "startedAt": 1792520789.2613726,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "document-intelligence-local-cf7251f56a-classify",
+        "allocatedResourceId": "document-intelligence-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "finishedAt": 1792520790.782236,
+        "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-classify",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1393265724182129,
+          "preparationFinishedAt": 1792520790.563933,
+          "preparationStartedAt": 1792520790.3721144,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.000896453857421875,
+          "runtimeId": "document-intelligence-local",
+          "transferElapsedSeconds": 0.1918184757232666,
+          "transferWorkSeconds": 0.1918184757232666
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "document-intelligence-local-cf7251f56a-manual-plan-20261020t182628-document-intelligence-local-cf7251f56a-classify",
+        "plannedResourceId": "document-intelligence-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520790.3693523,
+        "readyAt": 1792520790.3693523,
+        "runtimeId": "document-intelligence-local",
+        "runtimeSeconds": 0.07897663116455078,
+        "startedAt": 1792520790.7032595,
+        "status": "completed",
+        "transferBytes": 936,
+        "transferSeconds": 0.1918184757232666
+      },
+      {
+        "activityId": "document-intelligence-local-cf7251f56a-extract",
+        "allocatedResourceId": "document-intelligence-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "finishedAt": 1792520792.7946289,
+        "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-extract",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13842368125915527,
+          "preparationFinishedAt": 1792520792.576108,
+          "preparationStartedAt": 1792520792.3783593,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.000926971435546875,
+          "runtimeId": "document-intelligence-local",
+          "transferElapsedSeconds": 0.19774866104125977,
+          "transferWorkSeconds": 0.19774866104125977
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "document-intelligence-local-cf7251f56a-manual-plan-20261020t182628-document-intelligence-local-cf7251f56a-extract",
+        "plannedResourceId": "document-intelligence-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520792.3754075,
+        "readyAt": 1792520792.3754075,
+        "runtimeId": "document-intelligence-local",
+        "runtimeSeconds": 0.08009719848632812,
+        "startedAt": 1792520792.7145317,
+        "status": "completed",
+        "transferBytes": 1948,
+        "transferSeconds": 0.19774866104125977
+      },
+      {
+        "activityId": "document-intelligence-local-cf7251f56a-reconcile",
+        "allocatedResourceId": "document-intelligence-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "finishedAt": 1792520794.827484,
+        "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-reconcile",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1524038314819336,
+          "preparationFinishedAt": 1792520794.5948565,
+          "preparationStartedAt": 1792520794.395574,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0009202957153320312,
+          "runtimeId": "document-intelligence-local",
+          "transferElapsedSeconds": 0.19928240776062012,
+          "transferWorkSeconds": 0.19928240776062012
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "document-intelligence-local-cf7251f56a-manual-plan-20261020t182628-document-intelligence-local-cf7251f56a-reconcile",
+        "plannedResourceId": "document-intelligence-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520794.3928185,
+        "readyAt": 1792520794.3928185,
+        "runtimeId": "document-intelligence-local",
+        "runtimeSeconds": 0.08022356033325195,
+        "startedAt": 1792520794.7472603,
+        "status": "completed",
+        "transferBytes": 3469,
+        "transferSeconds": 0.19928240776062012
+      },
+      {
+        "activityId": "document-intelligence-local-cf7251f56a-report",
+        "allocatedResourceId": "document-intelligence-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "finishedAt": 1792520796.7746537,
+        "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-report",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.12836742401123047,
+          "preparationFinishedAt": 1792520796.5661373,
+          "preparationStartedAt": 1792520796.3999772,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.001199960708618164,
+          "runtimeId": "document-intelligence-local",
+          "transferElapsedSeconds": 0.16616010665893555,
+          "transferWorkSeconds": 0.16616010665893555
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "document-intelligence-local-cf7251f56a-manual-plan-20261020t182628-document-intelligence-local-cf7251f56a-report",
+        "plannedResourceId": "document-intelligence-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520796.3970203,
+        "readyAt": 1792520796.3970203,
+        "runtimeId": "document-intelligence-local",
+        "runtimeSeconds": 0.08014893531799316,
+        "startedAt": 1792520796.6945047,
+        "status": "completed",
+        "transferBytes": 4047,
+        "transferSeconds": 0.16616010665893555
+      }
+    ],
+    "activityAttempts": [
+      {
+        "activityId": "document-intelligence-local-cf7251f56a-ingest",
+        "allocatedResourceId": "document-intelligence-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "finishedAt": 1792520789.3435352,
+        "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-ingest",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "document-intelligence-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "document-intelligence-local-cf7251f56a-manual-plan-20261020t182628-document-intelligence-local-cf7251f56a-ingest",
+        "plannedResourceId": "document-intelligence-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520789.1355443,
+        "readyAt": 1792520789.1355443,
+        "runtimeId": "document-intelligence-local",
+        "runtimeSeconds": 0.08216261863708496,
+        "startedAt": 1792520789.2613726,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "document-intelligence-local-cf7251f56a-classify",
+        "allocatedResourceId": "document-intelligence-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "finishedAt": 1792520790.782236,
+        "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-classify",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1393265724182129,
+          "preparationFinishedAt": 1792520790.563933,
+          "preparationStartedAt": 1792520790.3721144,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.000896453857421875,
+          "runtimeId": "document-intelligence-local",
+          "transferElapsedSeconds": 0.1918184757232666,
+          "transferWorkSeconds": 0.1918184757232666
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "document-intelligence-local-cf7251f56a-manual-plan-20261020t182628-document-intelligence-local-cf7251f56a-classify",
+        "plannedResourceId": "document-intelligence-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520790.3693523,
+        "readyAt": 1792520790.3693523,
+        "runtimeId": "document-intelligence-local",
+        "runtimeSeconds": 0.07897663116455078,
+        "startedAt": 1792520790.7032595,
+        "status": "completed",
+        "transferBytes": 936,
+        "transferSeconds": 0.1918184757232666
+      },
+      {
+        "activityId": "document-intelligence-local-cf7251f56a-extract",
+        "allocatedResourceId": "document-intelligence-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "finishedAt": 1792520792.7946289,
+        "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-extract",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13842368125915527,
+          "preparationFinishedAt": 1792520792.576108,
+          "preparationStartedAt": 1792520792.3783593,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.000926971435546875,
+          "runtimeId": "document-intelligence-local",
+          "transferElapsedSeconds": 0.19774866104125977,
+          "transferWorkSeconds": 0.19774866104125977
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "document-intelligence-local-cf7251f56a-manual-plan-20261020t182628-document-intelligence-local-cf7251f56a-extract",
+        "plannedResourceId": "document-intelligence-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520792.3754075,
+        "readyAt": 1792520792.3754075,
+        "runtimeId": "document-intelligence-local",
+        "runtimeSeconds": 0.08009719848632812,
+        "startedAt": 1792520792.7145317,
+        "status": "completed",
+        "transferBytes": 1948,
+        "transferSeconds": 0.19774866104125977
+      },
+      {
+        "activityId": "document-intelligence-local-cf7251f56a-reconcile",
+        "allocatedResourceId": "document-intelligence-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "finishedAt": 1792520794.827484,
+        "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-reconcile",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1524038314819336,
+          "preparationFinishedAt": 1792520794.5948565,
+          "preparationStartedAt": 1792520794.395574,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0009202957153320312,
+          "runtimeId": "document-intelligence-local",
+          "transferElapsedSeconds": 0.19928240776062012,
+          "transferWorkSeconds": 0.19928240776062012
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "document-intelligence-local-cf7251f56a-manual-plan-20261020t182628-document-intelligence-local-cf7251f56a-reconcile",
+        "plannedResourceId": "document-intelligence-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520794.3928185,
+        "readyAt": 1792520794.3928185,
+        "runtimeId": "document-intelligence-local",
+        "runtimeSeconds": 0.08022356033325195,
+        "startedAt": 1792520794.7472603,
+        "status": "completed",
+        "transferBytes": 3469,
+        "transferSeconds": 0.19928240776062012
+      },
+      {
+        "activityId": "document-intelligence-local-cf7251f56a-report",
+        "allocatedResourceId": "document-intelligence-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "finishedAt": 1792520796.7746537,
+        "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-report",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.12836742401123047,
+          "preparationFinishedAt": 1792520796.5661373,
+          "preparationStartedAt": 1792520796.3999772,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.001199960708618164,
+          "runtimeId": "document-intelligence-local",
+          "transferElapsedSeconds": 0.16616010665893555,
+          "transferWorkSeconds": 0.16616010665893555
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "document-intelligence-local-cf7251f56a-manual-plan-20261020t182628-document-intelligence-local-cf7251f56a-report",
+        "plannedResourceId": "document-intelligence-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792520796.3970203,
+        "readyAt": 1792520796.3970203,
+        "runtimeId": "document-intelligence-local",
+        "runtimeSeconds": 0.08014893531799316,
+        "startedAt": 1792520796.6945047,
+        "status": "completed",
+        "transferBytes": 4047,
+        "transferSeconds": 0.16616010665893555
+      }
+    ],
+    "artifactMaterializations": null,
+    "artifactTransferRuns": [
+      {
+        "activityId": "document-intelligence-local-cf7251f56a-classify",
+        "durationSeconds": 0.1918184757232666,
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "filesTransferred": 1,
+        "finishedAt": 1792520790.563933,
+        "id": "transfer-workspace-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-classify-0",
+        "logicalBytes": 936,
+        "planId": "transfer-workspace-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-classify-0",
+        "route": {
+          "consumerActivityId": "document-intelligence-local-cf7251f56a-classify",
+          "filesTransferred": 1,
+          "producerActivityId": "document-intelligence-local-cf7251f56a-ingest",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.094947291,
+          "sourceEnvironmentId": "document-intelligence-v1",
+          "sourceResourceId": "document-intelligence-local-docker",
+          "sshChannelWaitSeconds": 6.68e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "document-intelligence-v1",
+          "targetResourceId": "document-intelligence-local-docker"
+        },
+        "startedAt": 1792520790.3721144,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 936
+      },
+      {
+        "activityId": "document-intelligence-local-cf7251f56a-extract",
+        "durationSeconds": 0.19774866104125977,
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "filesTransferred": 2,
+        "finishedAt": 1792520792.576108,
+        "id": "transfer-workspace-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-extract-0",
+        "logicalBytes": 1948,
+        "planId": "transfer-workspace-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-extract-0",
+        "route": {
+          "consumerActivityId": "document-intelligence-local-cf7251f56a-extract",
+          "filesTransferred": 2,
+          "producerActivityId": "document-intelligence-local-cf7251f56a-classify",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09967625,
+          "sourceEnvironmentId": "document-intelligence-v1",
+          "sourceResourceId": "document-intelligence-local-docker",
+          "sshChannelWaitSeconds": 5.84e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "document-intelligence-v1",
+          "targetResourceId": "document-intelligence-local-docker"
+        },
+        "startedAt": 1792520792.3783593,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 1948
+      },
+      {
+        "activityId": "document-intelligence-local-cf7251f56a-reconcile",
+        "durationSeconds": 0.19928240776062012,
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "filesTransferred": 3,
+        "finishedAt": 1792520794.5948565,
+        "id": "transfer-workspace-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-reconcile-0",
+        "logicalBytes": 3469,
+        "planId": "transfer-workspace-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-reconcile-0",
+        "route": {
+          "consumerActivityId": "document-intelligence-local-cf7251f56a-reconcile",
+          "filesTransferred": 3,
+          "producerActivityId": "document-intelligence-local-cf7251f56a-extract",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.103646791,
+          "sourceEnvironmentId": "document-intelligence-v1",
+          "sourceResourceId": "document-intelligence-local-docker",
+          "sshChannelWaitSeconds": 4.99e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "document-intelligence-v1",
+          "targetResourceId": "document-intelligence-local-docker"
+        },
+        "startedAt": 1792520794.395574,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 3469
+      },
+      {
+        "activityId": "document-intelligence-local-cf7251f56a-report",
+        "durationSeconds": 0.16616010665893555,
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "filesTransferred": 5,
+        "finishedAt": 1792520796.5661373,
+        "id": "transfer-workspace-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-report-0",
+        "logicalBytes": 4047,
+        "planId": "transfer-workspace-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-report-0",
+        "route": {
+          "consumerActivityId": "document-intelligence-local-cf7251f56a-report",
+          "filesTransferred": 5,
+          "producerActivityId": "document-intelligence-local-cf7251f56a-reconcile",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.092367208,
+          "sourceEnvironmentId": "document-intelligence-v1",
+          "sourceResourceId": "document-intelligence-local-docker",
+          "sshChannelWaitSeconds": 5.83e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "document-intelligence-v1",
+          "targetResourceId": "document-intelligence-local-docker"
+        },
+        "startedAt": 1792520796.3999772,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 4047
+      }
+    ],
+    "cloudBilling": {
+      "asOf": "2026-10-20T18:26:38.984090169Z",
+      "costBasis": "VM compute and boot-disk lifecycle at on-demand marginal rates; not a provider invoice",
+      "estimatedCost": 0,
+      "excludedCosts": [
+        "network-egress",
+        "public-ipv4",
+        "image-storage",
+        "discounts-and-tax"
+      ],
+      "instances": [],
+      "knownCost": 0,
+      "status": "estimated"
+    },
+    "dataLocations": [
+      {
+        "dataObjectInstanceId": "4a693367938c9eba4dc6342b05331033",
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "id": "e2bd826c10a384c5cee32769e882cfa7",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "document-intelligence-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "74abcd8ed896ecd8b3248d48d6ecd00b",
+        "uri": "file:///akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-classify/classified.json"
+      },
+      {
+        "dataObjectInstanceId": "23d4cf8da20e322724fb95c776ea17c2",
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "id": "b468f5b6ed8bf60d03ab348b808d5949",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "document-intelligence-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "74abcd8ed896ecd8b3248d48d6ecd00b",
+        "uri": "file:///akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-extract/extracted.json"
+      },
+      {
+        "dataObjectInstanceId": "9c89f1d3e146c97cc75f5cdfc3f21f0b",
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "id": "b26af75b98947be632dcbd0e27d88396",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "document-intelligence-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "74abcd8ed896ecd8b3248d48d6ecd00b",
+        "uri": "file:///akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-ingest/ingested.json"
+      },
+      {
+        "dataObjectInstanceId": "eada6570998153a1282d50e9dcead400",
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "id": "2eea062ca6cc80f9be1bc381c005b131",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "document-intelligence-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "74abcd8ed896ecd8b3248d48d6ecd00b",
+        "uri": "file:///akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-reconcile/invoice-summary.csv"
+      },
+      {
+        "dataObjectInstanceId": "bdc67c269a9ef3bfbb05e3da55a61df2",
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "id": "4708cb65549cacb9f88c16bd95ac9fcd",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "document-intelligence-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "74abcd8ed896ecd8b3248d48d6ecd00b",
+        "uri": "file:///akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-reconcile/reconciliation.json"
+      },
+      {
+        "dataObjectInstanceId": "3383e4f93a45d045c12dbca987e972f1",
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "id": "0319f086ad5fc787af20b93d4274de75",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "document-intelligence-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "74abcd8ed896ecd8b3248d48d6ecd00b",
+        "uri": "file:///akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-report/manifest.json"
+      },
+      {
+        "dataObjectInstanceId": "894dd4f5fea5623306ab0ed8cd31fc53",
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "id": "d488df82e78483792e125bc144d557d8",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "document-intelligence-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "74abcd8ed896ecd8b3248d48d6ecd00b",
+        "uri": "file:///akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-report/report.json"
+      }
+    ],
+    "dataObjects": [
+      {
+        "attempt": 1,
+        "checksum": "sha256:5d54c6e03a942160fc6843edaf79968f5628fcb8a692da5ede47cedb5b2b5b81",
+        "dataObjectId": "b01e92d06adc2a1fec78b017a5b91bff",
+        "discovered": true,
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "id": "4a693367938c9eba4dc6342b05331033",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "document-intelligence-local-cf7251f56a-classify",
+        "relativePath": "classified.json",
+        "sizeBytes": 1012
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:96bb4ccc6aaa6035bfadc0fa583495d81a7ff57c6ea384e47afc930a156caf3d",
+        "dataObjectId": "05e71e6c9d8bfb2624593f48015345ed",
+        "discovered": true,
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "id": "23d4cf8da20e322724fb95c776ea17c2",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "document-intelligence-local-cf7251f56a-extract",
+        "relativePath": "extracted.json",
+        "sizeBytes": 1521
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:4304af29c1e9fb9d724634d69a6a42c4d350916f26dd299d1969eb1efde2265b",
+        "dataObjectId": "4ae05f463f58838c08d42b1e7cee6111",
+        "discovered": true,
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "id": "9c89f1d3e146c97cc75f5cdfc3f21f0b",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "document-intelligence-local-cf7251f56a-ingest",
+        "relativePath": "ingested.json",
+        "sizeBytes": 936
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:a7f6534944a524795b5a6ff9ce1aa62f8c79844c3d791b67ea617c7800aadf7d",
+        "dataObjectId": "4f414a4b36b8db800dba939a2d5100b4",
+        "discovered": true,
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "id": "eada6570998153a1282d50e9dcead400",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "document-intelligence-local-cf7251f56a-reconcile",
+        "relativePath": "invoice-summary.csv",
+        "sizeBytes": 192
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:51b4dbb4db617e4c42acbb11cbec44cd2f7da456a444cf4e38e12507fd5f9187",
+        "dataObjectId": "05cc43377e0847f7936b13070ac88eef",
+        "discovered": true,
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "id": "bdc67c269a9ef3bfbb05e3da55a61df2",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "document-intelligence-local-cf7251f56a-reconcile",
+        "relativePath": "reconciliation.json",
+        "sizeBytes": 386
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:d3f1e32ab946e346ebce494f41ee1222610e15c66264c558f322b5e36325ec86",
+        "dataObjectId": "3c7cfc3032dc4a3f6a4cdae7c92cb017",
+        "discovered": true,
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "id": "3383e4f93a45d045c12dbca987e972f1",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "document-intelligence-local-cf7251f56a-report",
+        "relativePath": "manifest.json",
+        "sizeBytes": 225
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:c1c9450a2c9f625bedad76ad88b119408a341574c262fc31c0e845c1fbd4f8b4",
+        "dataObjectId": "fc4c457630af2fb64f2b81c68d4e6ef5",
+        "discovered": true,
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "id": "894dd4f5fea5623306ab0ed8cd31fc53",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "document-intelligence-local-cf7251f56a-report",
+        "relativePath": "report.json",
+        "sizeBytes": 86
+      }
+    ],
+    "dataTransfers": [
+      {
+        "bytes": 936,
+        "consumerActivityId": "document-intelligence-local-cf7251f56a-classify",
+        "cost": 0,
+        "durationSeconds": 0.1918184757232666,
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "finishedAt": 1792520790.563933,
+        "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-classify:transfer-workspace-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-classify-0",
+        "logicalBytes": 936,
+        "producerActivityId": "document-intelligence-local-cf7251f56a-ingest",
+        "route": {
+          "consumerActivityId": "document-intelligence-local-cf7251f56a-classify",
+          "filesTransferred": 1,
+          "producerActivityId": "document-intelligence-local-cf7251f56a-ingest",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.094947291,
+          "sourceEnvironmentId": "document-intelligence-v1",
+          "sourceResourceId": "document-intelligence-local-docker",
+          "sshChannelWaitSeconds": 6.68e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "document-intelligence-v1",
+          "targetResourceId": "document-intelligence-local-docker"
+        },
+        "sourceResourceId": "document-intelligence-local-docker",
+        "startedAt": 1792520790.3721144,
+        "strategy": "gateway",
+        "targetResourceId": "document-intelligence-local-docker"
+      },
+      {
+        "bytes": 1948,
+        "consumerActivityId": "document-intelligence-local-cf7251f56a-extract",
+        "cost": 0,
+        "durationSeconds": 0.19774866104125977,
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "finishedAt": 1792520792.576108,
+        "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-extract:transfer-workspace-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-extract-0",
+        "logicalBytes": 1948,
+        "producerActivityId": "document-intelligence-local-cf7251f56a-classify",
+        "route": {
+          "consumerActivityId": "document-intelligence-local-cf7251f56a-extract",
+          "filesTransferred": 2,
+          "producerActivityId": "document-intelligence-local-cf7251f56a-classify",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09967625,
+          "sourceEnvironmentId": "document-intelligence-v1",
+          "sourceResourceId": "document-intelligence-local-docker",
+          "sshChannelWaitSeconds": 5.84e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "document-intelligence-v1",
+          "targetResourceId": "document-intelligence-local-docker"
+        },
+        "sourceResourceId": "document-intelligence-local-docker",
+        "startedAt": 1792520792.3783593,
+        "strategy": "gateway",
+        "targetResourceId": "document-intelligence-local-docker"
+      },
+      {
+        "bytes": 3469,
+        "consumerActivityId": "document-intelligence-local-cf7251f56a-reconcile",
+        "cost": 0,
+        "durationSeconds": 0.19928240776062012,
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "finishedAt": 1792520794.5948565,
+        "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-reconcile:transfer-workspace-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-reconcile-0",
+        "logicalBytes": 3469,
+        "producerActivityId": "document-intelligence-local-cf7251f56a-extract",
+        "route": {
+          "consumerActivityId": "document-intelligence-local-cf7251f56a-reconcile",
+          "filesTransferred": 3,
+          "producerActivityId": "document-intelligence-local-cf7251f56a-extract",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.103646791,
+          "sourceEnvironmentId": "document-intelligence-v1",
+          "sourceResourceId": "document-intelligence-local-docker",
+          "sshChannelWaitSeconds": 4.99e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "document-intelligence-v1",
+          "targetResourceId": "document-intelligence-local-docker"
+        },
+        "sourceResourceId": "document-intelligence-local-docker",
+        "startedAt": 1792520794.395574,
+        "strategy": "gateway",
+        "targetResourceId": "document-intelligence-local-docker"
+      },
+      {
+        "bytes": 4047,
+        "consumerActivityId": "document-intelligence-local-cf7251f56a-report",
+        "cost": 0,
+        "durationSeconds": 0.16616010665893555,
+        "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "finishedAt": 1792520796.5661373,
+        "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-report:transfer-workspace-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-report-0",
+        "logicalBytes": 4047,
+        "producerActivityId": "document-intelligence-local-cf7251f56a-reconcile",
+        "route": {
+          "consumerActivityId": "document-intelligence-local-cf7251f56a-report",
+          "filesTransferred": 5,
+          "producerActivityId": "document-intelligence-local-cf7251f56a-reconcile",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.092367208,
+          "sourceEnvironmentId": "document-intelligence-v1",
+          "sourceResourceId": "document-intelligence-local-docker",
+          "sshChannelWaitSeconds": 5.83e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "document-intelligence-v1",
+          "targetResourceId": "document-intelligence-local-docker"
+        },
+        "sourceResourceId": "document-intelligence-local-docker",
+        "startedAt": 1792520796.3999772,
+        "strategy": "gateway",
+        "targetResourceId": "document-intelligence-local-docker"
+      }
+    ],
+    "events": [
+      {
+        "aggregateId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.started",
+        "id": "ae3456e00d0921549a96a16970863804",
+        "occurredAt": "2026-10-20T18:26:29.11933897Z",
+        "payload": {
+          "mode": "real",
+          "schedulePlanId": "document-intelligence-local-cf7251f56a-manual-plan-20261020t182628"
+        }
+      },
+      {
+        "aggregateId": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-ingest",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "7f9af1454d21ab30f0c61518c9b902d0",
+        "occurredAt": "2026-10-20T18:26:30.289692471Z",
+        "payload": {
+          "activityId": "document-intelligence-local-cf7251f56a-ingest",
+          "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-ingest",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "74b96237f888238ace75f689c8b27bfb",
+        "occurredAt": "2026-10-20T18:26:30.367589387Z",
+        "payload": {
+          "activityId": "document-intelligence-local-cf7251f56a-ingest",
+          "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+          "failureReason": "",
+          "runtimeSeconds": 0.08216261863708496,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-classify",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "de708d6f39d8168c19ed958cb0d5bc2f",
+        "occurredAt": "2026-10-20T18:26:32.295212722Z",
+        "payload": {
+          "activityId": "document-intelligence-local-cf7251f56a-classify",
+          "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-classify",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "3c37d42b77a9f2ab28ae0a0603136075",
+        "occurredAt": "2026-10-20T18:26:32.37410818Z",
+        "payload": {
+          "activityId": "document-intelligence-local-cf7251f56a-classify",
+          "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+          "failureReason": "",
+          "runtimeSeconds": 0.07897663116455078,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-extract",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "dfa3f5591eac657685fa85c7753facf6",
+        "occurredAt": "2026-10-20T18:26:34.308716042Z",
+        "payload": {
+          "activityId": "document-intelligence-local-cf7251f56a-extract",
+          "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-extract",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "3d6a76493d3df46abbb494698c00ff2d",
+        "occurredAt": "2026-10-20T18:26:34.391276042Z",
+        "payload": {
+          "activityId": "document-intelligence-local-cf7251f56a-extract",
+          "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+          "failureReason": "",
+          "runtimeSeconds": 0.08009719848632812,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-reconcile",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "3fb34c18ffc49fc1f08b112d05147aa6",
+        "occurredAt": "2026-10-20T18:26:36.314299834Z",
+        "payload": {
+          "activityId": "document-intelligence-local-cf7251f56a-reconcile",
+          "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-reconcile",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "7cd3a83a9724a2387a3676de743a43de",
+        "occurredAt": "2026-10-20T18:26:36.395118751Z",
+        "payload": {
+          "activityId": "document-intelligence-local-cf7251f56a-reconcile",
+          "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+          "failureReason": "",
+          "runtimeSeconds": 0.08022356033325195,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-report",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "df46809d899828e9084c2480f331cf89",
+        "occurredAt": "2026-10-20T18:26:38.32218246Z",
+        "payload": {
+          "activityId": "document-intelligence-local-cf7251f56a-report",
+          "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-report",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "404f61895aafccf99052f3836d14ad8e",
+        "occurredAt": "2026-10-20T18:26:38.396791877Z",
+        "payload": {
+          "activityId": "document-intelligence-local-cf7251f56a-report",
+          "executionRunId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+          "failureReason": "",
+          "runtimeSeconds": 0.08014893531799316,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.completed",
+        "id": "551d896edbcc32e5cc99c84611108175",
+        "occurredAt": "2026-10-20T18:26:38.399036502Z",
+        "payload": {
+          "cost": 0,
+          "makespanSeconds": 7.5132811069488525
+        }
+      }
+    ],
+    "handles": [
+      {
+        "activityId": "document-intelligence-local-cf7251f56a-classify",
+        "artifacts": {
+          "activityId": "document-intelligence-local-cf7251f56a-classify",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:5d54c6e03a942160fc6843edaf79968f5628fcb8a692da5ede47cedb5b2b5b81",
+              "modifiedUnixNano": 1792520790777496000,
+              "path": "classified.json",
+              "sizeBytes": 1012
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:5d54c6e03a942160fc6843edaf79968f5628fcb8a692da5ede47cedb5b2b5b81",
+              "modifiedUnixNano": 1792520790777496000,
+              "path": "classified.json",
+              "sizeBytes": 1012
+            },
+            {
+              "checksum": "sha256:4304af29c1e9fb9d724634d69a6a42c4d350916f26dd299d1969eb1efde2265b",
+              "modifiedUnixNano": 1792520790520496000,
+              "path": "ingested.json",
+              "sizeBytes": 936
+            }
+          ],
+          "finishedAt": 1792520790.782236,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:4304af29c1e9fb9d724634d69a6a42c4d350916f26dd299d1969eb1efde2265b",
+              "modifiedUnixNano": 1792520790520496000,
+              "path": "ingested.json",
+              "sizeBytes": 936
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.07897663116455078,
+              "finishedAt": 1792520790.782236,
+              "phase": "execution",
+              "startedAt": 1792520790.7032595,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-classify",
+          "runId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+          "runtime": "document-intelligence-local",
+          "schemaVersion": 1,
+          "startedAt": 1792520790.7032595,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 1012
+          }
+        },
+        "exitCode": 0,
+        "externalId": "e7e3442bab247bf826182a2365baab99dcc562e32e88947a7da66c63a06dd083",
+        "finishedAt": 1792520790.782236,
+        "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-classify",
+        "log": "[AKOFLOW INFO] Activity started on runtime document-intelligence-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-classify",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792520790.7032652,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-classify",
+          "submittedAt": 1792520790.7032595
+        },
+        "resourceId": "document-intelligence-local-docker",
+        "runId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "runtimeId": "document-intelligence-local",
+        "startedAt": 1792520790.7032595,
+        "status": "completed"
+      },
+      {
+        "activityId": "document-intelligence-local-cf7251f56a-extract",
+        "artifacts": {
+          "activityId": "document-intelligence-local-cf7251f56a-extract",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:96bb4ccc6aaa6035bfadc0fa583495d81a7ff57c6ea384e47afc930a156caf3d",
+              "modifiedUnixNano": 1792520792790496000,
+              "path": "extracted.json",
+              "sizeBytes": 1521
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:5d54c6e03a942160fc6843edaf79968f5628fcb8a692da5ede47cedb5b2b5b81",
+              "modifiedUnixNano": 1792520792530496000,
+              "path": "classified.json",
+              "sizeBytes": 1012
+            },
+            {
+              "checksum": "sha256:96bb4ccc6aaa6035bfadc0fa583495d81a7ff57c6ea384e47afc930a156caf3d",
+              "modifiedUnixNano": 1792520792790496000,
+              "path": "extracted.json",
+              "sizeBytes": 1521
+            },
+            {
+              "checksum": "sha256:4304af29c1e9fb9d724634d69a6a42c4d350916f26dd299d1969eb1efde2265b",
+              "modifiedUnixNano": 1792520792530496000,
+              "path": "ingested.json",
+              "sizeBytes": 936
+            }
+          ],
+          "finishedAt": 1792520792.7946289,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:5d54c6e03a942160fc6843edaf79968f5628fcb8a692da5ede47cedb5b2b5b81",
+              "modifiedUnixNano": 1792520792530496000,
+              "path": "classified.json",
+              "sizeBytes": 1012
+            },
+            {
+              "checksum": "sha256:4304af29c1e9fb9d724634d69a6a42c4d350916f26dd299d1969eb1efde2265b",
+              "modifiedUnixNano": 1792520792530496000,
+              "path": "ingested.json",
+              "sizeBytes": 936
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.08009719848632812,
+              "finishedAt": 1792520792.7946289,
+              "phase": "execution",
+              "startedAt": 1792520792.7145317,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-extract",
+          "runId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+          "runtime": "document-intelligence-local",
+          "schemaVersion": 1,
+          "startedAt": 1792520792.7145317,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 3,
+            "initialFiles": 2,
+            "modifiedFiles": 0,
+            "outputBytes": 1521
+          }
+        },
+        "exitCode": 0,
+        "externalId": "ac890f3a10a6ad7e1409c80be731c0e9e9b8d566898a65be74574ac337b9277b",
+        "finishedAt": 1792520792.7946289,
+        "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-extract",
+        "log": "[AKOFLOW INFO] Activity started on runtime document-intelligence-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-extract",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792520792.7145534,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-extract",
+          "submittedAt": 1792520792.7145317
+        },
+        "resourceId": "document-intelligence-local-docker",
+        "runId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "runtimeId": "document-intelligence-local",
+        "startedAt": 1792520792.7145317,
+        "status": "completed"
+      },
+      {
+        "activityId": "document-intelligence-local-cf7251f56a-ingest",
+        "artifacts": {
+          "activityId": "document-intelligence-local-cf7251f56a-ingest",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:4304af29c1e9fb9d724634d69a6a42c4d350916f26dd299d1969eb1efde2265b",
+              "modifiedUnixNano": 1792520789339496000,
+              "path": "ingested.json",
+              "sizeBytes": 936
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:4304af29c1e9fb9d724634d69a6a42c4d350916f26dd299d1969eb1efde2265b",
+              "modifiedUnixNano": 1792520789339496000,
+              "path": "ingested.json",
+              "sizeBytes": 936
+            }
+          ],
+          "finishedAt": 1792520789.3435352,
+          "phases": [
+            {
+              "durationSeconds": 0.08216261863708496,
+              "finishedAt": 1792520789.3435352,
+              "phase": "execution",
+              "startedAt": 1792520789.2613726,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-ingest",
+          "runId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+          "runtime": "document-intelligence-local",
+          "schemaVersion": 1,
+          "startedAt": 1792520789.2613726,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 1,
+            "initialFiles": 0,
+            "modifiedFiles": 0,
+            "outputBytes": 936
+          }
+        },
+        "exitCode": 0,
+        "externalId": "0e6969457875d64d754d69092301cad25b336628aeb4e692ff913cdb775b2e37",
+        "finishedAt": 1792520789.3435352,
+        "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-ingest",
+        "log": "[AKOFLOW INFO] Activity started on runtime document-intelligence-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-ingest",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792520789.2613883,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-ingest",
+          "submittedAt": 1792520789.2613726
+        },
+        "resourceId": "document-intelligence-local-docker",
+        "runId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "runtimeId": "document-intelligence-local",
+        "startedAt": 1792520789.2613726,
+        "status": "completed"
+      },
+      {
+        "activityId": "document-intelligence-local-cf7251f56a-reconcile",
+        "artifacts": {
+          "activityId": "document-intelligence-local-cf7251f56a-reconcile",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:a7f6534944a524795b5a6ff9ce1aa62f8c79844c3d791b67ea617c7800aadf7d",
+              "modifiedUnixNano": 1792520794823314000,
+              "path": "invoice-summary.csv",
+              "sizeBytes": 192
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:51b4dbb4db617e4c42acbb11cbec44cd2f7da456a444cf4e38e12507fd5f9187",
+              "modifiedUnixNano": 1792520794822314000,
+              "path": "reconciliation.json",
+              "sizeBytes": 386
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:5d54c6e03a942160fc6843edaf79968f5628fcb8a692da5ede47cedb5b2b5b81",
+              "modifiedUnixNano": 1792520794540314000,
+              "path": "classified.json",
+              "sizeBytes": 1012
+            },
+            {
+              "checksum": "sha256:96bb4ccc6aaa6035bfadc0fa583495d81a7ff57c6ea384e47afc930a156caf3d",
+              "modifiedUnixNano": 1792520794540314000,
+              "path": "extracted.json",
+              "sizeBytes": 1521
+            },
+            {
+              "checksum": "sha256:4304af29c1e9fb9d724634d69a6a42c4d350916f26dd299d1969eb1efde2265b",
+              "modifiedUnixNano": 1792520794540314000,
+              "path": "ingested.json",
+              "sizeBytes": 936
+            },
+            {
+              "checksum": "sha256:a7f6534944a524795b5a6ff9ce1aa62f8c79844c3d791b67ea617c7800aadf7d",
+              "modifiedUnixNano": 1792520794823314000,
+              "path": "invoice-summary.csv",
+              "sizeBytes": 192
+            },
+            {
+              "checksum": "sha256:51b4dbb4db617e4c42acbb11cbec44cd2f7da456a444cf4e38e12507fd5f9187",
+              "modifiedUnixNano": 1792520794822314000,
+              "path": "reconciliation.json",
+              "sizeBytes": 386
+            }
+          ],
+          "finishedAt": 1792520794.827484,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:5d54c6e03a942160fc6843edaf79968f5628fcb8a692da5ede47cedb5b2b5b81",
+              "modifiedUnixNano": 1792520794540314000,
+              "path": "classified.json",
+              "sizeBytes": 1012
+            },
+            {
+              "checksum": "sha256:96bb4ccc6aaa6035bfadc0fa583495d81a7ff57c6ea384e47afc930a156caf3d",
+              "modifiedUnixNano": 1792520794540314000,
+              "path": "extracted.json",
+              "sizeBytes": 1521
+            },
+            {
+              "checksum": "sha256:4304af29c1e9fb9d724634d69a6a42c4d350916f26dd299d1969eb1efde2265b",
+              "modifiedUnixNano": 1792520794540314000,
+              "path": "ingested.json",
+              "sizeBytes": 936
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.08022356033325195,
+              "finishedAt": 1792520794.827484,
+              "phase": "execution",
+              "startedAt": 1792520794.7472603,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-reconcile",
+          "runId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+          "runtime": "document-intelligence-local",
+          "schemaVersion": 1,
+          "startedAt": 1792520794.7472603,
+          "summary": {
+            "createdFiles": 2,
+            "deletedFiles": 0,
+            "finalFiles": 5,
+            "initialFiles": 3,
+            "modifiedFiles": 0,
+            "outputBytes": 578
+          }
+        },
+        "exitCode": 0,
+        "externalId": "3c1f6c5a40c4bb84b2b8a394282913916579617fd32c142431976b31ba86669f",
+        "finishedAt": 1792520794.827484,
+        "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-reconcile",
+        "log": "[AKOFLOW INFO] Activity started on runtime document-intelligence-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-reconcile",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792520794.7472737,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-reconcile",
+          "submittedAt": 1792520794.7472603
+        },
+        "resourceId": "document-intelligence-local-docker",
+        "runId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "runtimeId": "document-intelligence-local",
+        "startedAt": 1792520794.7472603,
+        "status": "completed"
+      },
+      {
+        "activityId": "document-intelligence-local-cf7251f56a-report",
+        "artifacts": {
+          "activityId": "document-intelligence-local-cf7251f56a-report",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:d3f1e32ab946e346ebce494f41ee1222610e15c66264c558f322b5e36325ec86",
+              "modifiedUnixNano": 1792520796768314000,
+              "path": "manifest.json",
+              "sizeBytes": 225
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:c1c9450a2c9f625bedad76ad88b119408a341574c262fc31c0e845c1fbd4f8b4",
+              "modifiedUnixNano": 1792520796768314000,
+              "path": "report.json",
+              "sizeBytes": 86
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:5d54c6e03a942160fc6843edaf79968f5628fcb8a692da5ede47cedb5b2b5b81",
+              "modifiedUnixNano": 1792520796522314000,
+              "path": "classified.json",
+              "sizeBytes": 1012
+            },
+            {
+              "checksum": "sha256:96bb4ccc6aaa6035bfadc0fa583495d81a7ff57c6ea384e47afc930a156caf3d",
+              "modifiedUnixNano": 1792520796522314000,
+              "path": "extracted.json",
+              "sizeBytes": 1521
+            },
+            {
+              "checksum": "sha256:4304af29c1e9fb9d724634d69a6a42c4d350916f26dd299d1969eb1efde2265b",
+              "modifiedUnixNano": 1792520796522314000,
+              "path": "ingested.json",
+              "sizeBytes": 936
+            },
+            {
+              "checksum": "sha256:a7f6534944a524795b5a6ff9ce1aa62f8c79844c3d791b67ea617c7800aadf7d",
+              "modifiedUnixNano": 1792520796522314000,
+              "path": "invoice-summary.csv",
+              "sizeBytes": 192
+            },
+            {
+              "checksum": "sha256:d3f1e32ab946e346ebce494f41ee1222610e15c66264c558f322b5e36325ec86",
+              "modifiedUnixNano": 1792520796768314000,
+              "path": "manifest.json",
+              "sizeBytes": 225
+            },
+            {
+              "checksum": "sha256:51b4dbb4db617e4c42acbb11cbec44cd2f7da456a444cf4e38e12507fd5f9187",
+              "modifiedUnixNano": 1792520796522314000,
+              "path": "reconciliation.json",
+              "sizeBytes": 386
+            },
+            {
+              "checksum": "sha256:c1c9450a2c9f625bedad76ad88b119408a341574c262fc31c0e845c1fbd4f8b4",
+              "modifiedUnixNano": 1792520796768314000,
+              "path": "report.json",
+              "sizeBytes": 86
+            }
+          ],
+          "finishedAt": 1792520796.7746537,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:5d54c6e03a942160fc6843edaf79968f5628fcb8a692da5ede47cedb5b2b5b81",
+              "modifiedUnixNano": 1792520796522314000,
+              "path": "classified.json",
+              "sizeBytes": 1012
+            },
+            {
+              "checksum": "sha256:96bb4ccc6aaa6035bfadc0fa583495d81a7ff57c6ea384e47afc930a156caf3d",
+              "modifiedUnixNano": 1792520796522314000,
+              "path": "extracted.json",
+              "sizeBytes": 1521
+            },
+            {
+              "checksum": "sha256:4304af29c1e9fb9d724634d69a6a42c4d350916f26dd299d1969eb1efde2265b",
+              "modifiedUnixNano": 1792520796522314000,
+              "path": "ingested.json",
+              "sizeBytes": 936
+            },
+            {
+              "checksum": "sha256:a7f6534944a524795b5a6ff9ce1aa62f8c79844c3d791b67ea617c7800aadf7d",
+              "modifiedUnixNano": 1792520796522314000,
+              "path": "invoice-summary.csv",
+              "sizeBytes": 192
+            },
+            {
+              "checksum": "sha256:51b4dbb4db617e4c42acbb11cbec44cd2f7da456a444cf4e38e12507fd5f9187",
+              "modifiedUnixNano": 1792520796522314000,
+              "path": "reconciliation.json",
+              "sizeBytes": 386
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.08014893531799316,
+              "finishedAt": 1792520796.7746537,
+              "phase": "execution",
+              "startedAt": 1792520796.6945047,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-report",
+          "runId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+          "runtime": "document-intelligence-local",
+          "schemaVersion": 1,
+          "startedAt": 1792520796.6945047,
+          "summary": {
+            "createdFiles": 2,
+            "deletedFiles": 0,
+            "finalFiles": 7,
+            "initialFiles": 5,
+            "modifiedFiles": 0,
+            "outputBytes": 311
+          }
+        },
+        "exitCode": 0,
+        "externalId": "1743cfdc3a02ee4b6f9cdbcc891f3bb483288ebaffe34b5fbc9d3fc8503362cb",
+        "finishedAt": 1792520796.7746537,
+        "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-report",
+        "log": "[AKOFLOW INFO] Activity started on runtime document-intelligence-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-report",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792520796.694512,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-report",
+          "submittedAt": 1792520796.6945047
+        },
+        "resourceId": "document-intelligence-local-docker",
+        "runId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "runtimeId": "document-intelligence-local",
+        "startedAt": 1792520796.6945047,
+        "status": "completed"
+      }
+    ],
+    "infrastructureRuns": [],
+    "operationEvents": [],
+    "run": {
+      "activityCount": 5,
+      "breakdown": {
+        "computeSeconds": 0.401608943939209,
+        "interferenceSeconds": 0,
+        "overheadSeconds": 0,
+        "queueSeconds": 0,
+        "transferSeconds": 0.755009651184082
+      },
+      "completedActivityCount": 5,
+      "cost": 0,
+      "finishedAt": "2026-10-20T18:26:38Z",
+      "id": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+      "kind": "workflow",
+      "makespanSeconds": 7.5132811069488525,
+      "mode": "real",
+      "schedulePlanId": "document-intelligence-local-cf7251f56a-manual-plan-20261020t182628",
+      "seed": 0,
+      "startedAt": "2026-10-20T18:26:29Z",
+      "status": "completed",
+      "title": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+      "transferredBytes": 10400
+    },
+    "timeline": {
+      "computeMakespanSeconds": 7.5132811069488525,
+      "coveredWallSeconds": 1.8523948192596436,
+      "finishedAt": 1792520798,
+      "phases": [
+        {
+          "activityId": "document-intelligence-local-cf7251f56a-ingest",
+          "category": "resource-queue",
+          "durationSeconds": 0.12582826614379883,
+          "finishedAt": 1792520789.2613726,
+          "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-ingest:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792520789.1355443,
+          "status": "completed"
+        },
+        {
+          "activityId": "document-intelligence-local-cf7251f56a-ingest",
+          "category": "runtime",
+          "durationSeconds": 0.08216261863708496,
+          "finishedAt": 1792520789.3435352,
+          "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-ingest:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792520789.2613726,
+          "status": "completed"
+        },
+        {
+          "activityId": "document-intelligence-local-cf7251f56a-classify",
+          "category": "resource-queue",
+          "durationSeconds": 0.0027620792388916016,
+          "finishedAt": 1792520790.3721144,
+          "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-classify:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792520790.3693523,
+          "status": "completed"
+        },
+        {
+          "activityId": "document-intelligence-local-cf7251f56a-classify",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.1918184757232666,
+          "finishedAt": 1792520790.563933,
+          "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-classify:transfer-workspace-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-classify-0",
+          "source": "transfer-observation",
+          "startedAt": 1792520790.3721144,
+          "status": "completed",
+          "transferId": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-classify:transfer-workspace-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-classify-0"
+        },
+        {
+          "activityId": "document-intelligence-local-cf7251f56a-classify",
+          "category": "launch",
+          "durationSeconds": 0.1393265724182129,
+          "finishedAt": 1792520790.7032595,
+          "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-classify:launch",
+          "source": "task-metadata",
+          "startedAt": 1792520790.563933,
+          "status": "completed"
+        },
+        {
+          "activityId": "document-intelligence-local-cf7251f56a-classify",
+          "category": "runtime",
+          "durationSeconds": 0.07897663116455078,
+          "finishedAt": 1792520790.782236,
+          "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-classify:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792520790.7032595,
+          "status": "completed"
+        },
+        {
+          "activityId": "document-intelligence-local-cf7251f56a-extract",
+          "category": "resource-queue",
+          "durationSeconds": 0.0029518604278564453,
+          "finishedAt": 1792520792.3783593,
+          "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-extract:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792520792.3754075,
+          "status": "completed"
+        },
+        {
+          "activityId": "document-intelligence-local-cf7251f56a-extract",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.19774866104125977,
+          "finishedAt": 1792520792.576108,
+          "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-extract:transfer-workspace-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-extract-0",
+          "source": "transfer-observation",
+          "startedAt": 1792520792.3783593,
+          "status": "completed",
+          "transferId": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-extract:transfer-workspace-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-extract-0"
+        },
+        {
+          "activityId": "document-intelligence-local-cf7251f56a-extract",
+          "category": "launch",
+          "durationSeconds": 0.13842368125915527,
+          "finishedAt": 1792520792.7145317,
+          "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-extract:launch",
+          "source": "task-metadata",
+          "startedAt": 1792520792.576108,
+          "status": "completed"
+        },
+        {
+          "activityId": "document-intelligence-local-cf7251f56a-extract",
+          "category": "runtime",
+          "durationSeconds": 0.08009719848632812,
+          "finishedAt": 1792520792.7946289,
+          "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-extract:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792520792.7145317,
+          "status": "completed"
+        },
+        {
+          "activityId": "document-intelligence-local-cf7251f56a-reconcile",
+          "category": "resource-queue",
+          "durationSeconds": 0.0027556419372558594,
+          "finishedAt": 1792520794.395574,
+          "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-reconcile:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792520794.3928185,
+          "status": "completed"
+        },
+        {
+          "activityId": "document-intelligence-local-cf7251f56a-reconcile",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.19928240776062012,
+          "finishedAt": 1792520794.5948565,
+          "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-reconcile:transfer-workspace-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-reconcile-0",
+          "source": "transfer-observation",
+          "startedAt": 1792520794.395574,
+          "status": "completed",
+          "transferId": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-reconcile:transfer-workspace-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-reconcile-0"
+        },
+        {
+          "activityId": "document-intelligence-local-cf7251f56a-reconcile",
+          "category": "launch",
+          "durationSeconds": 0.1524038314819336,
+          "finishedAt": 1792520794.7472603,
+          "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-reconcile:launch",
+          "source": "task-metadata",
+          "startedAt": 1792520794.5948565,
+          "status": "completed"
+        },
+        {
+          "activityId": "document-intelligence-local-cf7251f56a-reconcile",
+          "category": "runtime",
+          "durationSeconds": 0.08022356033325195,
+          "finishedAt": 1792520794.827484,
+          "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-reconcile:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792520794.7472603,
+          "status": "completed"
+        },
+        {
+          "activityId": "document-intelligence-local-cf7251f56a-report",
+          "category": "resource-queue",
+          "durationSeconds": 0.002956867218017578,
+          "finishedAt": 1792520796.3999772,
+          "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-report:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792520796.3970203,
+          "status": "completed"
+        },
+        {
+          "activityId": "document-intelligence-local-cf7251f56a-report",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.16616010665893555,
+          "finishedAt": 1792520796.5661373,
+          "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-report:transfer-workspace-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-report-0",
+          "source": "transfer-observation",
+          "startedAt": 1792520796.3999772,
+          "status": "completed",
+          "transferId": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-report:transfer-workspace-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-report-0"
+        },
+        {
+          "activityId": "document-intelligence-local-cf7251f56a-report",
+          "category": "launch",
+          "durationSeconds": 0.12836742401123047,
+          "finishedAt": 1792520796.6945047,
+          "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-report:launch",
+          "source": "task-metadata",
+          "startedAt": 1792520796.5661373,
+          "status": "completed"
+        },
+        {
+          "activityId": "document-intelligence-local-cf7251f56a-report",
+          "category": "runtime",
+          "durationSeconds": 0.08014893531799316,
+          "finishedAt": 1792520796.7746537,
+          "id": "document-intelligence-local-cf7251f56a-run-20261020t182628:document-intelligence-local-cf7251f56a-report:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792520796.6945047,
+          "status": "completed"
+        }
+      ],
+      "startedAt": 1792520789,
+      "totals": {
+        "destroySeconds": 0,
+        "executablePreparationSeconds": 0,
+        "launchSeconds": 0.5585215091705322,
+        "provisionSeconds": 0,
+        "resourceQueueSeconds": 0.1372547149658203,
+        "runtimeSeconds": 0.401608943939209,
+        "startSeconds": 0,
+        "stopSeconds": 0,
+        "validationSeconds": 0,
+        "workspaceTransferSeconds": 0.755009651184082
+      },
+      "unclassifiedWallSeconds": 7.1476051807403564,
+      "wallSeconds": 9
+    },
+    "workspaceLeases": [
+      {
+        "consumerActivityId": "document-intelligence-local-cf7251f56a-extract",
+        "id": "workspace-lease-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-classify-document-intelligence-local-cf7251f56a-extract",
+        "producerActivityId": "document-intelligence-local-cf7251f56a-classify",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T18:26:32.579895347Z",
+        "runId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "workspaceId": "workspace-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-classify"
+      },
+      {
+        "consumerActivityId": "document-intelligence-local-cf7251f56a-reconcile",
+        "id": "workspace-lease-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-extract-document-intelligence-local-cf7251f56a-reconcile",
+        "producerActivityId": "document-intelligence-local-cf7251f56a-extract",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T18:26:34.598522333Z",
+        "runId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "workspaceId": "workspace-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-extract"
+      },
+      {
+        "consumerActivityId": "document-intelligence-local-cf7251f56a-classify",
+        "id": "workspace-lease-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-ingest-document-intelligence-local-cf7251f56a-classify",
+        "producerActivityId": "document-intelligence-local-cf7251f56a-ingest",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T18:26:30.567563387Z",
+        "runId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "workspaceId": "workspace-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-ingest"
+      },
+      {
+        "consumerActivityId": "document-intelligence-local-cf7251f56a-report",
+        "id": "workspace-lease-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-reconcile-document-intelligence-local-cf7251f56a-report",
+        "producerActivityId": "document-intelligence-local-cf7251f56a-reconcile",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T18:26:36.569804501Z",
+        "runId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "workspaceId": "workspace-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-reconcile"
+      }
+    ],
+    "workspaces": [
+      {
+        "activityId": "document-intelligence-local-cf7251f56a-classify",
+        "createdAt": "2026-10-20T18:26:29.121756595Z",
+        "driver": "local",
+        "environmentId": "document-intelligence-v1",
+        "executionPath": "/akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-classify",
+        "fileCount": 2,
+        "id": "workspace-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-classify",
+        "inputBytes": 936,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:5d54c6e03a942160fc6843edaf79968f5628fcb8a692da5ede47cedb5b2b5b81",
+              "path": "classified.json",
+              "sizeBytes": 1012
+            },
+            {
+              "digest": "sha256:4304af29c1e9fb9d724634d69a6a42c4d350916f26dd299d1969eb1efde2265b",
+              "path": "ingested.json",
+              "sizeBytes": 936
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:4304af29c1e9fb9d724634d69a6a42c4d350916f26dd299d1969eb1efde2265b",
+              "path": "ingested.json",
+              "sizeBytes": 936
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:4304af29c1e9fb9d724634d69a6a42c4d350916f26dd299d1969eb1efde2265b",
+              "path": "ingested.json",
+              "sizeBytes": 936
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:5d54c6e03a942160fc6843edaf79968f5628fcb8a692da5ede47cedb5b2b5b81",
+              "path": "classified.json",
+              "sizeBytes": 1012
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-classify",
+        "outputBytes": 1012,
+        "pinned": false,
+        "reclaimedBytes": 1948,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T18:26:32.58615743Z",
+        "resourceId": "document-intelligence-local-docker",
+        "retention": "intermediate",
+        "runId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "runtimeId": "document-intelligence-local",
+        "sealedAt": "2026-10-20T18:26:32.371403305Z",
+        "sizeBytes": 1948,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-classify"
+      },
+      {
+        "activityId": "document-intelligence-local-cf7251f56a-extract",
+        "createdAt": "2026-10-20T18:26:29.121756595Z",
+        "driver": "local",
+        "environmentId": "document-intelligence-v1",
+        "executionPath": "/akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-extract",
+        "fileCount": 3,
+        "id": "workspace-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-extract",
+        "inputBytes": 1948,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:5d54c6e03a942160fc6843edaf79968f5628fcb8a692da5ede47cedb5b2b5b81",
+              "path": "classified.json",
+              "sizeBytes": 1012
+            },
+            {
+              "digest": "sha256:96bb4ccc6aaa6035bfadc0fa583495d81a7ff57c6ea384e47afc930a156caf3d",
+              "path": "extracted.json",
+              "sizeBytes": 1521
+            },
+            {
+              "digest": "sha256:4304af29c1e9fb9d724634d69a6a42c4d350916f26dd299d1969eb1efde2265b",
+              "path": "ingested.json",
+              "sizeBytes": 936
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:5d54c6e03a942160fc6843edaf79968f5628fcb8a692da5ede47cedb5b2b5b81",
+              "path": "classified.json",
+              "sizeBytes": 1012
+            },
+            {
+              "digest": "sha256:4304af29c1e9fb9d724634d69a6a42c4d350916f26dd299d1969eb1efde2265b",
+              "path": "ingested.json",
+              "sizeBytes": 936
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:5d54c6e03a942160fc6843edaf79968f5628fcb8a692da5ede47cedb5b2b5b81",
+              "path": "classified.json",
+              "sizeBytes": 1012
+            },
+            {
+              "digest": "sha256:4304af29c1e9fb9d724634d69a6a42c4d350916f26dd299d1969eb1efde2265b",
+              "path": "ingested.json",
+              "sizeBytes": 936
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:96bb4ccc6aaa6035bfadc0fa583495d81a7ff57c6ea384e47afc930a156caf3d",
+              "path": "extracted.json",
+              "sizeBytes": 1521
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-extract",
+        "outputBytes": 1521,
+        "pinned": false,
+        "reclaimedBytes": 3469,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T18:26:34.604800542Z",
+        "resourceId": "document-intelligence-local-docker",
+        "retention": "intermediate",
+        "runId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "runtimeId": "document-intelligence-local",
+        "sealedAt": "2026-10-20T18:26:34.387825125Z",
+        "sizeBytes": 3469,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-extract"
+      },
+      {
+        "activityId": "document-intelligence-local-cf7251f56a-ingest",
+        "createdAt": "2026-10-20T18:26:29.121756595Z",
+        "driver": "local",
+        "environmentId": "document-intelligence-v1",
+        "executionPath": "/akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-ingest",
+        "fileCount": 1,
+        "id": "workspace-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-ingest",
+        "inputBytes": 0,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:4304af29c1e9fb9d724634d69a6a42c4d350916f26dd299d1969eb1efde2265b",
+              "path": "ingested.json",
+              "sizeBytes": 936
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:4304af29c1e9fb9d724634d69a6a42c4d350916f26dd299d1969eb1efde2265b",
+              "path": "ingested.json",
+              "sizeBytes": 936
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-ingest",
+        "outputBytes": 936,
+        "pinned": false,
+        "reclaimedBytes": 936,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T18:26:30.573143512Z",
+        "resourceId": "document-intelligence-local-docker",
+        "retention": "intermediate",
+        "runId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "runtimeId": "document-intelligence-local",
+        "sealedAt": "2026-10-20T18:26:30.365024471Z",
+        "sizeBytes": 936,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-ingest"
+      },
+      {
+        "activityId": "document-intelligence-local-cf7251f56a-reconcile",
+        "createdAt": "2026-10-20T18:26:29.121756595Z",
+        "driver": "local",
+        "environmentId": "document-intelligence-v1",
+        "executionPath": "/akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-reconcile",
+        "fileCount": 5,
+        "id": "workspace-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-reconcile",
+        "inputBytes": 3469,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:5d54c6e03a942160fc6843edaf79968f5628fcb8a692da5ede47cedb5b2b5b81",
+              "path": "classified.json",
+              "sizeBytes": 1012
+            },
+            {
+              "digest": "sha256:96bb4ccc6aaa6035bfadc0fa583495d81a7ff57c6ea384e47afc930a156caf3d",
+              "path": "extracted.json",
+              "sizeBytes": 1521
+            },
+            {
+              "digest": "sha256:4304af29c1e9fb9d724634d69a6a42c4d350916f26dd299d1969eb1efde2265b",
+              "path": "ingested.json",
+              "sizeBytes": 936
+            },
+            {
+              "digest": "sha256:a7f6534944a524795b5a6ff9ce1aa62f8c79844c3d791b67ea617c7800aadf7d",
+              "path": "invoice-summary.csv",
+              "sizeBytes": 192
+            },
+            {
+              "digest": "sha256:51b4dbb4db617e4c42acbb11cbec44cd2f7da456a444cf4e38e12507fd5f9187",
+              "path": "reconciliation.json",
+              "sizeBytes": 386
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:5d54c6e03a942160fc6843edaf79968f5628fcb8a692da5ede47cedb5b2b5b81",
+              "path": "classified.json",
+              "sizeBytes": 1012
+            },
+            {
+              "digest": "sha256:96bb4ccc6aaa6035bfadc0fa583495d81a7ff57c6ea384e47afc930a156caf3d",
+              "path": "extracted.json",
+              "sizeBytes": 1521
+            },
+            {
+              "digest": "sha256:4304af29c1e9fb9d724634d69a6a42c4d350916f26dd299d1969eb1efde2265b",
+              "path": "ingested.json",
+              "sizeBytes": 936
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:5d54c6e03a942160fc6843edaf79968f5628fcb8a692da5ede47cedb5b2b5b81",
+              "path": "classified.json",
+              "sizeBytes": 1012
+            },
+            {
+              "digest": "sha256:96bb4ccc6aaa6035bfadc0fa583495d81a7ff57c6ea384e47afc930a156caf3d",
+              "path": "extracted.json",
+              "sizeBytes": 1521
+            },
+            {
+              "digest": "sha256:4304af29c1e9fb9d724634d69a6a42c4d350916f26dd299d1969eb1efde2265b",
+              "path": "ingested.json",
+              "sizeBytes": 936
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:a7f6534944a524795b5a6ff9ce1aa62f8c79844c3d791b67ea617c7800aadf7d",
+              "path": "invoice-summary.csv",
+              "sizeBytes": 192
+            },
+            {
+              "digest": "sha256:51b4dbb4db617e4c42acbb11cbec44cd2f7da456a444cf4e38e12507fd5f9187",
+              "path": "reconciliation.json",
+              "sizeBytes": 386
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-reconcile",
+        "outputBytes": 578,
+        "pinned": false,
+        "reclaimedBytes": 4047,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T18:26:36.575205584Z",
+        "resourceId": "document-intelligence-local-docker",
+        "retention": "intermediate",
+        "runId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "runtimeId": "document-intelligence-local",
+        "sealedAt": "2026-10-20T18:26:36.392387418Z",
+        "sizeBytes": 4047,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-reconcile"
+      },
+      {
+        "activityId": "document-intelligence-local-cf7251f56a-report",
+        "createdAt": "2026-10-20T18:26:29.121756595Z",
+        "driver": "local",
+        "environmentId": "document-intelligence-v1",
+        "executionPath": "/akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-report",
+        "fileCount": 2,
+        "id": "workspace-document-intelligence-local-cf7251f56a-run-20261020t182628-document-intelligence-local-cf7251f56a-report",
+        "inputBytes": 4047,
+        "isFinal": true,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:5d54c6e03a942160fc6843edaf79968f5628fcb8a692da5ede47cedb5b2b5b81",
+              "path": "classified.json",
+              "sizeBytes": 1012
+            },
+            {
+              "digest": "sha256:96bb4ccc6aaa6035bfadc0fa583495d81a7ff57c6ea384e47afc930a156caf3d",
+              "path": "extracted.json",
+              "sizeBytes": 1521
+            },
+            {
+              "digest": "sha256:4304af29c1e9fb9d724634d69a6a42c4d350916f26dd299d1969eb1efde2265b",
+              "path": "ingested.json",
+              "sizeBytes": 936
+            },
+            {
+              "digest": "sha256:a7f6534944a524795b5a6ff9ce1aa62f8c79844c3d791b67ea617c7800aadf7d",
+              "path": "invoice-summary.csv",
+              "sizeBytes": 192
+            },
+            {
+              "digest": "sha256:d3f1e32ab946e346ebce494f41ee1222610e15c66264c558f322b5e36325ec86",
+              "path": "manifest.json",
+              "sizeBytes": 225
+            },
+            {
+              "digest": "sha256:51b4dbb4db617e4c42acbb11cbec44cd2f7da456a444cf4e38e12507fd5f9187",
+              "path": "reconciliation.json",
+              "sizeBytes": 386
+            },
+            {
+              "digest": "sha256:c1c9450a2c9f625bedad76ad88b119408a341574c262fc31c0e845c1fbd4f8b4",
+              "path": "report.json",
+              "sizeBytes": 86
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:5d54c6e03a942160fc6843edaf79968f5628fcb8a692da5ede47cedb5b2b5b81",
+              "path": "classified.json",
+              "sizeBytes": 1012
+            },
+            {
+              "digest": "sha256:96bb4ccc6aaa6035bfadc0fa583495d81a7ff57c6ea384e47afc930a156caf3d",
+              "path": "extracted.json",
+              "sizeBytes": 1521
+            },
+            {
+              "digest": "sha256:4304af29c1e9fb9d724634d69a6a42c4d350916f26dd299d1969eb1efde2265b",
+              "path": "ingested.json",
+              "sizeBytes": 936
+            },
+            {
+              "digest": "sha256:a7f6534944a524795b5a6ff9ce1aa62f8c79844c3d791b67ea617c7800aadf7d",
+              "path": "invoice-summary.csv",
+              "sizeBytes": 192
+            },
+            {
+              "digest": "sha256:51b4dbb4db617e4c42acbb11cbec44cd2f7da456a444cf4e38e12507fd5f9187",
+              "path": "reconciliation.json",
+              "sizeBytes": 386
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:5d54c6e03a942160fc6843edaf79968f5628fcb8a692da5ede47cedb5b2b5b81",
+              "path": "classified.json",
+              "sizeBytes": 1012
+            },
+            {
+              "digest": "sha256:96bb4ccc6aaa6035bfadc0fa583495d81a7ff57c6ea384e47afc930a156caf3d",
+              "path": "extracted.json",
+              "sizeBytes": 1521
+            },
+            {
+              "digest": "sha256:4304af29c1e9fb9d724634d69a6a42c4d350916f26dd299d1969eb1efde2265b",
+              "path": "ingested.json",
+              "sizeBytes": 936
+            },
+            {
+              "digest": "sha256:a7f6534944a524795b5a6ff9ce1aa62f8c79844c3d791b67ea617c7800aadf7d",
+              "path": "invoice-summary.csv",
+              "sizeBytes": 192
+            },
+            {
+              "digest": "sha256:51b4dbb4db617e4c42acbb11cbec44cd2f7da456a444cf4e38e12507fd5f9187",
+              "path": "reconciliation.json",
+              "sizeBytes": 386
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:d3f1e32ab946e346ebce494f41ee1222610e15c66264c558f322b5e36325ec86",
+              "path": "manifest.json",
+              "sizeBytes": 225
+            },
+            {
+              "digest": "sha256:c1c9450a2c9f625bedad76ad88b119408a341574c262fc31c0e845c1fbd4f8b4",
+              "path": "report.json",
+              "sizeBytes": 86
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-report",
+        "outputBytes": 311,
+        "pinned": false,
+        "reclaimedBytes": 4047,
+        "releaseReason": "inherited inputs pruned",
+        "resourceId": "document-intelligence-local-docker",
+        "retention": "final",
+        "runId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+        "runtimeId": "document-intelligence-local",
+        "sealedAt": "2026-10-20T18:26:38.392165544Z",
+        "sizeBytes": 311,
+        "state": "sealed",
+        "uri": "file:///akoflow/workspace/runs/document-intelligence-local-cf7251f56a-run-20261020t182628/document-intelligence-local-cf7251f56a-report"
+      }
+    ]
+  },
+  "runId": "document-intelligence-local-cf7251f56a-run-20261020t182628",
+  "status": "completed",
+  "workflowId": "document-intelligence-local-cf7251f56a"
+}

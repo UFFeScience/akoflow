@@ -1,0 +1,5 @@
+{
+ "runId":"admission-fixture", "planId":"admission-plan", "materializationModelVersion":1,
+ "tasks":[{"id":"only","assignmentId":"only","resourceId":"hpc","flops":3000000000,"preparationSeconds":4,"admissionSeconds":7,"overheadSeconds":2,"publicationSeconds":5}],
+ "dependencies":[], "resourceLaneOrders":[]
+}

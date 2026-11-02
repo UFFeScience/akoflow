@@ -1,0 +1,49 @@
+---
+title: AI Video Studio
+description: Turn a creative brief into an offline storyboard, illustrated scenes, narration, and a validated video.
+---
+
+import WorkflowExecutionEvidence from "@site/src/components/WorkflowExecutionEvidence";
+
+import WorkflowLocalRun from "@site/src/components/WorkflowLocalRun";
+
+import {
+  WorkflowDag,
+  WorkflowPatternDetails,
+} from "@site/src/components/WorkflowShowcase";
+
+# AI Video Studio
+
+This runnable example turns a versioned creative brief into a complete short video without a hosted model or API. Python creates the storyboard, deterministic illustrations, and narration waveform; FFmpeg produces the MP4 inside the provided image.
+
+<WorkflowDag
+  title="AI Video Studio"
+  stages={["storyboard", ["scenes", "narration"], "compose", "quality-control"]}
+/>
+
+<WorkflowPatternDetails
+  inputs={[
+    "Creative brief with captions, colors, and narration tones",
+    "Smoke or demo profile",
+  ]}
+  outputs={[
+    "Storyboard JSON",
+    "Rendered frame sequence",
+    "Narration WAV",
+    "MP4 or portable YUV4MPEG video",
+    "Quality report and manifest",
+  ]}
+  evidence={[
+    "Brief revision",
+    "Per-stage generated files",
+    "Frame count and frame rate",
+    "Final artifact sizes",
+  ]}
+/>
+
+<WorkflowLocalRun examplePath="generative-ai/video-studio" />
+
+<WorkflowExecutionEvidence
+  title="AI Video Studio"
+  examplePath="generative-ai/video-studio"
+/>

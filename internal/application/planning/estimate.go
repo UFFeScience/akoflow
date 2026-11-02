@@ -49,7 +49,7 @@ func estimateAlgorithmRun(
 
 	coreEvaluations := 0
 	for _, resource := range compatible {
-		cores := resource.CPUCores
+		cores := resource.SchedulingCPUCores()
 		if cores < 1 || opaquePlanningBatchTarget(resource) {
 			cores = 1
 		}

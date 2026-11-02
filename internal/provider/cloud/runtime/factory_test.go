@@ -91,6 +91,7 @@ func (s *executorStub) Run(context.Context, string, []string, []byte) ([]byte, e
 func TestCloudRuntimeUsesAllocatedInstanceAndStartsRemoteDocker(t *testing.T) {
 	provisioner := &cloudProvisionerStub{created: domain.CloudProvisionedInstance{
 		ID: "instance", CapacityTargetID: "target", EnvironmentID: "environment", Status: "ready",
+		ProviderID: "123", TerraformOutput: map[string]any{"verifiedHostGeneration": "123", "verifiedHostKeyAlias": "verified-generation", "verifiedKnownHostsFile": t.TempDir() + "/known_hosts"},
 		PublicAddress: "203.0.113.10", SSHUsername: "akoflow", SSHCredentialRef: "file:/key",
 	}}
 	store := &cloudStoreStub{instances: []domain.CloudProvisionedInstance{provisioner.created}}
@@ -108,6 +109,18 @@ func TestCloudRuntimeUsesAllocatedInstanceAndStartsRemoteDocker(t *testing.T) {
 	}
 	if provisioner.calls != 0 || handle.Metadata["cloudInstanceId"] != "instance" || handle.ExternalID != "container" {
 		t.Fatalf("handle = %#v, provisions = %d", handle, provisioner.calls)
+	}
+}
+
+func TestCloudRuntimeRejectsUnverifiedOrStaleGeneration(t *testing.T) {
+	adapter := &Adapter{executor: &executorStub{}}
+	for _, instance := range []domain.CloudProvisionedInstance{
+		{ID: "worker", ProviderID: "123"},
+		{ID: "worker", ProviderID: "456", TerraformOutput: map[string]any{"verifiedHostGeneration": "123", "verifiedHostKeyAlias": "old", "verifiedKnownHostsFile": "old"}},
+	} {
+		if _, err := adapter.remoteAdapter(instance); err == nil {
+			t.Fatal("accepted unverified cloud generation")
+		}
 	}
 }
 

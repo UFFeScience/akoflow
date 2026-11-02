@@ -1,0 +1,26 @@
+{
+  "artifactSha256": {
+    "answer.json": "be0e60052df92f38c3749deabfa5ca5aeeccd890902fa21a97c5493109b7ed0c",
+    "trace.json": "c0a35a9c44c55a71b7f0618cda4e50f71c889ac2d2f1c17659512c15b09ff76f",
+    "validation.json": "4560b88d731ad0dd6b57909734ffbbe8281768a691c600511bd36ecf5dd21502"
+  },
+  "completedActivities": 5,
+  "dependencyWaves": [
+    [
+      "prepare-objective"
+    ],
+    [
+      "agent-loop"
+    ],
+    [
+      "validate-output"
+    ],
+    [
+      "publish-result",
+      "store-trace"
+    ]
+  ],
+  "executionMode": "local-process",
+  "mode": "local-workload",
+  "schedulingPolicy": "ready activities with bounded concurrency"
+}

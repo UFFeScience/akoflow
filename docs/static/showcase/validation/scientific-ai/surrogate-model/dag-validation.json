@@ -1,0 +1,31 @@
+{
+  "artifactSha256": {
+    "surrogate.pkl": "677295a53f3012a2d2097d4f61edc204e56d05dcebb1c1c5b954933ba4640f29",
+    "validation.json": "a7ed13feeeeeecb8702da342e725fa5afa77b902af78e4bb63c4d603ed2c31a1"
+  },
+  "completedActivities": 7,
+  "dependencyWaves": [
+    [
+      "design-samples"
+    ],
+    [
+      "simulation-a",
+      "simulation-n"
+    ],
+    [
+      "assemble-dataset"
+    ],
+    [
+      "train-surrogate"
+    ],
+    [
+      "validate"
+    ],
+    [
+      "publish"
+    ]
+  ],
+  "executionMode": "local-process",
+  "mode": "local-workload",
+  "schedulingPolicy": "ready activities with bounded concurrency"
+}

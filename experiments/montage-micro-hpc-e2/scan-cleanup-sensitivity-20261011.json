@@ -1,0 +1,16 @@
+{
+  "issue":"AKO-158",
+  "role":"two-feature-wall-fit-not-independent-validation",
+  "features":["pre-prune terminal snapshot bytes","final workspace inherited-input cleanup bytes"],
+  "scanSecondsPerWorkspaceByte":2.710558377450728e-8,
+  "cleanupSecondsPerInputByte":6.068931912359514e-8,
+  "samples":40,
+  "fixedPlacementSimGridSeconds":3825.5614337389516,
+  "simulatedActivities":58,
+  "limitations":[
+    "Reference wall times still include SSH transport and possible admission wait.",
+    "Final publication cleanup is distinct from later reclamation of intermediate workspaces after their consumers.",
+    "This fit uses recovered reference observations and is not independent validation.",
+    "Transfer-service residuals still need validation separately from publication."
+  ]
+}

@@ -2,33 +2,59 @@ package execution
 
 import (
 	"context"
+	"sync"
 
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
 )
 
-func (s *Supervisor) stopIdleCloud(
-	ctx context.Context,
-	request ports.ExecutionRequest,
-	completed map[string]domain.TaskExecution,
-	tasks map[string]domain.TaskExecution,
-	stopping map[string]bool,
-) {
+// Idle teardown must not hold the activity observation loop. Admission remains
+// on that loop; workers receive immutable allocation snapshots and never touch
+// its maps. Joining before release prevents overlapping cleanup ownership.
+type idleCloudStops struct {
+	ctx    context.Context
+	cancel context.CancelFunc
+	slots  chan struct{}
+	wg     sync.WaitGroup
+}
+
+func newIdleCloudStops(ctx context.Context) *idleCloudStops {
+	ctx, cancel := context.WithCancel(ctx)
+	return &idleCloudStops{ctx: ctx, cancel: cancel, slots: make(chan struct{}, 4)}
+}
+
+func (p *idleCloudStops) submit(stop func(context.Context) error) bool {
+	select {
+	case p.slots <- struct{}{}:
+	default:
+		return false
+	}
+	p.wg.Add(1)
+	go func() {
+		defer p.wg.Done()
+		defer func() { <-p.slots }()
+		// The durable operation records failures; final release verifies/retries
+		// cleanup without turning successful computation into a failure.
+		_ = stop(p.ctx)
+	}()
+	return true
+}
+
+func (p *idleCloudStops) close() {
+	p.cancel()
+	p.wg.Wait()
+}
+
+func (s *Supervisor) scheduleIdleCloudStops(request ports.ExecutionRequest, completed, tasks map[string]domain.TaskExecution, stopping map[string]bool, workers *idleCloudStops) {
 	stopper, ok := s.config.CloudAllocator.(CloudStopper)
 	if !ok {
 		return
 	}
-	ready := readyCloudStops(
-		request, completed, tasks, stopping,
-		s.config.Data != nil && s.config.Preparer != nil,
-	)
+	ready := readyCloudStops(request, completed, tasks, stopping, s.config.Data != nil && s.config.Preparer != nil)
 	for instanceID, allocations := range ready {
-		if err := stopper.Stop(ctx, request.Run.ID, allocations); err != nil {
-			// Teardown must not change the scientific run result. The final
-			// release path will retry if infrastructure submission failed.
-			continue
+		if workers.submit(func(workerCtx context.Context) error { return stopper.Stop(workerCtx, request.Run.ID, allocations) }) {
+			stopping[instanceID] = true
 		}
-		stopping[instanceID] = true
 	}
 }
 

@@ -1,0 +1,18 @@
+{
+  "issue":"AKO-158",
+  "role":"exploratory-observed-wall-sensitivity-not-service-calibration",
+  "fixedPlacementSimGridSeconds":3743.3807417053167,
+  "replannedPrismSeconds":3621.1737574989843,
+  "replannedSimGridSeconds":3743.3807417053167,
+  "simulatedActivities":58,
+  "scientificComputeWorkSeconds":5108.837997198105,
+  "publicationWorkSecondsNotMakespan":1133.254865169525,
+  "independentValidation":false,
+  "limitations":[
+    "Input observation and publication use reference wall coefficients, not queue-free service fits.",
+    "Aggregate publication work matches by weighted construction, not independent validation.",
+    "Individual dominant publication errors must be checked; summed work cannot replace that check.",
+    "Final-workspace inherited-input pruning must be separated from snapshot hashing before accepting the profile.",
+    "No real run was launched using this exploratory forecast."
+  ]
+}

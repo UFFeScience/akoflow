@@ -25,6 +25,18 @@ const sidebars: SidebarsConfig = {
             "showcase/index",
             {
               type: "category",
+              label: "Scientific Workflows",
+              collapsed: true,
+              items: [
+                "showcase/scientific-workflows/montage-050",
+                "showcase/ai/scientific-ai/ai-assisted-analysis",
+                "showcase/ai/scientific-ai/surrogate-model",
+                "showcase/ai/scientific-ai/experiment-feedback-loop",
+              ],
+            },
+
+            {
+              type: "category",
               label: "Machine Learning",
               collapsed: true,
               items: [
@@ -51,7 +63,27 @@ const sidebars: SidebarsConfig = {
                 "showcase/ai/generative-ai/synthetic-dataset",
                 "showcase/ai/generative-ai/audio-transcription",
                 "showcase/ai/generative-ai/document-extraction",
+                "showcase/ai/generative-ai/ai-video-studio",
+                "showcase/ai/generative-ai/local-rag-factory",
               ],
+            },
+            {
+              type: "category",
+              label: "Document AI",
+              collapsed: true,
+              items: ["showcase/document-ai/document-intelligence"],
+            },
+            {
+              type: "category",
+              label: "Media intelligence",
+              collapsed: true,
+              items: ["showcase/media/video-intelligence"],
+            },
+            {
+              type: "category",
+              label: "Rendering",
+              collapsed: true,
+              items: ["showcase/rendering/blender-render-farm"],
             },
             {
               type: "category",
@@ -61,16 +93,6 @@ const sidebars: SidebarsConfig = {
                 "showcase/ai/agentic-workflows/bounded-agent",
                 "showcase/ai/agentic-workflows/supervised-tool-loop",
                 "showcase/ai/agentic-workflows/multi-agent-review",
-              ],
-            },
-            {
-              type: "category",
-              label: "Scientific AI",
-              collapsed: true,
-              items: [
-                "showcase/ai/scientific-ai/ai-assisted-analysis",
-                "showcase/ai/scientific-ai/surrogate-model",
-                "showcase/ai/scientific-ai/experiment-feedback-loop",
               ],
             },
           ],
@@ -154,6 +176,7 @@ const sidebars: SidebarsConfig = {
       collapsed: false,
       items: [
         "reference/api-overview",
+        "reference/mcp",
         "reference/environment-yaml",
         "reference/execution-scopes-and-topologies",
         "reference/planning-and-execution-states",

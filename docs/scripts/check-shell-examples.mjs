@@ -18,7 +18,10 @@ function walk(directory) {
   });
 }
 
-for (const file of walk(contentDirectory)) {
+for (const file of [
+  ...walk(contentDirectory),
+  ...walk(join(docsDirectory, "blog")),
+]) {
   if (![".md", ".mdx"].includes(extname(file))) continue;
   const source = readFileSync(file, "utf8");
   const lines = source.split("\n");
@@ -26,11 +29,18 @@ for (const file of walk(contentDirectory)) {
     checked++;
     const result = spawnSync("bash", ["-n"], { input: body, encoding: "utf8" });
     if (result.error || result.status !== 0) {
-      errors.push(`${relative(docsDirectory, file)}:${line}: ${(result.stderr || result.error?.message || "invalid Bash").trim()}`);
+      errors.push(
+        `${relative(docsDirectory, file)}:${line}: ${(result.stderr || result.error?.message || "invalid Bash").trim()}`,
+      );
     }
     for (const [offset, command] of body.split("\n").entries()) {
-      if (/^\s*curl\b/.test(command) && !/--fail(?:-with-body)?\b/.test(command)) {
-        errors.push(`${relative(docsDirectory, file)}:${line + offset}: curl must fail on HTTP errors`);
+      if (
+        /^\s*curl\b/.test(command) &&
+        !/--fail(?:-with-body)?\b/.test(command)
+      ) {
+        errors.push(
+          `${relative(docsDirectory, file)}:${line + offset}: curl must fail on HTTP errors`,
+        );
       }
     }
   };
@@ -42,12 +52,16 @@ for (const file of walk(contentDirectory)) {
       body.push(lines[index]);
     }
     if (index === lines.length) {
-      errors.push(`${relative(docsDirectory, file)}:${start}: unclosed shell fence`);
+      errors.push(
+        `${relative(docsDirectory, file)}:${start}: unclosed shell fence`,
+      );
       break;
     }
     check(body.join("\n"), start);
   }
-  for (const match of source.matchAll(/<pre><code>\{`([\s\S]*?)`\}<\/code><\/pre>/g)) {
+  for (const match of source.matchAll(
+    /<pre><code>\{`([\s\S]*?)`\}<\/code><\/pre>/g,
+  )) {
     const line = source.slice(0, match.index).split("\n").length;
     // JSX template literals escape shell continuations and `${...}` variables.
     const body = match[1].replace(/\\([\\`$])/g, (_, escaped) => escaped);
@@ -59,5 +73,7 @@ if (errors.length) {
   for (const error of errors) process.stderr.write(`${error}\n`);
   process.exitCode = 1;
 } else {
-  process.stdout.write(`Shell examples verified: ${checked} fenced/JSX Bash/sh block(s).\n`);
+  process.stdout.write(
+    `Shell examples verified: ${checked} fenced/JSX Bash/sh block(s).\n`,
+  );
 }

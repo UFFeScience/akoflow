@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "runId": "montage-micro-hpc-e2-real-20261008-single-lane-v1",
+  "scope": "recovery after AKO-125 and AKO-126; before AKO-127",
+  "wholeWorkspaceContract": true,
+  "privatePeerRealValidated": false,
+  "consumers": [
+    {
+      "activity": "mDiffFit6",
+      "privateProbeFailedSeconds": [2.287067501, 2.290368959],
+      "strategies": ["gateway", "gateway"],
+      "serverNetworkBytes": [285910984, 290209742],
+      "archiveUploadSeconds": [139.627520438, 139.690869231],
+      "sharedPreparationBarrierSeconds": 162.541874742,
+      "sharedMergeAndVerificationSeconds": 8.674259296
+    },
+    {
+      "activity": "mDiffFit44",
+      "privateProbeFailedSeconds": [2.279054627],
+      "strategies": ["gateway", "gateway"],
+      "serverNetworkBytes": [103997679, 289012486],
+      "archiveUploadSeconds": [56.485266442, 102.646916214],
+      "sharedPreparationBarrierSeconds": 125.626070224,
+      "sharedMergeAndVerificationSeconds": 7.132608837
+    }
+  ],
+  "interpretation": {
+    "confirmedBottleneck": "gateway archive upload remains dominant after private authentication probes fail",
+    "barrierAccounting": "each shared barrier and merge is one joint operation, not a sum across predecessor records",
+    "credentialDefect": "OpenSSH expiry-time rejects the T-separated timestamp; isolated real sshd accepts the corrected continuous UTC timestamp, enforces the forced command and rejects expired authorization",
+    "identityCompatibilityDefect": "the gateway container client reads PKCS8 Ed25519 but the host OpenSSH client rejects it; canonical OpenSSH private-key serialization is used instead and verified against the matching public key",
+    "productionCausalityLimitation": "production probe stderr was not persisted; the credential defect is confirmed but cannot yet be asserted as the sole cause of those production probes",
+    "response": "cancel recovery, preserve reusable completed workspaces, stop idle VMs and correct/test before recovery",
+    "comparisonLimitation": "recovery and simultaneous transfers contaminate makespan and gateway throughput; this is not an uninterrupted benchmark"
+  }
+}

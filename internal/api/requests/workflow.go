@@ -46,6 +46,14 @@ func FromDomain(definition domain.WorkflowDefinition) Workflow {
 			DependsOn:   predecessors,
 			Simulation:  activity.Simulation,
 		}
+		if activity.ActivityTypeID != definition.ID+"-activity" {
+			item.ActivityType = strings.TrimPrefix(activity.ActivityTypeID, definition.ID+"-")
+		}
+		item.Metadata = map[string]any{}
+		for key, value := range metadata {
+			item.Metadata[key] = value
+		}
+		delete(item.Metadata, "workspaceProjectionVolumes") // derived for each placement
 		if metadata != nil {
 			item.Runtime, _ = metadata["runtime"].(string)
 			item.ResourceSelector, _ = metadata["resourceSelector"].(string)
@@ -104,6 +112,8 @@ type StoragePolicy struct {
 
 type WorkflowActivity struct {
 	Name              string                     `json:"name"`
+	ActivityType      string                     `json:"activityType,omitempty"`
+	Metadata          map[string]any             `json:"metadata,omitempty"`
 	Command           domain.ActivityCommand     `json:"command"`
 	Image             string                     `json:"image,omitempty"`
 	Runtime           string                     `json:"runtime,omitempty"`
@@ -143,7 +153,25 @@ func (request Workflow) Domain() (domain.WorkflowDefinition, error) {
 		names[value.Name] = workflowID + "-" + id
 	}
 	for index, value := range request.Spec.Activities {
-		activity, err := activityDomain(value, names[value.Name], request.Spec.Image, versionID, typeID, index)
+		activityTypeID := typeID
+		if value.ActivityType != "" {
+			family := identifier(value.ActivityType)
+			if family == "" {
+				return domain.WorkflowDefinition{}, fmt.Errorf("activity %q has an empty activityType", value.Name)
+			}
+			activityTypeID = workflowID + "-" + family
+			found := false
+			for _, existing := range definition.Types {
+				if existing.ID == activityTypeID {
+					found = true
+					break
+				}
+			}
+			if !found {
+				definition.Types = append(definition.Types, domain.ActivityType{ID: activityTypeID, Name: value.ActivityType, DefaultImage: request.Spec.Image})
+			}
+		}
+		activity, err := activityDomain(value, names[value.Name], request.Spec.Image, versionID, activityTypeID, index)
 		if err != nil {
 			return domain.WorkflowDefinition{}, err
 		}
@@ -190,7 +218,7 @@ func activityDomain(value WorkflowActivity, activityID, defaultImage, versionID,
 		command.Arguments = []string{"-c", value.Run}
 	}
 	simulationActivity := value.Simulation != nil
-	if command.Executable == nil && !simulationActivity {
+	if command.Executable == nil {
 		image := value.Image
 		if image == "" {
 			image = defaultImage
@@ -210,10 +238,21 @@ func activityDomain(value WorkflowActivity, activityID, defaultImage, versionID,
 			return domain.Activity{}, fmt.Errorf("activity %q: %w", value.Name, err)
 		}
 	}
-	capabilities := []domain.ActivityCapability{domain.ActivityCapabilityReal}
-	if simulationActivity {
-		capabilities = []domain.ActivityCapability{domain.ActivityCapabilitySimulation}
+	capabilities := make([]domain.ActivityCapability, 0, 2)
+	if command.Entrypoint != "" && command.Executable != nil {
+		capabilities = append(capabilities, domain.ActivityCapabilityReal)
 	}
+	if simulationActivity {
+		capabilities = append(capabilities, domain.ActivityCapabilitySimulation)
+	}
+	metadata := map[string]any{}
+	for key, value := range value.Metadata {
+		metadata[key] = value
+	}
+	delete(metadata, "workspaceProjectionVolumes") // executor recomputes from assignment
+	metadata["runtime"], metadata["resourceSelector"] = value.Runtime, value.ResourceSelector
+	metadata["keepDisk"], metadata["mountPath"] = value.KeepDisk, value.MountPath
+	metadata["workspaceSeedPath"], metadata["expectedOutputs"] = value.WorkspaceSeedPath, value.ExpectedOutputs
 	return domain.Activity{
 		ID: activityID, WorkflowVersionID: versionID, ActivityTypeID: typeID,
 		ExternalID: identifier(value.Name), Name: value.Name, Kind: domain.ActivityKindTask,
@@ -222,9 +261,7 @@ func activityDomain(value WorkflowActivity, activityID, defaultImage, versionID,
 		Resources:    domain.ActivityResources{CPU: cpu, MemoryBytes: memory},
 		Simulation:   value.Simulation,
 		Policy:       domain.ActivityPolicy{TimeoutSeconds: 3600, MaxAttempts: 1}, Priority: len(value.DependsOn) + index,
-		Metadata: map[string]any{"runtime": value.Runtime, "resourceSelector": value.ResourceSelector,
-			"keepDisk": value.KeepDisk, "mountPath": value.MountPath, "workspaceSeedPath": value.WorkspaceSeedPath,
-			"expectedOutputs": value.ExpectedOutputs},
+		Metadata: metadata,
 	}, nil
 }
 

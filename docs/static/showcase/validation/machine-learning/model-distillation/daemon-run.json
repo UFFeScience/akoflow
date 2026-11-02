@@ -1,0 +1,2604 @@
+{
+  "activityCount": 6,
+  "completedActivityCount": 6,
+  "image": "ghcr.io/uffescience/akoflow-examples/showcase-model-distillation:local-6fe8b3cede6c45d6",
+  "imageId": "sha256:6fe8b3cede6c45d63fc9c749d4e3ef5c96fd73fae46c7aacd860596c16187438",
+  "observedAt": "2026-10-20T19:11:50Z",
+  "planId": "showcase-model-distillation-local-89ee6b6444-manual-plan-20261020t191140.466308000",
+  "projection": {
+    "activities": [
+      {
+        "activityId": "showcase-model-distillation-local-89ee6b6444-load-teacher",
+        "allocatedResourceId": "showcase-model-distillation-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "finishedAt": 1792523500.8709056,
+        "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-load-teacher",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-model-distillation-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-distillation-local-89ee6b6444-manual-plan-20261020t191140.466308000-showcase-model-distillation-local-89ee6b6444-load-teacher",
+        "plannedResourceId": "showcase-model-distillation-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523500.629864,
+        "readyAt": 1792523500.629864,
+        "runtimeId": "showcase-model-distillation-local",
+        "runtimeSeconds": 0.11479997634887695,
+        "startedAt": 1792523500.7561057,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-model-distillation-local-89ee6b6444-soft-labels",
+        "allocatedResourceId": "showcase-model-distillation-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "finishedAt": 1792523502.2628467,
+        "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-soft-labels",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13910746574401855,
+          "preparationFinishedAt": 1792523502.013592,
+          "preparationStartedAt": 1792523501.84879,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0012485980987548828,
+          "runtimeId": "showcase-model-distillation-local",
+          "transferElapsedSeconds": 0.16480207443237305,
+          "transferWorkSeconds": 0.16480207443237305
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-distillation-local-89ee6b6444-manual-plan-20261020t191140.466308000-showcase-model-distillation-local-89ee6b6444-soft-labels",
+        "plannedResourceId": "showcase-model-distillation-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523501.844938,
+        "readyAt": 1792523501.844938,
+        "runtimeId": "showcase-model-distillation-local",
+        "runtimeSeconds": 0.11014723777770996,
+        "startedAt": 1792523502.1526995,
+        "status": "completed",
+        "transferBytes": 396,
+        "transferSeconds": 0.16480207443237305
+      },
+      {
+        "activityId": "showcase-model-distillation-local-89ee6b6444-train-student",
+        "allocatedResourceId": "showcase-model-distillation-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "finishedAt": 1792523504.2512248,
+        "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-train-student",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.12858319282531738,
+          "preparationFinishedAt": 1792523504.0177984,
+          "preparationStartedAt": 1792523503.8550751,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.001689910888671875,
+          "runtimeId": "showcase-model-distillation-local",
+          "transferElapsedSeconds": 0.16272330284118652,
+          "transferWorkSeconds": 0.16272330284118652
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-distillation-local-89ee6b6444-manual-plan-20261020t191140.466308000-showcase-model-distillation-local-89ee6b6444-train-student",
+        "plannedResourceId": "showcase-model-distillation-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523503.8514924,
+        "readyAt": 1792523503.8514924,
+        "runtimeId": "showcase-model-distillation-local",
+        "runtimeSeconds": 0.1048431396484375,
+        "startedAt": 1792523504.1463816,
+        "status": "completed",
+        "transferBytes": 3515,
+        "transferSeconds": 0.16272330284118652
+      },
+      {
+        "activityId": "showcase-model-distillation-local-89ee6b6444-latency",
+        "allocatedResourceId": "showcase-model-distillation-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "finishedAt": 1792523506.2806597,
+        "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-latency",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.11491560935974121,
+          "preparationFinishedAt": 1792523506.0536454,
+          "preparationStartedAt": 1792523505.8745236,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.004197359085083008,
+          "runtimeId": "showcase-model-distillation-local",
+          "transferElapsedSeconds": 0.179121732711792,
+          "transferWorkSeconds": 0.179121732711792
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-distillation-local-89ee6b6444-manual-plan-20261020t191140.466308000-showcase-model-distillation-local-89ee6b6444-latency",
+        "plannedResourceId": "showcase-model-distillation-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523505.8654451,
+        "readyAt": 1792523505.8654451,
+        "runtimeId": "showcase-model-distillation-local",
+        "runtimeSeconds": 0.11209869384765625,
+        "startedAt": 1792523506.168561,
+        "status": "completed",
+        "transferBytes": 3965,
+        "transferSeconds": 0.179121732711792
+      },
+      {
+        "activityId": "showcase-model-distillation-local-89ee6b6444-quality",
+        "allocatedResourceId": "showcase-model-distillation-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "finishedAt": 1792523506.2891514,
+        "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-quality",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14586448669433594,
+          "preparationFinishedAt": 1792523506.0329309,
+          "preparationStartedAt": 1792523505.8720806,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0035724639892578125,
+          "runtimeId": "showcase-model-distillation-local",
+          "transferElapsedSeconds": 0.16085028648376465,
+          "transferWorkSeconds": 0.16085028648376465
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-distillation-local-89ee6b6444-manual-plan-20261020t191140.466308000-showcase-model-distillation-local-89ee6b6444-quality",
+        "plannedResourceId": "showcase-model-distillation-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523505.8666081,
+        "readyAt": 1792523505.8666081,
+        "runtimeId": "showcase-model-distillation-local",
+        "runtimeSeconds": 0.11035609245300293,
+        "startedAt": 1792523506.1787953,
+        "status": "completed",
+        "transferBytes": 3965,
+        "transferSeconds": 0.16085028648376465
+      },
+      {
+        "activityId": "showcase-model-distillation-local-89ee6b6444-publish",
+        "allocatedResourceId": "showcase-model-distillation-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "finishedAt": 1792523508.5553226,
+        "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-publish",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.15630698204040527,
+          "preparationFinishedAt": 1792523508.2873776,
+          "preparationStartedAt": 1792523507.9278107,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0016820430755615234,
+          "runtimeId": "showcase-model-distillation-local",
+          "transferElapsedSeconds": 0.35956692695617676,
+          "transferWorkSeconds": 0.597214937210083
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-distillation-local-89ee6b6444-manual-plan-20261020t191140.466308000-showcase-model-distillation-local-89ee6b6444-publish",
+        "plannedResourceId": "showcase-model-distillation-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523507.923819,
+        "readyAt": 1792523507.923819,
+        "runtimeId": "showcase-model-distillation-local",
+        "runtimeSeconds": 0.11163806915283203,
+        "startedAt": 1792523508.4436846,
+        "status": "completed",
+        "transferBytes": 4858,
+        "transferSeconds": 0.597214937210083
+      }
+    ],
+    "activityAttempts": [
+      {
+        "activityId": "showcase-model-distillation-local-89ee6b6444-load-teacher",
+        "allocatedResourceId": "showcase-model-distillation-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "finishedAt": 1792523500.8709056,
+        "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-load-teacher",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-model-distillation-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-distillation-local-89ee6b6444-manual-plan-20261020t191140.466308000-showcase-model-distillation-local-89ee6b6444-load-teacher",
+        "plannedResourceId": "showcase-model-distillation-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523500.629864,
+        "readyAt": 1792523500.629864,
+        "runtimeId": "showcase-model-distillation-local",
+        "runtimeSeconds": 0.11479997634887695,
+        "startedAt": 1792523500.7561057,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-model-distillation-local-89ee6b6444-soft-labels",
+        "allocatedResourceId": "showcase-model-distillation-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "finishedAt": 1792523502.2628467,
+        "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-soft-labels",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13910746574401855,
+          "preparationFinishedAt": 1792523502.013592,
+          "preparationStartedAt": 1792523501.84879,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0012485980987548828,
+          "runtimeId": "showcase-model-distillation-local",
+          "transferElapsedSeconds": 0.16480207443237305,
+          "transferWorkSeconds": 0.16480207443237305
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-distillation-local-89ee6b6444-manual-plan-20261020t191140.466308000-showcase-model-distillation-local-89ee6b6444-soft-labels",
+        "plannedResourceId": "showcase-model-distillation-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523501.844938,
+        "readyAt": 1792523501.844938,
+        "runtimeId": "showcase-model-distillation-local",
+        "runtimeSeconds": 0.11014723777770996,
+        "startedAt": 1792523502.1526995,
+        "status": "completed",
+        "transferBytes": 396,
+        "transferSeconds": 0.16480207443237305
+      },
+      {
+        "activityId": "showcase-model-distillation-local-89ee6b6444-train-student",
+        "allocatedResourceId": "showcase-model-distillation-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "finishedAt": 1792523504.2512248,
+        "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-train-student",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.12858319282531738,
+          "preparationFinishedAt": 1792523504.0177984,
+          "preparationStartedAt": 1792523503.8550751,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.001689910888671875,
+          "runtimeId": "showcase-model-distillation-local",
+          "transferElapsedSeconds": 0.16272330284118652,
+          "transferWorkSeconds": 0.16272330284118652
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-distillation-local-89ee6b6444-manual-plan-20261020t191140.466308000-showcase-model-distillation-local-89ee6b6444-train-student",
+        "plannedResourceId": "showcase-model-distillation-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523503.8514924,
+        "readyAt": 1792523503.8514924,
+        "runtimeId": "showcase-model-distillation-local",
+        "runtimeSeconds": 0.1048431396484375,
+        "startedAt": 1792523504.1463816,
+        "status": "completed",
+        "transferBytes": 3515,
+        "transferSeconds": 0.16272330284118652
+      },
+      {
+        "activityId": "showcase-model-distillation-local-89ee6b6444-latency",
+        "allocatedResourceId": "showcase-model-distillation-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "finishedAt": 1792523506.2806597,
+        "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-latency",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.11491560935974121,
+          "preparationFinishedAt": 1792523506.0536454,
+          "preparationStartedAt": 1792523505.8745236,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.004197359085083008,
+          "runtimeId": "showcase-model-distillation-local",
+          "transferElapsedSeconds": 0.179121732711792,
+          "transferWorkSeconds": 0.179121732711792
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-distillation-local-89ee6b6444-manual-plan-20261020t191140.466308000-showcase-model-distillation-local-89ee6b6444-latency",
+        "plannedResourceId": "showcase-model-distillation-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523505.8654451,
+        "readyAt": 1792523505.8654451,
+        "runtimeId": "showcase-model-distillation-local",
+        "runtimeSeconds": 0.11209869384765625,
+        "startedAt": 1792523506.168561,
+        "status": "completed",
+        "transferBytes": 3965,
+        "transferSeconds": 0.179121732711792
+      },
+      {
+        "activityId": "showcase-model-distillation-local-89ee6b6444-quality",
+        "allocatedResourceId": "showcase-model-distillation-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "finishedAt": 1792523506.2891514,
+        "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-quality",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14586448669433594,
+          "preparationFinishedAt": 1792523506.0329309,
+          "preparationStartedAt": 1792523505.8720806,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0035724639892578125,
+          "runtimeId": "showcase-model-distillation-local",
+          "transferElapsedSeconds": 0.16085028648376465,
+          "transferWorkSeconds": 0.16085028648376465
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-distillation-local-89ee6b6444-manual-plan-20261020t191140.466308000-showcase-model-distillation-local-89ee6b6444-quality",
+        "plannedResourceId": "showcase-model-distillation-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523505.8666081,
+        "readyAt": 1792523505.8666081,
+        "runtimeId": "showcase-model-distillation-local",
+        "runtimeSeconds": 0.11035609245300293,
+        "startedAt": 1792523506.1787953,
+        "status": "completed",
+        "transferBytes": 3965,
+        "transferSeconds": 0.16085028648376465
+      },
+      {
+        "activityId": "showcase-model-distillation-local-89ee6b6444-publish",
+        "allocatedResourceId": "showcase-model-distillation-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "finishedAt": 1792523508.5553226,
+        "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-publish",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.15630698204040527,
+          "preparationFinishedAt": 1792523508.2873776,
+          "preparationStartedAt": 1792523507.9278107,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0016820430755615234,
+          "runtimeId": "showcase-model-distillation-local",
+          "transferElapsedSeconds": 0.35956692695617676,
+          "transferWorkSeconds": 0.597214937210083
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-model-distillation-local-89ee6b6444-manual-plan-20261020t191140.466308000-showcase-model-distillation-local-89ee6b6444-publish",
+        "plannedResourceId": "showcase-model-distillation-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523507.923819,
+        "readyAt": 1792523507.923819,
+        "runtimeId": "showcase-model-distillation-local",
+        "runtimeSeconds": 0.11163806915283203,
+        "startedAt": 1792523508.4436846,
+        "status": "completed",
+        "transferBytes": 4858,
+        "transferSeconds": 0.597214937210083
+      }
+    ],
+    "artifactMaterializations": null,
+    "artifactTransferRuns": [
+      {
+        "activityId": "showcase-model-distillation-local-89ee6b6444-latency",
+        "durationSeconds": 0.179121732711792,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "filesTransferred": 3,
+        "finishedAt": 1792523506.0536454,
+        "id": "transfer-workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-latency-0",
+        "logicalBytes": 3965,
+        "planId": "transfer-workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-latency-0",
+        "route": {
+          "consumerActivityId": "showcase-model-distillation-local-89ee6b6444-latency",
+          "filesTransferred": 3,
+          "producerActivityId": "showcase-model-distillation-local-89ee6b6444-train-student",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.088389125,
+          "sourceEnvironmentId": "showcase-model-distillation-v1",
+          "sourceResourceId": "showcase-model-distillation-local-docker",
+          "sshChannelWaitSeconds": 3.76e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-distillation-v1",
+          "targetResourceId": "showcase-model-distillation-local-docker"
+        },
+        "startedAt": 1792523505.8745236,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 3965
+      },
+      {
+        "activityId": "showcase-model-distillation-local-89ee6b6444-publish",
+        "durationSeconds": 0.23764801025390625,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "filesTransferred": 4,
+        "finishedAt": 1792523508.1654587,
+        "id": "transfer-workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-publish-0",
+        "logicalBytes": 4380,
+        "planId": "transfer-workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-publish-0",
+        "route": {
+          "consumerActivityId": "showcase-model-distillation-local-89ee6b6444-publish",
+          "filesTransferred": 4,
+          "producerActivityId": "showcase-model-distillation-local-89ee6b6444-quality",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09468420799999999,
+          "sourceEnvironmentId": "showcase-model-distillation-v1",
+          "sourceResourceId": "showcase-model-distillation-local-docker",
+          "sshChannelWaitSeconds": 3.33e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-distillation-v1",
+          "targetResourceId": "showcase-model-distillation-local-docker"
+        },
+        "startedAt": 1792523507.9278107,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 4380
+      },
+      {
+        "activityId": "showcase-model-distillation-local-89ee6b6444-publish",
+        "durationSeconds": 0.35956692695617676,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523508.2873776,
+        "id": "transfer-workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-publish-1",
+        "logicalBytes": 4443,
+        "planId": "transfer-workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-publish-1",
+        "route": {
+          "consumerActivityId": "showcase-model-distillation-local-89ee6b6444-publish",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-model-distillation-local-89ee6b6444-latency",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.093437042,
+          "sourceEnvironmentId": "showcase-model-distillation-v1",
+          "sourceResourceId": "showcase-model-distillation-local-docker",
+          "sshChannelWaitSeconds": 6.249999999999999e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-distillation-v1",
+          "targetResourceId": "showcase-model-distillation-local-docker"
+        },
+        "startedAt": 1792523507.9278107,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 478
+      },
+      {
+        "activityId": "showcase-model-distillation-local-89ee6b6444-quality",
+        "durationSeconds": 0.16085028648376465,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "filesTransferred": 3,
+        "finishedAt": 1792523506.0329309,
+        "id": "transfer-workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-quality-0",
+        "logicalBytes": 3965,
+        "planId": "transfer-workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-quality-0",
+        "route": {
+          "consumerActivityId": "showcase-model-distillation-local-89ee6b6444-quality",
+          "filesTransferred": 3,
+          "producerActivityId": "showcase-model-distillation-local-89ee6b6444-train-student",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09105316699999999,
+          "sourceEnvironmentId": "showcase-model-distillation-v1",
+          "sourceResourceId": "showcase-model-distillation-local-docker",
+          "sshChannelWaitSeconds": 4.5899999999999997e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-distillation-v1",
+          "targetResourceId": "showcase-model-distillation-local-docker"
+        },
+        "startedAt": 1792523505.8720806,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 3965
+      },
+      {
+        "activityId": "showcase-model-distillation-local-89ee6b6444-soft-labels",
+        "durationSeconds": 0.16480207443237305,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523502.013592,
+        "id": "transfer-workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-soft-labels-0",
+        "logicalBytes": 396,
+        "planId": "transfer-workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-soft-labels-0",
+        "route": {
+          "consumerActivityId": "showcase-model-distillation-local-89ee6b6444-soft-labels",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-model-distillation-local-89ee6b6444-load-teacher",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09113391600000001,
+          "sourceEnvironmentId": "showcase-model-distillation-v1",
+          "sourceResourceId": "showcase-model-distillation-local-docker",
+          "sshChannelWaitSeconds": 4.16e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-distillation-v1",
+          "targetResourceId": "showcase-model-distillation-local-docker"
+        },
+        "startedAt": 1792523501.84879,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 396
+      },
+      {
+        "activityId": "showcase-model-distillation-local-89ee6b6444-train-student",
+        "durationSeconds": 0.16272330284118652,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "filesTransferred": 2,
+        "finishedAt": 1792523504.0177984,
+        "id": "transfer-workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-train-student-0",
+        "logicalBytes": 3515,
+        "planId": "transfer-workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-train-student-0",
+        "route": {
+          "consumerActivityId": "showcase-model-distillation-local-89ee6b6444-train-student",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-model-distillation-local-89ee6b6444-soft-labels",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.090805625,
+          "sourceEnvironmentId": "showcase-model-distillation-v1",
+          "sourceResourceId": "showcase-model-distillation-local-docker",
+          "sshChannelWaitSeconds": 5.84e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-distillation-v1",
+          "targetResourceId": "showcase-model-distillation-local-docker"
+        },
+        "startedAt": 1792523503.8550751,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 3515
+      }
+    ],
+    "cloudBilling": {
+      "asOf": "2026-10-20T19:11:50.803377007Z",
+      "costBasis": "VM compute and boot-disk lifecycle at on-demand marginal rates; not a provider invoice",
+      "estimatedCost": 0,
+      "excludedCosts": [
+        "network-egress",
+        "public-ipv4",
+        "image-storage",
+        "discounts-and-tax"
+      ],
+      "instances": [],
+      "knownCost": 0,
+      "status": "estimated"
+    },
+    "dataLocations": [
+      {
+        "dataObjectInstanceId": "fc596e6fa71b2fe4da7f1aa628f97dc9",
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "id": "a4e62436b46337ad188e2591d87896f2",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-distillation-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "84f6515970795c3e184a006e7a4629e8",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-latency/stage-latency.json"
+      },
+      {
+        "dataObjectInstanceId": "d621a884c69dea68dd502c94d937ce02",
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "id": "9f852af9f2519e5624abd1ec50e859c8",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-distillation-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "84f6515970795c3e184a006e7a4629e8",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-load-teacher/stage-load-teacher.json"
+      },
+      {
+        "dataObjectInstanceId": "fbe736262ce58f588dab507384f52563",
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "id": "7cff03c98979247722c5d3344d35074c",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-distillation-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "84f6515970795c3e184a006e7a4629e8",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-publish/distillation-report.json"
+      },
+      {
+        "dataObjectInstanceId": "e8116e9d0c16d36c649bd9d9cd6aa8f6",
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "id": "738093d59a1f99d387886493b54ff453",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-distillation-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "84f6515970795c3e184a006e7a4629e8",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-publish/stage-publish.json"
+      },
+      {
+        "dataObjectInstanceId": "df30978564fa7ec8bee9f242a1219ca1",
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "id": "b7fe4a505c86793231c18cf40342732c",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-distillation-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "84f6515970795c3e184a006e7a4629e8",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-publish/student.pkl"
+      },
+      {
+        "dataObjectInstanceId": "43a4101c9b53d1947bfc829bd12dbfa8",
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "id": "0c1e9c2a19f1730babaa2575ae734263",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-distillation-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "84f6515970795c3e184a006e7a4629e8",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-quality/stage-quality.json"
+      },
+      {
+        "dataObjectInstanceId": "fe358cc40b35cf0a51b9c9b40aa6dc59",
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "id": "e05a6b281f4a9dca580046a9a1a8ca6c",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-distillation-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "84f6515970795c3e184a006e7a4629e8",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-soft-labels/stage-soft-labels.json"
+      },
+      {
+        "dataObjectInstanceId": "66eda02fb9b6910e8fb2f86a4b631dd6",
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "id": "2c7b8b2bcbdebb943efd39fb63cad061",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-model-distillation-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "84f6515970795c3e184a006e7a4629e8",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-train-student/stage-train-student.json"
+      }
+    ],
+    "dataObjects": [
+      {
+        "attempt": 1,
+        "checksum": "sha256:fc43a4dae549edff799902e8737775fbbc0562d6939cfe75646a95b9be8550f3",
+        "dataObjectId": "e5391886aad1e9141ba34624898a6af1",
+        "discovered": true,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "id": "fc596e6fa71b2fe4da7f1aa628f97dc9",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-distillation-local-89ee6b6444-latency",
+        "relativePath": "stage-latency.json",
+        "sizeBytes": 478
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:0f2413cf82a2e125ff4d0e8a6fa1088a5f1e01869590fe0c0fac1db26fe5356f",
+        "dataObjectId": "507f5115cfe9218495ecd2906985d9bf",
+        "discovered": true,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "id": "d621a884c69dea68dd502c94d937ce02",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-distillation-local-89ee6b6444-load-teacher",
+        "relativePath": "stage-load-teacher.json",
+        "sizeBytes": 396
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:1e6ccb12ab77b65d3ce6af7312be561e4f41da3d2c9cf5f0de11dbdeb6912574",
+        "dataObjectId": "16335f8a05adfd5c454f4e2b3d0704a9",
+        "discovered": true,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "id": "fbe736262ce58f588dab507384f52563",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-distillation-local-89ee6b6444-publish",
+        "relativePath": "distillation-report.json",
+        "sizeBytes": 224
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:0e6054190e880250e511422537561f4a28e9e647c6fb98474f8a7c4dee303823",
+        "dataObjectId": "30cdadccb25108bb0040555426bfb2c1",
+        "discovered": true,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "id": "e8116e9d0c16d36c649bd9d9cd6aa8f6",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-distillation-local-89ee6b6444-publish",
+        "relativePath": "stage-publish.json",
+        "sizeBytes": 603
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:c1b83380948ece0c14109908318c2e68c9cfbfe2761c3cfd45aca6edb111141c",
+        "dataObjectId": "490d52860c38e25ef35cc16f5afdc475",
+        "discovered": true,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "id": "df30978564fa7ec8bee9f242a1219ca1",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-distillation-local-89ee6b6444-publish",
+        "relativePath": "student.pkl",
+        "sizeBytes": 50
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:e254c888e3feee237f8552139db20bb66a7379adf627a0dac29a12a1f9a9ba69",
+        "dataObjectId": "54744f0b0babc73b0d8f50846c7b427f",
+        "discovered": true,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "id": "43a4101c9b53d1947bfc829bd12dbfa8",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-distillation-local-89ee6b6444-quality",
+        "relativePath": "stage-quality.json",
+        "sizeBytes": 415
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:76efa687cecdd9571976ce8aedd38b9259ba06ca973d07fe7de9d07785722fdf",
+        "dataObjectId": "292be2b6f06dbf3f2c363267021aa64b",
+        "discovered": true,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "id": "fe358cc40b35cf0a51b9c9b40aa6dc59",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-distillation-local-89ee6b6444-soft-labels",
+        "relativePath": "stage-soft-labels.json",
+        "sizeBytes": 3119
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:40dc3a23889f1ed5002f191dad8756a659b61c2cb9773fee333c3d83159326b7",
+        "dataObjectId": "1ddf89818b34c57356bcac3314b2d0b7",
+        "discovered": true,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "id": "66eda02fb9b6910e8fb2f86a4b631dd6",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-model-distillation-local-89ee6b6444-train-student",
+        "relativePath": "stage-train-student.json",
+        "sizeBytes": 450
+      }
+    ],
+    "dataTransfers": [
+      {
+        "bytes": 396,
+        "consumerActivityId": "showcase-model-distillation-local-89ee6b6444-soft-labels",
+        "cost": 0,
+        "durationSeconds": 0.16480207443237305,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "finishedAt": 1792523502.013592,
+        "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-soft-labels:transfer-workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-soft-labels-0",
+        "logicalBytes": 396,
+        "producerActivityId": "showcase-model-distillation-local-89ee6b6444-load-teacher",
+        "route": {
+          "consumerActivityId": "showcase-model-distillation-local-89ee6b6444-soft-labels",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-model-distillation-local-89ee6b6444-load-teacher",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09113391600000001,
+          "sourceEnvironmentId": "showcase-model-distillation-v1",
+          "sourceResourceId": "showcase-model-distillation-local-docker",
+          "sshChannelWaitSeconds": 4.16e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-distillation-v1",
+          "targetResourceId": "showcase-model-distillation-local-docker"
+        },
+        "sourceResourceId": "showcase-model-distillation-local-docker",
+        "startedAt": 1792523501.84879,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-model-distillation-local-docker"
+      },
+      {
+        "bytes": 3515,
+        "consumerActivityId": "showcase-model-distillation-local-89ee6b6444-train-student",
+        "cost": 0,
+        "durationSeconds": 0.16272330284118652,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "finishedAt": 1792523504.0177984,
+        "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-train-student:transfer-workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-train-student-0",
+        "logicalBytes": 3515,
+        "producerActivityId": "showcase-model-distillation-local-89ee6b6444-soft-labels",
+        "route": {
+          "consumerActivityId": "showcase-model-distillation-local-89ee6b6444-train-student",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-model-distillation-local-89ee6b6444-soft-labels",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.090805625,
+          "sourceEnvironmentId": "showcase-model-distillation-v1",
+          "sourceResourceId": "showcase-model-distillation-local-docker",
+          "sshChannelWaitSeconds": 5.84e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-distillation-v1",
+          "targetResourceId": "showcase-model-distillation-local-docker"
+        },
+        "sourceResourceId": "showcase-model-distillation-local-docker",
+        "startedAt": 1792523503.8550751,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-model-distillation-local-docker"
+      },
+      {
+        "bytes": 3965,
+        "consumerActivityId": "showcase-model-distillation-local-89ee6b6444-quality",
+        "cost": 0,
+        "durationSeconds": 0.16085028648376465,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "finishedAt": 1792523506.0329309,
+        "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-quality:transfer-workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-quality-0",
+        "logicalBytes": 3965,
+        "producerActivityId": "showcase-model-distillation-local-89ee6b6444-train-student",
+        "route": {
+          "consumerActivityId": "showcase-model-distillation-local-89ee6b6444-quality",
+          "filesTransferred": 3,
+          "producerActivityId": "showcase-model-distillation-local-89ee6b6444-train-student",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09105316699999999,
+          "sourceEnvironmentId": "showcase-model-distillation-v1",
+          "sourceResourceId": "showcase-model-distillation-local-docker",
+          "sshChannelWaitSeconds": 4.5899999999999997e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-distillation-v1",
+          "targetResourceId": "showcase-model-distillation-local-docker"
+        },
+        "sourceResourceId": "showcase-model-distillation-local-docker",
+        "startedAt": 1792523505.8720806,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-model-distillation-local-docker"
+      },
+      {
+        "bytes": 3965,
+        "consumerActivityId": "showcase-model-distillation-local-89ee6b6444-latency",
+        "cost": 0,
+        "durationSeconds": 0.179121732711792,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "finishedAt": 1792523506.0536454,
+        "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-latency:transfer-workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-latency-0",
+        "logicalBytes": 3965,
+        "producerActivityId": "showcase-model-distillation-local-89ee6b6444-train-student",
+        "route": {
+          "consumerActivityId": "showcase-model-distillation-local-89ee6b6444-latency",
+          "filesTransferred": 3,
+          "producerActivityId": "showcase-model-distillation-local-89ee6b6444-train-student",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.088389125,
+          "sourceEnvironmentId": "showcase-model-distillation-v1",
+          "sourceResourceId": "showcase-model-distillation-local-docker",
+          "sshChannelWaitSeconds": 3.76e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-distillation-v1",
+          "targetResourceId": "showcase-model-distillation-local-docker"
+        },
+        "sourceResourceId": "showcase-model-distillation-local-docker",
+        "startedAt": 1792523505.8745236,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-model-distillation-local-docker"
+      },
+      {
+        "bytes": 478,
+        "consumerActivityId": "showcase-model-distillation-local-89ee6b6444-publish",
+        "cost": 0,
+        "durationSeconds": 0.35956692695617676,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "finishedAt": 1792523508.2873776,
+        "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-publish:transfer-workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-publish-1",
+        "logicalBytes": 4443,
+        "producerActivityId": "showcase-model-distillation-local-89ee6b6444-latency",
+        "route": {
+          "consumerActivityId": "showcase-model-distillation-local-89ee6b6444-publish",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-model-distillation-local-89ee6b6444-latency",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.093437042,
+          "sourceEnvironmentId": "showcase-model-distillation-v1",
+          "sourceResourceId": "showcase-model-distillation-local-docker",
+          "sshChannelWaitSeconds": 6.249999999999999e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-distillation-v1",
+          "targetResourceId": "showcase-model-distillation-local-docker"
+        },
+        "sourceResourceId": "showcase-model-distillation-local-docker",
+        "startedAt": 1792523507.9278107,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-model-distillation-local-docker"
+      },
+      {
+        "bytes": 4380,
+        "consumerActivityId": "showcase-model-distillation-local-89ee6b6444-publish",
+        "cost": 0,
+        "durationSeconds": 0.23764801025390625,
+        "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "finishedAt": 1792523508.1654587,
+        "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-publish:transfer-workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-publish-0",
+        "logicalBytes": 4380,
+        "producerActivityId": "showcase-model-distillation-local-89ee6b6444-quality",
+        "route": {
+          "consumerActivityId": "showcase-model-distillation-local-89ee6b6444-publish",
+          "filesTransferred": 4,
+          "producerActivityId": "showcase-model-distillation-local-89ee6b6444-quality",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09468420799999999,
+          "sourceEnvironmentId": "showcase-model-distillation-v1",
+          "sourceResourceId": "showcase-model-distillation-local-docker",
+          "sshChannelWaitSeconds": 3.33e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-model-distillation-v1",
+          "targetResourceId": "showcase-model-distillation-local-docker"
+        },
+        "sourceResourceId": "showcase-model-distillation-local-docker",
+        "startedAt": 1792523507.9278107,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-model-distillation-local-docker"
+      }
+    ],
+    "events": [
+      {
+        "aggregateId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.started",
+        "id": "52fb4178a43591611cd4db11c7b545ea",
+        "occurredAt": "2026-10-20T19:11:40.606951628Z",
+        "payload": {
+          "mode": "real",
+          "schedulePlanId": "showcase-model-distillation-local-89ee6b6444-manual-plan-20261020t191140.466308000"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-load-teacher",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "45bac903aca3cac8349c8f06a612ac44",
+        "occurredAt": "2026-10-20T19:11:41.780694795Z",
+        "payload": {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-load-teacher",
+          "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-load-teacher",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "7be854bb38b5b5acaa25748663890fa1",
+        "occurredAt": "2026-10-20T19:11:41.842630878Z",
+        "payload": {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-load-teacher",
+          "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11479997634887695,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-soft-labels",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "af0ee5ba9b30723c3dba2e6872d062ac",
+        "occurredAt": "2026-10-20T19:11:43.786979296Z",
+        "payload": {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-soft-labels",
+          "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-soft-labels",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "b4ef88161bb6b10d47e53a5901af65fd",
+        "occurredAt": "2026-10-20T19:11:43.849824171Z",
+        "payload": {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-soft-labels",
+          "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11014723777770996,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-train-student",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "1a9663288d1be7a6ac5b9b2cadbdb724",
+        "occurredAt": "2026-10-20T19:11:45.793797672Z",
+        "payload": {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-train-student",
+          "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-train-student",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "af29e67447662a6325a096420bfc98c2",
+        "occurredAt": "2026-10-20T19:11:45.863788255Z",
+        "payload": {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-train-student",
+          "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+          "failureReason": "",
+          "runtimeSeconds": 0.1048431396484375,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-quality",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "c2797ca9da3f4637b6b8cf9338ac1e0e",
+        "occurredAt": "2026-10-20T19:11:47.806210798Z",
+        "payload": {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-quality",
+          "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-latency",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "2ed87eb4bf46dc4d9ecc375d21745277",
+        "occurredAt": "2026-10-20T19:11:47.811162006Z",
+        "payload": {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-latency",
+          "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-latency",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "bb0017545002cc8cfa3eceaa0158f699",
+        "occurredAt": "2026-10-20T19:11:47.918496048Z",
+        "payload": {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-latency",
+          "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11209869384765625,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-quality",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "f09bc0406772aa35aac3a176deb25c5f",
+        "occurredAt": "2026-10-20T19:11:47.922057006Z",
+        "payload": {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-quality",
+          "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11035609245300293,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-publish",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "11dffdd7ec36a353e7e2c8527939f751",
+        "occurredAt": "2026-10-20T19:11:49.802218049Z",
+        "payload": {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-publish",
+          "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-publish",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "c8076ed31865a04a66ad86e35bcad6b6",
+        "occurredAt": "2026-10-20T19:11:49.880678257Z",
+        "payload": {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-publish",
+          "executionRunId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11163806915283203,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.completed",
+        "id": "1875e67857e534e7437d6c849a284ee0",
+        "occurredAt": "2026-10-20T19:11:49.88408359Z",
+        "payload": {
+          "cost": 0,
+          "makespanSeconds": 7.799216985702515
+        }
+      }
+    ],
+    "handles": [
+      {
+        "activityId": "showcase-model-distillation-local-89ee6b6444-latency",
+        "artifacts": {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-latency",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:fc43a4dae549edff799902e8737775fbbc0562d6939cfe75646a95b9be8550f3",
+              "modifiedUnixNano": 1792523506275754000,
+              "path": "stage-latency.json",
+              "sizeBytes": 478
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:fc43a4dae549edff799902e8737775fbbc0562d6939cfe75646a95b9be8550f3",
+              "modifiedUnixNano": 1792523506275754000,
+              "path": "stage-latency.json",
+              "sizeBytes": 478
+            },
+            {
+              "checksum": "sha256:0f2413cf82a2e125ff4d0e8a6fa1088a5f1e01869590fe0c0fac1db26fe5356f",
+              "modifiedUnixNano": 1792523506010754000,
+              "path": "stage-load-teacher.json",
+              "sizeBytes": 396
+            },
+            {
+              "checksum": "sha256:76efa687cecdd9571976ce8aedd38b9259ba06ca973d07fe7de9d07785722fdf",
+              "modifiedUnixNano": 1792523506010754000,
+              "path": "stage-soft-labels.json",
+              "sizeBytes": 3119
+            },
+            {
+              "checksum": "sha256:40dc3a23889f1ed5002f191dad8756a659b61c2cb9773fee333c3d83159326b7",
+              "modifiedUnixNano": 1792523506010754000,
+              "path": "stage-train-student.json",
+              "sizeBytes": 450
+            }
+          ],
+          "finishedAt": 1792523506.2806597,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:0f2413cf82a2e125ff4d0e8a6fa1088a5f1e01869590fe0c0fac1db26fe5356f",
+              "modifiedUnixNano": 1792523506010754000,
+              "path": "stage-load-teacher.json",
+              "sizeBytes": 396
+            },
+            {
+              "checksum": "sha256:76efa687cecdd9571976ce8aedd38b9259ba06ca973d07fe7de9d07785722fdf",
+              "modifiedUnixNano": 1792523506010754000,
+              "path": "stage-soft-labels.json",
+              "sizeBytes": 3119
+            },
+            {
+              "checksum": "sha256:40dc3a23889f1ed5002f191dad8756a659b61c2cb9773fee333c3d83159326b7",
+              "modifiedUnixNano": 1792523506010754000,
+              "path": "stage-train-student.json",
+              "sizeBytes": 450
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11209869384765625,
+              "finishedAt": 1792523506.2806597,
+              "phase": "execution",
+              "startedAt": 1792523506.168561,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-latency",
+          "runId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+          "runtime": "showcase-model-distillation-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523506.168561,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 4,
+            "initialFiles": 3,
+            "modifiedFiles": 0,
+            "outputBytes": 478
+          }
+        },
+        "exitCode": 0,
+        "externalId": "9d891e8bb443de4d28fcc37b7d58bfd73bc6fe08c3869d67c54d8ae96871bc5f",
+        "finishedAt": 1792523506.2806597,
+        "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-latency",
+        "log": "{\"activity\": \"latency\", \"status\": \"success\", \"resultKeys\": [\"studentNanosecondsPerPrediction\", \"checksum\", \"hardware\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-model-distillation-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-latency",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523506.168566,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-latency",
+          "submittedAt": 1792523506.168561
+        },
+        "resourceId": "showcase-model-distillation-local-docker",
+        "runId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "runtimeId": "showcase-model-distillation-local",
+        "startedAt": 1792523506.168561,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-model-distillation-local-89ee6b6444-load-teacher",
+        "artifacts": {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-load-teacher",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:0f2413cf82a2e125ff4d0e8a6fa1088a5f1e01869590fe0c0fac1db26fe5356f",
+              "modifiedUnixNano": 1792523500864754000,
+              "path": "stage-load-teacher.json",
+              "sizeBytes": 396
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:0f2413cf82a2e125ff4d0e8a6fa1088a5f1e01869590fe0c0fac1db26fe5356f",
+              "modifiedUnixNano": 1792523500864754000,
+              "path": "stage-load-teacher.json",
+              "sizeBytes": 396
+            }
+          ],
+          "finishedAt": 1792523500.8709056,
+          "phases": [
+            {
+              "durationSeconds": 0.11479997634887695,
+              "finishedAt": 1792523500.8709056,
+              "phase": "execution",
+              "startedAt": 1792523500.7561057,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-load-teacher",
+          "runId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+          "runtime": "showcase-model-distillation-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523500.7561057,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 1,
+            "initialFiles": 0,
+            "modifiedFiles": 0,
+            "outputBytes": 396
+          }
+        },
+        "exitCode": 0,
+        "externalId": "82b0a7b80f6a1c7f85cef0c7ffb06cb9990824b1c7d8fcad094a91404afe7dc2",
+        "finishedAt": 1792523500.8709056,
+        "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-load-teacher",
+        "log": "{\"activity\": \"load-teacher\", \"status\": \"success\", \"resultKeys\": [\"weight\", \"bias\", \"kind\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-model-distillation-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-load-teacher",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523500.7561176,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-load-teacher",
+          "submittedAt": 1792523500.7561057
+        },
+        "resourceId": "showcase-model-distillation-local-docker",
+        "runId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "runtimeId": "showcase-model-distillation-local",
+        "startedAt": 1792523500.7561057,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-model-distillation-local-89ee6b6444-publish",
+        "artifacts": {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-publish",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:1e6ccb12ab77b65d3ce6af7312be561e4f41da3d2c9cf5f0de11dbdeb6912574",
+              "modifiedUnixNano": 1792523508548754000,
+              "path": "distillation-report.json",
+              "sizeBytes": 224
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:0e6054190e880250e511422537561f4a28e9e647c6fb98474f8a7c4dee303823",
+              "modifiedUnixNano": 1792523508548754000,
+              "path": "stage-publish.json",
+              "sizeBytes": 603
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:c1b83380948ece0c14109908318c2e68c9cfbfe2761c3cfd45aca6edb111141c",
+              "modifiedUnixNano": 1792523508548754000,
+              "path": "student.pkl",
+              "sizeBytes": 50
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:1e6ccb12ab77b65d3ce6af7312be561e4f41da3d2c9cf5f0de11dbdeb6912574",
+              "modifiedUnixNano": 1792523508548754000,
+              "path": "distillation-report.json",
+              "sizeBytes": 224
+            },
+            {
+              "checksum": "sha256:fc43a4dae549edff799902e8737775fbbc0562d6939cfe75646a95b9be8550f3",
+              "modifiedUnixNano": 1792523508241754000,
+              "path": "stage-latency.json",
+              "sizeBytes": 478
+            },
+            {
+              "checksum": "sha256:0f2413cf82a2e125ff4d0e8a6fa1088a5f1e01869590fe0c0fac1db26fe5356f",
+              "modifiedUnixNano": 1792523508120754000,
+              "path": "stage-load-teacher.json",
+              "sizeBytes": 396
+            },
+            {
+              "checksum": "sha256:0e6054190e880250e511422537561f4a28e9e647c6fb98474f8a7c4dee303823",
+              "modifiedUnixNano": 1792523508548754000,
+              "path": "stage-publish.json",
+              "sizeBytes": 603
+            },
+            {
+              "checksum": "sha256:e254c888e3feee237f8552139db20bb66a7379adf627a0dac29a12a1f9a9ba69",
+              "modifiedUnixNano": 1792523508120754000,
+              "path": "stage-quality.json",
+              "sizeBytes": 415
+            },
+            {
+              "checksum": "sha256:76efa687cecdd9571976ce8aedd38b9259ba06ca973d07fe7de9d07785722fdf",
+              "modifiedUnixNano": 1792523508120754000,
+              "path": "stage-soft-labels.json",
+              "sizeBytes": 3119
+            },
+            {
+              "checksum": "sha256:40dc3a23889f1ed5002f191dad8756a659b61c2cb9773fee333c3d83159326b7",
+              "modifiedUnixNano": 1792523508120754000,
+              "path": "stage-train-student.json",
+              "sizeBytes": 450
+            },
+            {
+              "checksum": "sha256:c1b83380948ece0c14109908318c2e68c9cfbfe2761c3cfd45aca6edb111141c",
+              "modifiedUnixNano": 1792523508548754000,
+              "path": "student.pkl",
+              "sizeBytes": 50
+            }
+          ],
+          "finishedAt": 1792523508.5553226,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:fc43a4dae549edff799902e8737775fbbc0562d6939cfe75646a95b9be8550f3",
+              "modifiedUnixNano": 1792523508241754000,
+              "path": "stage-latency.json",
+              "sizeBytes": 478
+            },
+            {
+              "checksum": "sha256:0f2413cf82a2e125ff4d0e8a6fa1088a5f1e01869590fe0c0fac1db26fe5356f",
+              "modifiedUnixNano": 1792523508120754000,
+              "path": "stage-load-teacher.json",
+              "sizeBytes": 396
+            },
+            {
+              "checksum": "sha256:e254c888e3feee237f8552139db20bb66a7379adf627a0dac29a12a1f9a9ba69",
+              "modifiedUnixNano": 1792523508120754000,
+              "path": "stage-quality.json",
+              "sizeBytes": 415
+            },
+            {
+              "checksum": "sha256:76efa687cecdd9571976ce8aedd38b9259ba06ca973d07fe7de9d07785722fdf",
+              "modifiedUnixNano": 1792523508120754000,
+              "path": "stage-soft-labels.json",
+              "sizeBytes": 3119
+            },
+            {
+              "checksum": "sha256:40dc3a23889f1ed5002f191dad8756a659b61c2cb9773fee333c3d83159326b7",
+              "modifiedUnixNano": 1792523508120754000,
+              "path": "stage-train-student.json",
+              "sizeBytes": 450
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11163806915283203,
+              "finishedAt": 1792523508.5553226,
+              "phase": "execution",
+              "startedAt": 1792523508.4436846,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-publish",
+          "runId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+          "runtime": "showcase-model-distillation-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523508.4436846,
+          "summary": {
+            "createdFiles": 3,
+            "deletedFiles": 0,
+            "finalFiles": 8,
+            "initialFiles": 5,
+            "modifiedFiles": 0,
+            "outputBytes": 877
+          }
+        },
+        "exitCode": 0,
+        "externalId": "b231cf9ae9d06e8fe1682c7cc1d8f12beb5348f9e9db187b79aee8ca9a2f9b4e",
+        "finishedAt": 1792523508.5553226,
+        "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-publish",
+        "log": "{\"activity\": \"publish\", \"status\": \"success\", \"resultKeys\": [\"quality\", \"latency\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-model-distillation-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-publish",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523508.4437342,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-publish",
+          "submittedAt": 1792523508.4436846
+        },
+        "resourceId": "showcase-model-distillation-local-docker",
+        "runId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "runtimeId": "showcase-model-distillation-local",
+        "startedAt": 1792523508.4436846,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-model-distillation-local-89ee6b6444-quality",
+        "artifacts": {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-quality",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:e254c888e3feee237f8552139db20bb66a7379adf627a0dac29a12a1f9a9ba69",
+              "modifiedUnixNano": 1792523506283754000,
+              "path": "stage-quality.json",
+              "sizeBytes": 415
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:0f2413cf82a2e125ff4d0e8a6fa1088a5f1e01869590fe0c0fac1db26fe5356f",
+              "modifiedUnixNano": 1792523505988754000,
+              "path": "stage-load-teacher.json",
+              "sizeBytes": 396
+            },
+            {
+              "checksum": "sha256:e254c888e3feee237f8552139db20bb66a7379adf627a0dac29a12a1f9a9ba69",
+              "modifiedUnixNano": 1792523506283754000,
+              "path": "stage-quality.json",
+              "sizeBytes": 415
+            },
+            {
+              "checksum": "sha256:76efa687cecdd9571976ce8aedd38b9259ba06ca973d07fe7de9d07785722fdf",
+              "modifiedUnixNano": 1792523505988754000,
+              "path": "stage-soft-labels.json",
+              "sizeBytes": 3119
+            },
+            {
+              "checksum": "sha256:40dc3a23889f1ed5002f191dad8756a659b61c2cb9773fee333c3d83159326b7",
+              "modifiedUnixNano": 1792523505988754000,
+              "path": "stage-train-student.json",
+              "sizeBytes": 450
+            }
+          ],
+          "finishedAt": 1792523506.2891514,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:0f2413cf82a2e125ff4d0e8a6fa1088a5f1e01869590fe0c0fac1db26fe5356f",
+              "modifiedUnixNano": 1792523505988754000,
+              "path": "stage-load-teacher.json",
+              "sizeBytes": 396
+            },
+            {
+              "checksum": "sha256:76efa687cecdd9571976ce8aedd38b9259ba06ca973d07fe7de9d07785722fdf",
+              "modifiedUnixNano": 1792523505988754000,
+              "path": "stage-soft-labels.json",
+              "sizeBytes": 3119
+            },
+            {
+              "checksum": "sha256:40dc3a23889f1ed5002f191dad8756a659b61c2cb9773fee333c3d83159326b7",
+              "modifiedUnixNano": 1792523505988754000,
+              "path": "stage-train-student.json",
+              "sizeBytes": 450
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11035609245300293,
+              "finishedAt": 1792523506.2891514,
+              "phase": "execution",
+              "startedAt": 1792523506.1787953,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-quality",
+          "runId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+          "runtime": "showcase-model-distillation-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523506.1787953,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 4,
+            "initialFiles": 3,
+            "modifiedFiles": 0,
+            "outputBytes": 415
+          }
+        },
+        "exitCode": 0,
+        "externalId": "28e11993a8c0268720c44e33b6a39a12d85507c0849eec0d3d36d7ff7c3868c2",
+        "finishedAt": 1792523506.2891514,
+        "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-quality",
+        "log": "{\"activity\": \"quality\", \"status\": \"success\", \"resultKeys\": [\"rmse\", \"heldOutSamples\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-model-distillation-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-quality",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523506.1788025,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-quality",
+          "submittedAt": 1792523506.1787953
+        },
+        "resourceId": "showcase-model-distillation-local-docker",
+        "runId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "runtimeId": "showcase-model-distillation-local",
+        "startedAt": 1792523506.1787953,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-model-distillation-local-89ee6b6444-soft-labels",
+        "artifacts": {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-soft-labels",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:76efa687cecdd9571976ce8aedd38b9259ba06ca973d07fe7de9d07785722fdf",
+              "modifiedUnixNano": 1792523502256754000,
+              "path": "stage-soft-labels.json",
+              "sizeBytes": 3119
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:0f2413cf82a2e125ff4d0e8a6fa1088a5f1e01869590fe0c0fac1db26fe5356f",
+              "modifiedUnixNano": 1792523501969754000,
+              "path": "stage-load-teacher.json",
+              "sizeBytes": 396
+            },
+            {
+              "checksum": "sha256:76efa687cecdd9571976ce8aedd38b9259ba06ca973d07fe7de9d07785722fdf",
+              "modifiedUnixNano": 1792523502256754000,
+              "path": "stage-soft-labels.json",
+              "sizeBytes": 3119
+            }
+          ],
+          "finishedAt": 1792523502.2628467,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:0f2413cf82a2e125ff4d0e8a6fa1088a5f1e01869590fe0c0fac1db26fe5356f",
+              "modifiedUnixNano": 1792523501969754000,
+              "path": "stage-load-teacher.json",
+              "sizeBytes": 396
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11014723777770996,
+              "finishedAt": 1792523502.2628467,
+              "phase": "execution",
+              "startedAt": 1792523502.1526995,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-soft-labels",
+          "runId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+          "runtime": "showcase-model-distillation-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523502.1526995,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 3119
+          }
+        },
+        "exitCode": 0,
+        "externalId": "6521a0064c5afd9f89c88741c417a66b5ebff587b1a3ae5650231dc853b8c01c",
+        "finishedAt": 1792523502.2628467,
+        "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-soft-labels",
+        "log": "{\"activity\": \"soft-labels\", \"status\": \"success\", \"resultKeys\": [\"teacher\", \"rows\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-model-distillation-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-soft-labels",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523502.152704,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-soft-labels",
+          "submittedAt": 1792523502.1526995
+        },
+        "resourceId": "showcase-model-distillation-local-docker",
+        "runId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "runtimeId": "showcase-model-distillation-local",
+        "startedAt": 1792523502.1526995,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-model-distillation-local-89ee6b6444-train-student",
+        "artifacts": {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-train-student",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:40dc3a23889f1ed5002f191dad8756a659b61c2cb9773fee333c3d83159326b7",
+              "modifiedUnixNano": 1792523504245754000,
+              "path": "stage-train-student.json",
+              "sizeBytes": 450
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:0f2413cf82a2e125ff4d0e8a6fa1088a5f1e01869590fe0c0fac1db26fe5356f",
+              "modifiedUnixNano": 1792523503973754000,
+              "path": "stage-load-teacher.json",
+              "sizeBytes": 396
+            },
+            {
+              "checksum": "sha256:76efa687cecdd9571976ce8aedd38b9259ba06ca973d07fe7de9d07785722fdf",
+              "modifiedUnixNano": 1792523503973754000,
+              "path": "stage-soft-labels.json",
+              "sizeBytes": 3119
+            },
+            {
+              "checksum": "sha256:40dc3a23889f1ed5002f191dad8756a659b61c2cb9773fee333c3d83159326b7",
+              "modifiedUnixNano": 1792523504245754000,
+              "path": "stage-train-student.json",
+              "sizeBytes": 450
+            }
+          ],
+          "finishedAt": 1792523504.2512248,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:0f2413cf82a2e125ff4d0e8a6fa1088a5f1e01869590fe0c0fac1db26fe5356f",
+              "modifiedUnixNano": 1792523503973754000,
+              "path": "stage-load-teacher.json",
+              "sizeBytes": 396
+            },
+            {
+              "checksum": "sha256:76efa687cecdd9571976ce8aedd38b9259ba06ca973d07fe7de9d07785722fdf",
+              "modifiedUnixNano": 1792523503973754000,
+              "path": "stage-soft-labels.json",
+              "sizeBytes": 3119
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.1048431396484375,
+              "finishedAt": 1792523504.2512248,
+              "phase": "execution",
+              "startedAt": 1792523504.1463816,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-train-student",
+          "runId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+          "runtime": "showcase-model-distillation-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523504.1463816,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 3,
+            "initialFiles": 2,
+            "modifiedFiles": 0,
+            "outputBytes": 450
+          }
+        },
+        "exitCode": 0,
+        "externalId": "be1751ad8cb2d96e369990c46dacbf502418f50b3047939d8a7867ec48031687",
+        "finishedAt": 1792523504.2512248,
+        "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-train-student",
+        "log": "{\"activity\": \"train-student\", \"status\": \"success\", \"resultKeys\": [\"model\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-model-distillation-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-train-student",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523504.1463864,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-train-student",
+          "submittedAt": 1792523504.1463816
+        },
+        "resourceId": "showcase-model-distillation-local-docker",
+        "runId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "runtimeId": "showcase-model-distillation-local",
+        "startedAt": 1792523504.1463816,
+        "status": "completed"
+      }
+    ],
+    "infrastructureRuns": [],
+    "operationEvents": [],
+    "run": {
+      "activityCount": 6,
+      "breakdown": {
+        "computeSeconds": 0.6638832092285156,
+        "interferenceSeconds": 0,
+        "overheadSeconds": 0,
+        "queueSeconds": 0,
+        "transferSeconds": 1.2647123336791992
+      },
+      "completedActivityCount": 6,
+      "cost": 0,
+      "finishedAt": "2026-10-20T19:11:49Z",
+      "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+      "kind": "workflow",
+      "makespanSeconds": 7.799216985702515,
+      "mode": "real",
+      "schedulePlanId": "showcase-model-distillation-local-89ee6b6444-manual-plan-20261020t191140.466308000",
+      "seed": 0,
+      "startedAt": "2026-10-20T19:11:40Z",
+      "status": "completed",
+      "title": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+      "transferredBytes": 16699
+    },
+    "timeline": {
+      "computeMakespanSeconds": 7.799216985702515,
+      "coveredWallSeconds": 2.1138925552368164,
+      "finishedAt": 1792523509,
+      "phases": [
+        {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-load-teacher",
+          "category": "resource-queue",
+          "durationSeconds": 0.12624168395996094,
+          "finishedAt": 1792523500.7561057,
+          "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-load-teacher:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523500.629864,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-load-teacher",
+          "category": "runtime",
+          "durationSeconds": 0.11479997634887695,
+          "finishedAt": 1792523500.8709056,
+          "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-load-teacher:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523500.7561057,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-soft-labels",
+          "category": "resource-queue",
+          "durationSeconds": 0.0038518905639648438,
+          "finishedAt": 1792523501.84879,
+          "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-soft-labels:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523501.844938,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-soft-labels",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.16480207443237305,
+          "finishedAt": 1792523502.013592,
+          "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-soft-labels:transfer-workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-soft-labels-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523501.84879,
+          "status": "completed",
+          "transferId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-soft-labels:transfer-workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-soft-labels-0"
+        },
+        {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-soft-labels",
+          "category": "launch",
+          "durationSeconds": 0.13910746574401855,
+          "finishedAt": 1792523502.1526995,
+          "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-soft-labels:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523502.013592,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-soft-labels",
+          "category": "runtime",
+          "durationSeconds": 0.11014723777770996,
+          "finishedAt": 1792523502.2628467,
+          "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-soft-labels:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523502.1526995,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-train-student",
+          "category": "resource-queue",
+          "durationSeconds": 0.0035827159881591797,
+          "finishedAt": 1792523503.8550751,
+          "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-train-student:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523503.8514924,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-train-student",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.16272330284118652,
+          "finishedAt": 1792523504.0177984,
+          "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-train-student:transfer-workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-train-student-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523503.8550751,
+          "status": "completed",
+          "transferId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-train-student:transfer-workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-train-student-0"
+        },
+        {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-train-student",
+          "category": "launch",
+          "durationSeconds": 0.12858319282531738,
+          "finishedAt": 1792523504.1463816,
+          "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-train-student:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523504.0177984,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-train-student",
+          "category": "runtime",
+          "durationSeconds": 0.1048431396484375,
+          "finishedAt": 1792523504.2512248,
+          "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-train-student:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523504.1463816,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-latency",
+          "category": "resource-queue",
+          "durationSeconds": 0.009078502655029297,
+          "finishedAt": 1792523505.8745236,
+          "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-latency:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523505.8654451,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-quality",
+          "category": "resource-queue",
+          "durationSeconds": 0.005472421646118164,
+          "finishedAt": 1792523505.8720806,
+          "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-quality:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523505.8666081,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-quality",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.16085028648376465,
+          "finishedAt": 1792523506.0329309,
+          "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-quality:transfer-workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-quality-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523505.8720806,
+          "status": "completed",
+          "transferId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-quality:transfer-workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-quality-0"
+        },
+        {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-latency",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.179121732711792,
+          "finishedAt": 1792523506.0536454,
+          "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-latency:transfer-workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-latency-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523505.8745236,
+          "status": "completed",
+          "transferId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-latency:transfer-workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-latency-0"
+        },
+        {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-quality",
+          "category": "launch",
+          "durationSeconds": 0.14586448669433594,
+          "finishedAt": 1792523506.1787953,
+          "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-quality:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523506.0329309,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-latency",
+          "category": "launch",
+          "durationSeconds": 0.11491560935974121,
+          "finishedAt": 1792523506.168561,
+          "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-latency:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523506.0536454,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-latency",
+          "category": "runtime",
+          "durationSeconds": 0.11209869384765625,
+          "finishedAt": 1792523506.2806597,
+          "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-latency:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523506.168561,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-quality",
+          "category": "runtime",
+          "durationSeconds": 0.11035609245300293,
+          "finishedAt": 1792523506.2891514,
+          "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-quality:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523506.1787953,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-publish",
+          "category": "resource-queue",
+          "durationSeconds": 0.003991603851318359,
+          "finishedAt": 1792523507.9278107,
+          "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-publish:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523507.923819,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-publish",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.23764801025390625,
+          "finishedAt": 1792523508.1654587,
+          "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-publish:transfer-workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-publish-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523507.9278107,
+          "status": "completed",
+          "transferId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-publish:transfer-workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-publish-0"
+        },
+        {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-publish",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.35956692695617676,
+          "finishedAt": 1792523508.2873776,
+          "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-publish:transfer-workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-publish-1",
+          "source": "transfer-observation",
+          "startedAt": 1792523507.9278107,
+          "status": "completed",
+          "transferId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-publish:transfer-workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-publish-1"
+        },
+        {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-publish",
+          "category": "launch",
+          "durationSeconds": 0.15630698204040527,
+          "finishedAt": 1792523508.4436846,
+          "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-publish:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523508.2873776,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-model-distillation-local-89ee6b6444-publish",
+          "category": "runtime",
+          "durationSeconds": 0.11163806915283203,
+          "finishedAt": 1792523508.5553226,
+          "id": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000:showcase-model-distillation-local-89ee6b6444-publish:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523508.4436846,
+          "status": "completed"
+        }
+      ],
+      "startedAt": 1792523500,
+      "totals": {
+        "destroySeconds": 0,
+        "executablePreparationSeconds": 0,
+        "launchSeconds": 0.6847777366638184,
+        "provisionSeconds": 0,
+        "resourceQueueSeconds": 0.15221881866455078,
+        "runtimeSeconds": 0.6638832092285156,
+        "startSeconds": 0,
+        "stopSeconds": 0,
+        "validationSeconds": 0,
+        "workspaceTransferSeconds": 1.2647123336791992
+      },
+      "unclassifiedWallSeconds": 6.886107444763184,
+      "wallSeconds": 9
+    },
+    "workspaceLeases": [
+      {
+        "consumerActivityId": "showcase-model-distillation-local-89ee6b6444-publish",
+        "id": "workspace-lease-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-latency-showcase-model-distillation-local-89ee6b6444-publish",
+        "producerActivityId": "showcase-model-distillation-local-89ee6b6444-latency",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:11:48.29682234Z",
+        "runId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "workspaceId": "workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-latency"
+      },
+      {
+        "consumerActivityId": "showcase-model-distillation-local-89ee6b6444-soft-labels",
+        "id": "workspace-lease-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-load-teacher-showcase-model-distillation-local-89ee6b6444-soft-labels",
+        "producerActivityId": "showcase-model-distillation-local-89ee6b6444-load-teacher",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:11:42.016955087Z",
+        "runId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "workspaceId": "workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-load-teacher"
+      },
+      {
+        "consumerActivityId": "showcase-model-distillation-local-89ee6b6444-publish",
+        "id": "workspace-lease-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-quality-showcase-model-distillation-local-89ee6b6444-publish",
+        "producerActivityId": "showcase-model-distillation-local-89ee6b6444-quality",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:11:48.29682234Z",
+        "runId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "workspaceId": "workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-quality"
+      },
+      {
+        "consumerActivityId": "showcase-model-distillation-local-89ee6b6444-train-student",
+        "id": "workspace-lease-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-soft-labels-showcase-model-distillation-local-89ee6b6444-train-student",
+        "producerActivityId": "showcase-model-distillation-local-89ee6b6444-soft-labels",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:11:44.021989254Z",
+        "runId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "workspaceId": "workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-soft-labels"
+      },
+      {
+        "consumerActivityId": "showcase-model-distillation-local-89ee6b6444-latency",
+        "id": "workspace-lease-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-train-student-showcase-model-distillation-local-89ee6b6444-latency",
+        "producerActivityId": "showcase-model-distillation-local-89ee6b6444-train-student",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:11:46.05519288Z",
+        "runId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "workspaceId": "workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-train-student"
+      },
+      {
+        "consumerActivityId": "showcase-model-distillation-local-89ee6b6444-quality",
+        "id": "workspace-lease-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-train-student-showcase-model-distillation-local-89ee6b6444-quality",
+        "producerActivityId": "showcase-model-distillation-local-89ee6b6444-train-student",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:11:46.034911505Z",
+        "runId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "workspaceId": "workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-train-student"
+      }
+    ],
+    "workspaces": [
+      {
+        "activityId": "showcase-model-distillation-local-89ee6b6444-latency",
+        "createdAt": "2026-10-20T19:11:40.608752919Z",
+        "driver": "local",
+        "environmentId": "showcase-model-distillation-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-latency",
+        "fileCount": 4,
+        "id": "workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-latency",
+        "inputBytes": 3965,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:fc43a4dae549edff799902e8737775fbbc0562d6939cfe75646a95b9be8550f3",
+              "path": "stage-latency.json",
+              "sizeBytes": 478
+            },
+            {
+              "digest": "sha256:0f2413cf82a2e125ff4d0e8a6fa1088a5f1e01869590fe0c0fac1db26fe5356f",
+              "path": "stage-load-teacher.json",
+              "sizeBytes": 396
+            },
+            {
+              "digest": "sha256:76efa687cecdd9571976ce8aedd38b9259ba06ca973d07fe7de9d07785722fdf",
+              "path": "stage-soft-labels.json",
+              "sizeBytes": 3119
+            },
+            {
+              "digest": "sha256:40dc3a23889f1ed5002f191dad8756a659b61c2cb9773fee333c3d83159326b7",
+              "path": "stage-train-student.json",
+              "sizeBytes": 450
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:0f2413cf82a2e125ff4d0e8a6fa1088a5f1e01869590fe0c0fac1db26fe5356f",
+              "path": "stage-load-teacher.json",
+              "sizeBytes": 396
+            },
+            {
+              "digest": "sha256:76efa687cecdd9571976ce8aedd38b9259ba06ca973d07fe7de9d07785722fdf",
+              "path": "stage-soft-labels.json",
+              "sizeBytes": 3119
+            },
+            {
+              "digest": "sha256:40dc3a23889f1ed5002f191dad8756a659b61c2cb9773fee333c3d83159326b7",
+              "path": "stage-train-student.json",
+              "sizeBytes": 450
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:0f2413cf82a2e125ff4d0e8a6fa1088a5f1e01869590fe0c0fac1db26fe5356f",
+              "path": "stage-load-teacher.json",
+              "sizeBytes": 396
+            },
+            {
+              "digest": "sha256:76efa687cecdd9571976ce8aedd38b9259ba06ca973d07fe7de9d07785722fdf",
+              "path": "stage-soft-labels.json",
+              "sizeBytes": 3119
+            },
+            {
+              "digest": "sha256:40dc3a23889f1ed5002f191dad8756a659b61c2cb9773fee333c3d83159326b7",
+              "path": "stage-train-student.json",
+              "sizeBytes": 450
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:fc43a4dae549edff799902e8737775fbbc0562d6939cfe75646a95b9be8550f3",
+              "path": "stage-latency.json",
+              "sizeBytes": 478
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-latency",
+        "outputBytes": 478,
+        "pinned": false,
+        "reclaimedBytes": 4443,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:11:48.303720506Z",
+        "resourceId": "showcase-model-distillation-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "runtimeId": "showcase-model-distillation-local",
+        "sealedAt": "2026-10-20T19:11:47.915926381Z",
+        "sizeBytes": 4443,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-latency"
+      },
+      {
+        "activityId": "showcase-model-distillation-local-89ee6b6444-load-teacher",
+        "createdAt": "2026-10-20T19:11:40.608752919Z",
+        "driver": "local",
+        "environmentId": "showcase-model-distillation-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-load-teacher",
+        "fileCount": 1,
+        "id": "workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-load-teacher",
+        "inputBytes": 0,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:0f2413cf82a2e125ff4d0e8a6fa1088a5f1e01869590fe0c0fac1db26fe5356f",
+              "path": "stage-load-teacher.json",
+              "sizeBytes": 396
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:0f2413cf82a2e125ff4d0e8a6fa1088a5f1e01869590fe0c0fac1db26fe5356f",
+              "path": "stage-load-teacher.json",
+              "sizeBytes": 396
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-load-teacher",
+        "outputBytes": 396,
+        "pinned": false,
+        "reclaimedBytes": 396,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:11:42.024125962Z",
+        "resourceId": "showcase-model-distillation-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "runtimeId": "showcase-model-distillation-local",
+        "sealedAt": "2026-10-20T19:11:41.840272712Z",
+        "sizeBytes": 396,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-load-teacher"
+      },
+      {
+        "activityId": "showcase-model-distillation-local-89ee6b6444-publish",
+        "createdAt": "2026-10-20T19:11:40.608752919Z",
+        "driver": "local",
+        "environmentId": "showcase-model-distillation-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-publish",
+        "fileCount": 3,
+        "id": "workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-publish",
+        "inputBytes": 4858,
+        "isFinal": true,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:1e6ccb12ab77b65d3ce6af7312be561e4f41da3d2c9cf5f0de11dbdeb6912574",
+              "path": "distillation-report.json",
+              "sizeBytes": 224
+            },
+            {
+              "digest": "sha256:fc43a4dae549edff799902e8737775fbbc0562d6939cfe75646a95b9be8550f3",
+              "path": "stage-latency.json",
+              "sizeBytes": 478
+            },
+            {
+              "digest": "sha256:0f2413cf82a2e125ff4d0e8a6fa1088a5f1e01869590fe0c0fac1db26fe5356f",
+              "path": "stage-load-teacher.json",
+              "sizeBytes": 396
+            },
+            {
+              "digest": "sha256:0e6054190e880250e511422537561f4a28e9e647c6fb98474f8a7c4dee303823",
+              "path": "stage-publish.json",
+              "sizeBytes": 603
+            },
+            {
+              "digest": "sha256:e254c888e3feee237f8552139db20bb66a7379adf627a0dac29a12a1f9a9ba69",
+              "path": "stage-quality.json",
+              "sizeBytes": 415
+            },
+            {
+              "digest": "sha256:76efa687cecdd9571976ce8aedd38b9259ba06ca973d07fe7de9d07785722fdf",
+              "path": "stage-soft-labels.json",
+              "sizeBytes": 3119
+            },
+            {
+              "digest": "sha256:40dc3a23889f1ed5002f191dad8756a659b61c2cb9773fee333c3d83159326b7",
+              "path": "stage-train-student.json",
+              "sizeBytes": 450
+            },
+            {
+              "digest": "sha256:c1b83380948ece0c14109908318c2e68c9cfbfe2761c3cfd45aca6edb111141c",
+              "path": "student.pkl",
+              "sizeBytes": 50
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:fc43a4dae549edff799902e8737775fbbc0562d6939cfe75646a95b9be8550f3",
+              "path": "stage-latency.json",
+              "sizeBytes": 478
+            },
+            {
+              "digest": "sha256:0f2413cf82a2e125ff4d0e8a6fa1088a5f1e01869590fe0c0fac1db26fe5356f",
+              "path": "stage-load-teacher.json",
+              "sizeBytes": 396
+            },
+            {
+              "digest": "sha256:e254c888e3feee237f8552139db20bb66a7379adf627a0dac29a12a1f9a9ba69",
+              "path": "stage-quality.json",
+              "sizeBytes": 415
+            },
+            {
+              "digest": "sha256:76efa687cecdd9571976ce8aedd38b9259ba06ca973d07fe7de9d07785722fdf",
+              "path": "stage-soft-labels.json",
+              "sizeBytes": 3119
+            },
+            {
+              "digest": "sha256:40dc3a23889f1ed5002f191dad8756a659b61c2cb9773fee333c3d83159326b7",
+              "path": "stage-train-student.json",
+              "sizeBytes": 450
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:fc43a4dae549edff799902e8737775fbbc0562d6939cfe75646a95b9be8550f3",
+              "path": "stage-latency.json",
+              "sizeBytes": 478
+            },
+            {
+              "digest": "sha256:0f2413cf82a2e125ff4d0e8a6fa1088a5f1e01869590fe0c0fac1db26fe5356f",
+              "path": "stage-load-teacher.json",
+              "sizeBytes": 396
+            },
+            {
+              "digest": "sha256:e254c888e3feee237f8552139db20bb66a7379adf627a0dac29a12a1f9a9ba69",
+              "path": "stage-quality.json",
+              "sizeBytes": 415
+            },
+            {
+              "digest": "sha256:76efa687cecdd9571976ce8aedd38b9259ba06ca973d07fe7de9d07785722fdf",
+              "path": "stage-soft-labels.json",
+              "sizeBytes": 3119
+            },
+            {
+              "digest": "sha256:40dc3a23889f1ed5002f191dad8756a659b61c2cb9773fee333c3d83159326b7",
+              "path": "stage-train-student.json",
+              "sizeBytes": 450
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:1e6ccb12ab77b65d3ce6af7312be561e4f41da3d2c9cf5f0de11dbdeb6912574",
+              "path": "distillation-report.json",
+              "sizeBytes": 224
+            },
+            {
+              "digest": "sha256:0e6054190e880250e511422537561f4a28e9e647c6fb98474f8a7c4dee303823",
+              "path": "stage-publish.json",
+              "sizeBytes": 603
+            },
+            {
+              "digest": "sha256:c1b83380948ece0c14109908318c2e68c9cfbfe2761c3cfd45aca6edb111141c",
+              "path": "student.pkl",
+              "sizeBytes": 50
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-publish",
+        "outputBytes": 877,
+        "pinned": false,
+        "reclaimedBytes": 4858,
+        "releaseReason": "inherited inputs pruned",
+        "resourceId": "showcase-model-distillation-local-docker",
+        "retention": "final",
+        "runId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "runtimeId": "showcase-model-distillation-local",
+        "sealedAt": "2026-10-20T19:11:49.876481424Z",
+        "sizeBytes": 877,
+        "state": "sealed",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-publish"
+      },
+      {
+        "activityId": "showcase-model-distillation-local-89ee6b6444-quality",
+        "createdAt": "2026-10-20T19:11:40.608752919Z",
+        "driver": "local",
+        "environmentId": "showcase-model-distillation-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-quality",
+        "fileCount": 4,
+        "id": "workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-quality",
+        "inputBytes": 3965,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:0f2413cf82a2e125ff4d0e8a6fa1088a5f1e01869590fe0c0fac1db26fe5356f",
+              "path": "stage-load-teacher.json",
+              "sizeBytes": 396
+            },
+            {
+              "digest": "sha256:e254c888e3feee237f8552139db20bb66a7379adf627a0dac29a12a1f9a9ba69",
+              "path": "stage-quality.json",
+              "sizeBytes": 415
+            },
+            {
+              "digest": "sha256:76efa687cecdd9571976ce8aedd38b9259ba06ca973d07fe7de9d07785722fdf",
+              "path": "stage-soft-labels.json",
+              "sizeBytes": 3119
+            },
+            {
+              "digest": "sha256:40dc3a23889f1ed5002f191dad8756a659b61c2cb9773fee333c3d83159326b7",
+              "path": "stage-train-student.json",
+              "sizeBytes": 450
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:0f2413cf82a2e125ff4d0e8a6fa1088a5f1e01869590fe0c0fac1db26fe5356f",
+              "path": "stage-load-teacher.json",
+              "sizeBytes": 396
+            },
+            {
+              "digest": "sha256:76efa687cecdd9571976ce8aedd38b9259ba06ca973d07fe7de9d07785722fdf",
+              "path": "stage-soft-labels.json",
+              "sizeBytes": 3119
+            },
+            {
+              "digest": "sha256:40dc3a23889f1ed5002f191dad8756a659b61c2cb9773fee333c3d83159326b7",
+              "path": "stage-train-student.json",
+              "sizeBytes": 450
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:0f2413cf82a2e125ff4d0e8a6fa1088a5f1e01869590fe0c0fac1db26fe5356f",
+              "path": "stage-load-teacher.json",
+              "sizeBytes": 396
+            },
+            {
+              "digest": "sha256:76efa687cecdd9571976ce8aedd38b9259ba06ca973d07fe7de9d07785722fdf",
+              "path": "stage-soft-labels.json",
+              "sizeBytes": 3119
+            },
+            {
+              "digest": "sha256:40dc3a23889f1ed5002f191dad8756a659b61c2cb9773fee333c3d83159326b7",
+              "path": "stage-train-student.json",
+              "sizeBytes": 450
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:e254c888e3feee237f8552139db20bb66a7379adf627a0dac29a12a1f9a9ba69",
+              "path": "stage-quality.json",
+              "sizeBytes": 415
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-quality",
+        "outputBytes": 415,
+        "pinned": false,
+        "reclaimedBytes": 4380,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:11:48.311861631Z",
+        "resourceId": "showcase-model-distillation-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "runtimeId": "showcase-model-distillation-local",
+        "sealedAt": "2026-10-20T19:11:47.920291256Z",
+        "sizeBytes": 4380,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-quality"
+      },
+      {
+        "activityId": "showcase-model-distillation-local-89ee6b6444-soft-labels",
+        "createdAt": "2026-10-20T19:11:40.608752919Z",
+        "driver": "local",
+        "environmentId": "showcase-model-distillation-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-soft-labels",
+        "fileCount": 2,
+        "id": "workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-soft-labels",
+        "inputBytes": 396,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:0f2413cf82a2e125ff4d0e8a6fa1088a5f1e01869590fe0c0fac1db26fe5356f",
+              "path": "stage-load-teacher.json",
+              "sizeBytes": 396
+            },
+            {
+              "digest": "sha256:76efa687cecdd9571976ce8aedd38b9259ba06ca973d07fe7de9d07785722fdf",
+              "path": "stage-soft-labels.json",
+              "sizeBytes": 3119
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:0f2413cf82a2e125ff4d0e8a6fa1088a5f1e01869590fe0c0fac1db26fe5356f",
+              "path": "stage-load-teacher.json",
+              "sizeBytes": 396
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:0f2413cf82a2e125ff4d0e8a6fa1088a5f1e01869590fe0c0fac1db26fe5356f",
+              "path": "stage-load-teacher.json",
+              "sizeBytes": 396
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:76efa687cecdd9571976ce8aedd38b9259ba06ca973d07fe7de9d07785722fdf",
+              "path": "stage-soft-labels.json",
+              "sizeBytes": 3119
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-soft-labels",
+        "outputBytes": 3119,
+        "pinned": false,
+        "reclaimedBytes": 3515,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:11:44.028355671Z",
+        "resourceId": "showcase-model-distillation-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "runtimeId": "showcase-model-distillation-local",
+        "sealedAt": "2026-10-20T19:11:43.846866296Z",
+        "sizeBytes": 3515,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-soft-labels"
+      },
+      {
+        "activityId": "showcase-model-distillation-local-89ee6b6444-train-student",
+        "createdAt": "2026-10-20T19:11:40.608752919Z",
+        "driver": "local",
+        "environmentId": "showcase-model-distillation-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-train-student",
+        "fileCount": 3,
+        "id": "workspace-showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000-showcase-model-distillation-local-89ee6b6444-train-student",
+        "inputBytes": 3515,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:0f2413cf82a2e125ff4d0e8a6fa1088a5f1e01869590fe0c0fac1db26fe5356f",
+              "path": "stage-load-teacher.json",
+              "sizeBytes": 396
+            },
+            {
+              "digest": "sha256:76efa687cecdd9571976ce8aedd38b9259ba06ca973d07fe7de9d07785722fdf",
+              "path": "stage-soft-labels.json",
+              "sizeBytes": 3119
+            },
+            {
+              "digest": "sha256:40dc3a23889f1ed5002f191dad8756a659b61c2cb9773fee333c3d83159326b7",
+              "path": "stage-train-student.json",
+              "sizeBytes": 450
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:0f2413cf82a2e125ff4d0e8a6fa1088a5f1e01869590fe0c0fac1db26fe5356f",
+              "path": "stage-load-teacher.json",
+              "sizeBytes": 396
+            },
+            {
+              "digest": "sha256:76efa687cecdd9571976ce8aedd38b9259ba06ca973d07fe7de9d07785722fdf",
+              "path": "stage-soft-labels.json",
+              "sizeBytes": 3119
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:0f2413cf82a2e125ff4d0e8a6fa1088a5f1e01869590fe0c0fac1db26fe5356f",
+              "path": "stage-load-teacher.json",
+              "sizeBytes": 396
+            },
+            {
+              "digest": "sha256:76efa687cecdd9571976ce8aedd38b9259ba06ca973d07fe7de9d07785722fdf",
+              "path": "stage-soft-labels.json",
+              "sizeBytes": 3119
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:40dc3a23889f1ed5002f191dad8756a659b61c2cb9773fee333c3d83159326b7",
+              "path": "stage-train-student.json",
+              "sizeBytes": 450
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-train-student",
+        "outputBytes": 450,
+        "pinned": false,
+        "reclaimedBytes": 3965,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:11:46.059101005Z",
+        "resourceId": "showcase-model-distillation-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+        "runtimeId": "showcase-model-distillation-local",
+        "sealedAt": "2026-10-20T19:11:45.86148688Z",
+        "sizeBytes": 3965,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000/showcase-model-distillation-local-89ee6b6444-train-student"
+      }
+    ]
+  },
+  "runId": "showcase-model-distillation-local-89ee6b6444-run-20261020t191140.471480000",
+  "status": "completed",
+  "workflowId": "showcase-model-distillation-local-89ee6b6444"
+}

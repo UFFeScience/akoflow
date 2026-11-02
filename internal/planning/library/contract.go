@@ -37,7 +37,10 @@ type Simulation struct { Model string; DurationSeconds float64; FLOPs float64; P
 type Dependency struct { ActivityID string; DependsOnActivityID string }
 type Scope struct { ID string; EnvironmentVersionIDs []string }
 type Resource struct {
- ID string; Name string; EnvironmentVersionID string; ExecutionTarget string; BootOverheadSeconds float64; ContainerOverheadSeconds float64; Type string; ProviderID string; Tier string; Region string; CPUCores int; CPUCapacity float64; MemoryBytes int64; StorageBytes int64
+ ID string; Name string; EnvironmentVersionID string; ExecutionTarget string
+ BootOverheadSeconds float64; ContainerOverheadSeconds float64
+ Type string; ProviderID string; Tier string; Region string
+ CPUCores int; CPUCapacity float64; MemoryBytes int64; StorageBytes int64
  Metadata map[string]any
  ComputeSpeedup float64; PricePerSecond float64; Schedulable bool
 }

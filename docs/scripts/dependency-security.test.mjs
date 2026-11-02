@@ -54,3 +54,27 @@ test("normal nested patterns, ranges and filesystem glob consumers remain compat
     ["src/a.js", "src/b.ts"],
   );
 });
+
+for (const entry of ["deepmerge/dist/cjs.js", "deepmerge/dist/umd.js"]) {
+  test(`${entry} preserves prototypes with attacker-controlled own keys`, () => {
+    const merge = require(entry);
+    const payload = JSON.parse(
+      '{"__proto__":{"poisoned":true},"nested":{"safe":1}}',
+    );
+    for (const target of [{}, Object.create(null), payload]) {
+      const result = merge(target, payload);
+      assert.equal(Object.getPrototypeOf(result), Object.prototype);
+      assert.equal(result.poisoned, undefined);
+      assert.equal({}.poisoned, undefined);
+      assert.deepEqual(result.nested, { safe: 1 });
+    }
+    const symbol = Symbol("field");
+    assert.deepEqual(merge({ a: [1] }, { a: [2], [symbol]: 3 }), {
+      a: [1, 2],
+      [symbol]: 3,
+    });
+    assert.deepEqual(merge({ a: { b: 1 } }, { a: { c: 2 } }), {
+      a: { b: 1, c: 2 },
+    });
+  });
+}

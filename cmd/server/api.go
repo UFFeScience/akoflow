@@ -24,6 +24,7 @@ import (
 	databaseprovenance "github.com/UFFeScience/akoflow/internal/infrastructure/database/provenance"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/instancearchive"
 	planningplugin "github.com/UFFeScience/akoflow/internal/infrastructure/plugins/planning"
+	"github.com/UFFeScience/akoflow/internal/mcpcontrol"
 	"github.com/UFFeScience/akoflow/internal/provider"
 	ansiblecloud "github.com/UFFeScience/akoflow/internal/provider/cloud/ansible"
 	gcpcloud "github.com/UFFeScience/akoflow/internal/provider/cloud/gcp"
@@ -133,6 +134,9 @@ func buildAPI(
 		ReadOnly:            storage.readOnly,
 		Restart:             restart,
 		FactoryReset: func(_ context.Context) error {
+			if err := mcpcontrol.ScheduleReset(mcpcontrol.StateDirectory(settings.MCPStateDirectory, instancearchive.ResolveDatabasePath())); err != nil {
+				return fmt.Errorf("schedule MCP credential reset: %w", err)
+			}
 			if err := database.ScheduleFactoryReset(instancearchive.ResolveDatabasePath()); err != nil {
 				return err
 			}

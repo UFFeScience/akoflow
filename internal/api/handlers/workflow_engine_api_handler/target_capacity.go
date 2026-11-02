@@ -23,7 +23,9 @@ func targetSchedulingCapacity(target domain.CloudCapacityTarget) (float64, error
 // launch overheads. A changed machine shape requires fresh calibration.
 func preserveTargetCalibration(target *domain.Resource, existing []domain.Resource) {
 	for _, old := range existing {
-		if old.ID != target.ID || old.EnvironmentVersionID != target.EnvironmentVersionID || old.CPUCores != target.CPUCores || old.MemoryBytes != target.MemoryBytes || old.Metadata["providerMachineType"] != target.Metadata["providerMachineType"] {
+		if old.ID != target.ID || old.EnvironmentVersionID != target.EnvironmentVersionID ||
+			old.CPUCores != target.CPUCores || old.MemoryBytes != target.MemoryBytes ||
+			old.Metadata["providerMachineType"] != target.Metadata["providerMachineType"] {
 			continue
 		}
 		target.ComputeSpeedup = old.ComputeSpeedup

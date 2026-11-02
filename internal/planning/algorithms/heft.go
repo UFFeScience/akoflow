@@ -47,13 +47,7 @@ func (HEFT) Schedule(ctx context.Context, request domain.PlanningRequest, _ map[
 	if len(resources) == 0 {
 		return fmt.Errorf("execution scope has no schedulable resources")
 	}
-	candidates := make([]heftResource, 0, len(resources))
-	for _, resource := range resources {
-		candidates = append(candidates, heftResource{
-			resource: resource,
-			cores:    cores(resource),
-		})
-	}
+	candidates := heftCandidates(resources)
 	preds := predecessors(request.Workflow)
 	bytes := dataBytes(request.Workflow)
 	state := initialState()
@@ -298,4 +292,16 @@ func heftOrder(request domain.PlanningRequest) ([]domain.Activity, error) {
 	}
 	sort.SliceStable(topological, func(i, j int) bool { return ranks[topological[i].ID] > ranks[topological[j].ID] })
 	return topological, nil
+}
+
+func heftCandidates(resources []domain.Resource) []heftResource {
+	candidates := make([]heftResource, 0, len(resources))
+	for _, resource := range resources {
+		candidates = append(candidates, heftResource{
+			resource: resource,
+			cores:    cores(resource),
+		})
+	}
+
+	return candidates
 }

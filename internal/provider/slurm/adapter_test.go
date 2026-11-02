@@ -534,7 +534,11 @@ func TestConnectionProberChecksSlurmThroughSSH(t *testing.T) {
 func TestBatchRootWorkspaceUsesSelectedSharedFilesystem(t *testing.T) {
 	executor := &executorFake{output: []byte("12345\n")}
 	adapter := NewWithConfig(executor, Config{ScriptDirectory: t.TempDir(), SubmitFromStdin: true})
-	execution := domain.ActivityExecutionContext{Run: domain.ExecutionRun{ID: "run"}, Activity: domain.Activity{ID: "root", Command: domain.ActivityCommand{Entrypoint: "true"}}, Resource: domain.Resource{ID: "diablo", Metadata: map[string]any{"homeDirectory": "/beegfs/scientist"}}}
+	execution := domain.ActivityExecutionContext{Run: domain.ExecutionRun{ID: "run"},
+		Activity: domain.Activity{ID: "root",
+			Command: domain.ActivityCommand{Entrypoint: "true"}},
+		Resource: domain.Resource{ID: "diablo",
+			Metadata: map[string]any{"homeDirectory": "/beegfs/scientist"}}}
 	handle, e := adapter.Start(context.Background(), execution)
 	if e != nil {
 		t.Fatal(e)

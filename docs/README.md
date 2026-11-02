@@ -43,3 +43,13 @@ normal nested patterns, ranges, and micromatch compatibility before building
 the site. Other advisories must be fixed independently; this patch is not a
 blanket audit exemption. Remove it only after an upstream depth-safe release
 is available and the regression tests still pass.
+
+The version-bound `patches/deepmerge+4.3.1.patch` mitigates
+[GHSA-gcqx-w48m-w2h4](https://github.com/advisories/GHSA-gcqx-w48m-w2h4),
+which has no published patched version. Both CommonJS and UMD entry points use
+own data properties when copying or merging keys, so an own `__proto__` key
+cannot invoke the inherited prototype setter. Regression tests cover malicious
+target and source objects, null-prototype targets, nested merges, arrays and
+symbols. The exact advisory remains visible in npm audit; every other advisory
+continues to fail CI. Remove the patch and its exact advisory exception after a
+fixed upstream release passes the same tests.

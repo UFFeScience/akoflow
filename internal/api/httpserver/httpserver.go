@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
+	"github.com/UFFeScience/akoflow/internal/mcpbridge"
 	"net"
 	"net/http"
 	"os/exec"
@@ -73,16 +75,8 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 	mux.HandleFunc("POST /akoflow-api/provenance/sql/", http_config.KernelHandler(workflowEngine.QueryProvenanceSQL))
 	mux.HandleFunc("GET /akoflow-api/provenance/sql/schema/", http_config.KernelHandler(workflowEngine.GetProvenanceSchema))
 	mux.HandleFunc("POST /akoflow-api/provenance/sql/explain/", http_config.KernelHandler(workflowEngine.ExplainProvenanceSQL))
-	mux.HandleFunc("GET /akoflow-api/console-commands/", http_config.KernelHandler(workflowEngine.ListConsoleCommands))
-	mux.HandleFunc("POST /akoflow-api/console-commands/", http_config.KernelHandler(workflowEngine.ExecuteConsoleCommand))
-	mux.HandleFunc("POST /akoflow-api/console-sessions/", http_config.KernelHandler(workflowEngine.OpenConsoleSession))
-	mux.HandleFunc("GET /akoflow-api/console-sessions/", http_config.KernelHandler(workflowEngine.ListConsoleSessions))
-	mux.HandleFunc("DELETE /akoflow-api/console-sessions/{sessionId}/", http_config.KernelHandler(workflowEngine.CloseConsoleSession))
-	mux.HandleFunc("GET /akoflow-api/console-sessions/{sessionId}/log/", http_config.KernelHandler(workflowEngine.ExportConsoleSessionLog))
-	mux.HandleFunc("GET /akoflow-api/console-sessions/{sessionId}/stream/", workflowEngine.StreamConsoleSession)
-	mux.HandleFunc("GET /akoflow-api/ssh-keys/", http_config.KernelHandler(workflowEngine.ListSSHKeys))
-	mux.HandleFunc("POST /akoflow-api/ssh-keys/", http_config.KernelHandler(workflowEngine.GenerateSSHKey))
-	mux.HandleFunc("POST /akoflow-api/ssh-keys/import/", http_config.KernelHandler(workflowEngine.ImportSSHKey))
+	registerConsoleRoutes(mux, workflowEngine)
+	registerSSHKeyRoutes(mux, workflowEngine)
 	mux.HandleFunc("POST /akoflow-api/kubernetes-tokens/", http_config.KernelHandler(workflowEngine.SaveKubernetesToken))
 	mux.HandleFunc("PUT /akoflow-api/instance/", http_config.KernelHandler(workflowEngine.SaveInstance))
 	mux.HandleFunc("POST /akoflow-api/factory-reset/", http_config.KernelHandler(workflowEngine.FactoryReset))
@@ -226,11 +220,20 @@ func Serve(ctx context.Context, address string, workflowEngine *workflow_engine_
 }
 
 func ServeSecure(ctx context.Context, address string, workflowEngine *workflow_engine_api_handler.Handler, security SecurityOptions) error {
-	handler := AllowCORSFor(SecureAPI(readOnlyAPI(NewMux(workflowEngine), workflowEngine), security), security.AllowedOrigins)
+	var handler http.Handler = AllowCORSFor(SecureAPI(readOnlyAPI(NewMux(workflowEngine), workflowEngine), security), security.AllowedOrigins)
+	settings := config.Load()
+	handler, closeMCP, err := managedMCPRoutes(handler, address, security, settings)
+	if err != nil {
+		return err
+	}
+	defer closeMCP()
+
 	server := &http.Server{Addr: address, Handler: handler, ReadHeaderTimeout: 10 * time.Second, IdleTimeout: 60 * time.Second}
-	go shutdownWhenCanceled(ctx, server)
-	err := server.ListenAndServe()
+	shutdownDone := make(chan struct{})
+	go func() { shutdownWhenCanceled(ctx, server); close(shutdownDone) }()
+	err = server.ListenAndServe()
 	if errors.Is(err, http.ErrServerClosed) {
+		<-shutdownDone
 		return nil
 	}
 	return err
@@ -263,4 +266,45 @@ func shutdownWhenCanceled(ctx context.Context, server *http.Server) {
 	shutdownContext, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	_ = server.Shutdown(shutdownContext)
+}
+
+func newMCPHandler(address string, security SecurityOptions, settings config.Settings) (http.Handler, func(), error) {
+	host, port, err := net.SplitHostPort(address)
+	if err != nil {
+		return nil, nil, err
+	}
+	if host == "" || host == "0.0.0.0" || host == "::" {
+		host = "127.0.0.1"
+	}
+	bridge, err := mcpbridge.New(mcpbridge.Options{
+		APIURL:         "http://" + net.JoinHostPort(host, port) + "/akoflow-api",
+		APIToken:       security.BearerToken,
+		Permissions:    mcpbridge.Permission(settings.MCPPermissions),
+		StateDirectory: settings.MCPStateDirectory,
+	})
+	if err != nil {
+		return nil, nil, fmt.Errorf("MCP configuration: %w", err)
+	}
+	handler, err := bridge.HTTPHandler(mcpbridge.HTTPOptionsFromEnvironment(settings.MCPToken, settings.MCPAllowedOrigins))
+	if err != nil {
+		bridge.Close()
+		return nil, nil, err
+	}
+	return handler, func() { bridge.Close() }, nil
+}
+
+func registerConsoleRoutes(mux *http.ServeMux, workflowEngine *workflow_engine_api_handler.Handler) {
+	mux.HandleFunc("GET /akoflow-api/console-commands/", http_config.KernelHandler(workflowEngine.ListConsoleCommands))
+	mux.HandleFunc("POST /akoflow-api/console-commands/", http_config.KernelHandler(workflowEngine.ExecuteConsoleCommand))
+	mux.HandleFunc("POST /akoflow-api/console-sessions/", http_config.KernelHandler(workflowEngine.OpenConsoleSession))
+	mux.HandleFunc("GET /akoflow-api/console-sessions/", http_config.KernelHandler(workflowEngine.ListConsoleSessions))
+	mux.HandleFunc("DELETE /akoflow-api/console-sessions/{sessionId}/", http_config.KernelHandler(workflowEngine.CloseConsoleSession))
+	mux.HandleFunc("GET /akoflow-api/console-sessions/{sessionId}/log/", http_config.KernelHandler(workflowEngine.ExportConsoleSessionLog))
+	mux.HandleFunc("GET /akoflow-api/console-sessions/{sessionId}/stream/", workflowEngine.StreamConsoleSession)
+}
+
+func registerSSHKeyRoutes(mux *http.ServeMux, workflowEngine *workflow_engine_api_handler.Handler) {
+	mux.HandleFunc("GET /akoflow-api/ssh-keys/", http_config.KernelHandler(workflowEngine.ListSSHKeys))
+	mux.HandleFunc("POST /akoflow-api/ssh-keys/", http_config.KernelHandler(workflowEngine.GenerateSSHKey))
+	mux.HandleFunc("POST /akoflow-api/ssh-keys/import/", http_config.KernelHandler(workflowEngine.ImportSSHKey))
 }

@@ -8,7 +8,7 @@ import (
 	"github.com/UFFeScience/akoflow/internal/planning/library"
 )
 
-func (h *Handler) WithAlgorithmLibrary(service *library.Service) { h.algorithmLibrary = service }
+func (h *Handler) WithAlgorithmLibrary(service *library.Catalog) { h.algorithmLibrary = service }
 func (h *Handler) ListSchedulerLibrary(w http.ResponseWriter, r *http.Request) {
 	if h.algorithmLibrary == nil {
 		writeError(w, 503, fmt.Errorf("algorithm library is unavailable"))
@@ -73,9 +73,9 @@ func (h *Handler) SaveSchedulerPlugin(w http.ResponseWriter, r *http.Request) {
 		writeError(w, 422, err)
 		return
 	}
-	status := 200
+	status := http.StatusOK
 	if r.Method == http.MethodPost {
-		status = 201
+		status = http.StatusCreated
 	}
 	writeJSON(w, status, saved)
 }

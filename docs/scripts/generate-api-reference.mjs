@@ -373,6 +373,12 @@ const runnableSimulationRequests = {
 // These notes come from handler calls and the credential/operation services,
 // not from JSON tags alone. Keep them scoped to fields the service validates.
 const verifiedRequestNotes = {
+  "POST /akoflow-api/scheduling-algorithms/":
+    "Submit a scheduler package with a unique id and trusted Go source. The writable daemon compiles it and returns the saved package with 201 Created. Compilation diagnostics are recorded on the package; inspect its status before planning. Installed code runs with daemon permissions.",
+  "PUT /akoflow-api/scheduling-algorithms/{algorithmId}/":
+    "The package id must match algorithmId. The daemon compiles a new revision; a failed edit retains the last active revision and records diagnostics. Inspect status and compileError in the returned package. Native algorithms cannot be replaced.",
+  "POST /akoflow-api/scheduling-algorithms/validate/":
+    "Send source and optional compile (default false). Returns validity, formatted source and diagnostics without saving or registering a scheduler. Compilation checks types but does not execute the scheduler. The instance must be writable.",
   "POST /akoflow-api/cloud-operations/{operationId}/reconcile-orphan/":
     "No JSON body is required. Only an unstarted queued workflow operation with no queue job can be reconciled; its owning workflow must already be completed, failed or cancelled. The server marks that orphan operation cancelled and returns it with `200 OK`. Unknown operations return `404`; an active, published or otherwise ineligible operation returns `409`. This route does not cancel an active infrastructure job.",
   "POST /akoflow-api/execution-runs/{runId}/preserve-cloud-workspaces/":
@@ -695,6 +701,17 @@ function extractSuccessStatuses(body, handler) {
     /http\.(Status(?:OK|Created|Accepted|NoContent))/g,
   )) {
     if (statusNames[match[1]]) statuses.add(statusNames[match[1]]);
+  }
+  const numericStatuses = {
+    200: "200 OK",
+    201: "201 Created",
+    202: "202 Accepted",
+    204: "204 No Content",
+  };
+  for (const match of body.matchAll(
+    /\bwriteJSON\(w,\s*(200|201|202|204)\s*,/g,
+  )) {
+    statuses.add(numericStatuses[match[1]]);
   }
   if (/\b(?:writeList|writeItem)\(/.test(body)) statuses.add("200 OK");
   // These handlers write response bytes without WriteHeader: Go uses 200.

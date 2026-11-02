@@ -169,7 +169,7 @@ type Dependencies struct {
 }
 
 type Handler struct {
-	algorithmLibrary    *library.Service
+	algorithmLibrary    *library.Catalog
 	environments        ports.EnvironmentCatalog
 	workflows           ports.WorkflowStore
 	plans               ports.PlanStore

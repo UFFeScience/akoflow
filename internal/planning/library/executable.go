@@ -25,7 +25,7 @@ func (b *boundedOutput) Write(p []byte) (int, error) {
 	}
 	return b.Buffer.Write(p)
 }
-func (s *Service) compile(ctx context.Context, p Package) (string, error) {
+func (s *Catalog) compile(ctx context.Context, p Package) (string, error) {
 	ctx, cancel := context.WithTimeout(ctx, 60*time.Second)
 	defer cancel()
 	binary, err := filepath.Abs(s.binary(p))

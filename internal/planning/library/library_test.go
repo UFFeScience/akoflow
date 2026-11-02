@@ -34,7 +34,12 @@ func TestPluginCompilesRunsPersistsAndKeepsLastWorkingRevision(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	p := Package{ID: "custom-test", Name: "Custom test", Objective: "time", Source: `func Schedule(input Input)([]Plan,error){return []Plan{{ID:"test",WorkflowVersionID:input.Request.Workflow.ID,ExecutionScopeID:input.Request.ExecutionScope.ID,Predicted:Metrics{MakespanSeconds:2,Feasible:true},Assignments:[]Assignment{{ActivityID:"activity",ResourceID:"resource",PredictedFinishAt:2}}}},nil}`}
+	p := Package{ID: "custom-test",
+		Name:      "Custom test",
+		Objective: "time",
+		Source: `func Schedule(input Input)([]Plan,error){return []Plan{{ID:"test",WorkflowVersionID:input.Request.Workflow.ID,ExecutionS` +
+			`copeID:input.Request.ExecutionScope.ID,Predicted:Metrics{MakespanSeconds:2,Feasible:true},Assignments:[]Assignment{{Acti` +
+			`vityID:"activity",ResourceID:"resource",PredictedFinishAt:2}}}},nil}`}
 	saved, err := s.Save(ctx, p)
 	if err != nil || saved.Status != "ready" {
 		t.Fatalf("save=%+v err=%v", saved, err)

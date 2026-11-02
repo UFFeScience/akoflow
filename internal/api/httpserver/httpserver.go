@@ -73,13 +73,7 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 	mux.HandleFunc("POST /akoflow-api/provenance/sql/", http_config.KernelHandler(workflowEngine.QueryProvenanceSQL))
 	mux.HandleFunc("GET /akoflow-api/provenance/sql/schema/", http_config.KernelHandler(workflowEngine.GetProvenanceSchema))
 	mux.HandleFunc("POST /akoflow-api/provenance/sql/explain/", http_config.KernelHandler(workflowEngine.ExplainProvenanceSQL))
-	mux.HandleFunc("GET /akoflow-api/console-commands/", http_config.KernelHandler(workflowEngine.ListConsoleCommands))
-	mux.HandleFunc("POST /akoflow-api/console-commands/", http_config.KernelHandler(workflowEngine.ExecuteConsoleCommand))
-	mux.HandleFunc("POST /akoflow-api/console-sessions/", http_config.KernelHandler(workflowEngine.OpenConsoleSession))
-	mux.HandleFunc("GET /akoflow-api/console-sessions/", http_config.KernelHandler(workflowEngine.ListConsoleSessions))
-	mux.HandleFunc("DELETE /akoflow-api/console-sessions/{sessionId}/", http_config.KernelHandler(workflowEngine.CloseConsoleSession))
-	mux.HandleFunc("GET /akoflow-api/console-sessions/{sessionId}/log/", http_config.KernelHandler(workflowEngine.ExportConsoleSessionLog))
-	mux.HandleFunc("GET /akoflow-api/console-sessions/{sessionId}/stream/", workflowEngine.StreamConsoleSession)
+	registerConsoleRoutes(mux, workflowEngine)
 	mux.HandleFunc("GET /akoflow-api/ssh-keys/", http_config.KernelHandler(workflowEngine.ListSSHKeys))
 	mux.HandleFunc("POST /akoflow-api/ssh-keys/", http_config.KernelHandler(workflowEngine.GenerateSSHKey))
 	mux.HandleFunc("POST /akoflow-api/ssh-keys/import/", http_config.KernelHandler(workflowEngine.ImportSSHKey))
@@ -154,8 +148,6 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 	mux.HandleFunc("POST /akoflow-api/build-contexts/", http_config.KernelHandler(workflowEngine.SaveBuildContext))
 	mux.HandleFunc("POST /akoflow-api/artifact-builds/", http_config.KernelHandler(workflowEngine.CreateArtifactBuild))
 	mux.HandleFunc("POST /akoflow-api/artifacts/docker/", http_config.KernelHandler(workflowEngine.RegisterDockerArtifact))
-	mux.HandleFunc("GET /akoflow-api/docker-hub/search/", http_config.KernelHandler(workflowEngine.SearchDockerHub))
-	mux.HandleFunc("GET /akoflow-api/docker-hub/tags/", http_config.KernelHandler(workflowEngine.DockerHubTags))
 	mux.HandleFunc("GET /akoflow-api/artifact-builds/{buildId}/", http_config.KernelHandler(workflowEngine.GetArtifactBuild))
 	mux.HandleFunc("GET /akoflow-api/artifacts/{artifactId}/builds/", http_config.KernelHandler(workflowEngine.ListArtifactBuilds))
 	mux.HandleFunc("GET /akoflow-api/artifact-builds/{buildId}/runs/", http_config.KernelHandler(workflowEngine.ListBuildRuns))
@@ -263,4 +255,14 @@ func shutdownWhenCanceled(ctx context.Context, server *http.Server) {
 	shutdownContext, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	_ = server.Shutdown(shutdownContext)
+}
+
+func registerConsoleRoutes(mux *http.ServeMux, workflowEngine *workflow_engine_api_handler.Handler) {
+	mux.HandleFunc("GET /akoflow-api/console-commands/", http_config.KernelHandler(workflowEngine.ListConsoleCommands))
+	mux.HandleFunc("POST /akoflow-api/console-commands/", http_config.KernelHandler(workflowEngine.ExecuteConsoleCommand))
+	mux.HandleFunc("POST /akoflow-api/console-sessions/", http_config.KernelHandler(workflowEngine.OpenConsoleSession))
+	mux.HandleFunc("GET /akoflow-api/console-sessions/", http_config.KernelHandler(workflowEngine.ListConsoleSessions))
+	mux.HandleFunc("DELETE /akoflow-api/console-sessions/{sessionId}/", http_config.KernelHandler(workflowEngine.CloseConsoleSession))
+	mux.HandleFunc("GET /akoflow-api/console-sessions/{sessionId}/log/", http_config.KernelHandler(workflowEngine.ExportConsoleSessionLog))
+	mux.HandleFunc("GET /akoflow-api/console-sessions/{sessionId}/stream/", workflowEngine.StreamConsoleSession)
 }

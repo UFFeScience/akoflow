@@ -225,45 +225,8 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 	running := make(map[string]domain.ActivityHandle)
 	tasks := make(map[string]domain.TaskExecution)
 	attempts := make(map[string]int)
-	if request.Recovery != nil {
-		reader, ok := s.executions.(interface {
-			ListTasks(context.Context, string) ([]domain.TaskExecution, error)
-		})
-		if !ok {
-			return domain.ExecutionTrace{}, fmt.Errorf("execution repository does not support recovery")
-		}
-		previous, loadErr := reader.ListTasks(ctx, request.Run.ID)
-		if loadErr != nil {
-			return domain.ExecutionTrace{}, fmt.Errorf("load prior activity attempts: %w", loadErr)
-		}
-		reusable := make(map[string]bool, len(request.Recovery.ReuseActivityIDs))
-		for _, activityID := range request.Recovery.ReuseActivityIDs {
-			reusable[activityID] = true
-		}
-		latest := make(map[string]domain.TaskExecution)
-		for _, task := range previous {
-			if task.Attempt > attempts[task.ActivityID] {
-				attempts[task.ActivityID] = task.Attempt
-				latest[task.ActivityID] = task
-			}
-		}
-		if store := s.workspaceStore(); store != nil {
-			workspaces, workspaceErr := store.ListWorkspaces(ctx, request.Run.ID)
-			if workspaceErr != nil {
-				return domain.ExecutionTrace{}, fmt.Errorf("load prior activity workspaces: %w", workspaceErr)
-			}
-			available := make(map[string]bool, len(workspaces))
-			for _, workspace := range workspaces {
-				available[workspace.ActivityID] = workspace.State != domain.WorkspaceReleased && workspace.State != domain.WorkspaceFailed
-			}
-			reconcileReusableWorkspaces(activities, predecessors, reusable, available)
-		}
-		for _, task := range latest {
-			if task.Status == domain.TaskCompleted && reusable[task.ActivityID] {
-				tasks[task.ActivityID], completed[task.ActivityID] = task, task
-				request.RuntimeAllocations[task.ActivityID] = recoveredAllocation(task)
-			}
-		}
+	if err := s.restoreActivityAttempts(ctx, request, activities, predecessors, attempts, tasks, completed); err != nil {
+		return domain.ExecutionTrace{}, err
 	}
 	transfers := make([]domain.DataTransfer, 0)
 	type allocationResult struct {
@@ -377,6 +340,58 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 		}
 	}
 	return completedTrace(request, tasks, transfers), nil
+}
+
+func (s *Supervisor) restoreActivityAttempts(
+	ctx context.Context,
+	request ports.ExecutionRequest,
+	activities map[string]domain.Activity,
+	predecessors map[string][]string,
+	attempts map[string]int,
+	tasks, completed map[string]domain.TaskExecution,
+) error {
+	if request.Recovery == nil {
+		return nil
+	}
+	reader, ok := s.executions.(interface {
+		ListTasks(context.Context, string) ([]domain.TaskExecution, error)
+	})
+	if !ok {
+		return fmt.Errorf("execution repository does not support recovery")
+	}
+	previous, loadErr := reader.ListTasks(ctx, request.Run.ID)
+	if loadErr != nil {
+		return fmt.Errorf("load prior activity attempts: %w", loadErr)
+	}
+	reusable := make(map[string]bool, len(request.Recovery.ReuseActivityIDs))
+	for _, activityID := range request.Recovery.ReuseActivityIDs {
+		reusable[activityID] = true
+	}
+	latest := make(map[string]domain.TaskExecution)
+	for _, task := range previous {
+		if task.Attempt > attempts[task.ActivityID] {
+			attempts[task.ActivityID] = task.Attempt
+			latest[task.ActivityID] = task
+		}
+	}
+	if store := s.workspaceStore(); store != nil {
+		workspaces, workspaceErr := store.ListWorkspaces(ctx, request.Run.ID)
+		if workspaceErr != nil {
+			return fmt.Errorf("load prior activity workspaces: %w", workspaceErr)
+		}
+		available := make(map[string]bool, len(workspaces))
+		for _, workspace := range workspaces {
+			available[workspace.ActivityID] = workspace.State != domain.WorkspaceReleased && workspace.State != domain.WorkspaceFailed
+		}
+		reconcileReusableWorkspaces(activities, predecessors, reusable, available)
+	}
+	for _, task := range latest {
+		if task.Status == domain.TaskCompleted && reusable[task.ActivityID] {
+			tasks[task.ActivityID], completed[task.ActivityID] = task, task
+			request.RuntimeAllocations[task.ActivityID] = recoveredAllocation(task)
+		}
+	}
+	return nil
 }
 
 func reconcileReusableWorkspaces(

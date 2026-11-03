@@ -11,6 +11,7 @@ require (
 	github.com/modelcontextprotocol/go-sdk v1.7.0
 	github.com/stretchr/testify v1.9.0
 	golang.org/x/crypto v0.52.0
+	mvdan.cc/sh/v3 v3.12.0
 )
 
 require (

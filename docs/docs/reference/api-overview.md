@@ -92,6 +92,7 @@ The root health check returns `ok`. Preflight reports server, Docker, and BuildK
 | `GET` | `/machine-configurations/{configurationId}/` | Read a configuration |
 | `POST` | `/machine-configurations/{configurationId}/versions/` | Add a configuration version |
 | `POST` | `/machine-configuration-validations/` | Validate playbook YAML |
+| `POST` | `/shell-command-validations/` | Validate POSIX sh syntax without executing the command |
 | `GET` | `/environments/{environmentId}/cloud-catalog/` | Read cached provider catalog |
 | `POST` | `/environments/{environmentId}/cloud-catalog/refresh/` | Refresh provider catalog |
 
@@ -303,3 +304,25 @@ curl --fail-with-body \
 ```
 
 Use `POST /provenance/sql/explain/` to inspect the planned query before running it. The result is a JSON projection of the rows; there is no envelope.
+
+## Shell command validation
+
+`POST /akoflow-api/shell-command-validations/` accepts a JSON object with a
+`command` string (up to 64 KiB). It parses POSIX sh syntax without executing
+commands, expanding variables or command substitutions, or checking whether
+programs and files exist. Desktop uses this endpoint in workflow Command fields
+and checks all commands again before submitting a workflow.
+
+A completed validation returns HTTP 200 with `valid` and `diagnostics`. Each
+diagnostic contains a `message` and, when available, one-based `line` and `column`
+positions. Empty commands, comment-only scripts, NUL bytes, unsupported Bash
+syntax, and oversized commands return `valid: false`. Malformed requests return
+HTTP 400. The workflow creation API remains a separate operation.
+
+```json
+{ "command": "echo hello | sort" }
+```
+
+```json
+{ "valid": true, "diagnostics": [] }
+```

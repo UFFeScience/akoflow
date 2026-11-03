@@ -7251,6 +7251,21 @@
     }
   },
   {
+    "name": "validate_shell_command",
+    "method": "POST",
+    "path": "/akoflow-api/shell-command-validations/",
+    "handler": "ValidateShellCommand",
+    "description": "validate shell command. POST /akoflow-api/shell-command-validations/. Uses the daemon API and its domain validation.",
+    "body": {
+      "properties": {
+        "command": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
     "name": "workspace_storage_budget",
     "method": "GET",
     "path": "/akoflow-api/storages/{storageId}/workspace-budget/",

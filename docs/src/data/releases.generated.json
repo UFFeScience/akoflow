@@ -1,0 +1,1546 @@
+{
+  "updatedAt": "2026-11-02T23:57:52Z",
+  "releases": [
+    {
+      "id": 432000997,
+      "tag_name": "v1.0.12",
+      "name": "AkôFlow 1.0.12",
+      "body": "## AkôFlow 1.0.12\n\nThis release integrates the daemon and Desktop improvements on matching frozen `v1.0.12` source tags.\n\n### Changes\n\n- Managed MCP connections for Codex, Claude Desktop, Claude Code and other AI apps, with separate permissions, enable/pause, credential rotation and revocation. See the [MCP setup guide](https://akoflow.com/docs/reference/mcp).\n- Docker Hub image discovery and digest-pinned SIF imports through the daemon.\n- Native algorithm inspection, editable versioned Go scheduling plugins and the documented MOHEFT Pareto plugin.\n- Safer execution cancellation and explicit recovery, exact producer allocation restoration, bounded SSH lookup retries and direct cloud console commands.\n- Dependency security updates, consistent API documentation and tested prototype protection for the documentation dependency without an upstream fix.\n- Correct shutdown of Kubernetes activity metrics sampling, preserving final metrics, artifact manifests and activity exit status.\n\n### Install or update\n\nDownload the package for your system below:\n\n- **macOS:** universal `.dmg` for installation, with the `.zip` used by the updater.\n- **Windows x64:** `setup.exe` installer or the separate `portable.exe`.\n- **Linux x64:** `.AppImage` or `.deb`.\n\nDocker Desktop is required on macOS and Windows. Linux requires Docker Engine with the Compose v2 plugin. Desktop downloads and verifies the matching runtime archives from this release and loads them into local Docker. Daemon and BuildKit archives are supplied for both Linux amd64 and arm64.\n\n### Validation\n\n- All integrated pull requests and the final daemon/Desktop checks passed; the documentation was deployed successfully.\n- The complete release workflow passed for Windows x64, macOS universal, Linux x64 and both runtime architectures.\n- Updater SHA512 manifests were checked against the generated packages. The downloaded amd64 runtime archives passed their SHA256 checks.\n- The actual released amd64 daemon was started in an isolated Docker instance. Native scheduling algorithms were discovered, MOHEFT compiled inside the image, and live Docker Hub search returned results.\n- The official MCP SDK probe and an independent external protocol client discovered **150 administration tools** and read daemon identity. Revoked credentials were rejected.\n\n[Release build and provenance](https://github.com/UFFeScience/akoflow/actions/runs/41529065790) · [Downloads and installation guide](https://akoflow.com/docs/downloads)\n",
+      "published_at": "2026-11-02T21:53:10Z",
+      "created_at": "2026-11-02T21:31:05Z",
+      "prerelease": false,
+      "assets": [
+        {
+          "name": "latest.yml",
+          "size": 378
+        },
+        {
+          "name": "akoflow-runtime-v1.0.12-linux-arm64.sha256",
+          "size": 212
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.12-win-x64-portable.exe",
+          "size": 149099415
+        },
+        {
+          "name": "akoflow-runtime-v1.0.12-linux-amd64.sha256",
+          "size": 212
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.12-win-x64-setup.exe.blockmap",
+          "size": 155835
+        },
+        {
+          "name": "akoflow-buildkit-v1.0.12-linux-amd64.tar",
+          "size": 109739520
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.12-mac-universal.zip",
+          "size": 223325006
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.12-mac-universal.dmg.blockmap",
+          "size": 235629
+        },
+        {
+          "name": "latest-mac.yml",
+          "size": 549
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.12-mac-universal.dmg",
+          "size": 225738397
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.12-win-x64-setup.exe",
+          "size": 149391734
+        },
+        {
+          "name": "akoflow-daemon-v1.0.12-linux-arm64.tar",
+          "size": 344379392
+        },
+        {
+          "name": "latest-linux.yml",
+          "size": 580
+        },
+        {
+          "name": "akoflow-buildkit-v1.0.12-linux-arm64.tar",
+          "size": 103481344
+        },
+        {
+          "name": "akoflow-daemon-v1.0.12-linux-amd64.tar",
+          "size": 365901312
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.12-linux-amd64.deb",
+          "size": 138146340
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.12-mac-universal.zip.blockmap",
+          "size": 232509
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.12-linux-x86_64.AppImage",
+          "size": 191134936
+        }
+      ]
+    },
+    {
+      "id": 419741861,
+      "tag_name": "v1.0.11",
+      "name": "AkôFlow 1.0.11",
+      "body": "## AkôFlow 1.0.11\n\n### Performance and execution inspection\n- Paginate execution history before joining activity and infrastructure aggregates.\n- Load workflow and environment summaries for catalogs and selectors; fetch complete DAGs only when needed.\n- Load execution logs, events, workspaces, and file catalogs on demand.\n- Fetch one activity at a time and paginate lifecycle events and infrastructure history.\n- Avoid overlapping monitor requests and duplicate cloud event reads.\n\n### Documentation\n- Add illustrated guides for the first local workflow execution and the Montage 050 scientific experiment, with downloadable examples and provenance.\n- Document the new API read models and filters.\n\n### Maintenance\n- Update build dependencies and verify the existing dependency security mitigations.\n\n## Installation\nDocker Desktop is required on macOS and Windows; Linux requires Docker Engine and Compose v2.\n- macOS: open the universal `.dmg` and move AkôFlow Desktop to Applications.\n- Windows: use the x64 setup installer or portable executable.\n- Linux: use the x64 `.AppImage` or `.deb`.\n\nThe daemon and BuildKit archives are loaded locally by Desktop. Updater manifests and runtime checksums are verified by the release workflow. Both application sources are frozen at tag `v1.0.11`.\n",
+      "published_at": "2026-10-21T15:40:33Z",
+      "created_at": "2026-10-21T15:28:15Z",
+      "prerelease": false,
+      "assets": [
+        {
+          "name": "akoflow-runtime-v1.0.11-linux-amd64.sha256",
+          "size": 212
+        },
+        {
+          "name": "latest-mac.yml",
+          "size": 549
+        },
+        {
+          "name": "akoflow-runtime-v1.0.11-linux-arm64.sha256",
+          "size": 212
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.11-win-x64-portable.exe",
+          "size": 148974743
+        },
+        {
+          "name": "akoflow-buildkit-v1.0.11-linux-amd64.tar",
+          "size": 109739520
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.11-win-x64-setup.exe",
+          "size": 149267077
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.11-win-x64-setup.exe.blockmap",
+          "size": 156095
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.11-linux-x86_64.AppImage",
+          "size": 191180970
+        },
+        {
+          "name": "akoflow-daemon-v1.0.11-linux-amd64.tar",
+          "size": 363883520
+        },
+        {
+          "name": "akoflow-daemon-v1.0.11-linux-arm64.tar",
+          "size": 342538240
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.11-linux-amd64.deb",
+          "size": 133609108
+        },
+        {
+          "name": "latest-linux.yml",
+          "size": 580
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.11-mac-universal.zip",
+          "size": 282929016
+        },
+        {
+          "name": "latest.yml",
+          "size": 378
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.11-mac-universal.dmg.blockmap",
+          "size": 293261
+        },
+        {
+          "name": "akoflow-buildkit-v1.0.11-linux-arm64.tar",
+          "size": 103481344
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.11-mac-universal.zip.blockmap",
+          "size": 293473
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.11-mac-universal.dmg",
+          "size": 285202888
+        }
+      ]
+    },
+    {
+      "id": 413285306,
+      "tag_name": "v1.0.10",
+      "name": "AkôFlow 1.0.10",
+      "body": "## AkôFlow 1.0.10\n\nThis release integrates the execution, planning, transfer and Desktop improvements validated for the 1.0.10 release.\n\n- Shared planning/SimGrid materialization stages, whole-workspace byte accounting and explicit calibration provenance.\n- Per-dependency routing: mandatory cloud ↔ HPC relay; authenticated eligible cloud peers; proven shared HPC storage; exact-instance local copies.\n- Verified compressed snapshots, reader-safe archive reuse, streaming extraction and conflict-safe consumer barriers.\n- Safer recovery, exact cloud-generation SSH trust, bounded Slurm reconciliation and explicit CPU-capacity admission.\n- Workflow-filtered execution pagination, Desktop navigation and runtime-version pinning.\n- Runnable local workflow examples and verified physical output manifests.\n- Dependency security updates and reproducible depth-limit mitigation for the unpatched upstream braces advisory.\n\n### Validation and limitations\n\nGo tests, native SimGrid tests, Desktop build/regressions and documentation checks were validated. Scientific profiles retain measured-versus-estimated provenance; this release does not claim global ±20% prediction accuracy. Recovered references are not independent cold-run benchmarks.\n\nUpstream GHSA-vfj7-8cjw-p6xm has no patched braces version. A version-bound, fail-closed local patch is applied on installation, and CI verifies malicious patterns, direct AST depth and normal glob compatibility. The original version/advisory remains documented; the audit gate rejects other advisories.\n\n### Functioning workflow screenshots\n\nThese are preserved reference screenshots of completed local Docker workflows, not newly executed cloud benchmarks.\n\n**Completed ML workflow: five activities completed, with dependency staging visible.**\n\n![Completed ML workflow](https://github.com/UFFeScience/akoflow/releases/download/v1.0.10/showcase-ml-workflow.png)\n\n**RAG generated files: observed outputs with sizes and SHA-256 checksums.**\n\n![Verified RAG generated files](https://github.com/UFFeScience/akoflow/releases/download/v1.0.10/showcase-rag-generated-files.png)\n\nScreenshot integrity is provided in the attached screenshots.sha256 file.\n\n\n### Reproducible packaging\n\nApplication source tags were not moved. The reviewed [packaging recipe](https://github.com/UFFeScience/akoflow/blob/68cbe07abab79706566a3e20705c68e898f90653/.github/workflows/gh-akf-new-release.yaml) rebuilds the frozen tags with distinct Windows setup/portable names and validates updater SHA-512 values against the distributed packages before upload. Core application code remains the tagged source; the packaging correction is explicit rather than hidden by rewriting a tag.\n\n\n### Installation\n\nDocker Desktop is required on macOS and Windows; Linux requires Docker Engine and Compose v2. Use the universal macOS DMG, the Windows portable executable or the separate setup installer, and the Linux AppImage or Debian package. Runtime archives are loaded locally by Desktop. Packages follow the project's unsigned-build configuration.\n",
+      "published_at": "2026-10-15T00:35:52Z",
+      "created_at": "2026-10-14T23:59:20Z",
+      "prerelease": false,
+      "assets": [
+        {
+          "name": "showcase-rag-generated-files.png",
+          "size": 35075
+        },
+        {
+          "name": "showcase-ml-workflow.png",
+          "size": 168079
+        },
+        {
+          "name": "screenshots.sha256",
+          "size": 190
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.10-win-x64-setup.exe",
+          "size": 149265120
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.10-mac-universal.zip",
+          "size": 282928748
+        },
+        {
+          "name": "akoflow-daemon-v1.0.10-linux-arm64.tar",
+          "size": 342493696
+        },
+        {
+          "name": "akoflow-daemon-v1.0.10-linux-amd64.tar",
+          "size": 363836416
+        },
+        {
+          "name": "akoflow-buildkit-v1.0.10-linux-arm64.tar",
+          "size": 103481344
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.10-linux-x86_64.AppImage",
+          "size": 191177033
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.10-mac-universal.dmg",
+          "size": 285199919
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.10-win-x64-portable.exe",
+          "size": 148972789
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.10-linux-amd64.deb",
+          "size": 133617220
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.10-win-x64-setup.exe.blockmap",
+          "size": 154901
+        },
+        {
+          "name": "akoflow-buildkit-v1.0.10-linux-amd64.tar",
+          "size": 109739520
+        },
+        {
+          "name": "latest.yml",
+          "size": 378
+        },
+        {
+          "name": "latest-mac.yml",
+          "size": 549
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.10-mac-universal.dmg.blockmap",
+          "size": 291108
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.10-mac-universal.zip.blockmap",
+          "size": 292705
+        },
+        {
+          "name": "akoflow-runtime-v1.0.10-linux-arm64.sha256",
+          "size": 212
+        },
+        {
+          "name": "akoflow-runtime-v1.0.10-linux-amd64.sha256",
+          "size": 212
+        },
+        {
+          "name": "latest-linux.yml",
+          "size": 580
+        }
+      ]
+    },
+    {
+      "id": 392497198,
+      "tag_name": "v1.0.9",
+      "name": "v1.0.9",
+      "body": "## Install AkôFlow Desktop\n\nAkôFlow Desktop requires Docker Desktop on macOS and Windows, or Docker Engine with the Compose v2 plugin on Linux. Download the matching asset below:\n\n- **macOS:** open the universal `.dmg`, drag AkôFlow Desktop to Applications, and launch it.\n- **Windows:** run the x64 portable `.exe` asset without an installation wizard.\n- **Linux:** run the x64 `.AppImage` after `chmod +x`, or install the `.deb` with `sudo apt install ./Akoflow-Desktop-*.deb`.\n\nThe matching source is the Git tag `v1.0.9`. The runtime Docker archives in this release are loaded locally by Desktop; AkôFlow does not publish daemon or BuildKit packages to a container registry.\n\n\n## What's Changed\n* Complete installation walkthrough and infrastructure tutorials by @ovvesley in https://github.com/UFFeScience/akoflow/pull/40\n* Fix mobile documentation menu height by @ovvesley in https://github.com/UFFeScience/akoflow/pull/41\n* fix: update vulnerable dependencies and remove legacy docs stack by @ovvesley in https://github.com/UFFeScience/akoflow/pull/42\n* Fix mobile documentation menu visibility by @ovvesley in https://github.com/UFFeScience/akoflow/pull/44\n* Fix mobile navigation on direct GitHub Pages URLs by @ovvesley in https://github.com/UFFeScience/akoflow/pull/45\n* Align AkôFlow documentation narrative and examples by @ovvesley in https://github.com/UFFeScience/akoflow/pull/43\n* feat: materialize 22 AkôFlow showcases by @ovvesley in https://github.com/UFFeScience/akoflow/pull/46\n* docs: publish runnable showcase examples by @ovvesley in https://github.com/UFFeScience/akoflow/pull/47\n* docs: expose complete runnable showcase bundles by @ovvesley in https://github.com/UFFeScience/akoflow/pull/48\n* docs: publish verified showcase execution evidence by @ovvesley in https://github.com/UFFeScience/akoflow/pull/49\n* docs: publish complete legacy showcase bundles by @ovvesley in https://github.com/UFFeScience/akoflow/pull/50\n* docs: explain transfer relay strategies by @ovvesley in https://github.com/UFFeScience/akoflow/pull/51\n* docs: align transfer relay guide with English layout by @ovvesley in https://github.com/UFFeScience/akoflow/pull/52\n* docs: align transfer diagrams with visual system by @ovvesley in https://github.com/UFFeScience/akoflow/pull/53\n\n\n**Full Changelog**: https://github.com/UFFeScience/akoflow/compare/v1.0.8...v1.0.9",
+      "published_at": "2026-09-20T16:34:16Z",
+      "created_at": "2026-09-20T16:24:58Z",
+      "prerelease": false,
+      "assets": [
+        {
+          "name": "latest.yml",
+          "size": 363
+        },
+        {
+          "name": "latest-mac.yml",
+          "size": 545
+        },
+        {
+          "name": "latest-linux.yml",
+          "size": 576
+        },
+        {
+          "name": "builder-debug.yml",
+          "size": 922
+        },
+        {
+          "name": "akoflow-runtime-v1.0.9-linux-amd64.sha256",
+          "size": 210
+        },
+        {
+          "name": "akoflow-buildkit-v1.0.9-linux-arm64.tar",
+          "size": 103481344
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.9-mac-universal.dmg",
+          "size": 280633316
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.9-mac-universal.zip",
+          "size": 278294889
+        },
+        {
+          "name": "akoflow-daemon-v1.0.9-linux-arm64.tar",
+          "size": 341994496
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.9-win-x64.exe",
+          "size": 148603010
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.9-mac-universal.dmg.blockmap",
+          "size": 287297
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.9-win-x64.exe.blockmap",
+          "size": 155310
+        },
+        {
+          "name": "akoflow-daemon-v1.0.9-linux-amd64.tar",
+          "size": 363298816
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.9-mac-universal.zip.blockmap",
+          "size": 288069
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.9-linux-amd64.deb",
+          "size": 132442480
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.9-linux-x86_64.AppImage",
+          "size": 189672752
+        },
+        {
+          "name": "akoflow-runtime-v1.0.9-linux-arm64.sha256",
+          "size": 210
+        },
+        {
+          "name": "akoflow-buildkit-v1.0.9-linux-amd64.tar",
+          "size": 109739520
+        }
+      ]
+    },
+    {
+      "id": 387466117,
+      "tag_name": "v1.0.8",
+      "name": "v1.0.8",
+      "body": "## Install AkôFlow Desktop\n\nAkôFlow Desktop requires Docker Desktop on macOS and Windows, or Docker Engine with the Compose v2 plugin on Linux. Download the matching asset below:\n\n- **macOS:** open the universal `.dmg`, drag AkôFlow Desktop to Applications, and launch it.\n- **Windows:** run the x64 installer `.exe`, or use the portable `.exe` without installation.\n- **Linux:** run the x64 `.AppImage` after `chmod +x`, or install the `.deb` with `sudo apt install ./Akoflow-Desktop-*.deb`.\n\nThe matching source is the Git tag `v1.0.8`. The runtime Docker archives in this release are loaded locally by Desktop; AkôFlow does not publish daemon or BuildKit packages to a container registry.\n\n\n**Full Changelog**: https://github.com/UFFeScience/akoflow/compare/v1.0.7...v1.0.8",
+      "published_at": "2026-09-12T05:29:54Z",
+      "created_at": "2026-09-12T05:17:07Z",
+      "prerelease": false,
+      "assets": [
+        {
+          "name": "latest.yml",
+          "size": 363
+        },
+        {
+          "name": "builder-debug.yml",
+          "size": 922
+        },
+        {
+          "name": "akoflow-daemon-v1.0.8-linux-arm64.tar",
+          "size": 345005056
+        },
+        {
+          "name": "latest-linux.yml",
+          "size": 576
+        },
+        {
+          "name": "akoflow-buildkit-v1.0.8-linux-amd64.tar",
+          "size": 109739520
+        },
+        {
+          "name": "akoflow-runtime-v1.0.8-linux-arm64.sha256",
+          "size": 210
+        },
+        {
+          "name": "akoflow-daemon-v1.0.8-linux-amd64.tar",
+          "size": 365896704
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.8-mac-universal.zip.blockmap",
+          "size": 286942
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.8-win-x64.exe",
+          "size": 147843124
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.8-mac-universal.zip",
+          "size": 277159093
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.8-linux-x86_64.AppImage",
+          "size": 188508203
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.8-mac-universal.dmg",
+          "size": 279466249
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.8-linux-amd64.deb",
+          "size": 131728780
+        },
+        {
+          "name": "akoflow-buildkit-v1.0.8-linux-arm64.tar",
+          "size": 103481344
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.8-mac-universal.dmg.blockmap",
+          "size": 283502
+        },
+        {
+          "name": "akoflow-runtime-v1.0.8-linux-amd64.sha256",
+          "size": 210
+        },
+        {
+          "name": "latest-mac.yml",
+          "size": 545
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.8-win-x64.exe.blockmap",
+          "size": 153530
+        }
+      ]
+    },
+    {
+      "id": 308110508,
+      "tag_name": "v1.0.2",
+      "name": "AkôFlow v0.9.2",
+      "body": "# AkôFlow v0.9.2\r\n\r\n\u003e **AkôFlow** is a scientific workflow management platform for multi-cloud and HPC environments.\r\n\u003e This release delivers updates across all modules — engine, desktop, control plane, and standalone bundle.\r\n\r\n---\r\n\r\n## What's new\r\n\r\n\u003cdetails open\u003e\r\n\u003csummary\u003e\u003cstrong\u003eWorkflow Engine\u003c/strong\u003e\u003c/summary\u003e\r\n\r\n- fix: handle errors when retrieving pending workflows and ensure repositories are initialized\r\n- Revise README.md to streamline content\r\n- chore: update base image to golang:1.23-alpine\r\n- chore: remove submodules\r\n- feat: add submodules\r\n- Update README.md\r\n- Update README.md\r\n- feat: enhance provenance graph functionality with interactive filters and improved data handling\r\n- refactor: remove nc command usage for HTTP requests in storage monitoring scripts\r\n- Merge branch 'process-graph-backend' of https://github.com/UFFeScience/akoflow\r\n- fix: update sidebar title to \"AkôFlow\"\r\n- fix: standardize title in admin templates to \"AkôFlow\"\r\n- Merge pull request #32 from UFFeScience/plafrim\r\n- feat: add script extraction for AkôFlow server and handlers\r\n- feat: enhance runtime ID retrieval and add duplicate removal logic\r\n\r\n\u003c/details\u003e\r\n\r\n\u003cdetails open\u003e\r\n\u003csummary\u003e\u003cstrong\u003eDesktop App\u003c/strong\u003e\u003c/summary\u003e\r\n\r\n- feat: implement AkôFlow container management and diagnostics\r\n- fix: update version number to 1.0.0 in package.json\r\n- fix: use ad-hoc signing for macOS ARM build to prevent damaged app error\r\n- fix: update product name and improve build configuration\r\n- Add initial styles and build script for renderer\r\n- fix: move electron to devDependencies in desktop package.json\r\n- fix: sync package-lock.json and add Docker layer cache to CI\r\n- Fix spelling of \"AkoFlow\" to \"AkôFlow\" across multiple files and update related messages for consistency\r\n- Add AkoFlow container management features and update UI components\r\n- Enhance CI/CD workflow by adding QEMU setup for cross-platform emulation and specifying target platforms for Docker builds\r\n- Fix title typo in index.html and update visual styles for improved layout and responsiveness\r\n- Add CI/CD workflow for Docker image build and publish; update README and package.json for desktop app\r\n- Add initial styles and Docker configuration for the application\r\n\r\n\u003c/details\u003e\r\n\r\n\u003cdetails open\u003e\r\n\u003csummary\u003e\u003cstrong\u003eControl Plane API\u003c/strong\u003e\u003c/summary\u003e\r\n\r\n- Refactor AkôFlow Local Installer and add NVIDIA Flare Federated Learning template\r\n- feat: Implement AkôFlow multicloud setup with Ansible playbooks and Terraform integration\r\n- feat: Add support for configurable Ansible forks in playbook execution\r\n- feat: Enhance Ansible playbook handling with improved task status tracking and SSH readiness checks\r\n- feat: Add task host status tracking for Ansible playbook runs\r\n- feat: Implement Ansible Playbook Services\r\n- fix: Update parameter type in AnsibleProcessRunnerService and improve temporary key file handling\r\n- fix: downgrade PHP version from 8.5 to 8.4 in Dockerfile\r\n- chore: use base image akoflow/base-control-plane to skip rebuilding dependencies\r\n- fix: Update PHP version from 8.3 to 8.4 in Dockerfile\r\n- chore: Remove CI/CD workflow for Docker Hub publishing\r\n- fix: Ensure Redis extension is installed and enabled in Dockerfile\r\n- fix: Correct cache directory path and update environment variable handling in Terraform services\r\n- feat: Enhance local AkôFlow installation with Kubernetes support and cleanup tasks\r\n- feat: Add support for teardown playbooks in Ansible configurations and update related functionality\r\n\r\n\u003c/details\u003e\r\n\r\n\u003cdetails open\u003e\r\n\u003csummary\u003e\u003cstrong\u003eControl Plane UI\u003c/strong\u003e\u003c/summary\u003e\r\n\r\n- Implement feature X to enhance user experience and fix bug Y in module Z\r\n- feat: rename Activities tab to Playbooks in EnvironmentTabs component\r\n- chore: clean up empty code change sections in the changes log\r\n- feat: add ActivityExecutionDetails component and integrate with ActivitiesTab; enhance DeploymentPhasePipeline and DeploymentsTab for detailed execution view\r\n- refactor: remove Ansible playbook support and rename related components\r\n- feat: remove CI/CD workflow for Docker Hub build and publish\r\n- feat: enhance deployment and provider handling with improved status and name sanitization\r\n- feat: add teardown playbook support to environment templates\r\n- feat: enhance dashboard and onboarding with local provider setup checks and environment creation flow\r\n- feat: add local provider setup functionality to onboarding process\r\n- feat: add SSH connection variables and health check resource for remote execution\r\n- feat: add credential management components and hooks\r\n- feat: enhance runbooks tab with playbook YAML viewer and toggle functionality\r\n- feat: implement runbook logs functionality and enhance logs tab with runbook run support\r\n- feat: add runbook management functionality\r\n\r\n\u003c/details\u003e\r\n\r\n---\r\n\r\n## AkôFlow Desktop downloads\r\n\r\n| Platform | Architecture | File |\r\n|---|---|---|\r\n| macOS | Apple Silicon (arm64) | `AkôFlow Desktop-*-arm64.dmg` |\r\n| macOS | Intel (x64) | `AkôFlow Desktop-*.dmg` |\r\n| Windows | x64 | `AkôFlow Desktop Setup *.exe` |\r\n| Linux | x64 | `AkôFlow Desktop-*.AppImage` |\r\n\r\n\u003e **macOS note:** If the app is blocked by Gatekeeper, run:\r\n\u003e ```\r\n\u003e xattr -cr /Applications/AkôFlow\\ Desktop.app\r\n\u003e ```\r\n\r\n---\r\n\r\n## Architecture overview\r\n\r\n```\r\n┌─────────────────────────────────────────────────┐\r\n│                   AkôFlow v1.0.2                     │\r\n├──────────────┬──────────────┬───────────────────┤\r\n│   Desktop    │ Control Plane│  Workflow Engine  │\r\n│  (Electron)  │ API  │  UI   │   (Go binary /    │\r\n│  mac/win/lnx │(PHP) │(Next) │   Docker)         │\r\n└──────────────┴──────┴───────┴───────────────────┘\r\n          ↕                           ↕\r\n┌─────────────────────┐   ┌──────────────────────┐\r\n│  akoflow/akoflow    │   │  Multi-cloud / HPC   │\r\n│  (all-in-one bundle)│   │  AWS · GCP · Azure   │\r\n└─────────────────────┘   └──────────────────────┘\r\n```\r\n\r\n---\r\n\r\n## Resources\r\n\r\n| | Link |\r\n|---|---|\r\n| Documentation | https://uffescience.github.io/akoflow/ |\r\n| Project site  | https://akoflow.com/ |\r\n| Docker Hub    | https://hub.docker.com/u/akoflow |\r\n| Issues        | https://github.com/UFFeScience/akoflow/issues |\r\n| Source (engine) | https://github.com/UFFeScience/akoflow-workflow-engine |\r\n| Source (desktop) | https://github.com/UFFeScience/akoflow-desktop |\r\n| Source (control plane) | https://github.com/UFFeScience/akoflow-deployment-control-plane |\r\n| Source (control plane UI) | https://github.com/UFFeScience/akoflow-deployment-control-plane-ui |\r\n\r\n---\r\n\r\n*Released by [AkôFlow CI](https://github.com/UFFeScience/akoflow/actions) · tag `v1.0.2`*\r\n",
+      "published_at": "2026-04-13T00:24:19Z",
+      "created_at": "2026-09-12T02:45:08Z",
+      "prerelease": false,
+      "assets": [
+        {
+          "name": "akoflow-engine_1.0.2_linux_arm64.tar.gz",
+          "size": 16809320
+        },
+        {
+          "name": "akoflow-engine_1.0.2_darwin_amd64.tar.gz",
+          "size": 12670801
+        },
+        {
+          "name": "akoflow-engine_1.0.2_windows_amd64.zip",
+          "size": 12896816
+        },
+        {
+          "name": "akoflow-engine_1.0.2_linux_amd64.tar.gz",
+          "size": 17233579
+        },
+        {
+          "name": "akoflow-engine_1.0.2_checksums.txt",
+          "size": 1006
+        },
+        {
+          "name": "akoflow-engine_1.0.2_darwin_arm64.tar.gz",
+          "size": 12034832
+        },
+        {
+          "name": "server.Dockerfile",
+          "size": 1101
+        },
+        {
+          "name": "Dockerfile",
+          "size": 2630
+        },
+        {
+          "name": "Akoflow.Desktop.Setup.1.0.0.exe",
+          "size": 104560952
+        },
+        {
+          "name": "Akoflow.Desktop-1.0.0.dmg",
+          "size": 129400685
+        },
+        {
+          "name": "supervisord.conf",
+          "size": 1788
+        },
+        {
+          "name": "php-fpm-pool.conf",
+          "size": 309
+        },
+        {
+          "name": "nginx.conf",
+          "size": 1182
+        },
+        {
+          "name": "Akoflow.Desktop-1.0.0-arm64.dmg",
+          "size": 124197126
+        },
+        {
+          "name": "Akoflow.Desktop-1.0.0.AppImage",
+          "size": 126834579
+        },
+        {
+          "name": "entrypoint.sh",
+          "size": 1339
+        },
+        {
+          "name": "akoflow-server_1.0.2_windows_amd64.exe",
+          "size": 14361088
+        },
+        {
+          "name": "ako-install.sh",
+          "size": 21014
+        },
+        {
+          "name": "akoflow-client_1.0.2_darwin_arm64",
+          "size": 8874178
+        },
+        {
+          "name": "akoflow-client_1.0.2_darwin_amd64",
+          "size": 9200816
+        },
+        {
+          "name": "control-plane.Dockerfile",
+          "size": 1137
+        },
+        {
+          "name": "akoflow-server_1.0.2_linux_arm64",
+          "size": 22741588
+        },
+        {
+          "name": "akoflow-client_1.0.2_windows_amd64.exe",
+          "size": 9285120
+        },
+        {
+          "name": "akoflow-server_1.0.2_linux_amd64",
+          "size": 22275232
+        },
+        {
+          "name": "workflow-engine.Dockerfile",
+          "size": 200
+        },
+        {
+          "name": "akoflow-server_1.0.2_darwin_arm64",
+          "size": 13666338
+        },
+        {
+          "name": "standalone.Dockerfile",
+          "size": 1621
+        },
+        {
+          "name": "akoflow-client_1.0.2_linux_arm64",
+          "size": 8925699
+        },
+        {
+          "name": "akoflow-server_1.0.2_darwin_amd64",
+          "size": 14169520
+        },
+        {
+          "name": "akoflow-client_1.0.2_linux_amd64",
+          "size": 9246141
+        }
+      ]
+    },
+    {
+      "id": 308073108,
+      "tag_name": "v1.0.1",
+      "name": "AkôFlow v0.9.1",
+      "body": "# AkôFlow v1.0.1\r\n\r\n\u003e **AkôFlow** is a scientific workflow management platform for multi-cloud and HPC environments.\r\n\u003e This release delivers updates across all modules — engine, desktop, control plane, and standalone bundle.\r\n\r\n---\r\n\r\n## What's new\r\n\r\n\u003cdetails open\u003e\r\n\u003csummary\u003e\u003cstrong\u003eWorkflow Engine\u003c/strong\u003e\u003c/summary\u003e\r\n\r\n- fix: handle errors when retrieving pending workflows and ensure repositories are initialized\r\n- Revise README.md to streamline content\r\n- chore: update base image to golang:1.23-alpine\r\n- chore: remove submodules\r\n- feat: add submodules\r\n- Update README.md\r\n- Update README.md\r\n- feat: enhance provenance graph functionality with interactive filters and improved data handling\r\n- refactor: remove nc command usage for HTTP requests in storage monitoring scripts\r\n- Merge branch 'process-graph-backend' of https://github.com/UFFeScience/akoflow\r\n- fix: update sidebar title to \"AkôFlow\"\r\n- fix: standardize title in admin templates to \"AkôFlow\"\r\n- Merge pull request #32 from UFFeScience/plafrim\r\n- feat: add script extraction for AkôFlow server and handlers\r\n- feat: enhance runtime ID retrieval and add duplicate removal logic\r\n\r\n\u003c/details\u003e\r\n\r\n\u003cdetails open\u003e\r\n\u003csummary\u003e\u003cstrong\u003eDesktop App\u003c/strong\u003e\u003c/summary\u003e\r\n\r\n- fix: update version number to 1.0.0 in package.json\r\n- fix: use ad-hoc signing for macOS ARM build to prevent damaged app error\r\n- fix: update product name and improve build configuration\r\n- Add initial styles and build script for renderer\r\n- fix: move electron to devDependencies in desktop package.json\r\n- fix: sync package-lock.json and add Docker layer cache to CI\r\n- Fix spelling of \"AkoFlow\" to \"AkôFlow\" across multiple files and update related messages for consistency\r\n- Add AkoFlow container management features and update UI components\r\n- Enhance CI/CD workflow by adding QEMU setup for cross-platform emulation and specifying target platforms for Docker builds\r\n- Fix title typo in index.html and update visual styles for improved layout and responsiveness\r\n- Add CI/CD workflow for Docker image build and publish; update README and package.json for desktop app\r\n- Add initial styles and Docker configuration for the application\r\n\r\n\u003c/details\u003e\r\n\r\n\u003cdetails open\u003e\r\n\u003csummary\u003e\u003cstrong\u003eControl Plane API\u003c/strong\u003e\u003c/summary\u003e\r\n\r\n- Refactor AkôFlow Local Installer and add NVIDIA Flare Federated Learning template\r\n- feat: Implement AkôFlow multicloud setup with Ansible playbooks and Terraform integration\r\n- feat: Add support for configurable Ansible forks in playbook execution\r\n- feat: Enhance Ansible playbook handling with improved task status tracking and SSH readiness checks\r\n- feat: Add task host status tracking for Ansible playbook runs\r\n- feat: Implement Ansible Playbook Services\r\n- fix: Update parameter type in AnsibleProcessRunnerService and improve temporary key file handling\r\n- fix: downgrade PHP version from 8.5 to 8.4 in Dockerfile\r\n- chore: use base image akoflow/base-control-plane to skip rebuilding dependencies\r\n- fix: Update PHP version from 8.3 to 8.4 in Dockerfile\r\n- chore: Remove CI/CD workflow for Docker Hub publishing\r\n- fix: Ensure Redis extension is installed and enabled in Dockerfile\r\n- fix: Correct cache directory path and update environment variable handling in Terraform services\r\n- feat: Enhance local AkôFlow installation with Kubernetes support and cleanup tasks\r\n- feat: Add support for teardown playbooks in Ansible configurations and update related functionality\r\n\r\n\u003c/details\u003e\r\n\r\n\u003cdetails open\u003e\r\n\u003csummary\u003e\u003cstrong\u003eControl Plane UI\u003c/strong\u003e\u003c/summary\u003e\r\n\r\n- Implement feature X to enhance user experience and fix bug Y in module Z\r\n- feat: rename Activities tab to Playbooks in EnvironmentTabs component\r\n- chore: clean up empty code change sections in the changes log\r\n- feat: add ActivityExecutionDetails component and integrate with ActivitiesTab; enhance DeploymentPhasePipeline and DeploymentsTab for detailed execution view\r\n- refactor: remove Ansible playbook support and rename related components\r\n- feat: remove CI/CD workflow for Docker Hub build and publish\r\n- feat: enhance deployment and provider handling with improved status and name sanitization\r\n- feat: add teardown playbook support to environment templates\r\n- feat: enhance dashboard and onboarding with local provider setup checks and environment creation flow\r\n- feat: add local provider setup functionality to onboarding process\r\n- feat: add SSH connection variables and health check resource for remote execution\r\n- feat: add credential management components and hooks\r\n- feat: enhance runbooks tab with playbook YAML viewer and toggle functionality\r\n- feat: implement runbook logs functionality and enhance logs tab with runbook run support\r\n- feat: add runbook management functionality\r\n\r\n\u003c/details\u003e\r\n\r\n---\r\n\r\n## AkôFlow Desktop downloads\r\n\r\n| Platform | Architecture | File |\r\n|---|---|---|\r\n| macOS | Apple Silicon (arm64) | `AkôFlow Desktop-*-arm64.dmg` |\r\n| macOS | Intel (x64) | `AkôFlow Desktop-*.dmg` |\r\n| Windows | x64 | `AkôFlow Desktop Setup *.exe` |\r\n| Linux | x64 | `AkôFlow Desktop-*.AppImage` |\r\n\r\n\u003e **macOS note:** If the app is blocked by Gatekeeper, run:\r\n\u003e ```\r\n\u003e xattr -cr /Applications/AkôFlow\\ Desktop.app\r\n\u003e ```\r\n\r\n---\r\n\r\n## Architecture overview\r\n\r\n```\r\n┌─────────────────────────────────────────────────┐\r\n│                   AkôFlow v1.0.1                     │\r\n├──────────────┬──────────────┬───────────────────┤\r\n│   Desktop    │ Control Plane│  Workflow Engine  │\r\n│  (Electron)  │ API  │  UI   │   (Go binary /    │\r\n│  mac/win/lnx │(PHP) │(Next) │   Docker)         │\r\n└──────────────┴──────┴───────┴───────────────────┘\r\n          ↕                           ↕\r\n┌─────────────────────┐   ┌──────────────────────┐\r\n│  akoflow/akoflow    │   │  Multi-cloud / HPC   │\r\n│  (all-in-one bundle)│   │  AWS · GCP · Azure   │\r\n└─────────────────────┘   └──────────────────────┘\r\n```\r\n\r\n---\r\n\r\n## Resources\r\n\r\n| | Link |\r\n|---|---|\r\n| Documentation | https://uffescience.github.io/akoflow/ |\r\n| Project site  | https://akoflow.com/ |\r\n| Docker Hub    | https://hub.docker.com/u/akoflow |\r\n| Issues        | https://github.com/UFFeScience/akoflow/issues |\r\n| Source (engine) | https://github.com/UFFeScience/akoflow-workflow-engine |\r\n| Source (desktop) | https://github.com/UFFeScience/akoflow-desktop |\r\n| Source (control plane) | https://github.com/UFFeScience/akoflow-deployment-control-plane |\r\n| Source (control plane UI) | https://github.com/UFFeScience/akoflow-deployment-control-plane-ui |\r\n\r\n---\r\n\r\n*Released by [AkôFlow CI](https://github.com/UFFeScience/akoflow/actions) · tag `v1.0.1`*\r\n",
+      "published_at": "2026-04-12T19:42:00Z",
+      "created_at": "2026-09-12T02:38:08Z",
+      "prerelease": false,
+      "assets": [
+        {
+          "name": "akoflow-engine_1.0.1_darwin_amd64.tar.gz",
+          "size": 12670759
+        },
+        {
+          "name": "akoflow-engine_1.0.1_checksums.txt",
+          "size": 1006
+        },
+        {
+          "name": "akoflow-engine_1.0.1_darwin_arm64.tar.gz",
+          "size": 12034839
+        },
+        {
+          "name": "akoflow-engine_1.0.1_linux_arm64.tar.gz",
+          "size": 16809391
+        },
+        {
+          "name": "akoflow-engine_1.0.1_windows_amd64.zip",
+          "size": 12896817
+        },
+        {
+          "name": "Akoflow.Desktop-1.0.0.dmg",
+          "size": 129395495
+        },
+        {
+          "name": "Akoflow.Desktop-1.0.0.AppImage",
+          "size": 126834407
+        },
+        {
+          "name": "supervisord.conf",
+          "size": 1788
+        },
+        {
+          "name": "akoflow-engine_1.0.1_linux_amd64.tar.gz",
+          "size": 17233586
+        },
+        {
+          "name": "Akoflow.Desktop.Setup.1.0.0.exe",
+          "size": 104558640
+        },
+        {
+          "name": "Akoflow.Desktop-1.0.0-arm64.dmg",
+          "size": 124220793
+        },
+        {
+          "name": "server.Dockerfile",
+          "size": 1101
+        },
+        {
+          "name": "Dockerfile",
+          "size": 2630
+        },
+        {
+          "name": "entrypoint.sh",
+          "size": 1339
+        },
+        {
+          "name": "nginx.conf",
+          "size": 1182
+        },
+        {
+          "name": "ako-install.sh",
+          "size": 21014
+        },
+        {
+          "name": "akoflow-server_1.0.1_windows_amd64.exe",
+          "size": 14361088
+        },
+        {
+          "name": "akoflow-server_1.0.1_linux_amd64",
+          "size": 22275232
+        },
+        {
+          "name": "akoflow-server_1.0.1_linux_arm64",
+          "size": 22741588
+        },
+        {
+          "name": "php-fpm-pool.conf",
+          "size": 309
+        },
+        {
+          "name": "akoflow-server_1.0.1_darwin_amd64",
+          "size": 14169520
+        },
+        {
+          "name": "akoflow-server_1.0.1_darwin_arm64",
+          "size": 13666338
+        },
+        {
+          "name": "akoflow-client_1.0.1_windows_amd64.exe",
+          "size": 9285120
+        },
+        {
+          "name": "akoflow-client_1.0.1_linux_arm64",
+          "size": 8925699
+        },
+        {
+          "name": "akoflow-client_1.0.1_darwin_amd64",
+          "size": 9200816
+        },
+        {
+          "name": "standalone.Dockerfile",
+          "size": 1621
+        },
+        {
+          "name": "akoflow-client_1.0.1_darwin_arm64",
+          "size": 8874178
+        },
+        {
+          "name": "workflow-engine.Dockerfile",
+          "size": 200
+        },
+        {
+          "name": "akoflow-client_1.0.1_linux_amd64",
+          "size": 9246141
+        },
+        {
+          "name": "control-plane.Dockerfile",
+          "size": 1137
+        }
+      ]
+    },
+    {
+      "id": 308049540,
+      "tag_name": "v1.0.0",
+      "name": "AkôFlow v0.9.0",
+      "body": "# AkôFlow v0.9.0\r\n\r\n\u003e **AkôFlow** is a scientific workflow management platform for multi-cloud and HPC environments.\r\n\u003e This release delivers updates across all modules — engine, desktop, control plane, and standalone bundle.\r\n\r\n---\r\n\r\n## What's new\r\n\r\n\u003cdetails open\u003e\r\n\u003csummary\u003e\u003cstrong\u003eWorkflow Engine\u003c/strong\u003e\u003c/summary\u003e\r\n\r\n- fix: handle errors when retrieving pending workflows and ensure repositories are initialized\r\n- Revise README.md to streamline content\r\n- chore: update base image to golang:1.23-alpine\r\n- chore: remove submodules\r\n- feat: add submodules\r\n- Update README.md\r\n- Update README.md\r\n- feat: enhance provenance graph functionality with interactive filters and improved data handling\r\n- refactor: remove nc command usage for HTTP requests in storage monitoring scripts\r\n- Merge branch 'process-graph-backend' of https://github.com/UFFeScience/akoflow\r\n- fix: update sidebar title to \"AkôFlow\"\r\n- fix: standardize title in admin templates to \"AkôFlow\"\r\n- Merge pull request #32 from UFFeScience/plafrim\r\n- feat: add script extraction for AkôFlow server and handlers\r\n- feat: enhance runtime ID retrieval and add duplicate removal logic\r\n\r\n\u003c/details\u003e\r\n\r\n\u003cdetails open\u003e\r\n\u003csummary\u003e\u003cstrong\u003eDesktop App\u003c/strong\u003e\u003c/summary\u003e\r\n\r\n- fix: update version number to 1.0.0 in package.json\r\n- fix: use ad-hoc signing for macOS ARM build to prevent damaged app error\r\n- fix: update product name and improve build configuration\r\n- Add initial styles and build script for renderer\r\n- fix: move electron to devDependencies in desktop package.json\r\n- fix: sync package-lock.json and add Docker layer cache to CI\r\n- Fix spelling of \"AkoFlow\" to \"AkôFlow\" across multiple files and update related messages for consistency\r\n- Add AkoFlow container management features and update UI components\r\n- Enhance CI/CD workflow by adding QEMU setup for cross-platform emulation and specifying target platforms for Docker builds\r\n- Fix title typo in index.html and update visual styles for improved layout and responsiveness\r\n- Add CI/CD workflow for Docker image build and publish; update README and package.json for desktop app\r\n- Add initial styles and Docker configuration for the application\r\n\r\n\u003c/details\u003e\r\n\r\n\u003cdetails open\u003e\r\n\u003csummary\u003e\u003cstrong\u003eControl Plane API\u003c/strong\u003e\u003c/summary\u003e\r\n\r\n- feat: Add support for configurable Ansible forks in playbook execution\r\n- feat: Enhance Ansible playbook handling with improved task status tracking and SSH readiness checks\r\n- feat: Add task host status tracking for Ansible playbook runs\r\n- feat: Implement Ansible Playbook Services\r\n- fix: Update parameter type in AnsibleProcessRunnerService and improve temporary key file handling\r\n- fix: downgrade PHP version from 8.5 to 8.4 in Dockerfile\r\n- chore: use base image akoflow/base-control-plane to skip rebuilding dependencies\r\n- fix: Update PHP version from 8.3 to 8.4 in Dockerfile\r\n- chore: Remove CI/CD workflow for Docker Hub publishing\r\n- fix: Ensure Redis extension is installed and enabled in Dockerfile\r\n- fix: Correct cache directory path and update environment variable handling in Terraform services\r\n- feat: Enhance local AkôFlow installation with Kubernetes support and cleanup tasks\r\n- feat: Add support for teardown playbooks in Ansible configurations and update related functionality\r\n- feat: Update AkôFlow local installer paths to use expanded user directory\r\n- feat: Add update functionality for provider credentials and enhance sensitive data handling\r\n\r\n\u003c/details\u003e\r\n\r\n\u003cdetails open\u003e\r\n\u003csummary\u003e\u003cstrong\u003eControl Plane UI\u003c/strong\u003e\u003c/summary\u003e\r\n\r\n- Implement feature X to enhance user experience and fix bug Y in module Z\r\n- feat: rename Activities tab to Playbooks in EnvironmentTabs component\r\n- chore: clean up empty code change sections in the changes log\r\n- feat: add ActivityExecutionDetails component and integrate with ActivitiesTab; enhance DeploymentPhasePipeline and DeploymentsTab for detailed execution view\r\n- refactor: remove Ansible playbook support and rename related components\r\n- feat: remove CI/CD workflow for Docker Hub build and publish\r\n- feat: enhance deployment and provider handling with improved status and name sanitization\r\n- feat: add teardown playbook support to environment templates\r\n- feat: enhance dashboard and onboarding with local provider setup checks and environment creation flow\r\n- feat: add local provider setup functionality to onboarding process\r\n- feat: add SSH connection variables and health check resource for remote execution\r\n- feat: add credential management components and hooks\r\n- feat: enhance runbooks tab with playbook YAML viewer and toggle functionality\r\n- feat: implement runbook logs functionality and enhance logs tab with runbook run support\r\n- feat: add runbook management functionality\r\n\r\n\u003c/details\u003e\r\n\r\n---\r\n\r\n## AkôFlow Desktop downloads\r\n\r\n| Platform | Architecture | File |\r\n|---|---|---|\r\n| macOS | Apple Silicon (arm64) | `AkôFlow Desktop-*-arm64.dmg` |\r\n| macOS | Intel (x64) | `AkôFlow Desktop-*.dmg` |\r\n| Windows | x64 | `AkôFlow Desktop Setup *.exe` |\r\n| Linux | x64 | `AkôFlow Desktop-*.AppImage` |\r\n\r\n\u003e **macOS note:** If the app is blocked by Gatekeeper, run:\r\n\u003e ```\r\n\u003e xattr -cr /Applications/AkôFlow\\ Desktop.app\r\n\u003e ```\r\n\r\n---\r\n\r\n## Architecture overview\r\n\r\n```\r\n┌─────────────────────────────────────────────────┐\r\n│                   AkôFlow v1.0.0                     │\r\n├──────────────┬──────────────┬───────────────────┤\r\n│   Desktop    │ Control Plane│  Workflow Engine  │\r\n│  (Electron)  │ API  │  UI   │   (Go binary /    │\r\n│  mac/win/lnx │(PHP) │(Next) │   Docker)         │\r\n└──────────────┴──────┴───────┴───────────────────┘\r\n          ↕                           ↕\r\n┌─────────────────────┐   ┌──────────────────────┐\r\n│  akoflow/akoflow    │   │  Multi-cloud / HPC   │\r\n│  (all-in-one bundle)│   │  AWS · GCP · Azure   │\r\n└─────────────────────┘   └──────────────────────┘\r\n```\r\n\r\n---\r\n\r\n## Resources\r\n\r\n| | Link |\r\n|---|---|\r\n| Documentation | https://uffescience.github.io/akoflow/ |\r\n| Project site  | https://akoflow.com/ |\r\n| Docker Hub    | https://hub.docker.com/u/akoflow |\r\n| Issues        | https://github.com/UFFeScience/akoflow/issues |\r\n| Source (engine) | https://github.com/UFFeScience/akoflow-workflow-engine |\r\n| Source (desktop) | https://github.com/UFFeScience/akoflow-desktop |\r\n| Source (control plane) | https://github.com/UFFeScience/akoflow-deployment-control-plane |\r\n| Source (control plane UI) | https://github.com/UFFeScience/akoflow-deployment-control-plane-ui |\r\n\r\n---\r\n\r\n*Released by [AkôFlow CI](https://github.com/UFFeScience/akoflow/actions) · tag `v1.0.0`*\r\n",
+      "published_at": "2026-04-12T17:16:29Z",
+      "created_at": "2026-09-11T03:29:09Z",
+      "prerelease": false,
+      "assets": [
+        {
+          "name": "supervisord.conf",
+          "size": 1788
+        },
+        {
+          "name": "server.Dockerfile",
+          "size": 1101
+        },
+        {
+          "name": "akoflow-engine_1.0.0_checksums.txt",
+          "size": 1006
+        },
+        {
+          "name": "akoflow-engine_1.0.0_linux_arm64.tar.gz",
+          "size": 16809318
+        },
+        {
+          "name": "akoflow-engine_1.0.0_windows_amd64.zip",
+          "size": 12896817
+        },
+        {
+          "name": "php-fpm-pool.conf",
+          "size": 309
+        },
+        {
+          "name": "Akoflow.Desktop-1.0.0.AppImage",
+          "size": 126834432
+        },
+        {
+          "name": "Dockerfile",
+          "size": 2630
+        },
+        {
+          "name": "nginx.conf",
+          "size": 1182
+        },
+        {
+          "name": "entrypoint.sh",
+          "size": 1339
+        },
+        {
+          "name": "akoflow-engine_1.0.0_darwin_amd64.tar.gz",
+          "size": 12670761
+        },
+        {
+          "name": "Akoflow.Desktop-1.0.0.dmg",
+          "size": 129395487
+        },
+        {
+          "name": "akoflow-engine_1.0.0_linux_amd64.tar.gz",
+          "size": 17233593
+        },
+        {
+          "name": "akoflow-engine_1.0.0_darwin_arm64.tar.gz",
+          "size": 12034821
+        },
+        {
+          "name": "Akoflow.Desktop-1.0.0-arm64.dmg",
+          "size": 124220853
+        },
+        {
+          "name": "akoflow-client_1.0.0_windows_amd64.exe",
+          "size": 9285120
+        },
+        {
+          "name": "akoflow-server_1.0.0_linux_amd64",
+          "size": 22275232
+        },
+        {
+          "name": "akoflow-server_1.0.0_darwin_arm64",
+          "size": 13666338
+        },
+        {
+          "name": "akoflow-client_1.0.0_linux_arm64",
+          "size": 8925699
+        },
+        {
+          "name": "akoflow-server_1.0.0_darwin_amd64",
+          "size": 14169520
+        },
+        {
+          "name": "Akoflow.Desktop.Setup.1.0.0.exe",
+          "size": 104558639
+        },
+        {
+          "name": "ako-install.sh",
+          "size": 21014
+        },
+        {
+          "name": "akoflow-client_1.0.0_linux_amd64",
+          "size": 9246141
+        },
+        {
+          "name": "akoflow-server_1.0.0_windows_amd64.exe",
+          "size": 14361088
+        },
+        {
+          "name": "akoflow-client_1.0.0_darwin_arm64",
+          "size": 8874178
+        },
+        {
+          "name": "standalone.Dockerfile",
+          "size": 1621
+        },
+        {
+          "name": "workflow-engine.Dockerfile",
+          "size": 200
+        },
+        {
+          "name": "akoflow-client_1.0.0_darwin_amd64",
+          "size": 9200816
+        },
+        {
+          "name": "control-plane.Dockerfile",
+          "size": 1137
+        },
+        {
+          "name": "akoflow-server_1.0.0_linux_arm64",
+          "size": 22741588
+        }
+      ]
+    },
+    {
+      "id": 306885890,
+      "tag_name": "v0.6.0",
+      "name": "AkôFlow v0.6.0",
+      "body": "# AkôFlow v0.6.0\n\n\u003e **AkôFlow** is a scientific workflow management platform for multi-cloud and HPC environments.\n\u003e This release delivers updates across all modules — engine, desktop, control plane, and standalone bundle.\n\n---\n\n## What's new\n\n\u003cdetails open\u003e\n\u003csummary\u003e\u003cstrong\u003eWorkflow Engine\u003c/strong\u003e\u003c/summary\u003e\n\n- chore: update base image to golang:1.23-alpine\n- chore: remove submodules\n- feat: add submodules\n- Update README.md\n- Update README.md\n- feat: enhance provenance graph functionality with interactive filters and improved data handling\n- refactor: remove nc command usage for HTTP requests in storage monitoring scripts\n- Merge branch 'process-graph-backend' of https://github.com/UFFeScience/akoflow\n- fix: update sidebar title to \"AkôFlow\"\n- fix: standardize title in admin templates to \"AkôFlow\"\n- Merge pull request #32 from UFFeScience/plafrim\n- feat: add script extraction for AkôFlow server and handlers\n- feat: enhance runtime ID retrieval and add duplicate removal logic\n- Merge branch 'main' of https://github.com/UFFeScience/akoflow into plafrim\n- Revise README to clarify AkôFlow's purpose\n\n\u003c/details\u003e\n\n\u003cdetails open\u003e\n\u003csummary\u003e\u003cstrong\u003eDesktop App\u003c/strong\u003e\u003c/summary\u003e\n\n- fix: use ad-hoc signing for macOS ARM build to prevent damaged app error\n- fix: update product name and improve build configuration\n- Add initial styles and build script for renderer\n- fix: move electron to devDependencies in desktop package.json\n- fix: sync package-lock.json and add Docker layer cache to CI\n- Fix spelling of \"AkoFlow\" to \"AkôFlow\" across multiple files and update related messages for consistency\n- Add AkoFlow container management features and update UI components\n- Enhance CI/CD workflow by adding QEMU setup for cross-platform emulation and specifying target platforms for Docker builds\n- Fix title typo in index.html and update visual styles for improved layout and responsiveness\n- Add CI/CD workflow for Docker image build and publish; update README and package.json for desktop app\n- Add initial styles and Docker configuration for the application\n\n\u003c/details\u003e\n\n\u003cdetails open\u003e\n\u003csummary\u003e\u003cstrong\u003eControl Plane API\u003c/strong\u003e\u003c/summary\u003e\n\n- fix: downgrade PHP version from 8.5 to 8.4 in Dockerfile\n- chore: use base image akoflow/base-control-plane to skip rebuilding dependencies\n- fix: Update PHP version from 8.3 to 8.4 in Dockerfile\n- chore: Remove CI/CD workflow for Docker Hub publishing\n- fix: Ensure Redis extension is installed and enabled in Dockerfile\n- fix: Correct cache directory path and update environment variable handling in Terraform services\n- feat: Enhance local AkôFlow installation with Kubernetes support and cleanup tasks\n- feat: Add support for teardown playbooks in Ansible configurations and update related functionality\n- feat: Update AkôFlow local installer paths to use expanded user directory\n- feat: Add update functionality for provider credentials and enhance sensitive data handling\n- feat: Add provider credential templates for AWS, GCP, HPC, and Local SSH\n- feat: Implement AkôFlow Local Installer with SSH support and Docker verification\n- feat: Add health check functionality for provider credentials\n- feat: Implement logging functionality for runbook executions\n- feat: Add Runbook and RunbookRun functionality\n\n\u003c/details\u003e\n\n\u003cdetails open\u003e\n\u003csummary\u003e\u003cstrong\u003eControl Plane UI\u003c/strong\u003e\u003c/summary\u003e\n\n- feat: remove CI/CD workflow for Docker Hub build and publish\n- feat: enhance deployment and provider handling with improved status and name sanitization\n- feat: add teardown playbook support to environment templates\n- feat: enhance dashboard and onboarding with local provider setup checks and environment creation flow\n- feat: add local provider setup functionality to onboarding process\n- feat: add SSH connection variables and health check resource for remote execution\n- feat: add credential management components and hooks\n- feat: enhance runbooks tab with playbook YAML viewer and toggle functionality\n- feat: implement runbook logs functionality and enhance logs tab with runbook run support\n- feat: add runbook management functionality\n- Refactor code structure for improved readability and maintainability\n- feat: update error messages to English and improve user feedback in settings and template components\n- feat: display alternative login password in plain text for VLDB user\n- feat: enhance login form with alternative credentials display and improved email/password handling\n- feat: add NEXT_PUBLIC_API_URL build argument for Docker image\n\n\u003c/details\u003e\n\n---\n\n## AkôFlow Desktop downloads\n\n| Platform | Architecture | File |\n|---|---|---|\n| macOS | Apple Silicon (arm64) | `AkôFlow Desktop-*-arm64.dmg` |\n| macOS | Intel (x64) | `AkôFlow Desktop-*.dmg` |\n| Windows | x64 | `AkôFlow Desktop Setup *.exe` |\n| Linux | x64 | `AkôFlow Desktop-*.AppImage` |\n\n\u003e **macOS note:** If the app is blocked by Gatekeeper, run:\n\u003e ```\n\u003e xattr -cr /Applications/AkôFlow\\ Desktop.app\n\u003e ```\n\n---\n\n## Architecture overview\n\n```\n┌─────────────────────────────────────────────────┐\n│                   AkôFlow v0.6.0                     │\n├──────────────┬──────────────┬───────────────────┤\n│   Desktop    │ Control Plane│  Workflow Engine  │\n│  (Electron)  │ API  │  UI   │   (Go binary /    │\n│  mac/win/lnx │(PHP) │(Next) │   Docker)         │\n└──────────────┴──────┴───────┴───────────────────┘\n          ↕                           ↕\n┌─────────────────────┐   ┌──────────────────────┐\n│  akoflow/akoflow    │   │  Multi-cloud / HPC   │\n│  (all-in-one bundle)│   │  AWS · GCP · Azure   │\n└─────────────────────┘   └──────────────────────┘\n```\n\n---\n\n## Resources\n\n| | Link |\n|---|---|\n| Documentation | https://uffescience.github.io/akoflow/ |\n| Project site  | https://akoflow.com/ |\n| Docker Hub    | https://hub.docker.com/u/akoflow |\n| Issues        | https://github.com/UFFeScience/akoflow/issues |\n| Source (engine) | https://github.com/UFFeScience/akoflow-workflow-engine |\n| Source (desktop) | https://github.com/UFFeScience/akoflow-desktop |\n| Source (control plane) | https://github.com/UFFeScience/akoflow-deployment-control-plane |\n| Source (control plane UI) | https://github.com/UFFeScience/akoflow-deployment-control-plane-ui |\n\n---\n\n*Released by [AkôFlow CI](https://github.com/UFFeScience/akoflow/actions) · tag `v0.6.0`*\n",
+      "published_at": "2026-04-09T04:24:24Z",
+      "created_at": "2026-04-09T02:44:08Z",
+      "prerelease": false,
+      "assets": [
+        {
+          "name": "akoflow-engine_0.6.0_linux_amd64.tar.gz",
+          "size": 17232542
+        },
+        {
+          "name": "akoflow-engine_0.6.0_darwin_arm64.tar.gz",
+          "size": 12034448
+        },
+        {
+          "name": "akoflow-engine_0.6.0_checksums.txt",
+          "size": 1006
+        },
+        {
+          "name": "akoflow-engine_0.6.0_windows_amd64.zip",
+          "size": 12893711
+        },
+        {
+          "name": "akoflow-engine_0.6.0_linux_arm64.tar.gz",
+          "size": 16808748
+        },
+        {
+          "name": "supervisord.conf",
+          "size": 1788
+        },
+        {
+          "name": "akoflow-engine_0.6.0_darwin_amd64.tar.gz",
+          "size": 12669613
+        },
+        {
+          "name": "Dockerfile",
+          "size": 2630
+        },
+        {
+          "name": "Akoflow.Desktop-0.1.0-arm64.dmg",
+          "size": 124220956
+        },
+        {
+          "name": "nginx.conf",
+          "size": 1182
+        },
+        {
+          "name": "Akoflow.Desktop-0.1.0.AppImage",
+          "size": 126834401
+        },
+        {
+          "name": "server.Dockerfile",
+          "size": 934
+        },
+        {
+          "name": "php-fpm-pool.conf",
+          "size": 309
+        },
+        {
+          "name": "control-plane.Dockerfile",
+          "size": 1137
+        },
+        {
+          "name": "standalone.Dockerfile",
+          "size": 1621
+        },
+        {
+          "name": "ako-install.sh",
+          "size": 21014
+        },
+        {
+          "name": "akoflow-client_0.6.0_linux_arm64",
+          "size": 8925699
+        },
+        {
+          "name": "akoflow-server_0.6.0_linux_amd64",
+          "size": 22274664
+        },
+        {
+          "name": "entrypoint.sh",
+          "size": 1339
+        },
+        {
+          "name": "akoflow-client_0.6.0_darwin_arm64",
+          "size": 8874178
+        },
+        {
+          "name": "akoflow-client_0.6.0_darwin_amd64",
+          "size": 9200816
+        },
+        {
+          "name": "akoflow-server_0.6.0_darwin_amd64",
+          "size": 14169520
+        },
+        {
+          "name": "Akoflow.Desktop-0.1.0.dmg",
+          "size": 129395611
+        },
+        {
+          "name": "akoflow-client_0.6.0_linux_amd64",
+          "size": 9246141
+        },
+        {
+          "name": "workflow-engine.Dockerfile",
+          "size": 200
+        },
+        {
+          "name": "akoflow-client_0.6.0_windows_amd64.exe",
+          "size": 9285120
+        },
+        {
+          "name": "akoflow-server_0.6.0_darwin_arm64",
+          "size": 13666338
+        },
+        {
+          "name": "Akoflow.Desktop.Setup.0.1.0.exe",
+          "size": 104558796
+        },
+        {
+          "name": "akoflow-server_0.6.0_windows_amd64.exe",
+          "size": 14358528
+        },
+        {
+          "name": "akoflow-server_0.6.0_linux_arm64",
+          "size": 22741438
+        }
+      ]
+    },
+    {
+      "id": 302782148,
+      "tag_name": "v0.5.1",
+      "name": "AkôFlow v0.5.1",
+      "body": "# AkôFlow Release v0.5.1\n\n## Changes\n- feat: enhance provenance graph functionality with interactive filters and improved data handling (b1a99c4)\n- refactor: remove nc command usage for HTTP requests in storage monitoring scripts (54ec465)\n- Merge branch 'process-graph-backend' of https://github.com/UFFeScience/akoflow (30965d5)\n- fix: update sidebar title to \"AkôFlow\" (e33cfa1)\n- fix: standardize title in admin templates to \"AkôFlow\" (9ac0bfb)\n- Merge pull request #32 from UFFeScience/plafrim (64e8b59)\n- feat: add script extraction for AkôFlow server and handlers (169f18e)\n- feat: enhance runtime ID retrieval and add duplicate removal logic (4addd71)\n- Merge branch 'main' of https://github.com/UFFeScience/akoflow into plafrim (5409fd1)\n- Revise README to clarify AkôFlow's purpose (c0c1d12)\n- Update Publications section title in README.md (6be708e)\n- feat: update .gitignore to include volumes directory (0eab7f2)\n- feat: update job completion verification and logging in HPC runtime service (c30b7ee)\n- feat: update entry point in MakeContainerCommandActivityToHPC for shared mount path (791e53e)\n- feat: enhance runtime management by adding runtimeType and runtimeName fields across various runtime services (4ed1c48)\n- feat: add MountPath field to Activity and WorkflowActivities models for improved data handling (ed22d32)\n- feat: add SSH key handling in ConnectorHPCRuntime for remote command execution (12e4c28)\n- feat: implement local runtime and connector services for command execution (3393798)\n- feat: add local connector to AppContainer for enhanced connectivity options (188c747)\n- fix: remove unnecessary flag from buildFlags in AkoFlow Server launch configuration (f751c8c)\n- fix: update delve version to 1.23.1 in Dockerfile (3134c8b)\n- feat: update Dockerfile and devcontainer configuration for improved container setup (ee7ea03)\n- feat: add default Slurm batch script and implement template retrieval in HPC runtime service (f3663b4)\n- fix: update sensitive key detection regex in isSensitiveKey function (5b88e50)\n- feat: add BuildRemoteCommand method and refactor command execution in HPC runtime service (28085cc)\n- feat: update HPC runtime support and refactor related components (faaca30)\n- fix: correct value trimming logic in loadDotEnv function (f2c8aa6)\n- feat: implement HPC runtime support and refactor related components (f6ae12c)\n- Merge branch 'main' of https://github.com/UFFeScience/akoflow into process-graph-backend (fce00da)\n- add process graph in backend and export .dot file to frontend (7d6240c)\n- Merge branch 'main' of https://github.com/UFFeScience/akoflow into process-graph-backend (1e11939)\n- add provenience graph (7e8cc27)EOF\nNo changes available.\n\n## Installation\n\n### Client Binaries\n- Linux (AMD64): `akoflow-client_0.5.1_linux_amd64`\n- Linux (ARM64): `akoflow-client_0.5.1_linux_arm64`\n- Windows (AMD64): `akoflow-client_0.5.1_windows_amd64.exe`\n- macOS (AMD64): `akoflow-client_0.5.1_darwin_amd64`\n- macOS (ARM64): `akoflow-client_0.5.1_darwin_arm64`\n\n### Server Binaries\n- Linux (AMD64): `akoflow-server_0.5.1_linux_amd64`\n- Linux (ARM64): `akoflow-server_0.5.1_linux_arm64`\n- Windows (AMD64): `akoflow-server_0.5.1_windows_amd64.exe`\n- macOS (AMD64): `akoflow-server_0.5.1_darwin_amd64`\n- macOS (ARM64): `akoflow-server_0.5.1_darwin_arm64`\n\nDownload the appropriate binary for your platform, make it executable, and add it to your PATH.\n\n### Download Client \nFor more information, visit [AkôFlow Client documentation](https://github.com/UFFeScience/akoflow/wiki/).\n\n### Download Server\nFor more information, visit [AkôFlow Server documentation](https://github.com/UFFeScience/akoflow/wiki/).\n\n## Documentation\nFor more information, visit [AkôFlow documentation](https://github.com/UFFeScience/akoflow/wiki/).\n",
+      "published_at": "2026-03-29T02:37:04Z",
+      "created_at": "2026-03-29T02:29:22Z",
+      "prerelease": false,
+      "assets": [
+        {
+          "name": "akoflow-client_0.5.1_darwin_amd64",
+          "size": 9200816
+        },
+        {
+          "name": "akoflow-client_0.5.1_linux_amd64",
+          "size": 9246125
+        },
+        {
+          "name": "akoflow-server_0.5.1_darwin_arm64",
+          "size": 13666338
+        },
+        {
+          "name": "akoflow-server_0.5.1_linux_arm64",
+          "size": 22741422
+        },
+        {
+          "name": "akoflow-client_0.5.1_darwin_arm64",
+          "size": 8874178
+        },
+        {
+          "name": "akoflow-client_0.5.1_linux_arm64",
+          "size": 8925723
+        },
+        {
+          "name": "akoflow-client_0.5.1_windows_amd64.exe",
+          "size": 9285120
+        },
+        {
+          "name": "akoflow-server_0.5.1_darwin_amd64",
+          "size": 14169520
+        },
+        {
+          "name": "akoflow_0.5.1_checksums.txt",
+          "size": 1006
+        },
+        {
+          "name": "akoflow-server_0.5.1_windows_amd64.exe",
+          "size": 14358528
+        },
+        {
+          "name": "akoflow-server_0.5.1_linux_amd64",
+          "size": 22274632
+        }
+      ]
+    },
+    {
+      "id": 302648048,
+      "tag_name": "v0.5.0",
+      "name": "AkôFlow v0.5.0",
+      "body": "# AkôFlow Release v0.5.0\n\n## Changes\n- feat: enhance provenance graph functionality with interactive filters and improved data handling (b1a99c4)\n- refactor: remove nc command usage for HTTP requests in storage monitoring scripts (54ec465)\n- Merge branch 'process-graph-backend' of https://github.com/UFFeScience/akoflow (30965d5)\n- fix: update sidebar title to \"AkôFlow\" (e33cfa1)\n- fix: standardize title in admin templates to \"AkôFlow\" (9ac0bfb)\n- Merge pull request #32 from UFFeScience/plafrim (64e8b59)\n- feat: add script extraction for AkôFlow server and handlers (169f18e)\n- feat: enhance runtime ID retrieval and add duplicate removal logic (4addd71)\n- Merge branch 'main' of https://github.com/UFFeScience/akoflow into plafrim (5409fd1)\n- Revise README to clarify AkôFlow's purpose (c0c1d12)\n- Update Publications section title in README.md (6be708e)\n- feat: update .gitignore to include volumes directory (0eab7f2)\n- feat: update job completion verification and logging in HPC runtime service (c30b7ee)\n- feat: update entry point in MakeContainerCommandActivityToHPC for shared mount path (791e53e)\n- feat: enhance runtime management by adding runtimeType and runtimeName fields across various runtime services (4ed1c48)\n- feat: add MountPath field to Activity and WorkflowActivities models for improved data handling (ed22d32)\n- feat: add SSH key handling in ConnectorHPCRuntime for remote command execution (12e4c28)\n- feat: implement local runtime and connector services for command execution (3393798)\n- feat: add local connector to AppContainer for enhanced connectivity options (188c747)\n- fix: remove unnecessary flag from buildFlags in AkoFlow Server launch configuration (f751c8c)\n- fix: update delve version to 1.23.1 in Dockerfile (3134c8b)\n- feat: update Dockerfile and devcontainer configuration for improved container setup (ee7ea03)\n- feat: add default Slurm batch script and implement template retrieval in HPC runtime service (f3663b4)\n- fix: update sensitive key detection regex in isSensitiveKey function (5b88e50)\n- feat: add BuildRemoteCommand method and refactor command execution in HPC runtime service (28085cc)\n- feat: update HPC runtime support and refactor related components (faaca30)\n- fix: correct value trimming logic in loadDotEnv function (f2c8aa6)\n- feat: implement HPC runtime support and refactor related components (f6ae12c)\n- Merge branch 'main' of https://github.com/UFFeScience/akoflow into process-graph-backend (fce00da)\n- add process graph in backend and export .dot file to frontend (7d6240c)\n- Merge branch 'main' of https://github.com/UFFeScience/akoflow into process-graph-backend (1e11939)\n- add provenience graph (7e8cc27)EOF\nNo changes available.\n\n## Installation\n\n### Client Binaries\n- Linux (AMD64): `akoflow-client_0.5.0_linux_amd64`\n- Linux (ARM64): `akoflow-client_0.5.0_linux_arm64`\n- Windows (AMD64): `akoflow-client_0.5.0_windows_amd64.exe`\n- macOS (AMD64): `akoflow-client_0.5.0_darwin_amd64`\n- macOS (ARM64): `akoflow-client_0.5.0_darwin_arm64`\n\n### Server Binaries\n- Linux (AMD64): `akoflow-server_0.5.0_linux_amd64`\n- Linux (ARM64): `akoflow-server_0.5.0_linux_arm64`\n- Windows (AMD64): `akoflow-server_0.5.0_windows_amd64.exe`\n- macOS (AMD64): `akoflow-server_0.5.0_darwin_amd64`\n- macOS (ARM64): `akoflow-server_0.5.0_darwin_arm64`\n\nDownload the appropriate binary for your platform, make it executable, and add it to your PATH.\n\n### Download Client \nFor more information, visit [AkôFlow Client documentation](https://github.com/UFFeScience/akoflow/wiki/).\n\n### Download Server\nFor more information, visit [AkôFlow Server documentation](https://github.com/UFFeScience/akoflow/wiki/).\n\n## Documentation\nFor more information, visit [AkôFlow documentation](https://github.com/UFFeScience/akoflow/wiki/).\n",
+      "published_at": "2026-03-28T06:36:55Z",
+      "created_at": "2026-03-29T02:29:22Z",
+      "prerelease": false,
+      "assets": [
+        {
+          "name": "akoflow-client_0.5.0_linux_amd64",
+          "size": 9246125
+        },
+        {
+          "name": "akoflow-server_0.5.0_linux_arm64",
+          "size": 22741422
+        },
+        {
+          "name": "akoflow_0.5.0_checksums.txt",
+          "size": 1006
+        },
+        {
+          "name": "akoflow-client_0.5.0_windows_amd64.exe",
+          "size": 9285120
+        },
+        {
+          "name": "akoflow-server_0.5.0_linux_amd64",
+          "size": 22274632
+        },
+        {
+          "name": "akoflow-server_0.5.0_darwin_arm64",
+          "size": 13666338
+        },
+        {
+          "name": "akoflow-client_0.5.0_linux_arm64",
+          "size": 8925723
+        },
+        {
+          "name": "akoflow-client_0.5.0_darwin_arm64",
+          "size": 8874178
+        },
+        {
+          "name": "akoflow-server_0.5.0_windows_amd64.exe",
+          "size": 14358528
+        },
+        {
+          "name": "akoflow-server_0.5.0_darwin_amd64",
+          "size": 14169520
+        },
+        {
+          "name": "akoflow-client_0.5.0_darwin_amd64",
+          "size": 9200816
+        }
+      ]
+    },
+    {
+      "id": 278308322,
+      "tag_name": "v0.4.2",
+      "name": "AkôFlow v0.4.2",
+      "body": "# AkôFlow Release v0.4.2\n\n## Changes\n- fix: specify exact version for delve installation in Dockerfile (d6f3d10)EOF\nNo changes available.\n\n## Installation\n\n### Client Binaries\n- Linux (AMD64): `akoflow-client_0.4.2_linux_amd64`\n- Linux (ARM64): `akoflow-client_0.4.2_linux_arm64`\n- Windows (AMD64): `akoflow-client_0.4.2_windows_amd64.exe`\n- macOS (AMD64): `akoflow-client_0.4.2_darwin_amd64`\n- macOS (ARM64): `akoflow-client_0.4.2_darwin_arm64`\n\n### Server Binaries\n- Linux (AMD64): `akoflow-server_0.4.2_linux_amd64`\n- Linux (ARM64): `akoflow-server_0.4.2_linux_arm64`\n- Windows (AMD64): `akoflow-server_0.4.2_windows_amd64.exe`\n- macOS (AMD64): `akoflow-server_0.4.2_darwin_amd64`\n- macOS (ARM64): `akoflow-server_0.4.2_darwin_arm64`\n\nDownload the appropriate binary for your platform, make it executable, and add it to your PATH.\n\n### Download Client \nFor more information, visit [AkôFlow Client documentation](https://github.com/UFFeScience/akoflow/wiki/).\n\n### Download Server\nFor more information, visit [AkôFlow Server documentation](https://github.com/UFFeScience/akoflow/wiki/).\n\n## Documentation\nFor more information, visit [AkôFlow documentation](https://github.com/UFFeScience/akoflow/wiki/).\n",
+      "published_at": "2026-01-20T15:18:28Z",
+      "created_at": "2026-01-20T15:12:57Z",
+      "prerelease": false,
+      "assets": [
+        {
+          "name": "akoflow-server_0.4.2_darwin_arm64",
+          "size": 13576258
+        },
+        {
+          "name": "akoflow-client_0.4.2_linux_arm64",
+          "size": 8925723
+        },
+        {
+          "name": "akoflow-server_0.4.2_linux_amd64",
+          "size": 22168640
+        },
+        {
+          "name": "akoflow-client_0.4.2_linux_amd64",
+          "size": 9246125
+        },
+        {
+          "name": "akoflow-client_0.4.2_windows_amd64.exe",
+          "size": 9285120
+        },
+        {
+          "name": "akoflow-client_0.4.2_darwin_arm64",
+          "size": 8874178
+        },
+        {
+          "name": "akoflow_0.4.2_checksums.txt",
+          "size": 1006
+        },
+        {
+          "name": "akoflow-server_0.4.2_windows_amd64.exe",
+          "size": 14284800
+        },
+        {
+          "name": "akoflow-client_0.4.2_darwin_amd64",
+          "size": 9200816
+        },
+        {
+          "name": "akoflow-server_0.4.2_linux_arm64",
+          "size": 22638941
+        },
+        {
+          "name": "akoflow-server_0.4.2_darwin_amd64",
+          "size": 14092416
+        }
+      ]
+    },
+    {
+      "id": 245354180,
+      "tag_name": "v0.4.1",
+      "name": "AkôFlow v0.4.1",
+      "body": "# AkôFlow Release v0.4.1\n\n## Changes\n- feat: update build commands to use version variable for server and client binaries (d553a91)\n- fix: correct build command for darwin arm64 client binary (6f67441)\n- feat: update build commands for server and client binaries to improve compatibility and performance (05f7efc)\n- feat: update Dockerfile to include additional build dependencies (8202163)\n- feat: add installation script for Docker-based setup (6314401)EOF\nNo changes available.\n\n## Installation\n\n### Client Binaries\n- Linux (AMD64): `akoflow-client_0.4.1_linux_amd64`\n- Linux (ARM64): `akoflow-client_0.4.1_linux_arm64`\n- Windows (AMD64): `akoflow-client_0.4.1_windows_amd64.exe`\n- macOS (AMD64): `akoflow-client_0.4.1_darwin_amd64`\n- macOS (ARM64): `akoflow-client_0.4.1_darwin_arm64`\n\n### Server Binaries\n- Linux (AMD64): `akoflow-server_0.4.1_linux_amd64`\n- Linux (ARM64): `akoflow-server_0.4.1_linux_arm64`\n- Windows (AMD64): `akoflow-server_0.4.1_windows_amd64.exe`\n- macOS (AMD64): `akoflow-server_0.4.1_darwin_amd64`\n- macOS (ARM64): `akoflow-server_0.4.1_darwin_arm64`\n\nDownload the appropriate binary for your platform, make it executable, and add it to your PATH.\n\n### Download Client \nFor more information, visit [AkôFlow Client documentation](https://github.com/UFFeScience/akoflow/wiki/).\n\n### Download Server\nFor more information, visit [AkôFlow Server documentation](https://github.com/UFFeScience/akoflow/wiki/).\n\n## Documentation\nFor more information, visit [AkôFlow documentation](https://github.com/UFFeScience/akoflow/wiki/).\n",
+      "published_at": "2025-09-07T14:22:02Z",
+      "created_at": "2025-09-07T14:47:03Z",
+      "prerelease": false,
+      "assets": [
+        {
+          "name": "akoflow-client__darwin_arm64",
+          "size": 8874178
+        },
+        {
+          "name": "akoflow-client__linux_arm64",
+          "size": 8925723
+        },
+        {
+          "name": "akoflow-client__darwin_amd64",
+          "size": 9200816
+        },
+        {
+          "name": "akoflow-client__linux_amd64",
+          "size": 9246125
+        },
+        {
+          "name": "akoflow-server__darwin_amd64",
+          "size": 14092288
+        },
+        {
+          "name": "akoflow-server__darwin_arm64",
+          "size": 13576114
+        },
+        {
+          "name": "akoflow-server__windows_amd64.exe",
+          "size": 14281728
+        },
+        {
+          "name": "akoflow-server__linux_arm64",
+          "size": 22638090
+        },
+        {
+          "name": "akoflow-server__linux_amd64",
+          "size": 22167752
+        },
+        {
+          "name": "akoflow-client__windows_amd64.exe",
+          "size": 9285120
+        },
+        {
+          "name": "akoflow-client_0.4.1_darwin_arm64",
+          "size": 8874178
+        },
+        {
+          "name": "akoflow-client_0.4.1_darwin_amd64",
+          "size": 9200816
+        },
+        {
+          "name": "akoflow-client_0.4.1_linux_amd64",
+          "size": 9246125
+        },
+        {
+          "name": "akoflow-server_0.4.1_darwin_amd64",
+          "size": 14092288
+        },
+        {
+          "name": "akoflow-client_0.4.1_windows_amd64.exe",
+          "size": 9285120
+        },
+        {
+          "name": "akoflow-client_0.4.1_linux_arm64",
+          "size": 8925723
+        },
+        {
+          "name": "akoflow-server_0.4.1_windows_amd64.exe",
+          "size": 14281728
+        },
+        {
+          "name": "akoflow-server_0.4.1_darwin_arm64",
+          "size": 13576114
+        },
+        {
+          "name": "akoflow-server_0.4.1_linux_amd64",
+          "size": 22167752
+        },
+        {
+          "name": "akoflow-server_0.4.1_linux_arm64",
+          "size": 22638090
+        },
+        {
+          "name": "akoflow_0.4.1_checksums.txt",
+          "size": 1006
+        }
+      ]
+    },
+    {
+      "id": 243672876,
+      "tag_name": "v0.4.0",
+      "name": "AkôFlow v0.4.0",
+      "body": "# AkôFlow Release v0.4.0\n\n## Changes\n- Merge branch 'main' of https://github.com/UFFeScience/akoflow (7215226)\n- Merge pull request #29 from UFFeScience/AKF-21 (8565ae5)\n- feat: add Debora Pina to contributors list and remove author details from README (b04092b)\n- Merge branch 'main' of https://github.com/UFFeScience/akoflow into AKF-21 (ef6ff51)\n- feat: add runtime selection to workflow creation modal (413f20d)\n- fix: update machine_type field to use node name instead of instance type (72b3ca4)\n- refactor: remove GetInstanceType method from Node struct (d7a9d34)\n- feat: make CPU and memory fields optional in K8sJobResourcesLimits (eb5aaa6)\n- Add workflow schedules for montage processing (84033eb)\n- feat: update command execution in setupCommandWorkdir to prevent failure on move operation (d6b0753)\n- Add new workflow schedules for synthetic activities (168b824)\n- feat: add new workflow schedule with updated activity configurations and dependencies (bc8238c)\n- feat: add new workflow schedule with enhanced activity definitions and dependencies (363a895)\n- feat: enhance current metrics calculation by incorporating finished and paused activity statuses (0c17c57)\n- feat: enhance Kubernetes metrics and node management with CPU and memory usage calculations (f52c0cd)\n- feat: add metrics retrieval functionality for Kubernetes runtime and monitoring services (ca96d2d)\n- feat: add activity scheduling check to prevent duplicate scheduling in orchestrate service (1ef7e76)\n- feat: enhance workflow and NFS service configurations with new activities and improved resource management (5bbcf91)\n- feat: update Kubernetes installation commands for version 1.33 and improve initialization process (83f649e)\n- feat: enhance OrchestrateWorflowService with scheduling capabilities and workflow management (0eace63)\n- feat: implement OrchestrateScheduleService for managing activity scheduling and node selection (b03f864)\n- feat: implement NodeCurrentMetrics and NodeCurrentMetricsService for node resource tracking (f73dbce)\n- feat: update plugin input parameters for improved scheduling accuracy (7d5acb9)\n- feat: add activity schedule handling to MakeK8sActivityService for improved node selection (f11c461)\n- feat: enhance node selector handling by incorporating activity schedule retrieval (167cb97)\n- refactor: remove unnecessary comment in ApplyDistributedJob method (961d308)\n- feat: add optional Schedule field to WorkflowSpec for scheduling support (866a5b8)\n- feat: add memory and CPU requirement methods, and enhance NodeSelector handling (dc8f10d)\n- feat: add workflow creation functionality and update related templates (3c2770b)\n- fix: correct SQL query in GetScheduleByName to include missing fields (bb63242)\n- feat: implement GetNodesByRuntime method for retrieving nodes by runtime (c32c098)\n- feat: add ActivitySchedule table and update ActivityRepository initialization (90441e5)\n- feat: add UpdateNodeSelector method for updating node selector in activities (2bdd28d)\n- feat: implement GetAllRunningActivities method for retrieving active workflow activities (2083df4)\n- feat: include node_selector in ActivityRepository Find method for enhanced data retrieval (7c9bcf8)\n- feat: implement ActivityRepository methods for managing activity schedules (64e2a9f)\n- feat: add memory and CPU utility methods to Node model for resource management (b003f1d)\n- feat: add ActivitySchedule model for managing scheduled activities in the database (3ff731e)\n- feat: add NodeSelector field to Activity model for enhanced scheduling capabilities (4a7c76f)\n- feat: implement RunScheduleService with StartRunningSchedule method to execute schedules using dynamic plugin loading (37a11df)\n- Merge pull request #28 from UFFeScience/fix_issue_25 (c402a89)\n- refactor replace in .sh and readfile (992ea78)\n- fix error when image doesnt contain netcat (486c8c3)\n- feat: update AkoScore function to accept a map input and return a float score; enhance plugin execution logic (c367dad)\n- feat: add missing comma in Launch AkoFlow Server configuration and ensure buildFlags are included (36bbcfa)\n- feat: update CreateSchedule method to include soFile parameter and enhance ValidateUserCode with version checks (84613c7)\n- feat: update ListAllSchedules to include additional fields and implement connectorSchedules for schedule management (c8ca97e)\n- feat: add optional fields PluginSoPath, CreatedAt, and UpdatedAt to ScheduleEntity (cb200e0)\n- feat: enhance ValidateUserCode to compile user code as a plugin and improve error handling (10de645)\n- feat: fix ListAllSchedules to correctly populate CreatedAt and UpdatedAt fields (a423a07)\n- feat: update schedule repository initialization and enhance schedule name input handling in the admin template (3d5b72c)\n- feat: add ScheduleRepository to AppContainer and implement ReadJson in HttpHelper (eac6776)\n- feat: add ReadJson function to handle JSON decoding with error handling (8206d77)\n- feat: update ScheduleModel to include Name field and remove Namespace (0165d36)\n- feat: implement ScheduleRepository with CRUD operations for schedules (64c6d2d)\n- feat: add schedule API routes for listing and creating schedules (95d2f6d)\n- feat: enhance schedule management UI with editor modal and validation functionality (81eec91)\n- feat: implement ScheduleApiHandler with methods for schedule management (a2faef7)\n- feat: add ScheduleEntity struct with associated methods for schedule management (b8fd73a)\n- feat: implement CreateScheduleApiService for creating new schedules (8aef5de)\n- feat: implement GetScheduleApiService for retrieving schedule details by name (997aa0c)\n- feat: implement ListSchedulesApiService for retrieving all schedules (757dc8c)\n- feat: add ApiScheduleType struct for schedule entity representation (d964a77)\n- fix: correct table name in ScheduleModel to match database schema (fb6652b)\n- feat: implement node and workflow execution repositories, add schedule handler and templates (fa4cb76)\n- fix: update launch configuration and improve environment variable setup (400c57d)\n- fix: update documentation links to point to the GitHub wiki (6049866)\n- Merge pull request #26 from zaclummys/main (94c012c)\n- Update to v1.23 (0e928bc)\n- Update README.md (b0ed6c5)\n- Merge pull request #18 from UFFeScience/dependabot/go_modules/golang.org/x/crypto-0.35.0 (ece6722)\n- feat: add conditional check for setting K8S_API_SERVER_TOKEN in SetupEnv (81d85c1)\n- feat: add modal for creating new workflows and update sidebar links (7b36632)\n- build(deps): bump golang.org/x/crypto from 0.31.0 to 0.35.0 (c06280c)EOF\nNo changes available.\n\n## Installation\n\n### Client Binaries\n- Linux (AMD64): `akoflow-client_0.4.0_linux_amd64`\n- Linux (ARM64): `akoflow-client_0.4.0_linux_arm64`\n- Windows (AMD64): `akoflow-client_0.4.0_windows_amd64.exe`\n- macOS (AMD64): `akoflow-client_0.4.0_darwin_amd64`\n- macOS (ARM64): `akoflow-client_0.4.0_darwin_arm64`\n\n### Server Binaries\n- Linux (AMD64): `akoflow-server_0.4.0_linux_amd64`\n- Linux (ARM64): `akoflow-server_0.4.0_linux_arm64`\n- Windows (AMD64): `akoflow-server_0.4.0_windows_amd64.exe`\n- macOS (AMD64): `akoflow-server_0.4.0_darwin_amd64`\n- macOS (ARM64): `akoflow-server_0.4.0_darwin_arm64`\n\nDownload the appropriate binary for your platform, make it executable, and add it to your PATH.\n\n### Download Client \nFor more information, visit [AkôFlow Client documentation](https://github.com/UFFeScience/akoflow/wiki/).\n\n### Download Server\nFor more information, visit [AkôFlow Server documentation](https://github.com/UFFeScience/akoflow/wiki/).\n\n## Documentation\nFor more information, visit [AkôFlow documentation](https://github.com/UFFeScience/akoflow/wiki/).\n",
+      "published_at": "2025-08-30T20:03:35Z",
+      "created_at": "2025-08-30T19:47:26Z",
+      "prerelease": false,
+      "assets": [
+        {
+          "name": "akoflow-client_0.4.0_linux_amd64",
+          "size": 9246125
+        },
+        {
+          "name": "akoflow-client_0.4.0_darwin_arm64",
+          "size": 8874178
+        },
+        {
+          "name": "akoflow-server_0.4.0_windows_amd64.exe",
+          "size": 14281728
+        },
+        {
+          "name": "akoflow-client_0.4.0_darwin_amd64",
+          "size": 9200816
+        },
+        {
+          "name": "akoflow-client_0.4.0_linux_arm64",
+          "size": 8902137
+        },
+        {
+          "name": "akoflow-client_0.4.0_windows_amd64.exe",
+          "size": 9285120
+        },
+        {
+          "name": "akoflow-server_0.4.0_linux_amd64",
+          "size": 22167752
+        },
+        {
+          "name": "akoflow-server_0.4.0_linux_arm64",
+          "size": 13505451
+        },
+        {
+          "name": "akoflow_0.4.0_checksums.txt",
+          "size": 1006
+        },
+        {
+          "name": "akoflow-server_0.4.0_darwin_arm64",
+          "size": 13576114
+        },
+        {
+          "name": "akoflow-server_0.4.0_darwin_amd64",
+          "size": 14092288
+        }
+      ]
+    },
+    {
+      "id": 223819758,
+      "tag_name": "v0.3.3",
+      "name": "AkôFlow v0.3.3",
+      "body": "# AkôFlow Release v0.3.3\n\n## Changes\n- feat: update activity failure handling in handleVerifyActivityWasFinished (ff24564)EOF\nNo changes available.\n\n## Installation\n\n### Client Binaries\n- Linux (AMD64): `akoflow-client_0.3.3_linux_amd64`\n- Linux (ARM64): `akoflow-client_0.3.3_linux_arm64`\n- Windows (AMD64): `akoflow-client_0.3.3_windows_amd64.exe`\n- macOS (AMD64): `akoflow-client_0.3.3_darwin_amd64`\n- macOS (ARM64): `akoflow-client_0.3.3_darwin_arm64`\n\n### Server Binaries\n- Linux (AMD64): `akoflow-server_0.3.3_linux_amd64`\n- Linux (ARM64): `akoflow-server_0.3.3_linux_arm64`\n- Windows (AMD64): `akoflow-server_0.3.3_windows_amd64.exe`\n- macOS (AMD64): `akoflow-server_0.3.3_darwin_amd64`\n- macOS (ARM64): `akoflow-server_0.3.3_darwin_arm64`\n\nDownload the appropriate binary for your platform, make it executable, and add it to your PATH.\n\n### Download Client \nFor more information, visit [AkôFlow Client documentation](https://akoflow.com/docs/).\n\n### Download Server\nFor more information, visit [AkôFlow Server documentation](https://akoflow.com/docs/).\n\n## Documentation\nFor more information, visit [AkôFlow documentation](https://akoflow.com/docs/).\n",
+      "published_at": "2025-06-07T21:02:48Z",
+      "created_at": "2025-06-07T20:58:37Z",
+      "prerelease": false,
+      "assets": [
+        {
+          "name": "akoflow-client_0.3.3_darwin_amd64",
+          "size": 8639296
+        },
+        {
+          "name": "akoflow-client_0.3.3_linux_arm64",
+          "size": 8243797
+        },
+        {
+          "name": "akoflow-server_0.3.3_darwin_amd64",
+          "size": 13183760
+        },
+        {
+          "name": "akoflow-client_0.3.3_linux_amd64",
+          "size": 8653819
+        },
+        {
+          "name": "akoflow-client_0.3.3_windows_amd64.exe",
+          "size": 8702464
+        },
+        {
+          "name": "akoflow_0.3.3_checksums.txt",
+          "size": 1006
+        },
+        {
+          "name": "akoflow-server_0.3.3_darwin_arm64",
+          "size": 12717986
+        },
+        {
+          "name": "akoflow-server_0.3.3_linux_amd64",
+          "size": 16430856
+        },
+        {
+          "name": "akoflow-client_0.3.3_darwin_arm64",
+          "size": 8315586
+        },
+        {
+          "name": "akoflow-server_0.3.3_windows_amd64.exe",
+          "size": 13338624
+        },
+        {
+          "name": "akoflow-server_0.3.3_linux_arm64",
+          "size": 12607569
+        }
+      ]
+    },
+    {
+      "id": 223807825,
+      "tag_name": "v0.3.2",
+      "name": "AkôFlow v0.3.2",
+      "body": "# AkôFlow Release v0.3.2\n\n## Changes\n- sdumont: update activity status handling to include additional states in handleVerifyActivityWasFinished (ea5d79f)EOF\nNo changes available.\n\n## Installation\n\n### Client Binaries\n- Linux (AMD64): `akoflow-client_0.3.2_linux_amd64`\n- Linux (ARM64): `akoflow-client_0.3.2_linux_arm64`\n- Windows (AMD64): `akoflow-client_0.3.2_windows_amd64.exe`\n- macOS (AMD64): `akoflow-client_0.3.2_darwin_amd64`\n- macOS (ARM64): `akoflow-client_0.3.2_darwin_arm64`\n\n### Server Binaries\n- Linux (AMD64): `akoflow-server_0.3.2_linux_amd64`\n- Linux (ARM64): `akoflow-server_0.3.2_linux_arm64`\n- Windows (AMD64): `akoflow-server_0.3.2_windows_amd64.exe`\n- macOS (AMD64): `akoflow-server_0.3.2_darwin_amd64`\n- macOS (ARM64): `akoflow-server_0.3.2_darwin_arm64`\n\nDownload the appropriate binary for your platform, make it executable, and add it to your PATH.\n\n### Download Client \nFor more information, visit [AkôFlow Client documentation](https://akoflow.com/docs/).\n\n### Download Server\nFor more information, visit [AkôFlow Server documentation](https://akoflow.com/docs/).\n\n## Documentation\nFor more information, visit [AkôFlow documentation](https://akoflow.com/docs/).\n",
+      "published_at": "2025-06-07T17:43:40Z",
+      "created_at": "2025-06-07T15:53:02Z",
+      "prerelease": false,
+      "assets": [
+        {
+          "name": "akoflow-client_0.3.2_windows_amd64.exe",
+          "size": 8702464
+        },
+        {
+          "name": "akoflow-client_0.3.2_darwin_amd64",
+          "size": 8639296
+        },
+        {
+          "name": "akoflow-server_0.3.2_darwin_amd64",
+          "size": 13183760
+        },
+        {
+          "name": "akoflow-client_0.3.2_linux_amd64",
+          "size": 8653819
+        },
+        {
+          "name": "akoflow-client_0.3.2_linux_arm64",
+          "size": 8243797
+        },
+        {
+          "name": "akoflow-client_0.3.2_darwin_arm64",
+          "size": 8315586
+        },
+        {
+          "name": "akoflow-server_0.3.2_linux_amd64",
+          "size": 16430696
+        },
+        {
+          "name": "akoflow-server_0.3.2_darwin_arm64",
+          "size": 12717986
+        },
+        {
+          "name": "akoflow-server_0.3.2_windows_amd64.exe",
+          "size": 13338112
+        },
+        {
+          "name": "akoflow_0.3.2_checksums.txt",
+          "size": 1006
+        },
+        {
+          "name": "akoflow-server_0.3.2_linux_arm64",
+          "size": 12607609
+        }
+      ]
+    },
+    {
+      "id": 220826727,
+      "tag_name": "v0.3.1",
+      "name": "AkôFlow v0.3.1",
+      "body": "# AkôFlow Release v0.3.1\n\n## Changes\n- feat: add logging for command execution in RunCommandWithOutputRemote and ExecuteMultiplesCommand (f2cd246)\n- feat: removed comment in code (8071ea0)\n- feat: Update graph layout direction and fix dependency edge connections (7e3562e)\n- Merge pull request #17 from UFFeScience/akf-list-files (ec870d4)\n- feat: Update duration display in workflow detail template to show seconds (7b95af6)\n- Add getting the activities proveniences and file disk spec struct (41b2ac2)\n- fix workflow yaml (77a0fc1)EOF\nNo changes available.\n\n## Installation\n\n### Client Binaries\n- Linux (AMD64): `akoflow-client_0.3.1_linux_amd64`\n- Linux (ARM64): `akoflow-client_0.3.1_linux_arm64`\n- Windows (AMD64): `akoflow-client_0.3.1_windows_amd64.exe`\n- macOS (AMD64): `akoflow-client_0.3.1_darwin_amd64`\n- macOS (ARM64): `akoflow-client_0.3.1_darwin_arm64`\n\n### Server Binaries\n- Linux (AMD64): `akoflow-server_0.3.1_linux_amd64`\n- Linux (ARM64): `akoflow-server_0.3.1_linux_arm64`\n- Windows (AMD64): `akoflow-server_0.3.1_windows_amd64.exe`\n- macOS (AMD64): `akoflow-server_0.3.1_darwin_amd64`\n- macOS (ARM64): `akoflow-server_0.3.1_darwin_arm64`\n\nDownload the appropriate binary for your platform, make it executable, and add it to your PATH.\n\n### Download Client \nFor more information, visit [AkôFlow Client documentation](https://akoflow.com/docs/).\n\n### Download Server\nFor more information, visit [AkôFlow Server documentation](https://akoflow.com/docs/).\n\n## Documentation\nFor more information, visit [AkôFlow documentation](https://akoflow.com/docs/).\n",
+      "published_at": "2025-05-25T02:37:35Z",
+      "created_at": "2025-05-25T02:33:11Z",
+      "prerelease": false,
+      "assets": [
+        {
+          "name": "akoflow-client_0.3.1_linux_arm64",
+          "size": 8243797
+        },
+        {
+          "name": "akoflow-client_0.3.1_darwin_arm64",
+          "size": 8315586
+        },
+        {
+          "name": "akoflow-client_0.3.1_linux_amd64",
+          "size": 8653819
+        },
+        {
+          "name": "akoflow-client_0.3.1_windows_amd64.exe",
+          "size": 8702464
+        },
+        {
+          "name": "akoflow-server_0.3.1_darwin_amd64",
+          "size": 13187856
+        },
+        {
+          "name": "akoflow-server_0.3.1_linux_amd64",
+          "size": 16435000
+        },
+        {
+          "name": "akoflow-server_0.3.1_darwin_arm64",
+          "size": 12717986
+        },
+        {
+          "name": "akoflow-client_0.3.1_darwin_amd64",
+          "size": 8639296
+        },
+        {
+          "name": "akoflow-server_0.3.1_linux_arm64",
+          "size": 12607657
+        },
+        {
+          "name": "akoflow-server_0.3.1_windows_amd64.exe",
+          "size": 13339648
+        },
+        {
+          "name": "akoflow_0.3.1_checksums.txt",
+          "size": 1006
+        }
+      ]
+    },
+    {
+      "id": 219645441,
+      "tag_name": "v0.3.0",
+      "name": "AkôFlow v0.3.0",
+      "body": "# AkôFlow Release v0.3.0\n\n## Changes\n- feat: Integrate runtime metadata into MakeSBatchSDumontActivityService for dynamic job configuration (dde61b1)\n- feat: Refactor syncWorkflowVolumes to use runtime metadata instead of environment variables (22e3244)\n- feat: Add runtime management and health check for SDumont integration (4fc8651)\n- Update README.md (aa99767)\n- Merge pull request #16 from UFFeScience/AKF-15 (b1b7c51)\n- feat: Enhance AkôFlow with runtime support for activities (bff5a60)\n- Update workflow detail template to use seconds instead of milliseconds for activity durations (34360ea)\n- Implement runtime management features including API integration, UI updates, and database queries (eeebb30)\n- Add HTML templates and JavaScript connectors for workflow management in AkôFlow Admin (34438b4)\n- akoflow: improove dashboard images (66558c6)\n- Implement health check functionality for Kubernetes and Docker runtimes, including new health check services and integration into existing runtime interfaces. (55677df)\n- Refactor Kubernetes connector implementations to use runtime metadata for API server token and host retrieval (0fbd6d1)\n- Add methods to retrieve API server token and host from metadata (cf99ae6)\n- Fix GetByName query to select specific columns instead of all (7873e7d)\n- Refactor runtime.go to add normalizeRuntime function for runtime validation (9e3dbef)\n- Update metrics-server image version to v0.7.2 (4a1a2b6)\n- Refactor PublicStaticHandler to redirect requests to /akoflow-admin (9daaf4e)\n- Refactor ConnectorClusterRoleBinding to use runtime entity for token and host retrieval (2d5fc60)\n- Refactor ConnectorClusterRole to use runtime entity for token and host retrieval (d36fab4)\n- Refactor Connector struct to improve code readability and organization (ffdac30)\n- Refactor SetupEnv function to improve token handling and remove debug prints (37011e0)\n- Refactor Workflow struct to include runtime entity and improve code organization (82b6655)\n- Refactor MonitorVerifyActivityWasFinishedService constructor for improved readability (75689e0)\n- Refactor Kubernetes Connectors to Accept Runtime Entity (36d6d0c)\n- Refactor database models to standardize primary key definitions and add utility methods for key and column type retrieval (b3239e1)\n- Enhance workflow creation: return workflow ID and handle errors in Create method (a3b752f)\n- Refactor health check logic for improved readability and update runtime model to use primary key on name (07d3942)\n- Implement health check functionality and update runtime repository handling (0669063)\n- Refactor instance handling: remove instance model and repository, add runtime model and repository (8d7c114)\n- Add database models and repositories for activity, instance, logs, metrics, storage, and workflow (bf7eb42)\n- update repository and models to database folder (10ae347)\n- Enable garbage collector in server startup (9627fc1)\n- Update singularity command timeout to 48 hours and adjust activity status handling (d7c45d3)\n- sdumont: monitor: VerifyActivitiesWasFinished (b0e2b82)\n- update enviroment (c2ab3b4)EOF\nNo changes available.\n\n## Installation\n\n### Client Binaries\n- Linux (AMD64): `akoflow-client_0.3.0_linux_amd64`\n- Linux (ARM64): `akoflow-client_0.3.0_linux_arm64`\n- Windows (AMD64): `akoflow-client_0.3.0_windows_amd64.exe`\n- macOS (AMD64): `akoflow-client_0.3.0_darwin_amd64`\n- macOS (ARM64): `akoflow-client_0.3.0_darwin_arm64`\n\n### Server Binaries\n- Linux (AMD64): `akoflow-server_0.3.0_linux_amd64`\n- Linux (ARM64): `akoflow-server_0.3.0_linux_arm64`\n- Windows (AMD64): `akoflow-server_0.3.0_windows_amd64.exe`\n- macOS (AMD64): `akoflow-server_0.3.0_darwin_amd64`\n- macOS (ARM64): `akoflow-server_0.3.0_darwin_arm64`\n\nDownload the appropriate binary for your platform, make it executable, and add it to your PATH.\n\n### Download Client \nFor more information, visit [AkôFlow Client documentation](https://akoflow.com/docs/).\n\n### Download Server\nFor more information, visit [AkôFlow Server documentation](https://akoflow.com/docs/).\n\n## Documentation\nFor more information, visit [AkôFlow documentation](https://akoflow.com/docs/).\n",
+      "published_at": "2025-05-20T00:37:30Z",
+      "created_at": "2025-05-20T00:22:38Z",
+      "prerelease": false,
+      "assets": [
+        {
+          "name": "akoflow-client_0.3.0_darwin_amd64",
+          "size": 8639296
+        },
+        {
+          "name": "akoflow-client_0.3.0_darwin_arm64",
+          "size": 8315586
+        },
+        {
+          "name": "akoflow-client_0.3.0_linux_arm64",
+          "size": 8243797
+        },
+        {
+          "name": "akoflow-client_0.3.0_linux_amd64",
+          "size": 8653819
+        },
+        {
+          "name": "akoflow-server_0.3.0_darwin_amd64",
+          "size": 13183760
+        },
+        {
+          "name": "akoflow-client_0.3.0_windows_amd64.exe",
+          "size": 8702464
+        },
+        {
+          "name": "akoflow-server_0.3.0_linux_amd64",
+          "size": 16435280
+        },
+        {
+          "name": "akoflow-server_0.3.0_darwin_arm64",
+          "size": 12717986
+        },
+        {
+          "name": "akoflow-server_0.3.0_windows_amd64.exe",
+          "size": 13338624
+        },
+        {
+          "name": "akoflow_0.3.0_checksums.txt",
+          "size": 1006
+        },
+        {
+          "name": "akoflow-server_0.3.0_linux_arm64",
+          "size": 12607793
+        }
+      ]
+    },
+    {
+      "id": 210990863,
+      "tag_name": "v0.2.0",
+      "name": "AkôFlow v0.2.0",
+      "body": "# AkôFlow Release v0.2.0\n\n## Changes\n- gh actions: ajustando arquivo de release (54c58da)\n- gh actions: ajustando arquivo de release (5b2420e)\n- connector: remove Setpgid não é mais necessario (a3e3e42)\n- release: adding release in akoflow (de9ed2f)\n- release: adding release in akoflow (6bf9ce4)\n- release: adding release in akoflow (ee1a559)\n- kuberentes runtime: fixing instance (460e5ca)\n- Merge pull request #12 from UFFeScience/feat/akf-runtimes (1df60d5)\n- sdumont: criando recurso de volume, envinando imagem e código para o akoflow (6382658)\n- sdumont: recuperando job id na submissão do job (ee092bd)\n- sdumont: submentendo jobs no sdumont (e32d94b)\n- scratch: conectando pela VPN e por SSH no SDumont. (bda4163)\n- singularity: adicionando montage (4b91e32)\n- monitor: carregando o dashboard (68a291f)\n- monitor: quando todas as atividades concluir terminar o workflow e recuperando os logs e metricas (1a475d4)\n- monitor: recuperando CPU e Memoria total da atividade (4531587)\n- monitor: implementando script bash que irá recuperar para cada atividade o uso de memoria, cpu de cada atividade (a415fcd)\n- sqlite: salvando arquivo no caminho relativo do sistema (ba9816a)\n- gitignore: ignorando arquivo .db e .sif (70438cf)\n- singularity: executando um novo processo e recuperando o PID (d126659)\n- akoflow runtimes: worker run singularity command (fbc6d81)\n- akoflow runtimes: criando workflows com runtimes (a08ed3a)\n- garbage collector disabled (aa6af5d)\n- akoflow runtimes: monitores executando de acordo com o runtime (8401015)\n- akoflow runtimes: executando de acordo com o runtime (aaa2f18)\n- akoflow runtimes: acoplando em kubernetes service (062fc95)\n- akoflow runtimes: modularizando runtimes (9f01e9e)\n- Update README.md (3a1a9a1)\n- gawa: add gawa workflow (dabc3cc)\n- add akoflow-kubeadmin resource (184017b)\n- add akoflow-kubeadmin resource (7758efd)\n- add akoflow-kubeadmin resource (cb56650)\n- add akoflow-kubeadmin resource (1b171dc)\n- add akoflow-kubeadmin resource (c555553)\n- akoflow install: kubernetes install with SSH (4acab85)\n- ssh: install docker and kubernetes in ip host (76bee65)\n- devenv: fix version static validator (82fbb92)\n- AkoFlow Client: conectando em instancias por SSH e executando comandos em paralelo (452820f)\n- [wip] - akoflow install --instance=local (33c81cb)\n- client: adicionando akoflow run and akoflow install cli command (17bb9fd)\n- shared: add utils ler arquivos em shared (b8c8213)\n- tests: TestStartWorker_ActivityNotFound (c55eb3f)\n- logger: implementando log global (d599898)\n- add akoflow log in permission (bb85c30)\n- tests: testes para o worker (6ce8e33)\n- project: removendo codigo não utilizados (2811bb4)\n- tests: criando casos de testes para o akoflow-client (549d9fc)\n- removendo pastas de tests (45a8986)\n- tests: adicionando novos casos para o projeto (447aa07)\n- gitignore: ajustando pastas do akoflow (0b5427c)\n- gitignore: ajustando pastas do gitignore (e9d927e)\n- tests: implementando infraestrutura basica de teste (e7d9497)\n- Tasks: adicionando tarefa para poder executar multiplos binariso para todos os SO (94991de)\n- delete depreacated documentations (c689f16)\n- delete idea config (e673d34)\n- ci/cd: removing docs and build image container (a3d2737)\n- environment: Add development container configuration and Go environment setup (45cd991)\n- Merge pull request #3 from ovvesley/nfs-server (8db727b)\n- created nfs server (f1b0054)\n- Merge pull request #2 from ovvesley/nfs-server (fa15c1e)\n- client: add scope check (ef36699)\n- new datetime (550e8ff)\n- akoflow: adicionando grafico de timeline por atividade (867693e)\n- Merge pull request #1 from ovvesley/nfs-server (b7802da)\n- akoflow: carregando dinamicamente as atividades, grafos e workflow (063bc9d)\n- akoflow: adicionando mecanismo de path de stirng (da9619c)\n- akoflow: listando workflows na tela home (7d72673)\n- akoflow: modificando url do workflow (fcb2dc0)\n- akoflow: adicionando visualização de DAG (da53df4)\n- akoflow: admin adding interface to akoflow admin (0f518e1)\n- feat: akoflow admin handler (50e2749)\n- feat: wf montage distributed (955fd3c)\n- feat: wf distributed and wf standalone (8d58247)\n- feat: workflow com sistemas de arquivo distribuido (5a1fd9c)\n- feat: connector adicionando get deployment (6262f2d)\n- feat: update akoflow manifest distributed (bb61708)\n- feat: update akoflow manifest standalone (27620df)\n- feat: standalone using m.service.dependencies (07a5ee0)\n- feat: separando fluxo de criação do container (3f849bf)\n- feat: seprando fluxo de criação de apply job (aa4c3aa)\n- feat: seprando fluxo de criação de atividade de acordo com o container (f72430f)\n- feat: executando fluxo de standalone com preactivity (0dc2778)\n- nfs standalone server (7355931)\n- delete depreacted test cases (ce0fa00)\n- select with colums (4a551b3)\n- implementing middleware in webserver (6505f6e)\n- execution createNfsService (5dbc848)\n- execution createNfsService (a4fc06a)\n- execution createNfsService (cc9b3fc)\n- akoflow: add permission to use extensions (ea52546)\n- NFS Service entity: add json parameters serialize (cb9f8fe)\n- CreatePvc: fixing parameters (c706ee6)\n- update connector_pvc_k8s.go and create_nfs_service.go (2d66c7c)\n- update connector_pvc_k8s.go (13c24f5)\n- update connector_deployment_k8s.go (e5344e0)\n- update connector.go adding new connctor (381d869)\n- update run_activity_in_cluster_service.go (06ed32e)\n- update monitor_change_workflow_service.go (a0f558d)\n- feat: create create_nfs_service.go (18d40aa)\n- chore: create 1 pkg server resource nfs server (fad5101)\n- chore: update akoflow-nfs-server.yaml (31b75e5)\n- update workflow_entity.go (836c338)\n- feat: create nfs_server_entity.go (549d1fd)\n- update k8sjob_entity.go (e8ab32c)\n- feat: create connector_storage_class.go (7d876fa)\n- feat: create connector_service_account.go (03895d4)\n- feat: create connector_service.go (3f290af)\n- feat: create connector_role_binding.go (6adf29b)\n- feat: create connector_role.go (0e221f7)\n- feat: create connector_cluster_role_binding.go (ad17e0c)\n- feat: create connector_cluster_role.go (f96c28e)\n- chore: create wf-0-montage.yaml (5df720a)\n- chore: create wf-montage-050d-distributed.yaml (00117b0)\n- Merge branch 'main' of github.com:ovvesley/akoflow into nfs-server (1b43426)\n- Merge branch 'main' of github.com:ovvesley/akoflow (afd46f9)\n- montage 2 graus: adicionando imagem e dockerfile (fad456d)\n- Update README.md (b5a8477)\n- nfs-server (0a06f6d)\n- monitor: adding monitor when completed log (6cf7de5)\n- Storage: file list (74d0d14)\n- metaheuristica grasp: exp (27a2acf)\n- Database: expose dump database to public (e7fee35)\n- Database: expose dump database to public (33457f7)\n- Database: expose dump database to public (608a961)\n- Storage: update activity when start and complete (89398e5)\n- Garbage Collector: when activity completed your storage is free (9384b81)\n- Garbage Collector: when activity completed your storage is free (41db818)\n- Garbage Collector: when activity completed your storage is free (376cde9)\n- Garbage Collector: adding storage per activity (5dddd3c)\n- Garbage Collector: adding garbage collector (e093c50)\n- add experiments (814b367)\n- Akoflow: add results (e0e051f)\n- Akoflow: add results (365dbbd)\n- akoflow-gcloud: experiment to 1.00d montage (3db114f)\n- akoflow-gcloud: experiment to 1.00d montage (2517430)\n- experiment: add results (eff1066)\n- experiment: add results (4f999a8)\n- experiment: add results (b1675f7)\n- experiment: add results (f6ed6b0)\n- experiment: add results (2fe263b)\n- experiment: add results (5b5f90c)\n- akoflow-gcloud: experiment to 1.00d montage (68c763e)\n- akoflow-gcloud: experiment to 1.00d montage (4215377)\n- akoflow-gcloud: minimize num volum in preactivity (663b76e)\n- akoflow-gcloud: resultando 050d (5e2b27e)\n- akoflow-gcloud: update with gcloud (6c12a19)\n- akoflow-gcloud: activities without dependencies (c4b10b0)\n- akoflow-gcloud: update docker image (f37a416)\n- akoflow-gcloud: update docker image (d0627c4)\n- github: adding pipeline (151adaa)\n- github: adding pipeline (cee89cd)\n- github: adding pipeline (c4bc699)\n- github: adding pipeline (37c4e1a)\n- github: adding pipeline (c11d1e5)\n- monitor: fix get metrics (a294a2b)\n- docs: how dev (3dba9c6)\n- docs: how dev (6c39772)\n- docs: how dev (039c7eb)\n- Akoflow: docs (016f582)\n- Akoflow: docs (62b66e1)\n- Akoflow: docs (bef5fa2)\n- Akoflow: docs (6f80c9b)\n- Akoflow: docs (e561952)\n- Akoflow: docs (f83f172)\n- Akoflow: docs (7061544)\n- Akoflow: docs (959d3e2)\n- Akoflow: docs (6ec8196)\n- Akoflow: docs (819c4a4)\n- Akoflow: docs (37218a2)\n- akoflow: scik8sflow to akoflow (6bee143)\n- scik8sflow: add preliminar experiment (d1b1b18)\n- scik8sflow: fix job not found and preactivity dependencies (cec3674)\n- scik8sflow: adding preactive mecanism (b182ae2)\n- scik8sflow - server: when failed job set to finished status (0cd5b00)\n- montage: adding montage workflow (7dc46c0)\n- montage: ignore file .fits (36ab2f9)\n- montage: adding dax montage (aa26111)\n- montage: adding montage wfs (d0a9c35)\n- scik8sflow: adding optional nodeSelector parameters and docs in methods (cf8a578)\n- scik8sflow: append multiple disk in container (e4823a2)\n- scik8sflow: get activity dependencies service (4589bf8)\n- scik8sflow: mapWfWfs (aeaf99b)\n- scik8sflow: removing situation algoritm (a37bb8e)\n- scik8sflow: preparing to v0-03 (d346774)\n- scik8sflow: preparing to v0-03 (d42d632)\n- scik8sflow: preparing to v0-03 (b151de3)\n- scik8sflow: storage path to sqlite (73a505f)\n- scik8sflow: storage path to sqlite (1b13f3b)\n- scik8sflow: running in production on gke (60e063f)\n- scik8sflow: setup env (4c59073)\n- scik8sflow: rename default namespace (5b8afb8)\n- test: adding r.handleGetOrCreateNamespace(namespace)  test (cd61d9f)\n- project: rename to scik8sflow (9a388d3)\n- project: rename to scik8sflow (9df93b4)\n- mock: criando mocks de response (ab5b91c)\n- refact: using interface in connector (bcd1f4a)\n- refact: separeted repository module files (b46914d)\n- resource: error getting metrics (c3292a4)\n- resource: adicionando workflow do NMFSt.P (74380ae)\n- server: permitindo limitacao de CPU e memoria (429ac44)\n- server: sequencial workflow with shared data (cac3351)\n- server: new files to workflow (d097638)\n- server: change monitor and orchestartor to 1 seconds in time to update (d999fa4)\n- client: send file to server (15bd735)\n- client: send file to server (1fc2cab)\n- monitor: persist metrics and logs (94073f7)\n- monitor: change status when job is running (cdcc8d6)\n- monitor: monitor change workflow service (6a439a9)\n- worker: run activity in cluster service (79ba48f)\n- orchestrator: send to worker a activity (040ab15)\n- orchestrator: get pending workflow (0f91fb9)\n- workflow and activities: create workflow in database (87e8299)\n- workflow and activities: create workflow in database (95bd072)\n- workflow and activities: create workflow in database (12f8ff0)\n- workflow: add sqlite connection and persist workflow and activities (2387deb)\n- workflow: add channel metodology (789cecc)\n- workflow: add channel metodology (1bb731d)\n- workflow: to do (f17faa0)\n- runworkflow: execute k8s job by workflow (b0f6775)\n- runworkflow: parser yaml (9e61d78)\n- proof of concept: request k8s metrics (6790ddb)\n- proof of concept: request k8s metrics (6212d9e)\n- initial commit: big bang (9e13edb)EOF\nNo changes available.\n\n## Installation\n\n### Client Binaries\n- Linux (AMD64): `akoflow-client_0.2.0_linux_amd64`\n- Linux (ARM64): `akoflow-client_0.2.0_linux_arm64`\n- Windows (AMD64): `akoflow-client_0.2.0_windows_amd64.exe`\n- macOS (AMD64): `akoflow-client_0.2.0_darwin_amd64`\n- macOS (ARM64): `akoflow-client_0.2.0_darwin_arm64`\n\n### Server Binaries\n- Linux (AMD64): `akoflow-server_0.2.0_linux_amd64`\n- Linux (ARM64): `akoflow-server_0.2.0_linux_arm64`\n- Windows (AMD64): `akoflow-server_0.2.0_windows_amd64.exe`\n- macOS (AMD64): `akoflow-server_0.2.0_darwin_amd64`\n- macOS (ARM64): `akoflow-server_0.2.0_darwin_arm64`\n\nDownload the appropriate binary for your platform, make it executable, and add it to your PATH.\n\n### Download Client \nFor more information, visit [AkôFlow Client documentation](https://akoflow.com/docs/).\n\n### Download Server\nFor more information, visit [AkôFlow Server documentation](https://akoflow.com/docs/).\n\n## Documentation\nFor more information, visit [AkôFlow documentation](https://akoflow.com/docs/).\n",
+      "published_at": "2025-04-08T11:26:36Z",
+      "created_at": "2025-04-08T11:21:02Z",
+      "prerelease": false,
+      "assets": [
+        {
+          "name": "akoflow-client_0.2.0_linux_arm64",
+          "size": 8244781
+        },
+        {
+          "name": "akoflow-client_0.2.0_linux_amd64",
+          "size": 8649013
+        },
+        {
+          "name": "akoflow-client_0.2.0_darwin_arm64",
+          "size": 8315490
+        },
+        {
+          "name": "akoflow-client_0.2.0_windows_amd64.exe",
+          "size": 8701440
+        },
+        {
+          "name": "akoflow-server_0.2.0_darwin_amd64",
+          "size": 12973808
+        },
+        {
+          "name": "akoflow-server_0.2.0_linux_amd64",
+          "size": 16269832
+        },
+        {
+          "name": "akoflow-server_0.2.0_windows_amd64.exe",
+          "size": 13136384
+        },
+        {
+          "name": "akoflow-client_0.2.0_darwin_amd64",
+          "size": 8639216
+        },
+        {
+          "name": "akoflow-server_0.2.0_linux_arm64",
+          "size": 12418271
+        },
+        {
+          "name": "akoflow-server_0.2.0_darwin_arm64",
+          "size": 12514658
+        },
+        {
+          "name": "akoflow_0.2.0_checksums.txt",
+          "size": 1006
+        }
+      ]
+    }
+  ]
+}

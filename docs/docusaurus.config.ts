@@ -222,6 +222,7 @@ const config: Config = {
           position: "left",
           label: "API Reference",
         },
+        { to: "/docs/changelog", position: "left", label: "Changelog" },
         { to: "/blog", position: "left", label: "Blog" },
         {
           href: "https://github.com/UFFeScience/akoflow",
@@ -240,6 +241,11 @@ const config: Config = {
             { label: "Architecture internals", to: "/docs/modules" },
             { label: "Installation", to: "/docs/installation" },
             { label: "Downloads", to: "/docs/downloads" },
+            { label: "Changelog", to: "/docs/changelog" },
+            {
+              label: "MCP & AI apps",
+              to: "/docs/guides/operations/mcp-ai-apps",
+            },
             { label: "Interface Tour", to: "/docs/guides/interface-tour" },
           ],
         },

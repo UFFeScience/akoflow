@@ -20,7 +20,7 @@ Plan a workflow before starting execution. For a known placement, make a manual 
 
 <img src={require('@site/static/img/interface/planning/create-execution-plan.png').default} alt="AkôFlow Desktop Create an execution plan screen in light mode, with generated and manual planning choices, a planning target selector, an execution scope, and PRISM Cost, PRISM Time, and HEFT controls." />
 
-*Choose **Generate plans** to compare candidate schedules. The target selector keeps real execution scopes separate from simulation-only scopes; PRISM Cost and PRISM Time are exclusive objectives, while HEFT is a comparison baseline.*
+_Choose **Generate plans** to compare candidate schedules. The target selector keeps real execution scopes separate from simulation-only scopes; PRISM Cost and PRISM Time are exclusive objectives, while HEFT is a comparison baseline._
 
 The server's available algorithms are listed by `GET /planning-algorithms/`. A session may also include a deadline, budget, or directed interference matrix; HEFT does not use that matrix for its placement. See [PRISM and HEFT](/docs/explanations/prism-and-heft) for the prediction models and [planning states](/docs/reference/planning-and-execution-states) for candidate and session fields.
 
@@ -151,3 +151,23 @@ Planning sessions retain candidate comparisons before promotion. Open a session 
 ![Planning sessions catalog](/img/interface/planning/sessions.png)
 
 ![Planning session candidate comparison](/img/interface/planning/session-detail.png)
+
+## Inspect algorithms and add a Go plugin
+
+Open **Workflows → Scheduling algorithms** to inspect HEFT, PRISM Time and PRISM Cost. Native implementations are included with the daemon; PRISM variants carry the AkôFlow-exclusive marker. Each detail page explains its objective, model and implementation.
+
+![AkôFlow 1.0.12 native algorithm library with a ready MOHEFT plugin](/img/releases/v1.0.12/05-algorithm-library.png)
+
+For a custom algorithm, choose **Add algorithm**, enter its identity and objective, and implement `Schedule(input Input) ([]Plan, error)`. **Import .go or package** accepts a source file or a portable scheduler package. **Format Go** checks syntax and formatting; **Check types** compiles a temporary validation build. **Save and compile** stores a revision and makes a successful build available for planning. A failed edit retains the last working revision and reports compiler diagnostics.
+
+![Go scheduling editor with the MOHEFT implementation](/img/releases/v1.0.12/08-go-plugin-editor.png)
+
+The production daemon includes its Go compiler. Compilation and plugin execution happen on the daemon; installed source must be trusted because it runs with the daemon's system access. Export the package to move the source, documentation and defaults to another installation.
+
+### Try the reviewed MOHEFT package
+
+Download the [versioned MOHEFT package](/downloads/scheduling/v1.0.12/moheft.akoflow-scheduler.json) or its [Go source](/downloads/scheduling/v1.0.12/moheft.go), then import it from **Add algorithm** and choose **Save and compile**. The screenshot shows the resulting **Ready** state in an isolated 1.0.12 installation.
+
+MOHEFT returns time–cost Pareto candidates using the documented task-additive model. Its detail page records CPU, memory, directed transfer and pricing assumptions. Read those assumptions before comparing costs with PRISM's resource-window billing. The integration does not claim to reproduce the paper's numerical experiments. BDHEFT is deferred while contradictions in the supplied publication remain unresolved.
+
+See [the changelog](/docs/changelog) for the release history and [the planning explanation](/docs/explanations/planning) for the broader model.

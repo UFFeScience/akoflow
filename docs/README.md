@@ -53,3 +53,13 @@ target and source objects, null-prototype targets, nested merges, arrays and
 symbols. The exact advisory remains visible in npm audit; every other advisory
 continues to fail CI. Remove the patch and its exact advisory exception after a
 fixed upstream release passes the same tests.
+
+## Automatic project changelog
+
+GitHub Releases is the source of truth for `/docs/changelog`. Publish or edit release notes there to update the changelog, including screenshots and download files. The page follows every pagination link and includes stable releases and public pre-releases; drafts are excluded.
+
+The Go command `go run ./cmd/docs-release-sync` writes the public build snapshot to `docs/src/data/releases.generated.json`. The documentation build runs this command automatically through `npm run generate:releases`; Go 1.25 and Node.js 20 or later are required. `GITHUB_TOKEN`, when provided by CI, is used only by this build command and is never written to the browser snapshot. A valid previous snapshot remains available during a GitHub outage. The browser also refreshes the full public history on entry and through **Refresh**.
+
+Release publication, edits, deletion or unpublication request a documentation workflow on `main`, preserving the existing Pages deployment branch policy. The existing daily schedule refreshes the saved history as well. Pull request checks use separate concurrency groups from production Pages deployment.
+
+Validate the generator with `go test ./cmd/docs-release-sync` and the browser pagination/normalization with `npm run test:releases --prefix docs`. Runtime release Markdown is parsed and sanitized before rendering. Screenshots in release notes should use an immutable raw GitHub commit URL; the normal documentation guides reference their repository-owned static image paths.

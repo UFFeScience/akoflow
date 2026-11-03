@@ -2,6 +2,7 @@ import type { SidebarsConfig } from "@docusaurus/plugin-content-docs";
 
 const sidebars: SidebarsConfig = {
   docsSidebar: [
+    "changelog",
     {
       type: "category",
       label: "Tutorials",
@@ -142,6 +143,7 @@ const sidebars: SidebarsConfig = {
           collapsed: true,
           items: [
             "guides/operations/instance-management",
+            "guides/operations/mcp-ai-apps",
             "guides/operations/server-instance",
             "guides/operations/search-and-notifications",
             "guides/operations/interactive-console",

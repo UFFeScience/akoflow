@@ -1,11 +1,14 @@
 name: Documentation checks
 
 on:
+  release:
+    types: [published, edited, deleted, unpublished, released, prereleased]
   repository_dispatch:
     types: [examples-updated]
   pull_request:
     paths:
       - "docs/**"
+      - "cmd/docs-release-sync/**"
       - "internal/api/**"
       - "internal/domain/**"
       - "internal/provider/**"
@@ -14,6 +17,7 @@ on:
     branches: [main]
     paths:
       - "docs/**"
+      - "cmd/docs-release-sync/**"
       - "internal/api/**"
       - "internal/domain/**"
       - "internal/provider/**"
@@ -28,11 +32,25 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: ${{ github.event_name == 'pull_request' && format('docs-pr-{0}', github.event.pull_request.number) || github.event_name == 'release' && 'docs-release-refresh' || 'pages' }}
   cancel-in-progress: false
 
 jobs:
+  refresh-from-release:
+    name: Refresh changelog from release
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: write
+    steps:
+      - name: Build the current documentation on main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run docs-checks.yaml --repo "$GITHUB_REPOSITORY" --ref main
+
   verify:
+    if: github.event_name != 'release'
     name: Build and verify documentation
     runs-on: ubuntu-latest
     steps:
@@ -50,6 +68,10 @@ jobs:
           repository: UFFeScience/akoflow-examples
           ref: ${{ steps.examples-revision.outputs.revision }}
           path: .external/akoflow-examples
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+          cache: true
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -63,8 +85,14 @@ jobs:
         run: npm run test:api-generator --prefix docs
       - name: Verify patched dependency security regressions
         run: npm run check:dependency-security --prefix docs
+      - name: Test release snapshot generator
+        run: go test ./cmd/docs-release-sync
+      - name: Test release history synchronization
+        run: npm run test:releases --prefix docs
       - name: Build the documentation site
         run: npm run build --prefix docs
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
       - name: Verify repository-owned documentation links
         run: npm run check:links --prefix docs
         env:

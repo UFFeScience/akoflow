@@ -1,12 +1,11 @@
 ---
-
 id: interface-tour
 title: Tour the AkôFlow interface
 sidebar_label: Interface tour
 description: Learn how the AkôFlow Desktop navigation maps to the control-plane API.
 ---
 
-import AnnotatedScreenshot from '@site/src/components/AnnotatedScreenshot';
+import AnnotatedScreenshot from "@site/src/components/AnnotatedScreenshot";
 
 AkôFlow Desktop lets you see your workflows, environments, plans, runs, and results in one place. Start on **Overview** to check the current instance, then use the sidebar to open the record you need.
 
@@ -16,10 +15,33 @@ AkôFlow Desktop lets you see your workflows, environments, plans, runs, and res
   alt="AkôFlow Desktop overview with the sidebar, global search, notifications, instance status, and workflow summary identified"
   caption="A current Desktop overview. The numbered markers identify the navigation and status controls; counts and workflow names change with the selected instance. Open a workflow row or select View all to continue into a record."
   callouts={[
-    {number: 1, x: 4.8, y: 16.0, label: 'The sidebar groups workflows, infrastructure, runs, artifacts, provenance, and audit.'},
-    {number: 2, x: 50.0, y: 7.5, label: 'Global search opens entities without first visiting their list page.'},
-    {number: 3, x: 92.1, y: 7.5, label: 'Notifications report operations that need attention.'},
-    {number: 4, x: 8.2, y: 91.5, label: 'The instance indicator confirms which daemon the client is using.'},
+    {
+      number: 1,
+      x: 4.8,
+      y: 16.0,
+      label:
+        "The sidebar groups workflows, infrastructure, runs, artifacts, provenance, and audit.",
+    },
+    {
+      number: 2,
+      x: 50.0,
+      y: 7.5,
+      label:
+        "Global search opens entities without first visiting their list page.",
+    },
+    {
+      number: 3,
+      x: 92.1,
+      y: 7.5,
+      label: "Notifications report operations that need attention.",
+    },
+    {
+      number: 4,
+      x: 8.2,
+      y: 91.5,
+      label:
+        "The instance indicator confirms which daemon the client is using.",
+    },
   ]}
 />
 
@@ -27,16 +49,16 @@ AkôFlow Desktop lets you see your workflows, environments, plans, runs, and res
 
 Each task guide includes the relevant Desktop captures beside the procedure it explains. Start with the workflow, infrastructure, data, or operations guide for the task you want to complete.
 
-| Area | What you do there | Main API domain |
-|---|---|---|
-| Overview | Check registered environments, workflows, and completed runs | Multiple read endpoints |
-| Workflows | Create versioned definitions and inspect activity DAGs | `/workflow-definitions/` |
-| Planning sessions | compare algorithms and promote a candidate to a plan | `/planning-sessions/` |
-| Infrastructure | Connect environments, discover resources, and define execution scopes | `/environments/`, `/resources/`, `/execution-scopes/` |
-| Runs | Start and inspect workflow, standalone, simulated, and interactive runs | `/execution-runs/` |
-| Artifacts | Register, build, locate, and materialize executable artifacts | `/artifacts/`, `/artifact-builds/` |
-| Provenance | Query evidence and follow lineage | `/provenance/` |
-| Audit | Inspect the operational event history | `/audit-events/` |
+| Area              | What you do there                                                       | Main API domain                                       |
+| ----------------- | ----------------------------------------------------------------------- | ----------------------------------------------------- |
+| Overview          | Check registered environments, workflows, and completed runs            | Multiple read endpoints                               |
+| Workflows         | Create versioned definitions and inspect activity DAGs                  | `/workflow-definitions/`                              |
+| Planning sessions | compare algorithms and promote a candidate to a plan                    | `/planning-sessions/`                                 |
+| Infrastructure    | Connect environments, discover resources, and define execution scopes   | `/environments/`, `/resources/`, `/execution-scopes/` |
+| Runs              | Start and inspect workflow, standalone, simulated, and interactive runs | `/execution-runs/`                                    |
+| Artifacts         | Register, build, locate, and materialize executable artifacts           | `/artifacts/`, `/artifact-builds/`                    |
+| Provenance        | Query evidence and follow lineage                                       | `/provenance/`                                        |
+| Audit             | Inspect the operational event history                                   | `/audit-events/`                                      |
 
 ## Follow the ownership hierarchy
 
@@ -88,3 +110,11 @@ Some instance modes prevent write operations. The interface displays the active 
 ## Continue
 
 Start with [your first end-to-end run](/docs/guides/workflows/first-run), or connect [execution infrastructure](/docs/guides/infrastructure/environments).
+
+## New screens and versions
+
+The [project changelog](/docs/changelog) collects every public GitHub release, including its new screens, changes and downloads. In Desktop, **Settings → General → Application updates** shows the installed version and checks for a matching Desktop/daemon/BuildKit release.
+
+![AkôFlow Desktop 1.0.12 and its paired runtime update status](/img/releases/v1.0.12/07-desktop-version.png)
+
+Version 1.0.12 adds guided [MCP & AI app setup](/docs/guides/operations/mcp-ai-apps), an inspectable [scheduling algorithm library and Go plugin editor](/docs/guides/workflows/planning#inspect-algorithms-and-add-a-go-plugin), and [Docker Hub image import with verified SIF builds](/docs/guides/data/artifacts#import-an-image-from-docker-hub).

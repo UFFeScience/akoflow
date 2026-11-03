@@ -5,128 +5,32 @@ description: Connect MCP clients to the full AkôFlow daemon API using stdio or 
 
 # Control AkôFlow through MCP
 
-AkôFlow provides named MCP tools for every registered daemon API operation.
-The current catalog contains 136 domain operations, plus upload, download and
-operation preparation tools. The `admin` profile exposes all 142 tools.
+AkôFlow provides named MCP tools for every registered domain API operation.
+The current catalog contains 144 domain operations, plus upload, download and
+operation preparation tools. The `admin` profile exposes all 150 tools.
 
-MCP uses the same HTTP API and domain validation as Desktop. It can operate
-while Desktop is closed, provided the daemon is running. SSH, Docker,
+MCP uses the same HTTP API and domain validation as Desktop. Desktop connections use the bundled connector while Desktop is open.
+Standalone adapters connect to an independently running daemon. SSH, Docker,
 Kubernetes, BuildKit, connection checks and runtime commands remain in the
 daemon.
 
+For the guided Desktop setup, screenshots and first prompts, start with
+[Connect your AI apps](/docs/guides/operations/mcp-ai-apps). The remainder of
+this page is the protocol and deployment reference.
+
 ## Connect from AkôFlow Desktop
 
-Open **Instance settings → MCP & AI apps**. MCP starts disabled. Enable it,
-then choose **Add app** and select Codex, Claude Desktop, Claude Code or another
-MCP client. Give each app its own connection.
+Open **Settings → MCP & AI apps**, enable MCP, add an app and choose its access level. The [guided Desktop setup](/docs/guides/operations/mcp-ai-apps) covers client installation, screenshots, first prompts, permissions and troubleshooting.
 
-![Enable MCP in Desktop](/img/interface/mcp/01-desktop-mcp-disabled.png)
+The connector and Node runtime are bundled with Desktop. Generated client entries contain private connection-file references. Secrets stay out of the configuration preview and clipboard. Use **Test MCP connection** to authenticate with a real MCP client, discover the permitted tools and read daemon identity, then reconnect the AI app.
 
-Choose the access level before creating the connection. **Read only** is the
-default; **Operate workflows** permits ordinary workflow changes and execution;
-**Full administration** exposes all 142 tools, including credentials, cloud
-resources and deletion.
+![AkôFlow 1.0.12 verifies its full 150-tool MCP catalog](/img/releases/v1.0.12/04-mcp-verified.png)
 
-![Choose the app and its permissions](/img/interface/mcp/03-desktop-choose-permissions.png)
+Each app has an independent permission and credential. Disabling MCP pauses saved connections; rotation invalidates the old credential; revocation removes one app's access. Connections survive instance/archive switches and daemon restarts. Factory reset revokes them and disables MCP before requests are accepted. The Desktop Compose stack keeps MCP state in its dedicated persistent volume.
 
-The setup dialog includes the complete guide inside the platform:
+Desktop management endpoints require the operator credential and are excluded from the MCP tool catalog. MCP clients cannot enable themselves, create another client or promote their own role. Native Desktop owns credential delivery; renderer proxies reject the dedicated credential endpoint.
 
-1. Keep AkôFlow Desktop open.
-2. Select **Add to Codex**, **Add to Claude Desktop** or **Add to Claude Code**.
-   Alternatively, copy the configuration preview into the AI app's MCP settings.
-3. Restart the AI app or reconnect its MCP servers. Review and approve requested
-   write operations in that app.
-4. Select **Test MCP connection**. The daemon runs a real MCP handshake, discovers
-   the permitted tools and reads its identity. This verifies the service and
-   credential; the AI app must still load its configuration.
-
-![Generated Codex configuration](/img/interface/mcp/04-desktop-codex-configuration.png)
-
-The connector uses the Node runtime already bundled in Electron. Users do not
-need a separate Node.js installation or Docker command to configure MCP.
-Desktop itself still uses its normal Docker-based runtime. The generated entry
-contains an executable, a stable helper path and a **private connection file
-reference**. Neither the daemon token nor the per-app token appears in the
-preview, clipboard, renderer or client configuration.
-
-![Successful MCP connection test](/img/interface/mcp/06-desktop-mcp-verified.png)
-
-### Client configuration locations
-
-| Client                    | Location and activation                                                              |
-| ------------------------- | ------------------------------------------------------------------------------------ |
-| Codex Desktop / CLI       | `~/.codex/config.toml`; select **Add to Codex**, then restart/reconnect Codex        |
-| Claude Desktop on macOS   | `~/Library/Application Support/Claude/claude_desktop_config.json`                    |
-| Claude Desktop on Windows | `%APPDATA%\\Claude\\claude_desktop_config.json`                                      |
-| Claude Code               | User-level `~/.claude.json`; select **Add to Claude Code**, then start a new session |
-| Other MCP clients         | Copy the generated stdio JSON entry into their MCP server settings                   |
-
-For Claude Desktop, open **Settings → Developer → Edit Config** to check the file
-actually used by your installation. If its location differs from the standard
-path, copy the generated entry there manually. Add it alongside existing
-`mcpServers` entries. Claude Desktop installation is offered on macOS and Windows;
-on Linux use Claude Code or another compatible stdio client.
-
-![Claude Desktop configuration guide](/img/interface/mcp/08-desktop-claude-configuration.png)
-
-Automatic installation preserves other servers and settings, and saves a
-private backup when replacing an existing configuration. A broken configuration
-is reported without exposing its contents. Codex entries have explicit ownership
-markers; manually maintained JSON entries are preserved during cleanup.
-
-Try **“List my AkôFlow workflows and available environments.”** With write or
-admin access, try **“Create a workflow called MCP demo with one activity.”**
-The normal workflow pages show records created through MCP.
-
-![Workflow created by an MCP client](/img/interface/mcp/07-workflow-created-through-mcp.png)
-
-### Pause, rotate and revoke
-
-**Disable MCP** pauses every app without deleting its registration. Re-enable
-it to restore access. **Rotate credential** in the setup dialog invalidates the
-old credential and refreshes the private desktop reference. Reconnect the AI app
-after rotation. **Revoke access** invalidates one app immediately and removes its
-managed local configuration and connection file when possible.
-
-![Paused connections](/img/interface/mcp/11-desktop-mcp-paused.png)
-
-![Revoked connection](/img/interface/mcp/12-desktop-access-revoked.png)
-
-Connections are installation settings and survive archive switches and daemon
-restarts. A factory reset revokes all saved app connections and disables MCP
-before the restarted daemon accepts requests. Domain writes still respect read-only archives. The desktop Compose
-stack persists MCP state in a dedicated volume, separate from instance exports.
-The daemon stores metadata and credential references in `desktop-settings.json`;
-credentials and operation receipts use separate private files. Native Desktop
-refreshes local endpoint references at startup when the daemon port changes.
-
-### Troubleshooting
-
-- **MCP management unavailable:** update both Desktop and its matching daemon
-  runtime. An older daemon cannot provide these management endpoints.
-- **Server absent in the AI app:** restart it, check its MCP settings and use
-  **Open config** or **Copy configuration**. Check custom client configuration
-  directories and your installation's actual file location.
-- **Connection unavailable:** keep Desktop running and test again. Local stdio
-  connects to the daemon on this computer; a cloud-hosted AI client cannot reach
-  this loopback endpoint.
-- **Insufficient access:** revoke and recreate a connection with the required
-  profile. Clients cannot promote their own permissions.
-- **Moved application:** open **Configure app** and add the configuration again
-  so it uses the current executable path.
-- **Manually edited configuration:** access revocation still takes effect;
-  remove any retained entry manually in the AI app.
-
-Desktop management endpoints require the operator credential and are deliberately
-excluded from the MCP catalog. An MCP client cannot enable itself, mint another
-credential or promote its own role. The dedicated credential endpoint is
-accessible only to native main-process code through Desktop; renderer proxies
-reject it.
-
-The screenshot and protocol evidence is documented in
-[the homeserver validation record](/img/interface/mcp/validation.md).
-For advanced standalone deployments and remote HTTPS/OAuth clients, use the
-following sections.
+For advanced standalone deployments and remote HTTPS/OAuth clients, use the following sections.
 
 ## Build and run
 

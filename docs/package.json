@@ -9,8 +9,8 @@
     "generate:api": "node scripts/generate-api-reference.mjs",
     "test:api-generator": "node --test scripts/go-function-body.test.mjs",
     "capture:media": "node scripts/capture-interface-media.mjs",
-    "prestart": "npm run generate:api",
-    "prebuild": "npm run generate:api",
+    "prestart": "npm run generate:api && npm run generate:releases",
+    "prebuild": "npm run generate:api && npm run generate:releases",
     "docusaurus": "docusaurus",
     "start": "docusaurus start",
     "build": "docusaurus build",
@@ -22,7 +22,9 @@
     "write-heading-ids": "docusaurus write-heading-ids",
     "typecheck": "tsc",
     "check:links": "node scripts/check-links.mjs",
-    "check:shell": "node scripts/check-shell-examples.mjs"
+    "check:shell": "node scripts/check-shell-examples.mjs",
+    "generate:releases": "go run ../cmd/docs-release-sync --output src/data/releases.generated.json",
+    "test:releases": "node --test scripts/releases.test.mjs"
   },
   "dependencies": {
     "@docusaurus/core": "^3.10.2",
@@ -36,7 +38,11 @@
     "mermaid": "^11.17.2",
     "prism-react-renderer": "^2.3.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-markdown": "^10.1.0",
+    "rehype-raw": "^7.0.0",
+    "rehype-sanitize": "^6.0.0",
+    "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "^3.10.2",

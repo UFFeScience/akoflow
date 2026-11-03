@@ -40,6 +40,7 @@ export default function ExpandableImage(
         </a>
         <img
           src={props.src}
+          loading="lazy"
           alt={props.alt ?? "Documentation image"}
           onClick={(event) => event.stopPropagation()}
         />

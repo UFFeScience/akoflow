@@ -197,3 +197,23 @@ Locations and materializations answer different questions: locations show where 
 ![Artifact locations](/img/interface/data/artifact-locations.png)
 
 ![Artifact materializations](/img/interface/data/materializations.png)
+
+## Import an image from Docker Hub
+
+In **Build artifact**, use **Search Docker Hub** to find an official image or a namespace/repository. The daemon queries Docker Hub and returns repository metadata and available tags.
+
+![Search official and community Docker Hub images in AkôFlow 1.0.12](/img/releases/v1.0.12/09-docker-hub-search.png)
+
+Choose a tag, select its Linux architecture and give the artifact an identifier and version. Select **Import and build SIF**. The daemon resolves the selected image to an immutable digest and performs the build; the Desktop renderer requests the operation and displays progress.
+
+![Select an image tag, Linux platform and artifact identity](/img/releases/v1.0.12/10-docker-hub-platform.png)
+
+Wait for **Artifact verified and ready to use**, then open **View artifact and build logs**. A completed and verified artifact becomes selectable when editing workflow activities. Registration alone does not make an incomplete build ready for execution.
+
+![A real BusyBox 1.36 amd64 SIF build completed and verified](/img/releases/v1.0.12/11-sif-verified.png)
+
+The artifact detail records the pinned source, architecture, variants and build history. The captures show a disposable documentation installation running the published 1.0.12 Desktop and runtime.
+
+![Built artifact detail and immutable source information](/img/releases/v1.0.12/12-artifact-detail.png)
+
+For the complete version history, see [the changelog](/docs/changelog).

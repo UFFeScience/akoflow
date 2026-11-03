@@ -526,6 +526,8 @@ const verifiedRequestNotes = {
     "Replace the example `resourceId` with a saved resource that supports one-shot commands. `resourceId` and `command` are required; `timeoutSeconds` defaults to 30 and cannot exceed 3600. The request waits for the runner and returns a command record. A runner failure can return `201 Created` with `status: failed`; inspect `status`, `exitCode`, and `failure` instead of treating HTTP status as command success.",
   "POST /akoflow-api/connection-tests/":
     "The example tests the local server. For SSH, agent, or Kubernetes, send the connection fields and credentials required by that type instead. This route tests the supplied connection without saving it. It returns `200 OK` with `healthy` and `message`; `healthy: false` means the probe failed even though the HTTP request succeeded. Cloud connections are not handled here.",
+  "POST /akoflow-api/shell-command-validations/":
+    "Send a `command` string of at most 64 KiB. Parses POSIX sh syntax without executing commands or substitutions. Returns HTTP 200 with `valid` and `diagnostics` for both valid and invalid scripts; diagnostic `line` and `column` positions are one-based when available. Empty or comment-only commands and NUL bytes are invalid. This does not save a workflow or check whether programs and files exist.",
   "POST /akoflow-api/machine-configuration-validations/":
     "Send `playbookYaml` containing the Ansible playbook text. Valid input returns `200 OK` with `valid: true` and a content hash; invalid input returns `422` with `valid: false` and errors. This validates structure only and does not run a playbook or provision a machine.",
   "POST /akoflow-api/machine-configurations/":
@@ -600,6 +602,9 @@ const verifiedRequestExamples = {
     version: "1.36",
     image: "docker.io/library/busybox:1.36",
     architecture: "amd64",
+  },
+  "POST /akoflow-api/shell-command-validations/": {
+    command: "echo hello | sort",
   },
   "POST /akoflow-api/machine-configuration-validations/": {
     playbookYaml:

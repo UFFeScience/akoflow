@@ -8,9 +8,11 @@ type Stage = string | string[];
 export default function WorkflowDag({
   title,
   stages,
+  showCaption = true,
 }: {
   title: string;
   stages: Stage[];
+  showCaption?: boolean;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   function expandDiagram() {
@@ -71,10 +73,12 @@ export default function WorkflowDag({
           <Mermaid value={lines.join("\n")} />
         </div>
       </dialog>
-      <figcaption>
-        {title}. Nodes in the same column can run in parallel once their
-        dependencies complete.
-      </figcaption>
+      {showCaption && (
+        <figcaption>
+          {title}. Nodes in the same column can run in parallel once their
+          dependencies complete.
+        </figcaption>
+      )}
     </figure>
   );
 }

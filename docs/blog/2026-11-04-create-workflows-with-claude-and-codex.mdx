@@ -1,10 +1,10 @@
 ---
 slug: create-workflows-with-claude-and-codex
 authors: [ovvesley, llms]
-title: Create your first AkôFlow workflow with Claude or Codex
-description: Connect your AI app through MCP, describe a three-step analysis, and verify a real execution with files and logs.
-image: /img/releases/v1.0.12/04-mcp-verified.png
-cover_alt: AkôFlow Desktop verifies an MCP connection and discovers its available tools.
+title: AkôFlow 1.0.12 brings MCP to Claude and Codex
+description: AkôFlow 1.0.12 introduces MCP integration. Connect Claude or Codex to create, execute and inspect scientific workflows, with a hands-on example.
+image: /img/blog/mcp-first-workflow/hero.png
+cover_alt: Monochrome illustration of AI assistants connected through MCP to AkôFlow and scientific workflows.
 cover_dag: [prepare, analyze, write-report]
 tags: [Getting started, Desktop, Experiments]
 hide_table_of_contents: false
@@ -12,7 +12,9 @@ hide_table_of_contents: false
 
 import WorkflowDag from "@site/src/components/WorkflowDag";
 
-You can describe an experiment to Claude or Codex and have it create a workflow in AkôFlow. MCP—Model Context Protocol—is the connection that lets the assistant call AkôFlow tools, read their responses, and work with the same definitions, plans and runs that you see in Desktop.
+**Starting with version 1.0.12, AkôFlow includes MCP integration to connect AI apps such as Claude and Codex directly to its workflow engine.** You can now describe an experiment in a conversation and ask your assistant to create workflow definitions, prepare execution plans, start runs and inspect their results through AkôFlow tools.
+
+MCP—Model Context Protocol—provides that connection. The assistant works with the same persisted definitions, plans and runs that you see in Desktop, using the permissions you grant to its connection. The [1.0.12 release](/docs/changelog) brings managed app connections, native client setup, connection verification, credential rotation and revocation.
 
 This tutorial takes that connection from setup to a result you can inspect: three activities turn the measurements **2, 4 and 6** into a report containing **`Mean: 4.00`**. You will connect your AI app, give it focused prompts, inspect the saved DAG, and execute the workflow on a local Docker runtime.
 

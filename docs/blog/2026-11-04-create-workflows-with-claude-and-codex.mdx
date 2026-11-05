@@ -3,8 +3,8 @@ slug: create-workflows-with-claude-and-codex
 authors: [ovvesley, llms]
 title: AkôFlow 1.0.12 brings MCP to Claude and Codex
 description: AkôFlow 1.0.12 introduces MCP integration. Connect Claude or Codex to create, execute and inspect scientific workflows, with a hands-on example.
-image: /img/blog/mcp-first-workflow/hero.png
-cover_alt: Monochrome illustration of AI assistants connected through MCP to AkôFlow and scientific workflows.
+image: /img/blog/mcp-first-workflow/hero-v2.png
+cover_alt: ChatGPT and Claude Code connected through MCP to AkôFlow and scientific workflows in a monochrome illustration.
 cover_dag: [prepare, analyze, write-report]
 tags: [Getting started, Desktop, Experiments]
 hide_table_of_contents: false
@@ -197,6 +197,24 @@ If content cannot be retrieved, say so instead of inferring it.
 In Desktop, open the run's **Activities**, select **write-report**, and open its activity detail page. Inspect **Activity output** and **Generated files**.
 
 ![The final activity output and generated files in the real demonstration](/img/blog/mcp-first-workflow/activity-output.png)
+
+### Follow the data through the workflow
+
+Open the run’s **Workspaces & data** tab. The activity/file graph connects each producer to its recorded output: `prepare` produces `measurements.txt`, `analyze` produces `mean.txt`, and `write-report` produces `report.txt`.
+
+![The real run’s data graph links each activity to the file it generated](/img/blog/mcp-first-workflow/run-data.png)
+
+Open **prepare** and scroll to **Activity output** to check the actual input values. The log prints `2`, `4` and `6`; the generated-file record identifies `measurements.txt` and its checksum.
+
+![The prepare activity prints the input measurements and records measurements.txt with its checksum](/img/blog/mcp-first-workflow/prepare-data.png)
+
+Open **analyze** to inspect the intermediate result. Its output is `4.00`, and its generated file is `mean.txt`.
+
+![The analyze activity prints 4.00 and records mean.txt with its checksum](/img/blog/mcp-first-workflow/analyze-data.png)
+
+Back in **Workspaces & data**, scroll to the recorded file locations and **Data transfers**. The demonstration records two workspace transfers totaling **17 bytes**. These transfers stage predecessor workspaces, so the second transfer includes the intermediate workspace’s files; its byte count is not just the size of `mean.txt`. Recorded locations describe execution evidence and may become unavailable after ephemeral workspaces are released.
+
+![Recorded file locations and the two data transfers between the workflow activities](/img/blog/mcp-first-workflow/data-transfers.png)
 
 The demonstration created `mcp-first-analysis`, saved `mcp-analysis-plan`, and executed `mcp-analysis-run`. The real run completed all three activities. Reading the final workspace file confirmed:
 

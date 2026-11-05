@@ -36,7 +36,7 @@ export default function BlogPostItemHeader() {
       <BlogAuthorByline metadata={metadata} />
       {coverDag.length > 0 && (
         <div className={styles.articleCover}>
-          <WorkflowDag title={title} stages={coverDag} />
+          <WorkflowDag title={title} stages={coverDag} showCaption={false} />
         </div>
       )}
     </header>

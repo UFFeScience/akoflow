@@ -1,6 +1,89 @@
 {
-  "updatedAt": "2026-11-05T03:57:53Z",
+  "updatedAt": "2026-11-05T04:11:35Z",
   "releases": [
+    {
+      "id": 434772576,
+      "tag_name": "v1.0.13",
+      "name": "AkôFlow 1.0.13",
+      "body": "# AkôFlow 1.0.13\n\n\nAkôFlow 1.0.13 reorganizes execution monitoring around the workflow, its activities and the files they produce. This page describes changes since 1.0.12.\n\n\n\nThe screenshots below show the release candidate interface reading an existing completed six-activity Python workflow. Capturing them did not start a new execution. They demonstrate recorded observations, not a live filesystem listing. Capture provenance is stored alongside the images.\n\n## Workflow overview\n\nFollow the workflow as a whole: preparation artifacts, execution environments, recorded results and the execution plan. The unused external-input card has been removed.\n\n![Workflow overview](https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.13/docs/static/img/releases/v1.0.13/01-workflow-overview.png)\n\n## Files next to their producer\n\nWorkspace now connects activities to generated file nodes. Each activity previews its five largest files; the “…” node opens the complete list. Search activities or file paths in the explorer and click a result to focus the DAG. All, Path to activity, Branch, Fit view and fullscreen help navigate larger graphs.\n\n![Files next to their producer](https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.13/docs/static/img/releases/v1.0.13/02-workspace-files.png)\n\n## Plan versus execution\n\nCompare planned and observed duration and cost, including absolute and relative differences. Activity counts and configured deadline/budget constraints remain explicit. Unconfigured constraints are not presented as satisfied SLAs. The Gantt charts retain their existing layout.\n\n![Plan versus execution](https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.13/docs/static/img/releases/v1.0.13/03-plan-comparison.png)\n\n## Search activities while reading logs\n\nA searchable activity explorer focuses the log DAG. The main log remains the complete run output.\n\n![Search activities while reading logs](https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.13/docs/static/img/releases/v1.0.13/04-log-navigation.png)\n\n## Complete run logs\n\nSearch messages and sources, navigate matches, wrap lines, follow new output, copy visible output, download logs or use fullscreen. Raw output without recorded timestamps is not given invented timestamps.\n\n![Complete run logs](https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.13/docs/static/img/releases/v1.0.13/05-complete-logs.png)\n\n## Activity logs in a drawer\n\nClick an activity to open its log in a side drawer without replacing the complete run log. View activity opens its execution details.\n\n![Activity logs in a drawer](https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.13/docs/static/img/releases/v1.0.13/06-activity-log-drawer.png)\n\n## Activity details\n\nThe activity drawer includes execution placement, timing, preparation and generated files, with a link to the owned activity page.\n\n![Activity details](https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.13/docs/static/img/releases/v1.0.13/07-activity-details.png)\n\n## Preparation belongs to the activity\n\nPreparation is collapsible and updates during execution, with waiting, preparing, ready and failure states. Copy log reports clipboard success or failure. The separate run-wide Prerequisites tab has been removed.\n\n![Preparation belongs to the activity](https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.13/docs/static/img/releases/v1.0.13/08-activity-preparation.png)\n\n## Generated files in activity details\n\nBoth the activity page and drawer reuse the Workspace file component, filtered by producer. Inspect size, checksum and recorded locations. Deleted manifest entries are excluded; recorded locations may no longer exist after workspace cleanup.\n\n![Generated files in activity details](https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.13/docs/static/img/releases/v1.0.13/09-generated-files.png)\n\n## Temporal events\n\nWorkflow and activity lanes place events at recorded times. Event types use distinct marker shapes, and search/type filters narrow the view. Use the selector for overlapping or untimed events and download the complete available event collection as JSON.\n\n![Temporal events](https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.13/docs/static/img/releases/v1.0.13/10-event-timeline.png)\n\n## Event details and phase observations\n\nClick a marker to inspect its data in a side drawer. Reconstructed timing observations carry an explicit source, duration and recorded timestamps; they are derived observations, not additional persisted audit events.\n\n![Event details and phase observations](https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.13/docs/static/img/releases/v1.0.13/11-phase-event-details.png)\n\n## Timing totals with explanations\n\nExecution-time decomposition keeps aggregate totals and explains each phase. The duplicate per-activity phase table has moved into Events. Accumulated work can exceed elapsed wall time because activities overlap.\n\n![Timing totals with explanations](https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.13/docs/static/img/releases/v1.0.13/12-time-decomposition.png)\n\n## Appearance and readability\n\nDesktop is the default interface style, with Simple available in Settings. Neutral actions, opaque surfaces, compact navigation and corrected selected-item contrast improve light/dark readability. Desktop appearance preferences survive local-server port changes and application restarts.\n\n![Appearance and readability](https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.13/docs/static/img/releases/v1.0.13/13-dark-comparison.png)\n\n## Other changes since 1.0.12\n\n- Workflow shell commands can be checked for POSIX shell syntax through the daemon validation endpoint before execution. Validation does not execute the command.\n- MCP activation no longer requires a detected native AI client; manual connection configuration remains available. MCP itself was introduced in 1.0.12.\n- Research tooling is archived outside runtime packages, and downloadable scheduling snippets are isolated from daemon packages.\n- Documentation now includes the MCP hands-on workflow tutorial and generated public release history.\n\n## Install and update\n\nGet the [1.0.13 release packages](https://github.com/UFFeScience/akoflow/releases/tag/v1.0.13) or follow the [installation guide](https://akoflow.com/docs/downloads). Desktop packages are available for macOS universal, Windows x64 and Linux x64. Matching daemon and BuildKit runtime archives support Linux amd64 and arm64. Docker remains required.\n\nSee [execution monitoring](https://akoflow.com/docs/guides/workflows/executions) for the updated navigation and interpretation of timing observations.\n\n## Validation\n\n- Desktop: 82 unit tests, 20 packaging/MCP/appearance contract tests, dependency security checks and production build passed.\n- Browser: 52 development checks passed (one Electron-only check skipped); all 44 selected production checks passed, including native preference restoration.\n- Daemon: `go test ./...` passed from the source tree.\n- Documentation: production build, TypeScript and repository-owned links passed.\n- Screenshot capture: 13 real-interface captures, with no browser page errors.\n\nRelease packages and updater manifests are built and validated by the [release workflow](https://github.com/UFFeScience/akoflow/actions/runs/41964980241).\n\nFrozen source tags: [daemon and documentation](https://github.com/UFFeScience/akoflow/tree/v1.0.13) and [Desktop](https://github.com/UFFeScience/akoflow-desktop/tree/v1.0.13). [Full release tour](https://uffescience.ic.uff.br/akoflow/blog/akoflow-1-0-13/).\n",
+      "published_at": "2026-11-05T04:11:12Z",
+      "created_at": "2026-11-05T03:59:33Z",
+      "prerelease": false,
+      "assets": [
+        {
+          "name": "akoflow-daemon-v1.0.13-linux-amd64.tar",
+          "size": 366063104
+        },
+        {
+          "name": "akoflow-buildkit-v1.0.13-linux-amd64.tar",
+          "size": 109739520
+        },
+        {
+          "name": "akoflow-runtime-v1.0.13-linux-arm64.sha256",
+          "size": 212
+        },
+        {
+          "name": "akoflow-daemon-v1.0.13-linux-arm64.tar",
+          "size": 344527360
+        },
+        {
+          "name": "akoflow-runtime-v1.0.13-linux-amd64.sha256",
+          "size": 212
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.13-win-x64-portable.exe",
+          "size": 149113997
+        },
+        {
+          "name": "latest-mac.yml",
+          "size": 549
+        },
+        {
+          "name": "akoflow-buildkit-v1.0.13-linux-arm64.tar",
+          "size": 103481344
+        },
+        {
+          "name": "latest-linux.yml",
+          "size": 580
+        },
+        {
+          "name": "latest.yml",
+          "size": 378
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.13-mac-universal.zip.blockmap",
+          "size": 232507
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.13-win-x64-setup.exe",
+          "size": 149406327
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.13-mac-universal.zip",
+          "size": 223325005
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.13-win-x64-setup.exe.blockmap",
+          "size": 154665
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.13-linux-amd64.deb",
+          "size": 137274220
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.13-mac-universal.dmg",
+          "size": 225738369
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.13-linux-x86_64.AppImage",
+          "size": 191155318
+        },
+        {
+          "name": "Akoflow-Desktop-1.0.13-mac-universal.dmg.blockmap",
+          "size": 235634
+        }
+      ]
+    },
     {
       "id": 432000997,
       "tag_name": "v1.0.12",

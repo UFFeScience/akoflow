@@ -66,3 +66,27 @@ type Filter struct {
 	Outcome       Outcome
 	Limit         int
 }
+
+type FacetValue struct {
+	Value string `json:"value"`
+	Count int64  `json:"count"`
+}
+
+type FacetPage struct {
+	Values  []FacetValue `json:"values"`
+	HasMore bool         `json:"hasMore"`
+}
+
+type TimeBucket struct {
+	Timestamp time.Time `json:"timestamp"`
+	Count     int64     `json:"count"`
+}
+
+type Summary struct {
+	FacetMore map[string]bool         `json:"facetMore,omitempty"`
+	Total     int64                   `json:"total"`
+	From      time.Time               `json:"from"`
+	To        time.Time               `json:"to"`
+	Buckets   []TimeBucket            `json:"buckets"`
+	Facets    map[string][]FacetValue `json:"facets"`
+}

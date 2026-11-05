@@ -72,6 +72,8 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 	mux.HandleFunc("GET /akoflow-api/instance/", http_config.KernelHandler(workflowEngine.GetInstance))
 	mux.HandleFunc("GET /akoflow-api/preflight/", http_config.KernelHandler(Preflight))
 	mux.HandleFunc("GET /akoflow-api/search/", http_config.KernelHandler(workflowEngine.Search))
+	mux.HandleFunc("GET /akoflow-api/audit-events/facets/", http_config.KernelHandler(workflowEngine.AuditFacets))
+	mux.HandleFunc("GET /akoflow-api/audit-events/summary/", http_config.KernelHandler(workflowEngine.AuditSummary))
 	mux.HandleFunc("GET /akoflow-api/audit-events/", http_config.KernelHandler(workflowEngine.ListAuditEvents))
 	mux.HandleFunc("POST /akoflow-api/provenance/sql/", http_config.KernelHandler(workflowEngine.QueryProvenanceSQL))
 	mux.HandleFunc("GET /akoflow-api/provenance/sql/schema/", http_config.KernelHandler(workflowEngine.GetProvenanceSchema))

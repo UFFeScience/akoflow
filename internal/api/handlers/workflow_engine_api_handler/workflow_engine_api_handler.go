@@ -28,7 +28,6 @@ import (
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/controlplane/eventloop"
 	"github.com/UFFeScience/akoflow/internal/domain"
-	domainaudit "github.com/UFFeScience/akoflow/internal/domain/audit"
 	domainconsole "github.com/UFFeScience/akoflow/internal/domain/console"
 	domainevents "github.com/UFFeScience/akoflow/internal/domain/events"
 	domaininstance "github.com/UFFeScience/akoflow/internal/domain/instance"
@@ -774,40 +773,9 @@ func (h *Handler) ListAuditEvents(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("audit is unavailable"))
 		return
 	}
-	limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
-	status, statusErr := strconv.Atoi(r.URL.Query().Get("status"))
-	if r.URL.Query().Get("status") != "" && statusErr != nil {
-		writeError(w, http.StatusBadRequest, fmt.Errorf("invalid audit status"))
-		return
-	}
-	filter := domainaudit.Filter{Category: r.URL.Query().Get("category"), Status: status,
-		RequestID:     r.URL.Query().Get("requestId"),
-		CorrelationID: r.URL.Query().Get("correlationId"),
-		ActorID:       r.URL.Query().Get("actorId"),
-		Method:        r.URL.Query().Get("method"),
-		Route:         r.URL.Query().Get("route"),
-		Transport:     r.URL.Query().Get("transport"),
-		RuntimeID:     r.URL.Query().Get("runtimeId"),
-		ActivityID:    r.URL.Query().Get("activityId"),
-		OperationID:   r.URL.Query().Get("operationId"),
-		Before:        r.URL.Query().Get("before"),
-		From:          r.URL.Query().Get("from"),
-		To:            r.URL.Query().Get("to"),
-		EventType:     r.URL.Query().Get("eventType"),
-		EnvironmentID: r.URL.Query().Get("environmentId"),
-		ResourceID:    r.URL.Query().Get("resourceId"), ConnectionID: r.URL.Query().Get("connectionId"),
-		SessionID: r.URL.Query().Get("sessionId"), ExecutionID: r.URL.Query().Get("executionId"),
-		Outcome: domainaudit.Outcome(r.URL.Query().Get("outcome")), Limit: limit}
-	for _, value := range []string{filter.From, filter.To} {
-		if value != "" {
-			if _, err := time.Parse(time.RFC3339Nano, value); err != nil {
-				writeError(w, http.StatusBadRequest, fmt.Errorf("audit dates must use RFC3339"))
-				return
-			}
-		}
-	}
-	if filter.Status != 0 && (filter.Status < 100 || filter.Status > 599) {
-		writeError(w, http.StatusBadRequest, fmt.Errorf("invalid audit status"))
+	filter, err := parseAuditFilter(r)
+	if err != nil {
+		writeError(w, http.StatusBadRequest, err)
 		return
 	}
 	items, err := h.audit.ListAuditEvents(r.Context(), filter)

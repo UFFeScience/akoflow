@@ -25,6 +25,24 @@
     }
   },
   {
+    "name": "audit_facets",
+    "method": "GET",
+    "path": "/akoflow-api/audit-events/facets/",
+    "handler": "AuditFacets",
+    "description": "audit facets. GET /akoflow-api/audit-events/facets/. Uses the daemon API and its domain validation.",
+    "query": [
+      "field",
+      "search"
+    ]
+  },
+  {
+    "name": "audit_summary",
+    "method": "GET",
+    "path": "/akoflow-api/audit-events/summary/",
+    "handler": "AuditSummary",
+    "description": "audit summary. GET /akoflow-api/audit-events/summary/. Uses the daemon API and its domain validation."
+  },
+  {
     "name": "browse_storage",
     "method": "GET",
     "path": "/akoflow-api/storages/{storageId}/entries/",
@@ -5595,31 +5613,7 @@
     "method": "GET",
     "path": "/akoflow-api/audit-events/",
     "handler": "ListAuditEvents",
-    "description": "list audit events. GET /akoflow-api/audit-events/. Uses the daemon API and its domain validation.",
-    "query": [
-      "activityId",
-      "actorId",
-      "before",
-      "category",
-      "connectionId",
-      "correlationId",
-      "environmentId",
-      "eventType",
-      "executionId",
-      "from",
-      "limit",
-      "method",
-      "operationId",
-      "outcome",
-      "requestId",
-      "resourceId",
-      "route",
-      "runtimeId",
-      "sessionId",
-      "status",
-      "to",
-      "transport"
-    ]
+    "description": "list audit events. GET /akoflow-api/audit-events/. Uses the daemon API and its domain validation."
   },
   {
     "name": "list_build_runs",

@@ -28,7 +28,6 @@ import (
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/controlplane/eventloop"
 	"github.com/UFFeScience/akoflow/internal/domain"
-	domainaudit "github.com/UFFeScience/akoflow/internal/domain/audit"
 	domainconsole "github.com/UFFeScience/akoflow/internal/domain/console"
 	domainevents "github.com/UFFeScience/akoflow/internal/domain/events"
 	domaininstance "github.com/UFFeScience/akoflow/internal/domain/instance"
@@ -774,11 +773,11 @@ func (h *Handler) ListAuditEvents(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("audit is unavailable"))
 		return
 	}
-	limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
-	filter := domainaudit.Filter{EventType: r.URL.Query().Get("eventType"), EnvironmentID: r.URL.Query().Get("environmentId"),
-		ResourceID: r.URL.Query().Get("resourceId"), ConnectionID: r.URL.Query().Get("connectionId"),
-		SessionID: r.URL.Query().Get("sessionId"), ExecutionID: r.URL.Query().Get("executionId"),
-		Outcome: domainaudit.Outcome(r.URL.Query().Get("outcome")), Limit: limit}
+	filter, err := parseAuditFilter(r)
+	if err != nil {
+		writeError(w, http.StatusBadRequest, err)
+		return
+	}
 	items, err := h.audit.ListAuditEvents(r.Context(), filter)
 	writeList(w, items, err)
 }
@@ -2272,6 +2271,8 @@ func (h *Handler) enqueueCloudOperation(w http.ResponseWriter, r *http.Request, 
 	operation := domain.CloudOperationRun{ID: "cloud-run-" + uuid.NewString(), Kind: kind,
 		Status: "queued", Phase: "queued", EnvironmentID: environmentID, InstanceID: instanceID,
 		CapacityTargetID: targetID, Request: request, CreatedAt: time.Now().UTC()}
+	r.SetPathValue("operationId", operation.ID)
+	r.SetPathValue("environmentId", environmentID)
 	if err := h.cloudOperations.CreateCloudOperation(r.Context(), operation); err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return
@@ -2760,6 +2761,7 @@ func (h *Handler) CreateExecution(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("execution commands are unavailable"))
 		return
 	}
+	r.SetPathValue("runId", request.Run.ID)
 	if err := h.executionCommands.CreateRun(r.Context(), request.Run); err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return

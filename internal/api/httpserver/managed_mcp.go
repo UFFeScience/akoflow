@@ -1,6 +1,7 @@
 package httpserver
 
 import (
+	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"net"
 	"net/http"
 
@@ -9,12 +10,16 @@ import (
 	"github.com/UFFeScience/akoflow/internal/mcpcontrol"
 )
 
-func managedMCPRoutes(next http.Handler, address string, security SecurityOptions, settings config.Settings) (http.Handler, func(), error) {
+func managedMCPRoutes(next http.Handler, address string, security SecurityOptions, settings config.Settings, auditStores ...ports.AuditStore) (http.Handler, func(), error) {
+	var auditStore ports.AuditStore
+	if len(auditStores) > 0 {
+		auditStore = auditStores[0]
+	}
 	var legacy http.Handler
 	closeLegacy := func() {}
 	if settings.MCPEnabled {
 		var err error
-		legacy, closeLegacy, err = newMCPHandler(address, security, settings)
+		legacy, closeLegacy, err = newMCPHandler(address, security, settings, auditStore)
 		if err != nil {
 			return nil, nil, err
 		}
@@ -29,6 +34,7 @@ func managedMCPRoutes(next http.Handler, address string, security SecurityOption
 	}
 	directory := mcpcontrol.StateDirectory(settings.MCPStateDirectory, instancearchive.ResolveDatabasePath())
 	manager, err := mcpcontrol.New(mcpcontrol.Options{
+		Audit:    auditStore,
 		APIURL:   "http://" + net.JoinHostPort(host, port) + "/akoflow-api",
 		APIToken: security.BearerToken, Directory: directory,
 		InitiallyEnabled: settings.MCPEnabled, Legacy: legacy,

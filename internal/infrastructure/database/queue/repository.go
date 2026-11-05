@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	dbaudit "github.com/UFFeScience/akoflow/internal/infrastructure/database/audit"
 	"strings"
 	"time"
 
@@ -56,7 +57,12 @@ func (r *Repository) Publish(ctx context.Context, job domainqueue.Job) (domainqu
 	if job.CreatedAt.IsZero() {
 		job.CreatedAt = job.AvailableAt
 	}
-	_, err := r.db.ExecContext(ctx, `INSERT INTO queue_jobs (
+	tx, err := r.db.BeginTx(ctx, nil)
+	if err != nil {
+		return domainqueue.Job{}, err
+	}
+	defer tx.Rollback()
+	insertResult, err := tx.ExecContext(ctx, `INSERT INTO queue_jobs (
 		id, category, event_type, aggregate_type, aggregate_id, payload, status,
 		priority, available_at, attempts, max_attempts, idempotency_key, created_at
 	) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULLIF(?, ''), ?)
@@ -69,17 +75,29 @@ func (r *Repository) Publish(ctx context.Context, job domainqueue.Job) (domainqu
 	}
 	if job.IdempotencyKey != "" {
 		var existingID string
-		if err := r.db.QueryRowContext(ctx, `SELECT id FROM queue_jobs WHERE idempotency_key = ?`, job.IdempotencyKey).Scan(&existingID); err != nil {
+		if err := tx.QueryRowContext(ctx, `SELECT id FROM queue_jobs WHERE idempotency_key = ?`, job.IdempotencyKey).Scan(&existingID); err != nil {
 			return domainqueue.Job{}, err
 		}
-		existing, err := r.FindByID(ctx, existingID)
+		existing, err := scanJob(tx.QueryRowContext(ctx, "SELECT "+columns+" FROM queue_jobs WHERE id=?", existingID))
 		if err != nil {
 			return domainqueue.Job{}, err
 		}
 		if existing == nil {
 			return domainqueue.Job{}, errors.New("idempotent queue job disappeared")
 		}
-		return *existing, nil
+		job = *existing
+	}
+	inserted, _ := insertResult.RowsAffected()
+	if inserted > 0 {
+		if err := dbaudit.Bind(ctx, tx, "queue_job", job.ID); err != nil {
+			return domainqueue.Job{}, err
+		}
+		if err := RecordLifecycle(ctx, tx, job); err != nil {
+			return domainqueue.Job{}, err
+		}
+	}
+	if err := tx.Commit(); err != nil {
+		return domainqueue.Job{}, err
 	}
 	return job, nil
 }
@@ -125,6 +143,9 @@ func (r *Repository) Lease(ctx context.Context, owner string, categories []strin
 		}
 		job, err := scanJob(tx.QueryRowContext(ctx, `SELECT `+columns+` FROM queue_jobs WHERE id = ?`, value.id))
 		if err != nil {
+			return nil, err
+		}
+		if err := RecordLifecycle(ctx, tx, *job); err != nil {
 			return nil, err
 		}
 		leased = append(leased, *job)
@@ -321,15 +342,11 @@ func (r *Repository) Retry(ctx context.Context, id, owner string, cause error, a
 	if cause != nil {
 		message = cause.Error()
 	}
-	result, err := r.db.ExecContext(ctx, `UPDATE queue_jobs SET
+	return r.transition(ctx, `UPDATE queue_jobs SET
 		status=CASE WHEN attempts >= max_attempts THEN 'failed' ELSE 'pending' END,
 		available_at=?, last_error=?, lease_owner='', lease_expires_at=NULL,
 		completed_at=CASE WHEN attempts >= max_attempts THEN ? ELSE NULL END
 		WHERE id=? AND status='leased' AND lease_owner=?`, availableAt, message, availableAt, id, owner)
-	if err != nil {
-		return err
-	}
-	return requireOne(result, "retry queue job")
 }
 
 func (r *Repository) Cancel(ctx context.Context, id string, at time.Time) error {
@@ -338,19 +355,19 @@ func (r *Repository) Cancel(ctx context.Context, id string, at time.Time) error 
 }
 
 func (r *Repository) CancelByAggregate(ctx context.Context, aggregateType, aggregateID string, at time.Time) (int64, error) {
-	result, err := r.db.ExecContext(ctx, `UPDATE queue_jobs SET status='cancelled', completed_at=?,
+	count, err := r.auditMutation(ctx, `UPDATE queue_jobs SET status='cancelled', completed_at=?,
 		lease_owner='', lease_expires_at=NULL
 		WHERE aggregate_type=? AND aggregate_id=? AND status IN ('pending','leased')`,
 		at, aggregateType, aggregateID)
 	if err != nil {
 		return 0, err
 	}
-	return result.RowsAffected()
+	return count, nil
 }
 
 func (r *Repository) ReleaseExpired(ctx context.Context, now time.Time) (int64, error) {
 	now = now.UTC()
-	result, err := r.db.ExecContext(ctx, `UPDATE queue_jobs SET
+	count, err := r.auditMutation(ctx, `UPDATE queue_jobs SET
 		status=CASE WHEN attempts >= max_attempts THEN 'failed' ELSE 'pending' END,
 		lease_owner='', lease_expires_at=NULL,
 		completed_at=CASE WHEN attempts >= max_attempts THEN ? ELSE NULL END,
@@ -361,15 +378,18 @@ func (r *Repository) ReleaseExpired(ctx context.Context, now time.Time) (int64, 
 	if err != nil {
 		return 0, err
 	}
-	return result.RowsAffected()
+	return count, nil
 }
 
 func (r *Repository) transition(ctx context.Context, query string, args ...any) error {
-	result, err := r.db.ExecContext(ctx, query, args...)
+	count, err := r.auditMutation(ctx, query, args...)
 	if err != nil {
 		return err
 	}
-	return requireOne(result, "transition queue job")
+	if count != 1 {
+		return fmt.Errorf("transition queue job affected %d rows", count)
+	}
+	return nil
 }
 
 func requireOne(result sql.Result, operation string) error {

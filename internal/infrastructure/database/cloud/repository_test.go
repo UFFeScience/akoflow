@@ -223,3 +223,44 @@ func TestRepositoryRejectsInvalidPlaybook(t *testing.T) {
 		t.Fatal("expected invalid playbook to be rejected")
 	}
 }
+
+func TestCloudLifecycleAuditDeduplicatesAndFailsAtomically(t *testing.T) {
+	ctx := context.Background()
+	db, err := database.Open(filepath.Join(t.TempDir(), "audit-cloud.sqlite"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	if err := database.Bootstrap(ctx, db); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := db.Exec("INSERT INTO environments(id,name) VALUES ('audit-env','Audit')"); err != nil {
+		t.Fatal(err)
+	}
+	repo := dbcloud.New(db)
+	operation := domain.CloudOperationRun{ID: "audit-op", Kind: "provision", Status: "queued", EnvironmentID: "audit-env", CreatedAt: time.Now().UTC()}
+	if err := repo.CreateCloudOperation(ctx, operation); err != nil {
+		t.Fatal(err)
+	}
+	operation.Status = "running"
+	for i := 0; i < 2; i++ {
+		if err := repo.UpdateCloudOperation(ctx, operation); err != nil {
+			t.Fatal(err)
+		}
+	}
+	var count int
+	if err := db.QueryRow("SELECT COUNT(*) FROM audit_events WHERE operation_id='audit-op'").Scan(&count); err != nil || count != 2 {
+		t.Fatalf("%d %v", count, err)
+	}
+	if _, err := db.Exec("DROP TABLE audit_events"); err != nil {
+		t.Fatal(err)
+	}
+	operation.Status = "completed"
+	if err := repo.UpdateCloudOperation(ctx, operation); err == nil {
+		t.Fatal("audit failure ignored")
+	}
+	stored, err := repo.FindCloudOperation(ctx, operation.ID)
+	if err != nil || stored.Status != "running" {
+		t.Fatalf("transition was not rolled back: %+v %v", stored, err)
+	}
+}

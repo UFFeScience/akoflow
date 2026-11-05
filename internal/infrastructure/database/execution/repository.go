@@ -5,6 +5,8 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	domainaudit "github.com/UFFeScience/akoflow/internal/domain/audit"
+	dbaudit "github.com/UFFeScience/akoflow/internal/infrastructure/database/audit"
 	"strings"
 	"time"
 
@@ -29,7 +31,12 @@ func (r *Repository) SaveWorkspace(ctx context.Context, workspace domain.Activit
 	if workspace.CreatedAt.IsZero() {
 		workspace.CreatedAt = time.Now().UTC()
 	}
-	_, err = r.db.ExecContext(ctx, `INSERT INTO activity_workspaces (
+	tx, err := r.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	_, err = tx.ExecContext(ctx, `INSERT INTO activity_workspaces (
 		id, execution_run_id, activity_id, environment_id, resource_id, runtime_id,
 		connection_id, uri, execution_path, observation_path, driver, state,
 		retention, is_final, pinned, manifest, file_count, size_bytes, input_bytes,
@@ -54,7 +61,13 @@ func (r *Repository) SaveWorkspace(ctx context.Context, workspace domain.Activit
 		workspace.FileCount, workspace.SizeBytes, workspace.InputBytes, workspace.OutputBytes,
 		workspace.ReclaimedBytes, workspace.ReleaseReason, workspace.LastError,
 		workspace.CreatedAt, workspace.SealedAt, workspace.ReleasedAt)
-	return err
+	if err != nil {
+		return err
+	}
+	if err := auditWorkspace(ctx, tx, workspace); err != nil {
+		return err
+	}
+	return tx.Commit()
 }
 
 func (r *Repository) FindWorkspace(ctx context.Context, id string) (*domain.ActivityWorkspace, error) {
@@ -133,7 +146,12 @@ func scanWorkspace(scanner interface{ Scan(...any) error }) (*domain.ActivityWor
 }
 
 func (r *Repository) SaveWorkspaceLease(ctx context.Context, lease domain.WorkspaceLease) error {
-	_, err := r.db.ExecContext(ctx, `INSERT INTO workspace_leases (
+	tx, err := r.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	_, err = tx.ExecContext(ctx, `INSERT INTO workspace_leases (
 		id, workspace_id, execution_run_id, producer_activity_id,
 		consumer_activity_id, released, released_at, release_reason
 	) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
@@ -141,7 +159,23 @@ func (r *Repository) SaveWorkspaceLease(ctx context.Context, lease domain.Worksp
 		released_at=excluded.released_at, release_reason=excluded.release_reason`,
 		lease.ID, lease.WorkspaceID, lease.RunID, lease.ProducerActivityID,
 		lease.ConsumerActivityID, lease.Released, lease.ReleasedAt, lease.ReleaseReason)
-	return err
+	if err != nil {
+		return err
+	}
+	state := "held"
+	if lease.Released {
+		state = "released"
+	}
+	if err := dbaudit.AppendLifecycle(ctx, tx, domainaudit.Event{
+		ID: "workspace-lease:" + lease.ID + ":" + state, EventType: "runtime.workspace_lease." + state,
+		ExecutionID: lease.RunID, ActivityID: lease.ConsumerActivityID,
+		ActorID: "daemon", ActorType: "service_client", AuthOutcome: "internal", Source: "workspace", Transport: "internal",
+		CorrelationID: "run:" + lease.RunID, Outcome: domainaudit.OutcomeSucceeded, OccurredAt: time.Now().UTC(),
+		Metadata: map[string]any{"entityType": "workspace_lease", "entityId": lease.ID},
+	}, "execution_run", lease.RunID); err != nil {
+		return err
+	}
+	return tx.Commit()
 }
 
 func (r *Repository) ListWorkspaceLeases(ctx context.Context, runID string) ([]domain.WorkspaceLease, error) {
@@ -186,7 +220,17 @@ func (r *Repository) CreateRun(ctx context.Context, run domain.ExecutionRun) err
 	if err != nil {
 		return err
 	}
-	if changed, _ := result.RowsAffected(); changed == 1 && run.Status == domain.ExecutionRunRunning {
+	changed, _ := result.RowsAffected()
+	if changed == 1 && run.Status == domain.ExecutionRunCreated {
+		if err := dbaudit.AppendLifecycle(ctx, tx, domainaudit.Event{
+			ID: "run-created:" + run.ID, EventType: "execution.run.created", ExecutionID: run.ID,
+			ActorID: "daemon", ActorType: "service_client", AuthOutcome: "internal", Transport: "internal", Source: "execution_run",
+			CorrelationID: "run:" + run.ID, Outcome: domainaudit.OutcomeStarted, OccurredAt: time.Now().UTC(),
+		}, "execution_run", run.ID); err != nil {
+			return err
+		}
+	}
+	if changed == 1 && run.Status == domain.ExecutionRunRunning {
 		if err := dbevents.Append(ctx, tx, domainevents.Event{
 			Type: domainevents.ExecutionStarted, AggregateType: "execution_run", AggregateID: run.ID,
 			Payload: map[string]any{"mode": run.Mode, "schedulePlanId": run.SchedulePlanID},
@@ -194,11 +238,19 @@ func (r *Repository) CreateRun(ctx context.Context, run domain.ExecutionRun) err
 			return err
 		}
 	}
+	if err := dbaudit.Bind(ctx, tx, "execution_run", run.ID); err != nil {
+		return err
+	}
 	return tx.Commit()
 }
 
 func (r *Repository) ResumeRun(ctx context.Context, id string) error {
-	result, err := r.db.ExecContext(ctx, `UPDATE execution_runs SET status='created',
+	tx, err := r.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	result, err := tx.ExecContext(ctx, `UPDATE execution_runs SET status='created',
 		finished_at=NULL, failure_reason='' WHERE id=? AND status IN ('failed','cancelled')`, id)
 	if err != nil {
 		return err
@@ -206,7 +258,15 @@ func (r *Repository) ResumeRun(ctx context.Context, id string) error {
 	if changed, _ := result.RowsAffected(); changed != 1 {
 		return fmt.Errorf("execution run %q is not recoverable", id)
 	}
-	return nil
+	if err := dbaudit.AppendLifecycle(ctx, tx, domainaudit.Event{
+		ID: fmt.Sprintf("run-recovery:%s:%d", id, time.Now().UnixNano()), EventType: "execution.run.recovery_requested",
+		ExecutionID: id, ActorID: "daemon", ActorType: "service_client", AuthOutcome: "internal",
+		Transport: "internal", Source: "execution_run", CorrelationID: "run:" + id,
+		Outcome: domainaudit.OutcomeStarted, OccurredAt: time.Now().UTC(),
+	}, "execution_run", id); err != nil {
+		return err
+	}
+	return tx.Commit()
 }
 
 func (r *Repository) FindRun(ctx context.Context, id string) (*domain.ExecutionRun, error) {
@@ -485,7 +545,12 @@ func (r *Repository) Save(ctx context.Context, handle domain.ActivityHandle) err
 	if err != nil {
 		return fmt.Errorf("marshal handle artifacts: %w", err)
 	}
-	_, err = r.db.ExecContext(ctx, `INSERT INTO activity_handles (
+	tx, err := r.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	_, err = tx.ExecContext(ctx, `INSERT INTO activity_handles (
 		id, execution_run_id, activity_id, resource_id, runtime_id, external_id,
 		status, endpoints, started_at, finished_at, exit_code, failure, log, artifacts, metadata
 	) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -497,7 +562,18 @@ func (r *Repository) Save(ctx context.Context, handle domain.ActivityHandle) err
 		handle.ID, handle.RunID, handle.ActivityID, handle.ResourceID, handle.RuntimeID,
 		handle.ExternalID, handle.Status, string(endpoints), handle.StartedAt,
 		handle.FinishedAt, handle.ExitCode, handle.Failure, handle.Log, string(artifacts), string(metadata))
-	return err
+	if err != nil {
+		return err
+	}
+	if err := dbaudit.AppendLifecycle(ctx, tx, domainaudit.Event{
+		ID: "handle:" + handle.ID + ":" + string(handle.Status), EventType: "runtime.handle." + string(handle.Status),
+		ActorID: "daemon", ActorType: "service_client", AuthOutcome: "internal", Source: "runtime_handle", Transport: "internal",
+		ExecutionID: handle.RunID, ActivityID: handle.ActivityID, ResourceID: handle.ResourceID, RuntimeID: handle.RuntimeID,
+		CorrelationID: "run:" + handle.RunID, Outcome: runtimeAuditOutcome(string(handle.Status)), OccurredAt: time.Now().UTC(),
+	}, "execution_run", handle.RunID); err != nil {
+		return err
+	}
+	return tx.Commit()
 }
 
 func (r *Repository) Find(ctx context.Context, id string) (*domain.ActivityHandle, error) {
@@ -718,11 +794,7 @@ func (r *Repository) CancelRun(ctx context.Context, id, reason string) error {
 	if changed, _ := result.RowsAffected(); changed != 1 {
 		return fmt.Errorf("execution run %q cannot cancel unfinished activities", id)
 	}
-	if _, err := tx.ExecContext(ctx, `UPDATE task_executions SET status='cancelled',
-		finished_at=CASE WHEN finished_at=0 THEN ? ELSE finished_at END,
-		failure_reason=CASE WHEN failure_reason='' THEN ? ELSE failure_reason END
-		WHERE execution_run_id=? AND status IN ('blocked','ready','queued','preparing','running')`,
-		float64(time.Now().UnixNano())/float64(time.Second), reason, id); err != nil {
+	if err := cancelTasksWithAudit(ctx, tx, id, reason); err != nil {
 		return err
 	}
 	if err := dbevents.Append(ctx, tx, domainevents.Event{
@@ -763,7 +835,7 @@ func appendTaskEvent(ctx context.Context, tx *sql.Tx, task domain.TaskExecution)
 	case domain.TaskFailed, domain.TaskCancelled:
 		eventType = domainevents.ActivityFailed
 	default:
-		return nil
+		return auditTaskState(ctx, tx, task)
 	}
 	lifecycleID := fmt.Sprintf("%s:%s:%d:%s", task.ExecutionRunID, task.ActivityID, task.Attempt, task.Status)
 	if _, err := tx.ExecContext(ctx, `INSERT OR IGNORE INTO activity_lifecycle_events (
@@ -777,7 +849,7 @@ func appendTaskEvent(ctx context.Context, tx *sql.Tx, task domain.TaskExecution)
 	return dbevents.Append(ctx, tx, domainevents.Event{
 		Type: eventType, AggregateType: "activity_execution", AggregateID: task.ID,
 		OccurredAt: time.Now().UTC(), Payload: map[string]any{
-			"executionRunId": task.ExecutionRunID, "activityId": task.ActivityID,
+			"executionRunId": task.ExecutionRunID, "activityId": task.ActivityID, "attempt": task.Attempt, "runtimeId": task.RuntimeID,
 			"status": task.Status, "runtimeSeconds": task.RuntimeSeconds,
 			"failureReason": task.FailureReason,
 		},
@@ -829,4 +901,36 @@ func nullableString(value string) any {
 		return nil
 	}
 	return value
+}
+
+func runtimeAuditOutcome(status string) domainaudit.Outcome {
+	switch status {
+	case "failed", "cancelled", "lost", "unknown":
+		return domainaudit.OutcomeFailed
+	case "completed", "succeeded", "stopped":
+		return domainaudit.OutcomeSucceeded
+	default:
+		return domainaudit.OutcomeStarted
+	}
+}
+
+func auditTaskState(ctx context.Context, tx *sql.Tx, task domain.TaskExecution) error {
+	return dbaudit.AppendLifecycle(ctx, tx, domainaudit.Event{
+		ID:        fmt.Sprintf("task:%s:%s:%d:%s", task.ExecutionRunID, task.ActivityID, task.Attempt, task.Status),
+		EventType: "activity." + string(task.Status), ActorID: "daemon", ActorType: "service_client", AuthOutcome: "internal",
+		Source: "activity_state", Transport: "internal", ExecutionID: task.ExecutionRunID, ActivityID: task.ActivityID,
+		RuntimeID: task.RuntimeID, ConnectionID: task.ConnectionID, Attempt: task.Attempt,
+		CorrelationID: "run:" + task.ExecutionRunID, Outcome: runtimeAuditOutcome(string(task.Status)), OccurredAt: time.Now().UTC(),
+	}, "execution_run", task.ExecutionRunID)
+}
+
+func auditWorkspace(ctx context.Context, tx *sql.Tx, value domain.ActivityWorkspace) error {
+	return dbaudit.AppendLifecycle(ctx, tx, domainaudit.Event{
+		ID: "workspace:" + value.ID + ":" + string(value.State), EventType: "runtime.workspace." + string(value.State),
+		ExecutionID: value.RunID, ActivityID: value.ActivityID, EnvironmentID: value.EnvironmentID,
+		ResourceID: value.ResourceID, RuntimeID: value.RuntimeID, ConnectionID: value.ConnectionID,
+		ActorID: "daemon", ActorType: "service_client", AuthOutcome: "internal", Source: "workspace", Transport: "internal",
+		CorrelationID: "run:" + value.RunID, Outcome: runtimeAuditOutcome(string(value.State)), OccurredAt: time.Now().UTC(),
+		Metadata: map[string]any{"entityType": "workspace", "entityId": value.ID},
+	}, "execution_run", value.RunID)
 }

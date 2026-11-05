@@ -173,3 +173,49 @@ func TestStorageHelpers(t *testing.T) {
 		t.Fatalf("artifactVersionID = %q", got)
 	}
 }
+
+func TestStorageLifecycleAuditDoesNotCopyPathsURLsOrErrors(t *testing.T) {
+	repo := testRepository(t)
+	ctx := context.Background()
+	value := domain.DownloadRun{ID: "audit-download", StorageID: "storage", Path: "/secret-path", URL: "https://secret-url", Error: "secret-error", Status: domain.DownloadQueued, Strategy: "stream", CreatedAt: time.Now().UTC(), UpdatedAt: time.Now().UTC()}
+	if err := repo.SaveDownload(ctx, value); err != nil {
+		t.Fatal(err)
+	}
+	value.Status = domain.DownloadCompleted
+	if err := repo.SaveDownload(ctx, value); err != nil {
+		t.Fatal(err)
+	}
+	if err := repo.SaveDownload(ctx, value); err != nil {
+		t.Fatal(err)
+	}
+	rows, err := repo.db.Query("SELECT summary,metadata FROM audit_events WHERE source='storage'")
+	if err != nil {
+		t.Fatal(err)
+	}
+	count := 0
+	for rows.Next() {
+		var summary, metadata string
+		if err := rows.Scan(&summary, &metadata); err != nil {
+			t.Fatal(err)
+		}
+		if strings.Contains(summary+metadata, "secret") {
+			t.Fatal("sensitive storage data in audit")
+		}
+		count++
+	}
+	rows.Close()
+	if count != 2 {
+		t.Fatalf("count=%d", count)
+	}
+	if _, err := repo.db.Exec("DROP TABLE audit_events"); err != nil {
+		t.Fatal(err)
+	}
+	value.Status = domain.DownloadQueued
+	if err := repo.SaveDownload(ctx, value); err == nil {
+		t.Fatal("audit failure ignored")
+	}
+	stored, err := repo.FindDownload(ctx, value.ID)
+	if err != nil || stored.Status != domain.DownloadCompleted {
+		t.Fatalf("%+v %v", stored, err)
+	}
+}

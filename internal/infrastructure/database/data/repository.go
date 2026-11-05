@@ -7,8 +7,11 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	domainaudit "github.com/UFFeScience/akoflow/internal/domain/audit"
+	dbaudit "github.com/UFFeScience/akoflow/internal/infrastructure/database/audit"
 	"net/url"
 	"path"
+	"time"
 
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
@@ -311,7 +314,12 @@ func (r *Repository) SaveTransferRun(ctx context.Context, value domain.DataTrans
 	if err != nil {
 		return err
 	}
-	_, err = r.db.ExecContext(ctx, `INSERT INTO transfer_runs(id,plan_id,execution_run_id,activity_id,strategy,status,verified_blobs,completed_chunks,started_at,finished_at,transferred_bytes,error,logical_bytes,network_bytes,route)
+	tx, err := r.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	_, err = tx.ExecContext(ctx, `INSERT INTO transfer_runs(id,plan_id,execution_run_id,activity_id,strategy,status,verified_blobs,completed_chunks,started_at,finished_at,transferred_bytes,error,logical_bytes,network_bytes,route)
 		VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET execution_run_id=excluded.execution_run_id,
 		activity_id=excluded.activity_id, strategy=excluded.strategy, status=excluded.status, verified_blobs=excluded.verified_blobs,
 		completed_chunks=excluded.completed_chunks, started_at=excluded.started_at, finished_at=excluded.finished_at,
@@ -320,7 +328,26 @@ func (r *Repository) SaveTransferRun(ctx context.Context, value domain.DataTrans
 		value.ExecutionRunID, value.ActivityID, value.Strategy, value.Status, string(verified), string(chunks),
 		value.StartedAt, value.FinishedAt, value.TransferredBytes, value.Error, value.LogicalBytes,
 		value.NetworkBytes, string(route))
-	return err
+	if err != nil {
+		return err
+	}
+
+	outcome := domainaudit.OutcomeStarted
+	if string(value.Status) == "completed" || string(value.Status) == "succeeded" {
+		outcome = domainaudit.OutcomeSucceeded
+	}
+	if string(value.Status) == "failed" || string(value.Status) == "cancelled" {
+		outcome = domainaudit.OutcomeFailed
+	}
+	if err := dbaudit.AppendLifecycle(ctx, tx, domainaudit.Event{
+		ID: "transfer:" + value.ID + ":" + string(value.Status), EventType: "runtime.transfer." + string(value.Status),
+		ActorID: "daemon", ActorType: "service_client", AuthOutcome: "internal", Source: "transfer", Transport: "internal",
+		ExecutionID: value.ExecutionRunID, ActivityID: value.ActivityID, OperationID: value.ID,
+		CorrelationID: "transfer:" + value.ID, Outcome: outcome, OccurredAt: time.Now().UTC(),
+	}, "execution_run", value.ExecutionRunID); err != nil {
+		return err
+	}
+	return tx.Commit()
 }
 
 func (r *Repository) ListArtifactTransferRuns(ctx context.Context, runID string) ([]domain.DataTransferRun, error) {
@@ -397,7 +424,12 @@ func (r *Repository) AppendWorkflowOperationEvent(ctx context.Context, event dom
 	if err != nil {
 		return fmt.Errorf("encode workflow operation metadata: %w", err)
 	}
-	_, err = r.db.ExecContext(ctx, `INSERT INTO workflow_operation_events (
+	tx, err := r.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	_, err = tx.ExecContext(ctx, `INSERT INTO workflow_operation_events (
 		id,execution_run_id,activity_id,operation_id,parent_operation_id,transfer_run_id,
 		command_id,sequence,level,category,phase,message,command_sanitized,
 		progress_bytes,total_bytes,throughput_bps,exit_code,stdout_excerpt,stderr_excerpt,
@@ -407,7 +439,24 @@ func (r *Repository) AppendWorkflowOperationEvent(ctx context.Context, event dom
 		event.CommandID, event.Sequence, event.Level, event.Category, event.Phase, event.Message,
 		event.CommandSanitized, event.ProgressBytes, event.TotalBytes, event.ThroughputBPS,
 		event.ExitCode, event.StdoutExcerpt, event.StderrExcerpt, string(metadata), event.OccurredAt)
-	return err
+	if err != nil {
+		return err
+	}
+	outcome := domainaudit.OutcomeSucceeded
+	if event.Level == "error" {
+		outcome = domainaudit.OutcomeFailed
+	}
+	if err := dbaudit.AppendLifecycle(ctx, tx, domainaudit.Event{
+		ID: "workflow-operation:" + event.ID, EventType: "runtime.operation.event",
+		ActorID: "daemon", ActorType: "service_client", AuthOutcome: "internal",
+		CorrelationID: "run:" + event.ExecutionRunID, Transport: "internal", Source: "workflow_operation",
+		ExecutionID: event.ExecutionRunID, ActivityID: event.ActivityID, OperationID: event.OperationID,
+		Outcome: outcome, OccurredAt: event.OccurredAt,
+		Metadata: map[string]any{"logReference": event.ID},
+	}, "execution_run", event.ExecutionRunID); err != nil {
+		return err
+	}
+	return tx.Commit()
 }
 
 func (r *Repository) ListWorkflowOperationEvents(ctx context.Context, runID string) ([]domain.WorkflowOperationEvent, error) {
@@ -523,10 +572,36 @@ func (r *Repository) findArtifactBuild(ctx context.Context, query, argument stri
 }
 
 func (r *Repository) SaveBuildRun(ctx context.Context, value domain.BuildRun) error {
-	_, err := r.db.ExecContext(ctx, `INSERT INTO build_runs(id,artifact_build_id,status,output_variant_id,output_digest,logs,error)
+	tx, err := r.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	_, err = tx.ExecContext(ctx, `INSERT INTO build_runs(id,artifact_build_id,status,output_variant_id,output_digest,logs,error)
 		VALUES(?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET status=excluded.status, output_variant_id=excluded.output_variant_id, output_digest=excluded.output_digest, logs=excluded.logs, error=excluded.error`,
 		value.ID, value.ArtifactBuildID, value.Status, nullable(value.OutputVariantID), value.OutputDigest, value.Logs, value.Error)
-	return err
+	if err != nil {
+		return err
+	}
+	if err := dbaudit.Bind(ctx, tx, "build_run", value.ID); err != nil {
+		return err
+	}
+	outcome := domainaudit.OutcomeStarted
+	if string(value.Status) == "completed" || string(value.Status) == "succeeded" {
+		outcome = domainaudit.OutcomeSucceeded
+	}
+	if string(value.Status) == "failed" || string(value.Status) == "cancelled" {
+		outcome = domainaudit.OutcomeFailed
+	}
+	if err := dbaudit.AppendLifecycle(ctx, tx, domainaudit.Event{
+		ID: "build:" + value.ID + ":" + string(value.Status), EventType: "runtime.build." + string(value.Status),
+		ActorID: "daemon", ActorType: "service_client", AuthOutcome: "internal", Source: "build", Transport: "internal",
+		ExecutionID: "", ActivityID: "", OperationID: value.ID,
+		CorrelationID: "build:" + value.ID, Outcome: outcome, OccurredAt: time.Now().UTC(),
+	}, "build_run", value.ID); err != nil {
+		return err
+	}
+	return tx.Commit()
 }
 
 func (r *Repository) FindBuildRun(ctx context.Context, id string) (*domain.BuildRun, error) {

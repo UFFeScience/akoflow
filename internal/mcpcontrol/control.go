@@ -8,6 +8,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"errors"
+	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -19,6 +20,7 @@ import (
 )
 
 type Options struct {
+	Audit            ports.AuditStore
 	APIURL           string
 	APIToken         string
 	Directory        string
@@ -105,7 +107,7 @@ func (m *Manager) load() error {
 }
 func (m *Manager) newClient(info Connection, token string) (*client, error) {
 	bridge, err := mcpbridge.New(mcpbridge.Options{
-		APIURL: m.options.APIURL, APIToken: m.options.APIToken, Permissions: info.Permission,
+		Audit: m.options.Audit, ClientID: info.ID, APIURL: m.options.APIURL, APIToken: m.options.APIToken, Permissions: info.Permission,
 		StateDirectory: filepath.Join(m.options.Directory, "sessions", info.ID),
 	})
 	if err != nil {

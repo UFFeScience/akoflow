@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	dbaudit "github.com/UFFeScience/akoflow/internal/infrastructure/database/audit"
 	"time"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
@@ -44,6 +45,9 @@ func (r *Repository) CreateSession(ctx context.Context, session domain.PlanningS
 		session.FailureReason, session.CreatedAt); err != nil {
 		return err
 	}
+	if err := dbaudit.Bind(ctx, tx, "planning_session", session.ID); err != nil {
+		return err
+	}
 	for _, run := range runs {
 		persistedConfiguration := make(map[string]any, len(run.Configuration)+1)
 		for key, value := range run.Configuration {
@@ -63,6 +67,12 @@ func (r *Repository) CreateSession(ctx context.Context, session domain.PlanningS
 			run.Status, run.Progress, run.CandidateCount, config, run.FailureReason); err != nil {
 			return err
 		}
+		if err := auditPlanning(ctx, tx, "algorithm", run.ID, session.ID, string(run.Status)); err != nil {
+			return err
+		}
+	}
+	if err := auditPlanning(ctx, tx, "session", session.ID, session.ID, string(session.Status)); err != nil {
+		return err
 	}
 	return tx.Commit()
 }
@@ -182,29 +192,23 @@ func (r *Repository) ListAlgorithmRuns(ctx context.Context, sessionID string) ([
 }
 
 func (r *Repository) SetSessionQueued(ctx context.Context, id string) error {
-	_, err := r.db.ExecContext(ctx, `UPDATE planning_sessions SET status='queued' WHERE id=? AND status='running'`, id)
-	return err
+	return r.planningTransition(ctx, "session", "queued", `UPDATE planning_sessions SET status='queued' WHERE id=? AND status='running'`, id)
 }
 
 func (r *Repository) SetSessionRunning(ctx context.Context, id string) error {
-	_, err := r.db.ExecContext(ctx, `UPDATE planning_sessions SET status='running', started_at=COALESCE(started_at, CURRENT_TIMESTAMP) WHERE id=? AND status IN ('queued','running')`, id)
-	return err
+	return r.planningTransition(ctx, "session", "running", `UPDATE planning_sessions SET status='running', started_at=COALESCE(started_at, CURRENT_TIMESTAMP) WHERE id=? AND status IN ('queued','running')`, id)
 }
 func (r *Repository) SetSessionCompleted(ctx context.Context, id string) error {
-	_, err := r.db.ExecContext(ctx, `UPDATE planning_sessions SET status='completed', progress=1, completed_at=CURRENT_TIMESTAMP WHERE id=?`, id)
-	return err
+	return r.planningTransition(ctx, "session", "completed", `UPDATE planning_sessions SET status='completed', progress=1, completed_at=CURRENT_TIMESTAMP WHERE id=?`, id)
 }
 func (r *Repository) SetSessionFailed(ctx context.Context, id, reason string) error {
-	_, err := r.db.ExecContext(ctx, `UPDATE planning_sessions SET status='failed', failure_reason=?, completed_at=CURRENT_TIMESTAMP WHERE id=?`, reason, id)
-	return err
+	return r.planningTransition(ctx, "session", "failed", `UPDATE planning_sessions SET status='failed', failure_reason=?, completed_at=CURRENT_TIMESTAMP WHERE id=?`, reason, id)
 }
 func (r *Repository) SetSessionCancelled(ctx context.Context, id string) error {
-	_, err := r.db.ExecContext(ctx, `UPDATE planning_sessions SET status='cancelled', completed_at=CURRENT_TIMESTAMP WHERE id=? AND status IN ('queued','running')`, id)
-	return err
+	return r.planningTransition(ctx, "session", "cancelled", `UPDATE planning_sessions SET status='cancelled', completed_at=CURRENT_TIMESTAMP WHERE id=? AND status IN ('queued','running')`, id)
 }
 func (r *Repository) SetAlgorithmRunRunning(ctx context.Context, id string) error {
-	_, err := r.db.ExecContext(ctx, `UPDATE planning_algorithm_runs SET status='running', started_at=COALESCE(started_at,CURRENT_TIMESTAMP) WHERE id=?`, id)
-	return err
+	return r.planningTransition(ctx, "algorithm", "running", `UPDATE planning_algorithm_runs SET status='running', started_at=COALESCE(started_at,CURRENT_TIMESTAMP) WHERE id=?`, id)
 }
 func (r *Repository) SetAlgorithmRunEstimate(ctx context.Context, id string, estimate domain.PlanningEstimate) error {
 	var encodedConfiguration string
@@ -234,16 +238,13 @@ func (r *Repository) UpdateSessionProgress(ctx context.Context, id string, progr
 	return err
 }
 func (r *Repository) SetAlgorithmRunCompleted(ctx context.Context, id string) error {
-	_, err := r.db.ExecContext(ctx, `UPDATE planning_algorithm_runs SET status='completed', progress=1, completed_at=CURRENT_TIMESTAMP WHERE id=?`, id)
-	return err
+	return r.planningTransition(ctx, "algorithm", "completed", `UPDATE planning_algorithm_runs SET status='completed', progress=1, completed_at=CURRENT_TIMESTAMP WHERE id=?`, id)
 }
 func (r *Repository) SetAlgorithmRunFailed(ctx context.Context, id, reason string) error {
-	_, err := r.db.ExecContext(ctx, `UPDATE planning_algorithm_runs SET status='failed', failure_reason=?, completed_at=CURRENT_TIMESTAMP WHERE id=?`, reason, id)
-	return err
+	return r.planningTransition(ctx, "algorithm", "failed", `UPDATE planning_algorithm_runs SET status='failed', failure_reason=?, completed_at=CURRENT_TIMESTAMP WHERE id=?`, reason, id)
 }
 func (r *Repository) SetAlgorithmRunCancelled(ctx context.Context, id string) error {
-	_, err := r.db.ExecContext(ctx, `UPDATE planning_algorithm_runs SET status='cancelled', completed_at=CURRENT_TIMESTAMP WHERE id=? AND status IN ('queued','running')`, id)
-	return err
+	return r.planningTransition(ctx, "algorithm", "cancelled", `UPDATE planning_algorithm_runs SET status='cancelled', completed_at=CURRENT_TIMESTAMP WHERE id=? AND status IN ('queued','running')`, id)
 }
 
 func (r *Repository) SaveCandidate(ctx context.Context, candidate domain.PlanCandidate) error {
@@ -254,7 +255,12 @@ func (r *Repository) SaveCandidate(ctx context.Context, candidate domain.PlanCan
 	if candidate.CreatedAt.IsZero() {
 		candidate.CreatedAt = time.Now().UTC()
 	}
-	result, err := r.db.ExecContext(ctx, `INSERT INTO planning_candidates (
+	tx, err := r.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	result, err := tx.ExecContext(ctx, `INSERT INTO planning_candidates (
 		id, planning_session_id, algorithm_run_id, algorithm, objective, rank, pareto_optimal,
 		dominated, feasible, predicted_makespan_seconds, predicted_cost, plan, fingerprint, created_at
 	) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -268,13 +274,21 @@ func (r *Repository) SaveCandidate(ctx context.Context, candidate domain.PlanCan
 	}
 	inserted, _ := result.RowsAffected()
 	if inserted > 0 {
-		_, err = r.db.ExecContext(ctx, `UPDATE planning_algorithm_runs SET candidate_count=candidate_count+1 WHERE id=?`, candidate.AlgorithmRunID)
+		_, err = tx.ExecContext(ctx, `UPDATE planning_algorithm_runs SET candidate_count=candidate_count+1 WHERE id=?`, candidate.AlgorithmRunID)
 		if err != nil {
 			return err
 		}
-		_, err = r.db.ExecContext(ctx, `UPDATE planning_sessions SET candidate_count=candidate_count+1 WHERE id=?`, candidate.PlanningSessionID)
+		_, err = tx.ExecContext(ctx, `UPDATE planning_sessions SET candidate_count=candidate_count+1 WHERE id=?`, candidate.PlanningSessionID)
 	}
-	return err
+	if err != nil {
+		return err
+	}
+	if inserted > 0 {
+		if err := auditPlanning(ctx, tx, "candidate", candidate.ID, candidate.PlanningSessionID, "candidate"); err != nil {
+			return err
+		}
+	}
+	return tx.Commit()
 }
 
 func scanCandidate(scanner interface{ Scan(...any) error }) (*domain.PlanCandidate, error) {
@@ -391,6 +405,16 @@ func (r *Repository) SelectCandidate(ctx context.Context, sessionID string, cand
 			return err
 		}
 	}
-	_, err := r.db.ExecContext(ctx, `UPDATE planning_sessions SET selected_candidate_id=?, selected_plan_id=? WHERE id=?`, candidate.ID, candidate.Plan.ID, sessionID)
-	return err
+	tx, err := r.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	if _, err := tx.ExecContext(ctx, `UPDATE planning_sessions SET selected_candidate_id=?, selected_plan_id=? WHERE id=?`, candidate.ID, candidate.Plan.ID, sessionID); err != nil {
+		return err
+	}
+	if err := auditPlanning(ctx, tx, "candidate", candidate.ID, sessionID, "selected"); err != nil {
+		return err
+	}
+	return tx.Commit()
 }

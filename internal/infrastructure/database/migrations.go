@@ -34,11 +34,16 @@ func applyMigrations(ctx context.Context, db *sql.DB) error {
 				return err
 			}
 			checksum = schemaWithRunFeedIndexes
-		case schemaWithRunFeedIndexes:
-			if err := applyMigration(ctx, db, catalogReadIndexesSQL, schemaChecksum(), "index scoped catalog reads"); err != nil {
+		case "118459cfa1b2ace00d67b0e6f2a29e0f626525fab0a725221c66b6c814a5a313":
+			if err := applyMigration(ctx, db, unifiedAuditSQL, schemaChecksum(), "add unified audit fields and indexes"); err != nil {
 				return err
 			}
 			checksum = schemaChecksum()
+		case schemaWithRunFeedIndexes:
+			if err := applyMigration(ctx, db, catalogReadIndexesSQL, "118459cfa1b2ace00d67b0e6f2a29e0f626525fab0a725221c66b6c814a5a313", "index scoped catalog reads"); err != nil {
+				return err
+			}
+			checksum = "118459cfa1b2ace00d67b0e6f2a29e0f626525fab0a725221c66b6c814a5a313"
 		default:
 			return nil
 		}
@@ -133,4 +138,39 @@ CREATE TABLE workflow_operation_events (
 CREATE INDEX workflow_operation_events_run_idx ON workflow_operation_events(execution_run_id, occurred_at, sequence);
 CREATE INDEX workflow_operation_events_activity_idx ON workflow_operation_events(execution_run_id, activity_id, occurred_at);
 CREATE INDEX workflow_operation_events_operation_idx ON workflow_operation_events(operation_id, sequence);
+`
+
+const unifiedAuditSQL = `ALTER TABLE audit_events ADD COLUMN request_id TEXT NOT NULL DEFAULT '';
+ALTER TABLE audit_events ADD COLUMN correlation_id TEXT NOT NULL DEFAULT '';
+ALTER TABLE audit_events ADD COLUMN transport TEXT NOT NULL DEFAULT '';
+ALTER TABLE audit_events ADD COLUMN source TEXT NOT NULL DEFAULT '';
+ALTER TABLE audit_events ADD COLUMN method TEXT NOT NULL DEFAULT '';
+ALTER TABLE audit_events ADD COLUMN route TEXT NOT NULL DEFAULT '';
+ALTER TABLE audit_events ADD COLUMN status INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE audit_events ADD COLUMN duration_ms INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE audit_events ADD COLUMN auth_outcome TEXT NOT NULL DEFAULT '';
+ALTER TABLE audit_events ADD COLUMN activity_id TEXT NOT NULL DEFAULT '';
+ALTER TABLE audit_events ADD COLUMN attempt INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE audit_events ADD COLUMN operation_id TEXT NOT NULL DEFAULT '';
+CREATE INDEX audit_events_request_id_feed_idx ON audit_events(request_id, occurred_at DESC, id DESC);
+CREATE INDEX audit_events_correlation_id_feed_idx ON audit_events(correlation_id, occurred_at DESC, id DESC);
+CREATE INDEX audit_events_event_type_feed_idx ON audit_events(event_type, occurred_at DESC, id DESC);
+CREATE INDEX audit_events_execution_id_feed_idx ON audit_events(execution_id, occurred_at DESC, id DESC);
+CREATE INDEX audit_events_operation_id_feed_idx ON audit_events(operation_id, occurred_at DESC, id DESC);
+CREATE INDEX audit_events_actor_id_feed_idx ON audit_events(actor_id, occurred_at DESC, id DESC);
+CREATE INDEX audit_events_method_feed_idx ON audit_events(method, occurred_at DESC, id DESC);
+CREATE INDEX audit_events_status_feed_idx ON audit_events(status, occurred_at DESC, id DESC);
+CREATE INDEX audit_events_transport_feed_idx ON audit_events(transport, occurred_at DESC, id DESC);
+CREATE INDEX audit_events_runtime_id_feed_idx ON audit_events(runtime_id, occurred_at DESC, id DESC);
+CREATE INDEX audit_events_activity_id_feed_idx ON audit_events(activity_id, occurred_at DESC, id DESC);
+CREATE INDEX audit_events_outcome_feed_idx ON audit_events(outcome, occurred_at DESC, id DESC);
+CREATE INDEX audit_events_route_feed_idx ON audit_events(route, occurred_at DESC, id DESC);
+CREATE INDEX audit_events_feed_idx ON audit_events(occurred_at DESC, id DESC);
+CREATE TABLE audit_entity_context (
+ entity_type TEXT NOT NULL,
+ entity_id TEXT NOT NULL,
+ provenance TEXT NOT NULL,
+ PRIMARY KEY(entity_type, entity_id)
+);
+
 `

@@ -7,6 +7,11 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	domainaudit "github.com/UFFeScience/akoflow/internal/domain/audit"
+	domainqueue "github.com/UFFeScience/akoflow/internal/domain/queue"
+	dbaudit "github.com/UFFeScience/akoflow/internal/infrastructure/database/audit"
+	dbqueue "github.com/UFFeScience/akoflow/internal/infrastructure/database/queue"
+	"strings"
 	"time"
 
 	domainevents "github.com/UFFeScience/akoflow/internal/domain/events"
@@ -40,15 +45,47 @@ func Append(ctx context.Context, executor Execer, event domainevents.Event) erro
 		event.AggregateID, payload, event.OccurredAt, metadata); err != nil {
 		return fmt.Errorf("append domain event: %w", err)
 	}
+	deliveryID := newID()
 	if _, err := executor.ExecContext(ctx, `INSERT INTO queue_jobs (
 		id, category, event_type, aggregate_type, aggregate_id, payload, status,
 		priority, available_at, attempts, max_attempts, idempotency_key, created_at
 	) VALUES (?, 'monitoring', ?, ?, ?, ?, 'pending', 0, ?, 0, 5, ?, ?)`,
-		newID(), event.Type, event.AggregateType, event.AggregateID, payload,
+		deliveryID, event.Type, event.AggregateType, event.AggregateID, payload,
 		event.OccurredAt, "domain-event:"+event.ID, event.OccurredAt); err != nil {
 		return fmt.Errorf("enqueue domain event: %w", err)
 	}
-	return nil
+	if err := dbqueue.RecordLifecycle(ctx, executor, domainqueue.Job{
+		ID: deliveryID, Type: event.Type, Category: domainqueue.CategoryMonitoring,
+		AggregateType: event.AggregateType, AggregateID: event.AggregateID, Status: domainqueue.StatusPending,
+	}); err != nil {
+		return err
+	}
+	outcome := domainaudit.OutcomeSucceeded
+	if strings.HasSuffix(event.Type, "started") {
+		outcome = domainaudit.OutcomeStarted
+	}
+	if strings.HasSuffix(event.Type, "failed") || strings.HasSuffix(event.Type, "cancelled") {
+		outcome = domainaudit.OutcomeFailed
+	}
+	runID := ""
+	if event.AggregateType == "execution_run" {
+		runID = event.AggregateID
+	}
+	activityID := ""
+	if event.AggregateType == "activity_execution" {
+		runID, _ = event.Payload["executionRunId"].(string)
+		activityID, _ = event.Payload["activityId"].(string)
+	}
+	attempt, _ := event.Payload["attempt"].(int)
+	runtimeID, _ := event.Payload["runtimeId"].(string)
+	return dbaudit.AppendLifecycle(ctx, executor, domainaudit.Event{
+		ID: "lifecycle:" + event.AggregateID + ":" + event.Type, EventType: event.Type,
+		ActorID: "daemon", ActorType: "service_client", AuthOutcome: "internal",
+		CorrelationID: "run:" + runID, Transport: "internal", Source: "domain_event",
+		ExecutionID: runID, ActivityID: activityID, Attempt: attempt, RuntimeID: runtimeID,
+		Outcome: outcome, OccurredAt: event.OccurredAt,
+		Metadata: map[string]any{"entityType": event.AggregateType, "entityId": event.AggregateID},
+	}, "execution_run", runID)
 }
 
 func newID() string {

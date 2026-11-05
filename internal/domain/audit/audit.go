@@ -11,6 +11,19 @@ const (
 )
 
 type Event struct {
+	RequestID     string `json:"requestId,omitempty"`
+	CorrelationID string `json:"correlationId,omitempty"`
+	Transport     string `json:"transport,omitempty"`
+	Source        string `json:"source,omitempty"`
+	Method        string `json:"method,omitempty"`
+	Route         string `json:"route,omitempty"`
+	Status        int    `json:"status,omitempty"`
+	DurationMS    int64  `json:"durationMs,omitempty"`
+	AuthOutcome   string `json:"authOutcome,omitempty"`
+	ActivityID    string `json:"activityId,omitempty"`
+	Attempt       int    `json:"attempt,omitempty"`
+	OperationID   string `json:"operationId,omitempty"`
+
 	ID            string         `json:"id"`
 	EventType     string         `json:"eventType"`
 	ActorID       string         `json:"actorId,omitempty"`
@@ -29,6 +42,21 @@ type Event struct {
 }
 
 type Filter struct {
+	Category      string
+	RequestID     string
+	CorrelationID string
+	ActorID       string
+	Method        string
+	Route         string
+	Status        int
+	Transport     string
+	RuntimeID     string
+	ActivityID    string
+	OperationID   string
+	Before        string
+	From          string
+	To            string
+
 	EventType     string
 	EnvironmentID string
 	ResourceID    string
@@ -37,4 +65,28 @@ type Filter struct {
 	ExecutionID   string
 	Outcome       Outcome
 	Limit         int
+}
+
+type FacetValue struct {
+	Value string `json:"value"`
+	Count int64  `json:"count"`
+}
+
+type FacetPage struct {
+	Values  []FacetValue `json:"values"`
+	HasMore bool         `json:"hasMore"`
+}
+
+type TimeBucket struct {
+	Timestamp time.Time `json:"timestamp"`
+	Count     int64     `json:"count"`
+}
+
+type Summary struct {
+	FacetMore map[string]bool         `json:"facetMore,omitempty"`
+	Total     int64                   `json:"total"`
+	From      time.Time               `json:"from"`
+	To        time.Time               `json:"to"`
+	Buckets   []TimeBucket            `json:"buckets"`
+	Facets    map[string][]FacetValue `json:"facets"`
 }

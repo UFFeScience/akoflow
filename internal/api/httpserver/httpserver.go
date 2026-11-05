@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/mcpbridge"
 	"net"
 	"net/http"
@@ -67,10 +68,12 @@ func dockerDaemonCheck(r *http.Request) map[string]any {
 
 func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux {
 	mux := http.NewServeMux()
-	mux.HandleFunc("GET /", http_config.KernelHandler(HealthCheck))
+	mux.HandleFunc("GET /{$}", http_config.KernelHandler(HealthCheck))
 	mux.HandleFunc("GET /akoflow-api/instance/", http_config.KernelHandler(workflowEngine.GetInstance))
 	mux.HandleFunc("GET /akoflow-api/preflight/", http_config.KernelHandler(Preflight))
 	mux.HandleFunc("GET /akoflow-api/search/", http_config.KernelHandler(workflowEngine.Search))
+	mux.HandleFunc("GET /akoflow-api/audit-events/facets/", http_config.KernelHandler(workflowEngine.AuditFacets))
+	mux.HandleFunc("GET /akoflow-api/audit-events/summary/", http_config.KernelHandler(workflowEngine.AuditSummary))
 	mux.HandleFunc("GET /akoflow-api/audit-events/", http_config.KernelHandler(workflowEngine.ListAuditEvents))
 	mux.HandleFunc("POST /akoflow-api/provenance/sql/", http_config.KernelHandler(workflowEngine.QueryProvenanceSQL))
 	mux.HandleFunc("GET /akoflow-api/provenance/sql/schema/", http_config.KernelHandler(workflowEngine.GetProvenanceSchema))
@@ -204,22 +207,27 @@ func registerExecutionRoutes(mux *http.ServeMux, workflowEngine *workflow_engine
 	mux.HandleFunc("GET /akoflow-api/execution-runs/{runId}/activities/{activityId}/metrics/summary/", http_config.KernelHandler(workflowEngine.GetActivityMetricSummary))
 }
 
-func Serve(ctx context.Context, address string, workflowEngine *workflow_engine_api_handler.Handler) error {
+func Serve(ctx context.Context, address string, workflowEngine *workflow_engine_api_handler.Handler, auditStore ports.AuditStore) error {
 	settings := config.Load()
 	return ServeSecure(ctx, address, workflowEngine, SecurityOptions{
 		BearerToken: settings.APIToken, AllowedOrigins: settings.APIAllowedOrigins,
 		LoopbackOnly: !isLoopbackAddress(address) && settings.APIToken == "",
-	})
+	}, auditStore)
 }
 
-func ServeSecure(ctx context.Context, address string, workflowEngine *workflow_engine_api_handler.Handler, security SecurityOptions) error {
-	var handler http.Handler = AllowCORSFor(SecureAPI(readOnlyAPI(NewMux(workflowEngine), workflowEngine), security), security.AllowedOrigins)
+func ServeSecure(ctx context.Context, address string, workflowEngine *workflow_engine_api_handler.Handler, security SecurityOptions, auditStore ports.AuditStore) error {
+	if auditStore == nil {
+		return fmt.Errorf("audit store is required")
+	}
+	routes := NewMux(workflowEngine)
+	var handler http.Handler = AllowCORSFor(SecureAPI(readOnlyAPI(routes, workflowEngine), security), security.AllowedOrigins)
 	settings := config.Load()
-	handler, closeMCP, err := managedMCPRoutes(handler, address, security, settings)
+	handler, closeMCP, err := managedMCPRoutes(handler, address, security, settings, auditStore)
 	if err != nil {
 		return err
 	}
 	defer closeMCP()
+	handler = AuditAccess(handler, routes, auditStore)
 
 	server := &http.Server{Addr: address, Handler: handler, ReadHeaderTimeout: 10 * time.Second, IdleTimeout: 60 * time.Second}
 	shutdownDone := make(chan struct{})
@@ -261,7 +269,7 @@ func shutdownWhenCanceled(ctx context.Context, server *http.Server) {
 	_ = server.Shutdown(shutdownContext)
 }
 
-func newMCPHandler(address string, security SecurityOptions, settings config.Settings) (http.Handler, func(), error) {
+func newMCPHandler(address string, security SecurityOptions, settings config.Settings, auditStores ...ports.AuditStore) (http.Handler, func(), error) {
 	host, port, err := net.SplitHostPort(address)
 	if err != nil {
 		return nil, nil, err
@@ -269,7 +277,12 @@ func newMCPHandler(address string, security SecurityOptions, settings config.Set
 	if host == "" || host == "0.0.0.0" || host == "::" {
 		host = "127.0.0.1"
 	}
+	var auditStore ports.AuditStore
+	if len(auditStores) > 0 {
+		auditStore = auditStores[0]
+	}
 	bridge, err := mcpbridge.New(mcpbridge.Options{
+		Audit:          auditStore,
 		APIURL:         "http://" + net.JoinHostPort(host, port) + "/akoflow-api",
 		APIToken:       security.BearerToken,
 		Permissions:    mcpbridge.Permission(settings.MCPPermissions),

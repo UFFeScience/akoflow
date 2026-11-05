@@ -88,3 +88,65 @@ func TestAppendReportsEventAndQueueWriteFailures(t *testing.T) {
 		t.Fatalf("calls=%d", second.calls)
 	}
 }
+
+func TestLifecycleAuditDeduplicatesAndNeverCopiesPayload(t *testing.T) {
+	db, err := sql.Open("sqlite3", ":memory:")
+	if err != nil {
+		t.Fatal(err)
+	}
+	db.SetMaxOpenConns(1)
+	defer db.Close()
+	ctx := context.Background()
+	if err := database.Bootstrap(ctx, db); err != nil {
+		t.Fatal(err)
+	}
+	for i := 0; i < 2; i++ {
+		tx, err := db.BeginTx(ctx, nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err := Append(ctx, tx, domainevents.Event{Type: domainevents.ActivityFailed, AggregateType: "activity_execution", AggregateID: "task-attempt",
+			Payload: map[string]any{"executionRunId": "run", "activityId": "activity", "attempt": 2, "runtimeId": "runtime", "failureReason": "secret-output"}}); err != nil {
+			t.Fatal(err)
+		}
+		if err := tx.Commit(); err != nil {
+			t.Fatal(err)
+		}
+	}
+	var count, attempt int
+	var run, activity, runtime, summary, metadata string
+	if err := db.QueryRow("SELECT COUNT(*),execution_id,activity_id,runtime_id,attempt,summary,metadata FROM audit_events").Scan(&count, &run, &activity, &runtime, &attempt, &summary, &metadata); err != nil {
+		t.Fatal(err)
+	}
+	if count != 1 || run != "run" || activity != "activity" || runtime != "runtime" || attempt != 2 || strings.Contains(summary+metadata, "secret") {
+		t.Fatalf("%d %s %s %s %d %s %s", count, run, activity, runtime, attempt, summary, metadata)
+	}
+}
+
+func TestLifecycleAuditFailureRollsBackAggregateEvents(t *testing.T) {
+	db, err := sql.Open("sqlite3", ":memory:")
+	if err != nil {
+		t.Fatal(err)
+	}
+	db.SetMaxOpenConns(1)
+	defer db.Close()
+	ctx := context.Background()
+	if err := database.Bootstrap(ctx, db); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := db.Exec("DROP TABLE audit_events"); err != nil {
+		t.Fatal(err)
+	}
+	tx, err := db.BeginTx(ctx, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := Append(ctx, tx, domainevents.Event{Type: domainevents.ExecutionStarted, AggregateType: "execution_run", AggregateID: "run"}); err == nil {
+		t.Fatal("audit failure ignored")
+	}
+	tx.Rollback()
+	var count int
+	if err := db.QueryRow("SELECT COUNT(*) FROM domain_events").Scan(&count); err != nil || count != 0 {
+		t.Fatalf("%d %v", count, err)
+	}
+}

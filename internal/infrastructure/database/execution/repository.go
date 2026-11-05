@@ -5,6 +5,8 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	domainaudit "github.com/UFFeScience/akoflow/internal/domain/audit"
+	dbaudit "github.com/UFFeScience/akoflow/internal/infrastructure/database/audit"
 	"strings"
 	"time"
 
@@ -193,6 +195,9 @@ func (r *Repository) CreateRun(ctx context.Context, run domain.ExecutionRun) err
 		}); err != nil {
 			return err
 		}
+	}
+	if err := dbaudit.Bind(ctx, tx, "execution_run", run.ID); err != nil {
+		return err
 	}
 	return tx.Commit()
 }
@@ -485,7 +490,12 @@ func (r *Repository) Save(ctx context.Context, handle domain.ActivityHandle) err
 	if err != nil {
 		return fmt.Errorf("marshal handle artifacts: %w", err)
 	}
-	_, err = r.db.ExecContext(ctx, `INSERT INTO activity_handles (
+	tx, err := r.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	_, err = tx.ExecContext(ctx, `INSERT INTO activity_handles (
 		id, execution_run_id, activity_id, resource_id, runtime_id, external_id,
 		status, endpoints, started_at, finished_at, exit_code, failure, log, artifacts, metadata
 	) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -497,7 +507,18 @@ func (r *Repository) Save(ctx context.Context, handle domain.ActivityHandle) err
 		handle.ID, handle.RunID, handle.ActivityID, handle.ResourceID, handle.RuntimeID,
 		handle.ExternalID, handle.Status, string(endpoints), handle.StartedAt,
 		handle.FinishedAt, handle.ExitCode, handle.Failure, handle.Log, string(artifacts), string(metadata))
-	return err
+	if err != nil {
+		return err
+	}
+	if err := dbaudit.AppendLifecycle(ctx, tx, domainaudit.Event{
+		ID: "handle:" + handle.ID + ":" + string(handle.Status), EventType: "runtime.handle." + string(handle.Status),
+		ActorID: "daemon", ActorType: "service_client", AuthOutcome: "internal", Source: "runtime_handle", Transport: "internal",
+		ExecutionID: handle.RunID, ActivityID: handle.ActivityID, ResourceID: handle.ResourceID, RuntimeID: handle.RuntimeID,
+		CorrelationID: "run:" + handle.RunID, Outcome: runtimeAuditOutcome(string(handle.Status)), OccurredAt: time.Now().UTC(),
+	}, "execution_run", handle.RunID); err != nil {
+		return err
+	}
+	return tx.Commit()
 }
 
 func (r *Repository) Find(ctx context.Context, id string) (*domain.ActivityHandle, error) {
@@ -777,7 +798,7 @@ func appendTaskEvent(ctx context.Context, tx *sql.Tx, task domain.TaskExecution)
 	return dbevents.Append(ctx, tx, domainevents.Event{
 		Type: eventType, AggregateType: "activity_execution", AggregateID: task.ID,
 		OccurredAt: time.Now().UTC(), Payload: map[string]any{
-			"executionRunId": task.ExecutionRunID, "activityId": task.ActivityID,
+			"executionRunId": task.ExecutionRunID, "activityId": task.ActivityID, "attempt": task.Attempt, "runtimeId": task.RuntimeID,
 			"status": task.Status, "runtimeSeconds": task.RuntimeSeconds,
 			"failureReason": task.FailureReason,
 		},
@@ -829,4 +850,15 @@ func nullableString(value string) any {
 		return nil
 	}
 	return value
+}
+
+func runtimeAuditOutcome(status string) domainaudit.Outcome {
+	switch status {
+	case "failed", "cancelled", "lost", "unknown":
+		return domainaudit.OutcomeFailed
+	case "completed", "succeeded", "stopped":
+		return domainaudit.OutcomeSucceeded
+	default:
+		return domainaudit.OutcomeStarted
+	}
 }

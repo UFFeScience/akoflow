@@ -7,6 +7,9 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	domainaudit "github.com/UFFeScience/akoflow/internal/domain/audit"
+	dbaudit "github.com/UFFeScience/akoflow/internal/infrastructure/database/audit"
+	"strings"
 	"time"
 
 	domainevents "github.com/UFFeScience/akoflow/internal/domain/events"
@@ -48,7 +51,29 @@ func Append(ctx context.Context, executor Execer, event domainevents.Event) erro
 		event.OccurredAt, "domain-event:"+event.ID, event.OccurredAt); err != nil {
 		return fmt.Errorf("enqueue domain event: %w", err)
 	}
-	return nil
+	outcome := domainaudit.OutcomeSucceeded
+	if strings.HasSuffix(event.Type, "started") {
+		outcome = domainaudit.OutcomeStarted
+	}
+	if strings.HasSuffix(event.Type, "failed") || strings.HasSuffix(event.Type, "cancelled") {
+		outcome = domainaudit.OutcomeFailed
+	}
+	runID := event.AggregateID
+	activityID := ""
+	if event.AggregateType == "activity_execution" {
+		runID, _ = event.Payload["executionRunId"].(string)
+		activityID, _ = event.Payload["activityId"].(string)
+	}
+	attempt, _ := event.Payload["attempt"].(int)
+	runtimeID, _ := event.Payload["runtimeId"].(string)
+	return dbaudit.AppendLifecycle(ctx, executor, domainaudit.Event{
+		ID: "lifecycle:" + event.AggregateID + ":" + event.Type, EventType: event.Type,
+		ActorID: "daemon", ActorType: "service_client", AuthOutcome: "internal",
+		CorrelationID: "run:" + runID, Transport: "internal", Source: "domain_event",
+		ExecutionID: runID, ActivityID: activityID, Attempt: attempt, RuntimeID: runtimeID,
+		Outcome: outcome, OccurredAt: event.OccurredAt,
+		Metadata: map[string]any{"entityType": event.AggregateType, "entityId": event.AggregateID},
+	}, "execution_run", runID)
 }
 
 func newID() string {

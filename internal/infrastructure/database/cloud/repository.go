@@ -5,6 +5,8 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	domainaudit "github.com/UFFeScience/akoflow/internal/domain/audit"
+	dbaudit "github.com/UFFeScience/akoflow/internal/infrastructure/database/audit"
 	"strings"
 	"time"
 
@@ -567,24 +569,49 @@ func (r *Repository) CreateCloudOperation(ctx context.Context, value domain.Clou
 	if value.Phase == "" {
 		value.Phase = "queued"
 	}
+	tx, err := r.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
 	request, _ := json.Marshal(value.Request)
-	_, err := r.db.ExecContext(ctx, `INSERT INTO cloud_operation_runs(
+	_, err = tx.ExecContext(ctx, `INSERT INTO cloud_operation_runs(
 		id,kind,status,environment_id,capacity_target_id,instance_id,execution_run_id,activity_id,phase,request,failure_reason,
 		created_at,started_at,finished_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)`, value.ID, value.Kind,
 		value.Status, value.EnvironmentID, value.CapacityTargetID, value.InstanceID,
 		value.ExecutionRunID, value.ActivityID, value.Phase, request,
 		value.FailureReason, value.CreatedAt, value.StartedAt, value.FinishedAt)
-	return err
+	if err != nil {
+		return err
+	}
+	if err := dbaudit.Bind(ctx, tx, "cloud_operation", value.ID); err != nil {
+		return err
+	}
+	if err := auditCloudOperation(ctx, tx, value); err != nil {
+		return err
+	}
+	return tx.Commit()
 }
 
 func (r *Repository) UpdateCloudOperation(ctx context.Context, value domain.CloudOperationRun) error {
+	tx, err := r.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
 	request, _ := json.Marshal(value.Request)
-	_, err := r.db.ExecContext(ctx, `UPDATE cloud_operation_runs SET status=?,environment_id=?,
+	_, err = tx.ExecContext(ctx, `UPDATE cloud_operation_runs SET status=?,environment_id=?,
 		capacity_target_id=?,instance_id=?,execution_run_id=?,activity_id=?,phase=?,request=?,failure_reason=?,started_at=?,finished_at=?
 		WHERE id=?`, value.Status, value.EnvironmentID, value.CapacityTargetID, value.InstanceID,
 		value.ExecutionRunID, value.ActivityID, value.Phase, request, value.FailureReason,
 		value.StartedAt, value.FinishedAt, value.ID)
-	return err
+	if err != nil {
+		return err
+	}
+	if err := auditCloudOperation(ctx, tx, value); err != nil {
+		return err
+	}
+	return tx.Commit()
 }
 
 func (r *Repository) FindCloudOperation(ctx context.Context, id string) (*domain.CloudOperationRun, error) {
@@ -801,4 +828,21 @@ func persistCapacityTargetConfigurations(ctx context.Context, tx *sql.Tx, value 
 		}
 	}
 	return nil
+}
+
+func auditCloudOperation(ctx context.Context, tx *sql.Tx, value domain.CloudOperationRun) error {
+	outcome := domainaudit.OutcomeStarted
+	if value.Status == "completed" {
+		outcome = domainaudit.OutcomeSucceeded
+	}
+	if value.Status == "failed" || value.Status == "cancelled" {
+		outcome = domainaudit.OutcomeFailed
+	}
+	return dbaudit.AppendLifecycle(ctx, tx, domainaudit.Event{
+		ID: "cloud:" + value.ID + ":" + string(value.Status), EventType: "cloud.operation." + string(value.Status),
+		ActorID: "daemon", ActorType: "service_client", AuthOutcome: "internal",
+		CorrelationID: "operation:" + value.ID, Transport: "internal", Source: "cloud_operation",
+		EnvironmentID: value.EnvironmentID, ExecutionID: value.ExecutionRunID, ActivityID: value.ActivityID,
+		OperationID: value.ID, Outcome: outcome, OccurredAt: time.Now().UTC(),
+	}, "cloud_operation", value.ID)
 }

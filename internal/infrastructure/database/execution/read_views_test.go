@@ -58,3 +58,21 @@ func TestEventPagesPreserveAuditOrderWithoutDuplicates(t *testing.T) {
 	require.False(t, more)
 	require.Equal(t, all[1:], second)
 }
+
+func TestRuntimeHandleLifecycleAuditDeduplicatesWithoutOutput(t *testing.T) {
+	repo := setup(t)
+	ctx := context.Background()
+	require.NoError(t, repo.CreateRun(ctx, domain.ExecutionRun{ID: "audit-run", SchedulePlanID: "plan", Mode: domain.ExecutionModeReal, Status: domain.ExecutionRunRunning}))
+	handle := domain.ActivityHandle{ID: "audit-handle", RunID: "audit-run", ActivityID: "activity", ResourceID: "resource", RuntimeID: "local", Status: domain.HandleRunning, Log: "secret-output", Failure: "secret-error"}
+	for i := 0; i < 2; i++ {
+		require.NoError(t, repo.Save(ctx, handle))
+	}
+	handle.Status = domain.HandleCompleted
+	require.NoError(t, repo.Save(ctx, handle))
+	var count int
+	require.NoError(t, repo.db.QueryRow("SELECT COUNT(*) FROM audit_events WHERE source='runtime_handle'").Scan(&count))
+	require.Equal(t, 2, count)
+	var summary, metadata string
+	require.NoError(t, repo.db.QueryRow("SELECT summary,metadata FROM audit_events WHERE source='runtime_handle' LIMIT 1").Scan(&summary, &metadata))
+	require.NotContains(t, summary+metadata, "secret")
+}

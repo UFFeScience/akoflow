@@ -775,8 +775,12 @@ func (h *Handler) ListAuditEvents(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
-	status, _ := strconv.Atoi(r.URL.Query().Get("status"))
-	filter := domainaudit.Filter{Status: status,
+	status, statusErr := strconv.Atoi(r.URL.Query().Get("status"))
+	if r.URL.Query().Get("status") != "" && statusErr != nil {
+		writeError(w, http.StatusBadRequest, fmt.Errorf("invalid audit status"))
+		return
+	}
+	filter := domainaudit.Filter{Category: r.URL.Query().Get("category"), Status: status,
 		RequestID:     r.URL.Query().Get("requestId"),
 		CorrelationID: r.URL.Query().Get("correlationId"),
 		ActorID:       r.URL.Query().Get("actorId"),

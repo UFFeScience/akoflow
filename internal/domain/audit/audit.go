@@ -42,6 +42,7 @@ type Event struct {
 }
 
 type Filter struct {
+	Category      string
 	RequestID     string
 	CorrelationID string
 	ActorID       string

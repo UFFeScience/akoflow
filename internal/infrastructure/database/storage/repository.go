@@ -5,6 +5,8 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	domainaudit "github.com/UFFeScience/akoflow/internal/domain/audit"
+	dbaudit "github.com/UFFeScience/akoflow/internal/infrastructure/database/audit"
 	"path"
 	"regexp"
 	"strings"
@@ -236,11 +238,25 @@ func (r *Repository) SaveDownload(ctx context.Context, v domain.DownloadRun) err
 	) VALUES(?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET
 		path=excluded.path,status=excluded.status,url=excluded.url,transferred_bytes=excluded.transferred_bytes,
 		error=excluded.error,updated_at=excluded.updated_at`
-	_, e := r.db.ExecContext(ctx, query,
+	tx, err := r.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	_, e := tx.ExecContext(ctx, query,
 		v.ID, v.StorageID, v.Path, v.Status, v.Strategy, v.URL, v.SizeBytes,
 		v.TransferredBytes, v.Error, v.CreatedAt, v.UpdatedAt,
 	)
-	return e
+	if e != nil {
+		return e
+	}
+	if err := dbaudit.Bind(ctx, tx, "storage_download", v.ID); err != nil {
+		return err
+	}
+	if err := auditStorage(ctx, tx, "download", v.ID, v.StorageID, string(v.Status)); err != nil {
+		return err
+	}
+	return tx.Commit()
 }
 func (r *Repository) FindDownload(ctx context.Context, id string) (*domain.DownloadRun, error) {
 	var v domain.DownloadRun
@@ -262,11 +278,25 @@ func (r *Repository) SaveIndexRun(ctx context.Context, value domain.IndexRun) er
 	) VALUES(?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET
 		status=excluded.status,indexed_entries=excluded.indexed_entries,
 		error=excluded.error,finished_at=excluded.finished_at`
-	_, err := r.db.ExecContext(ctx, query,
+	tx, err := r.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	_, err = tx.ExecContext(ctx, query,
 		value.ID, value.StorageID, value.Status, value.IndexedEntries,
 		value.Error, value.CreatedAt, value.FinishedAt,
 	)
-	return err
+	if err != nil {
+		return err
+	}
+	if err := dbaudit.Bind(ctx, tx, "storage_index", value.ID); err != nil {
+		return err
+	}
+	if err := auditStorage(ctx, tx, "index", value.ID, value.StorageID, string(value.Status)); err != nil {
+		return err
+	}
+	return tx.Commit()
 }
 
 func (r *Repository) ListIndexRuns(ctx context.Context, storageID string) ([]domain.IndexRun, error) {
@@ -295,3 +325,19 @@ func (r *Repository) ListIndexRuns(ctx context.Context, storageID string) ([]dom
 	return values, rows.Err()
 }
 func (_ Repository) _time(_ time.Time) {}
+
+func auditStorage(ctx context.Context, tx *sql.Tx, kind, id, storageID, state string) error {
+	outcome := domainaudit.OutcomeStarted
+	switch state {
+	case "ready", "completed", "succeeded":
+		outcome = domainaudit.OutcomeSucceeded
+	case "failed", "cancelled":
+		outcome = domainaudit.OutcomeFailed
+	}
+	return dbaudit.AppendLifecycle(ctx, tx, domainaudit.Event{
+		ID: "storage:" + kind + ":" + id + ":" + state, EventType: "storage." + kind + "." + state,
+		OperationID: id, ActorID: "daemon", ActorType: "service_client", AuthOutcome: "internal",
+		Source: "storage", Transport: "internal", CorrelationID: "storage:" + id, Outcome: outcome, OccurredAt: time.Now().UTC(),
+		Metadata: map[string]any{"entityType": "storage", "entityId": storageID},
+	}, "storage_"+kind, id)
+}

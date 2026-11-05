@@ -5600,6 +5600,7 @@
       "activityId",
       "actorId",
       "before",
+      "category",
       "connectionId",
       "correlationId",
       "environmentId",

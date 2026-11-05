@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"log"
 	"strings"
 	"time"
@@ -113,7 +114,15 @@ func (r *Repository) ListAuditEvents(ctx context.Context, filter domainaudit.Fil
 
 func auditQuery(filter domainaudit.Filter) (string, []any, error) {
 	query := selectAuditSQL
+	prefix, err := familyPrefix(filter.Category)
+	if err != nil {
+		return "", nil, err
+	}
 	args := []any{}
+	if prefix != "" {
+		query += " AND event_type>=? AND event_type<?"
+		args = append(args, prefix+".", prefix+"/")
+	}
 	for _, item := range []struct{ column, value string }{
 		{"event_type", filter.EventType}, {"environment_id", filter.EnvironmentID}, {"resource_id", filter.ResourceID},
 		{"connection_id", filter.ConnectionID}, {"session_id", filter.SessionID}, {"execution_id", filter.ExecutionID},
@@ -166,7 +175,7 @@ const selectAuditSQL = `SELECT id,event_type,actor_id,actor_type,environment_id,
 // sanitize is an allowlist boundary for durable audit records.
 func sanitize(event domainaudit.Event) domainaudit.Event {
 	event.Summary = event.EventType
-	allowed := map[string]bool{"nodeCount": true, "logReference": true, "entityType": true, "entityId": true}
+	allowed := map[string]bool{"nodeCount": true, "logReference": true, "entityType": true, "entityId": true, "commandType": true, "commandId": true, "category": true}
 	metadata := map[string]any{}
 	for k, v := range event.Metadata {
 		if allowed[k] {
@@ -243,3 +252,15 @@ auth_outcome=excluded.auth_outcome,
 activity_id=excluded.activity_id,
 attempt=excluded.attempt,
 operation_id=excluded.operation_id`
+
+func familyPrefix(category string) (string, error) {
+	if len(category) > 64 {
+		return "", fmt.Errorf("invalid audit event family")
+	}
+	for _, letter := range category {
+		if (letter < 'a' || letter > 'z') && (letter < '0' || letter > '9') && letter != '_' && letter != '-' {
+			return "", fmt.Errorf("invalid audit event family")
+		}
+	}
+	return category, nil
+}

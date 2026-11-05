@@ -115,7 +115,7 @@ func TestLifecycleAuditDeduplicatesAndNeverCopiesPayload(t *testing.T) {
 	}
 	var count, attempt int
 	var run, activity, runtime, summary, metadata string
-	if err := db.QueryRow("SELECT COUNT(*),execution_id,activity_id,runtime_id,attempt,summary,metadata FROM audit_events").Scan(&count, &run, &activity, &runtime, &attempt, &summary, &metadata); err != nil {
+	if err := db.QueryRow("SELECT COUNT(*),execution_id,activity_id,runtime_id,attempt,summary,metadata FROM audit_events WHERE source='domain_event'").Scan(&count, &run, &activity, &runtime, &attempt, &summary, &metadata); err != nil {
 		t.Fatal(err)
 	}
 	if count != 1 || run != "run" || activity != "activity" || runtime != "runtime" || attempt != 2 || strings.Contains(summary+metadata, "secret") {

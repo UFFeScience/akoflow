@@ -160,3 +160,36 @@ func TestAsyncLifecyclePreservesBoundRequestProvenance(t *testing.T) {
 		t.Fatalf("%+v %v", items, err)
 	}
 }
+
+func TestEventFamilyFiltersKeepLegacyAndFutureEvents(t *testing.T) {
+	db, err := sql.Open("sqlite3", ":memory:")
+	if err != nil {
+		t.Fatal(err)
+	}
+	db.SetMaxOpenConns(1)
+	defer db.Close()
+	ctx := context.Background()
+	if err := database.Bootstrap(ctx, db); err != nil {
+		t.Fatal(err)
+	}
+	repo := New(db)
+	families := []string{"activity", "workflow", "execution", "connection", "console", "credential", "resource", "api", "queue", "planning", "storage", "future"}
+	for _, family := range families {
+		if err := repo.RecordAuditEvent(ctx, domainaudit.Event{ID: family, EventType: family + ".event", Outcome: domainaudit.OutcomeSucceeded, OccurredAt: time.Now().UTC()}); err != nil {
+			t.Fatal(err)
+		}
+	}
+	all, err := repo.ListAuditEvents(ctx, domainaudit.Filter{})
+	if err != nil || len(all) != len(families) {
+		t.Fatalf("%d %v", len(all), err)
+	}
+	for _, family := range families {
+		events, err := repo.ListAuditEvents(ctx, domainaudit.Filter{Category: family})
+		if err != nil || len(events) != 1 || events[0].ID != family {
+			t.Fatalf("%s: %+v %v", family, events, err)
+		}
+	}
+	if _, err := repo.ListAuditEvents(ctx, domainaudit.Filter{Category: "api%' OR 1=1"}); err == nil {
+		t.Fatal("invalid family accepted")
+	}
+}

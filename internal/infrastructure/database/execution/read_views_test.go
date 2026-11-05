@@ -76,3 +76,30 @@ func TestRuntimeHandleLifecycleAuditDeduplicatesWithoutOutput(t *testing.T) {
 	require.NoError(t, repo.db.QueryRow("SELECT summary,metadata FROM audit_events WHERE source='runtime_handle' LIMIT 1").Scan(&summary, &metadata))
 	require.NotContains(t, summary+metadata, "secret")
 }
+
+func TestIntermediateActivityStatesAreNotOmittedFromAudit(t *testing.T) {
+	repo := setup(t)
+	ctx := context.Background()
+	require.NoError(t, repo.CreateRun(ctx, domain.ExecutionRun{ID: "state-run", SchedulePlanID: "plan", Mode: domain.ExecutionModeReal, Status: domain.ExecutionRunRunning}))
+	task := domain.TaskExecution{ID: "state-task", ExecutionRunID: "state-run", PlanAssignmentID: "assignment", ActivityID: "activity", PlannedResourceID: "resource", Attempt: 1}
+	for _, state := range []domain.TaskExecutionStatus{domain.TaskBlocked, domain.TaskReady, domain.TaskQueued, domain.TaskPreparing} {
+		task.Status = state
+		require.NoError(t, repo.SaveTask(ctx, task))
+		require.NoError(t, repo.SaveTask(ctx, task))
+	}
+	var count int
+	require.NoError(t, repo.db.QueryRow("SELECT COUNT(*) FROM audit_events WHERE source='activity_state' AND execution_id='state-run'").Scan(&count))
+	require.Equal(t, 4, count)
+}
+
+func TestRunCancellationAuditsEachAffectedActivity(t *testing.T) {
+	repo := setup(t)
+	ctx := context.Background()
+	require.NoError(t, repo.CreateRun(ctx, domain.ExecutionRun{ID: "cancel-audit", SchedulePlanID: "plan", Mode: domain.ExecutionModeReal, Status: domain.ExecutionRunRunning}))
+	task := domain.TaskExecution{ID: "cancel-task", ExecutionRunID: "cancel-audit", PlanAssignmentID: "assignment", ActivityID: "activity", PlannedResourceID: "resource", Attempt: 1, Status: domain.TaskQueued}
+	require.NoError(t, repo.SaveTask(ctx, task))
+	require.NoError(t, repo.CancelRun(ctx, "cancel-audit", "secret-reason"))
+	var count int
+	require.NoError(t, repo.db.QueryRow("SELECT COUNT(*) FROM audit_events WHERE event_type='activity.cancelled' AND execution_id='cancel-audit'").Scan(&count))
+	require.Equal(t, 1, count)
+}

@@ -65,7 +65,7 @@ source tag; packaging fixes can rebuild an existing draft without moving tags:
 ```sh
 gh workflow run gh-akf-new-release.yaml \
   --repo UFFeScience/akoflow --ref main \
-  --field release_tag=v1.0.10
+  --field release_tag=v1.0.13
 ```
 
 The optional `runtime_artifact_run` input can reuse successful runtime archives

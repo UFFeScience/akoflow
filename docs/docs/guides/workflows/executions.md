@@ -131,10 +131,28 @@ The run overview summarizes observed timing and status. Use the owned sections b
 
 ![Predicted plan compared with observed execution](/img/interface/runs/run-plan-comparison.png)
 
-Use **Data**, **Prerequisites**, and **Events** when execution depends on transfers, preparation, or lifecycle transitions.
+## Files, preparation, logs and events in 1.0.13
 
-![Run data objects and transfers](/img/interface/runs/run-data.png)
+**Workspaces & data** connects activities to the files they generated. The DAG previews the five largest files per activity; **…** opens the remaining files. Search the activity/file explorer and click a result to focus the graph. Use path/branch filters or fullscreen for larger runs. File details open in a side drawer; **View activity** opens the producer's execution details.
 
-![Run prerequisite checks](/img/interface/runs/run-prerequisites.png)
+![Activity outputs and generated files](/img/releases/v1.0.13/02-workspace-files.png)
 
-![Ordered run lifecycle events](/img/interface/runs/run-events.png)
+The activity page and activity drawer also show **Generated files**, using the same file component as Workspace. Recorded files include size, checksum and locations when available. These are observations, not proof that a released workspace still exists. Catalog observations can include earlier attempts.
+
+**Preparation** is a collapsible section of the activity details. It updates while execution runs and exposes preparation status and copyable logs. There is no separate run-wide Prerequisites tab.
+
+![Activity preparation](/img/releases/v1.0.13/08-activity-preparation.png)
+
+**Logs** keeps the complete run output in the main console. Search activities in its sidebar or click the DAG to open an activity's log in a drawer. **View activity** opens its details. The console supports message search, match navigation, copying, downloading, line wrapping, following output and fullscreen.
+
+![Complete execution logs](/img/releases/v1.0.13/05-complete-logs.png)
+
+**Events** shows workflow and activity lanes along recorded time. Different event types use distinct shapes. Click a marker to inspect details in a drawer; the event selector also exposes overlapping and untimed entries. Search and type filters narrow the view. **Download events** exports all available event pages and reconstructed phase observations as JSON.
+
+![Temporal execution events](/img/releases/v1.0.13/10-event-timeline.png)
+
+Reconstructed phase observations are explicitly labelled with their source, duration and recorded timestamps. They are derived from monitoring evidence and are not additional persisted audit events. The execution-time decomposition retains aggregate totals and phase explanations; its former per-activity phase table is represented in Events. Accumulated phase work can exceed elapsed wall time because activities overlap.
+
+**Plan vs execution** compares planned and observed duration and cost with absolute and relative differences. Unconfigured deadline and budget constraints remain unconfigured. The planned and observed Gantt views are unchanged.
+
+![Plan versus execution](/img/releases/v1.0.13/03-plan-comparison.png)

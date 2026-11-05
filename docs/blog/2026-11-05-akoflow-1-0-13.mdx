@@ -1,0 +1,105 @@
+---
+slug: akoflow-1-0-13
+authors: [ovvesley, llms]
+title: AkôFlow 1.0.13 — workflow monitoring, files, logs and temporal events
+description: Explore workflow outputs by producer, read complete and activity logs, and inspect temporal execution events.
+image: /img/releases/v1.0.13/01-workflow-overview.png
+tags: [Desktop, Experiments]
+---
+
+AkôFlow 1.0.13 reorganizes execution monitoring around the workflow, its activities and the files they produce. This page describes changes since 1.0.12.
+
+<!-- truncate -->
+
+The screenshots below show the release candidate interface reading an existing completed six-activity Python workflow. Capturing them did not start a new execution. They demonstrate recorded observations, not a live filesystem listing. Capture provenance is stored alongside the images.
+
+## Workflow overview
+
+Follow the workflow as a whole: preparation artifacts, execution environments, recorded results and the execution plan. The unused external-input card has been removed.
+
+![Workflow overview](/img/releases/v1.0.13/01-workflow-overview.png)
+
+## Files next to their producer
+
+Workspace now connects activities to generated file nodes. Each activity previews its five largest files; the “…” node opens the complete list. Search activities or file paths in the explorer and click a result to focus the DAG. All, Path to activity, Branch, Fit view and fullscreen help navigate larger graphs.
+
+![Files next to their producer](/img/releases/v1.0.13/02-workspace-files.png)
+
+## Plan versus execution
+
+Compare planned and observed duration and cost, including absolute and relative differences. Activity counts and configured deadline/budget constraints remain explicit. Unconfigured constraints are not presented as satisfied SLAs. The Gantt charts retain their existing layout.
+
+![Plan versus execution](/img/releases/v1.0.13/03-plan-comparison.png)
+
+## Search activities while reading logs
+
+A searchable activity explorer focuses the log DAG. The main log remains the complete run output.
+
+![Search activities while reading logs](/img/releases/v1.0.13/04-log-navigation.png)
+
+## Complete run logs
+
+Search messages and sources, navigate matches, wrap lines, follow new output, copy visible output, download logs or use fullscreen. Raw output without recorded timestamps is not given invented timestamps.
+
+![Complete run logs](/img/releases/v1.0.13/05-complete-logs.png)
+
+## Activity logs in a drawer
+
+Click an activity to open its log in a side drawer without replacing the complete run log. View activity opens its execution details.
+
+![Activity logs in a drawer](/img/releases/v1.0.13/06-activity-log-drawer.png)
+
+## Activity details
+
+The activity drawer includes execution placement, timing, preparation and generated files, with a link to the owned activity page.
+
+![Activity details](/img/releases/v1.0.13/07-activity-details.png)
+
+## Preparation belongs to the activity
+
+Preparation is collapsible and updates during execution, with waiting, preparing, ready and failure states. Copy log reports clipboard success or failure. The separate run-wide Prerequisites tab has been removed.
+
+![Preparation belongs to the activity](/img/releases/v1.0.13/08-activity-preparation.png)
+
+## Generated files in activity details
+
+Both the activity page and drawer reuse the Workspace file component, filtered by producer. Inspect size, checksum and recorded locations. Deleted manifest entries are excluded; recorded locations may no longer exist after workspace cleanup.
+
+![Generated files in activity details](/img/releases/v1.0.13/09-generated-files.png)
+
+## Temporal events
+
+Workflow and activity lanes place events at recorded times. Event types use distinct marker shapes, and search/type filters narrow the view. Use the selector for overlapping or untimed events and download the complete available event collection as JSON.
+
+![Temporal events](/img/releases/v1.0.13/10-event-timeline.png)
+
+## Event details and phase observations
+
+Click a marker to inspect its data in a side drawer. Reconstructed timing observations carry an explicit source, duration and recorded timestamps; they are derived observations, not additional persisted audit events.
+
+![Event details and phase observations](/img/releases/v1.0.13/11-phase-event-details.png)
+
+## Timing totals with explanations
+
+Execution-time decomposition keeps aggregate totals and explains each phase. The duplicate per-activity phase table has moved into Events. Accumulated work can exceed elapsed wall time because activities overlap.
+
+![Timing totals with explanations](/img/releases/v1.0.13/12-time-decomposition.png)
+
+## Appearance and readability
+
+Desktop is the default interface style, with Simple available in Settings. Neutral actions, opaque surfaces, compact navigation and corrected selected-item contrast improve light/dark readability. Desktop appearance preferences survive local-server port changes and application restarts.
+
+![Appearance and readability](/img/releases/v1.0.13/13-dark-comparison.png)
+
+## Other changes since 1.0.12
+
+- Workflow shell commands can be checked for POSIX shell syntax through the daemon validation endpoint before execution. Validation does not execute the command.
+- MCP activation no longer requires a detected native AI client; manual connection configuration remains available. MCP itself was introduced in 1.0.12.
+- Research tooling is archived outside runtime packages, and downloadable scheduling snippets are isolated from daemon packages.
+- Documentation now includes the MCP hands-on workflow tutorial and generated public release history.
+
+## Install and update
+
+Get the [1.0.13 release packages](https://github.com/UFFeScience/akoflow/releases/tag/v1.0.13) or follow the [installation guide](/docs/downloads). Desktop packages are available for macOS universal, Windows x64 and Linux x64. Matching daemon and BuildKit runtime archives support Linux amd64 and arm64. Docker remains required.
+
+See [execution monitoring](/docs/guides/workflows/executions) for the updated navigation and interpretation of timing observations.

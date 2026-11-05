@@ -193,3 +193,29 @@ func TestEventFamilyFiltersKeepLegacyAndFutureEvents(t *testing.T) {
 		t.Fatal("invalid family accepted")
 	}
 }
+
+func TestLifecycleReplayCannotRewriteOriginalProvenance(t *testing.T) {
+	db, err := sql.Open("sqlite3", ":memory:")
+	if err != nil {
+		t.Fatal(err)
+	}
+	db.SetMaxOpenConns(1)
+	defer db.Close()
+	ctx := context.Background()
+	if err := database.Bootstrap(ctx, db); err != nil {
+		t.Fatal(err)
+	}
+	repo := New(db)
+	event := domainaudit.Event{ID: "immutable", EventType: "queue.job.pending", RequestID: "original", ActorID: "original-actor", Outcome: domainaudit.OutcomeStarted, OccurredAt: time.Now().UTC()}
+	if err := repo.RecordAuditEvent(ctx, event); err != nil {
+		t.Fatal(err)
+	}
+	event.RequestID, event.ActorID = "replayed", "other-actor"
+	if err := repo.RecordAuditEvent(ctx, event); err != nil {
+		t.Fatal(err)
+	}
+	events, err := repo.ListAuditEvents(ctx, domainaudit.Filter{})
+	if err != nil || len(events) != 1 || events[0].RequestID != "original" || events[0].ActorID != "original-actor" {
+		t.Fatalf("%+v %v", events, err)
+	}
+}

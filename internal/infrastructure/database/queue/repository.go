@@ -62,7 +62,7 @@ func (r *Repository) Publish(ctx context.Context, job domainqueue.Job) (domainqu
 		return domainqueue.Job{}, err
 	}
 	defer tx.Rollback()
-	_, err = tx.ExecContext(ctx, `INSERT INTO queue_jobs (
+	insertResult, err := tx.ExecContext(ctx, `INSERT INTO queue_jobs (
 		id, category, event_type, aggregate_type, aggregate_id, payload, status,
 		priority, available_at, attempts, max_attempts, idempotency_key, created_at
 	) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULLIF(?, ''), ?)
@@ -87,11 +87,14 @@ func (r *Repository) Publish(ctx context.Context, job domainqueue.Job) (domainqu
 		}
 		job = *existing
 	}
-	if err := dbaudit.Bind(ctx, tx, "queue_job", job.ID); err != nil {
-		return domainqueue.Job{}, err
-	}
-	if err := RecordLifecycle(ctx, tx, job); err != nil {
-		return domainqueue.Job{}, err
+	inserted, _ := insertResult.RowsAffected()
+	if inserted > 0 {
+		if err := dbaudit.Bind(ctx, tx, "queue_job", job.ID); err != nil {
+			return domainqueue.Job{}, err
+		}
+		if err := RecordLifecycle(ctx, tx, job); err != nil {
+			return domainqueue.Job{}, err
+		}
 	}
 	if err := tx.Commit(); err != nil {
 		return domainqueue.Job{}, err

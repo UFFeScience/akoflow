@@ -251,7 +251,8 @@ duration_ms=excluded.duration_ms,
 auth_outcome=excluded.auth_outcome,
 activity_id=excluded.activity_id,
 attempt=excluded.attempt,
-operation_id=excluded.operation_id`
+operation_id=excluded.operation_id
+WHERE audit_events.event_type IN ('api.access','mcp.request')`
 
 func familyPrefix(category string) (string, error) {
 	if len(category) > 64 {

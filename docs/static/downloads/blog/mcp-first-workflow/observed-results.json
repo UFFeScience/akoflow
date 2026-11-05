@@ -1,0 +1,67 @@
+{
+  "captureDate": "2026-11-04",
+  "host": "homeserver",
+  "method": "Official MCP Go SDK over stdio to an isolated Akoflow 1.0.12 daemon; native Desktop setup screenshots from existing homeserver captures",
+  "scope": "mcp-local-scope",
+  "workflowId": "mcp-first-analysis",
+  "workflowVersionId": "mcp-first-analysis-v1",
+  "planId": "mcp-analysis-plan",
+  "run": {
+    "activityCount": 3,
+    "breakdown": {
+      "computeSeconds": 0,
+      "interferenceSeconds": 0,
+      "overheadSeconds": 0,
+      "queueSeconds": 0,
+      "transferSeconds": 0.3589158058166504
+    },
+    "completedActivityCount": 3,
+    "cost": 0,
+    "environmentNames": ["MCP tutorial local"],
+    "finishedAt": "2026-11-05T01:33:45Z",
+    "id": "mcp-analysis-run",
+    "kind": "workflow",
+    "makespanSeconds": 2.3755929470062256,
+    "mode": "real",
+    "schedulePlanId": "mcp-analysis-plan",
+    "seed": 0,
+    "startedAt": "2026-11-05T01:33:36Z",
+    "status": "completed",
+    "title": "mcp-analysis-run",
+    "transferredBytes": 17,
+    "workflowId": "mcp-first-analysis",
+    "workflowName": "mcp-first-analysis",
+    "workflowVersionId": "mcp-first-analysis-v1"
+  },
+  "activities": [
+    {
+      "activityId": "mcp-first-analysis-prepare",
+      "status": "completed",
+      "runtimeId": "mcp-local-runtime"
+    },
+    {
+      "activityId": "mcp-first-analysis-analyze",
+      "status": "completed",
+      "runtimeId": "mcp-local-runtime"
+    },
+    {
+      "activityId": "mcp-first-analysis-write-report",
+      "status": "completed",
+      "runtimeId": "mcp-local-runtime"
+    }
+  ],
+  "fileVerification": {
+    "method": "Read final report directly from the isolated runtime workspace",
+    "path": "report.txt",
+    "contents": "Mean: 4.00\n",
+    "sha256": "bafe5f45928750f7ee90eddb5b03eebb74346cefa4aa067a6483141e4c36f0a2"
+  },
+  "authenticatedClaudeOrCodexConversationTested": false,
+  "daemonRelease": "v1.0.12",
+  "rendererSourceCommit": "78b326d38d6e550244f728218d426cb6c4333185",
+  "capture": {
+    "width": 1440,
+    "height": 1000,
+    "method": "Production React bundle served by the authenticated desktop server; real daemon records; headless Chromium screenshots"
+  }
+}

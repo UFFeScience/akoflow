@@ -97,6 +97,8 @@ const queryDescriptions = {
   environmentId: "Limit results to this environment.",
   eventType: "Limit results to this audit event type.",
   executionId: "Limit results to this execution run.",
+  field: "Audit facet field whose distinct values and matching counts should be returned.",
+  search: "Case-insensitive substring used to search audit facet values.",
   filterField: "Entity field to filter.",
   filterValue: "Value required in the selected filter field.",
   includeArtifacts:
@@ -1171,7 +1173,8 @@ const routePattern =
   /mux\.HandleFunc\("(GET|POST|PUT|PATCH|DELETE) ([^" ]+)",\s*(?:http_config\.KernelHandler\()?(?:workflowEngine\.)?([A-Za-z0-9_]+)/g;
 const endpoints = [];
 for (const match of source.matchAll(routePattern)) {
-  const [, method, routePath, handler] = match;
+  const [, method, routePatternPath, handler] = match;
+  const routePath = routePatternPath.replace(/\/\{\$\}$/, "/");
   const group = groupFor(routePath);
   const handlerBody = extractFunctionBody(
     `${completeHandlerSource}\n${source}`,

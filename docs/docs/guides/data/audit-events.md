@@ -44,3 +44,7 @@ curl --fail-with-body -G -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \
 ```
 
 Add `--data-urlencode "environmentId=<your-environment-id>"` when investigating one environment. Other filters are `eventType`, `resourceId`, `connectionId`, `sessionId`, `executionId`, and `limit`. Outcomes include `started`, `succeeded`, and `failed`. Desktop applies its category tabs to the list it has loaded; use API filters when you need a specific server query.
+
+For every completed daemon HTTP request, including its peer IP, status and caller
+classification, use [API request history](./api-request-history.md). Configure its
+retention separately from operational events.

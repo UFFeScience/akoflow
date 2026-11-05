@@ -694,6 +694,19 @@ CREATE TABLE simulation_runs (
 	created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 CREATE TABLE audit_events (
+ request_id TEXT NOT NULL DEFAULT '',
+ correlation_id TEXT NOT NULL DEFAULT '',
+ transport TEXT NOT NULL DEFAULT '',
+ source TEXT NOT NULL DEFAULT '',
+ method TEXT NOT NULL DEFAULT '',
+ route TEXT NOT NULL DEFAULT '',
+ status INTEGER NOT NULL DEFAULT 0,
+ duration_ms INTEGER NOT NULL DEFAULT 0,
+ auth_outcome TEXT NOT NULL DEFAULT '',
+ activity_id TEXT NOT NULL DEFAULT '',
+ attempt INTEGER NOT NULL DEFAULT 0,
+ operation_id TEXT NOT NULL DEFAULT '',
+
 	id TEXT PRIMARY KEY,
 	event_type TEXT NOT NULL,
 	actor_id TEXT NOT NULL DEFAULT '',
@@ -929,3 +942,25 @@ CREATE TABLE activity_metric_samples (
 );
 CREATE INDEX activity_metric_samples_run_idx
     ON activity_metric_samples(execution_run_id, activity_id, attempt);
+
+CREATE INDEX audit_events_request_id_feed_idx ON audit_events(request_id, occurred_at DESC, id DESC);
+CREATE INDEX audit_events_correlation_id_feed_idx ON audit_events(correlation_id, occurred_at DESC, id DESC);
+CREATE INDEX audit_events_event_type_feed_idx ON audit_events(event_type, occurred_at DESC, id DESC);
+CREATE INDEX audit_events_execution_id_feed_idx ON audit_events(execution_id, occurred_at DESC, id DESC);
+CREATE INDEX audit_events_operation_id_feed_idx ON audit_events(operation_id, occurred_at DESC, id DESC);
+CREATE INDEX audit_events_actor_id_feed_idx ON audit_events(actor_id, occurred_at DESC, id DESC);
+CREATE INDEX audit_events_method_feed_idx ON audit_events(method, occurred_at DESC, id DESC);
+CREATE INDEX audit_events_status_feed_idx ON audit_events(status, occurred_at DESC, id DESC);
+CREATE INDEX audit_events_transport_feed_idx ON audit_events(transport, occurred_at DESC, id DESC);
+CREATE INDEX audit_events_runtime_id_feed_idx ON audit_events(runtime_id, occurred_at DESC, id DESC);
+CREATE INDEX audit_events_activity_id_feed_idx ON audit_events(activity_id, occurred_at DESC, id DESC);
+CREATE INDEX audit_events_outcome_feed_idx ON audit_events(outcome, occurred_at DESC, id DESC);
+CREATE INDEX audit_events_route_feed_idx ON audit_events(route, occurred_at DESC, id DESC);
+CREATE INDEX audit_events_feed_idx ON audit_events(occurred_at DESC, id DESC);
+
+CREATE TABLE audit_entity_context (
+ entity_type TEXT NOT NULL,
+ entity_id TEXT NOT NULL,
+ provenance TEXT NOT NULL,
+ PRIMARY KEY(entity_type, entity_id)
+);

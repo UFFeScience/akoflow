@@ -8,6 +8,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/UFFeScience/akoflow/internal/application/auditcontext"
+	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"io"
 	"log/slog"
 	"net/http"
@@ -20,6 +22,8 @@ import (
 )
 
 type Options struct {
+	Audit          ports.AuditStore
+	ClientID       string
 	APIURL         string
 	APIToken       string
 	Permissions    Permission
@@ -95,6 +99,9 @@ func New(options Options) (*Bridge, error) {
 			"igest. Never request credentials in chat; use credential references or a trusted local upload. P" +
 			"ermissions are enforced by this server.",
 	})
+	if options.Audit != nil {
+		bridge.server.AddReceivingMiddleware(bridge.auditMiddleware)
+	}
 	for _, operation := range Catalog() {
 		if !options.Permissions.Allows(operation.Permission()) {
 			continue
@@ -254,6 +261,9 @@ func (b *Bridge) dispatch(ctx context.Context, op Operation, args arguments) *mc
 		request.Header.Set("Content-Type", contentType)
 	}
 	request.Header.Set("Authorization", "Bearer "+b.options.APIToken)
+	if trace := auditcontext.From(ctx); trace != nil {
+		request.Header.Set("X-Correlation-ID", trace.CorrelationID)
+	}
 	request.Header.Set("X-Akoflow-Client", "mcp/"+identityFromContext(ctx).client)
 	if args.RequestID != "" {
 		request.Header.Set("X-Request-ID", args.RequestID)

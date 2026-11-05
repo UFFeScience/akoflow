@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"path/filepath"
 
 	"github.com/UFFeScience/akoflow/internal/infrastructure/database"
 	dbaudit "github.com/UFFeScience/akoflow/internal/infrastructure/database/audit"
@@ -23,22 +24,23 @@ import (
 )
 
 type persistence struct {
-	database     *sql.DB
-	analytics    *sql.DB
-	readOnly     bool
-	environments *dbenvironment.Repository
-	executions   *dbexecution.Repository
-	data         *dbdata.Repository
-	topologies   *dbnetwork.Repository
-	plans        *dbplanning.Repository
-	events       *dbqueue.Repository
-	workflows    *dbworkflow.Repository
-	resources    *dbresource.Repository
-	instance     *dbinstance.Repository
-	audit        *dbaudit.Repository
-	console      *dbconsole.Repository
-	storage      *dbstorage.Repository
-	cloud        *dbcloud.Repository
+	auditDatabase *sql.DB
+	database      *sql.DB
+	analytics     *sql.DB
+	readOnly      bool
+	environments  *dbenvironment.Repository
+	executions    *dbexecution.Repository
+	data          *dbdata.Repository
+	topologies    *dbnetwork.Repository
+	plans         *dbplanning.Repository
+	events        *dbqueue.Repository
+	workflows     *dbworkflow.Repository
+	resources     *dbresource.Repository
+	instance      *dbinstance.Repository
+	audit         *dbaudit.Repository
+	console       *dbconsole.Repository
+	storage       *dbstorage.Repository
+	cloud         *dbcloud.Repository
 }
 
 func openPersistence(ctx context.Context, recreateOnSchemaChange bool) (persistence, error) {
@@ -104,15 +106,35 @@ func openPersistence(ctx context.Context, recreateOnSchemaChange bool) (persiste
 			return persistence{}, err
 		}
 	}
+	// Access to immutable archives is audited outside the snapshot. This keeps
+	// viewing and activation available without modifying the archived database.
+	auditDB := db
+	var separateAuditDB *sql.DB
+	if readOnly {
+		separateAuditDB, err = database.Open(filepath.Join(instancearchive.DefaultRoot(), "access-audit.sqlite"))
+		if err == nil {
+			err = database.Bootstrap(ctx, separateAuditDB)
+		}
+		if err != nil {
+			if separateAuditDB != nil {
+				_ = separateAuditDB.Close()
+			}
+			_ = analytics.Close()
+			_ = db.Close()
+			return persistence{}, err
+		}
+		auditDB = separateAuditDB
+	}
 	return persistence{
-		database: db, analytics: analytics, readOnly: readOnly,
+		auditDatabase: separateAuditDB,
+		database:      db, analytics: analytics, readOnly: readOnly,
 		environments: dbenvironment.New(db), executions: executionRepository,
 		data:       dbdata.New(db),
 		topologies: dbnetwork.New(db), plans: dbplanning.New(db), events: events,
 		workflows: dbworkflow.New(db),
 		resources: dbresource.New(db),
 		instance:  instanceRepository,
-		audit:     dbaudit.New(db),
+		audit:     dbaudit.New(auditDB),
 		console:   dbconsole.New(db),
 		storage:   dbstorage.New(db),
 		cloud:     cloudRepository,

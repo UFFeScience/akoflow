@@ -139,8 +139,10 @@ func routeOperation(node ast.Node) (operation, bool) {
 	if name == "" {
 		panic("unrecognized route: " + pattern)
 	}
+	// ServeMux end-of-path markers are routing syntax, not API arguments.
+	path = strings.TrimSuffix(path, "{$}")
 	tool := snake(name)
-	description := strings.ReplaceAll(tool, "_", " ") + ". " + pattern + ". Uses the daemon API and its domain validation."
+	description := strings.ReplaceAll(tool, "_", " ") + ". " + method + " " + path + ". Uses the daemon API and its domain validation."
 	return operation{Name: tool, Method: method, Path: path, Handler: name, Description: description}, true
 }
 

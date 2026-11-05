@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"github.com/UFFeScience/akoflow/internal/application/auditcontext"
 	"io"
 	"net"
 	"net/http"
@@ -67,7 +68,12 @@ func (b *Bridge) oauthHandler(next http.Handler, options OAuthOptions) (http.Han
 	metadataURL.Path = "/.well-known/oauth-protected-resource/mcp"
 	protected := auth.RequireBearerToken(options.verifier, &auth.RequireBearerTokenOptions{
 		ResourceMetadataURL: metadataURL.String(), Scopes: []string{scope},
-	})(next)
+	})(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if info := auth.TokenInfoFromContext(r.Context()); info != nil {
+			auditcontext.Identify(r.Context(), info.UserID, "principal", "authenticated")
+		}
+		next.ServeHTTP(w, r)
+	}))
 	metadata := auth.ProtectedResourceMetadataHandler(&oauthex.ProtectedResourceMetadata{
 		Resource: options.Resource, AuthorizationServers: []string{options.Issuer},
 		ScopesSupported: []string{scope}, BearerMethodsSupported: []string{"header"},

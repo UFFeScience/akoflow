@@ -5597,14 +5597,27 @@
     "handler": "ListAuditEvents",
     "description": "list audit events. GET /akoflow-api/audit-events/. Uses the daemon API and its domain validation.",
     "query": [
+      "activityId",
+      "actorId",
+      "before",
       "connectionId",
+      "correlationId",
       "environmentId",
       "eventType",
       "executionId",
+      "from",
       "limit",
+      "method",
+      "operationId",
       "outcome",
+      "requestId",
       "resourceId",
-      "sessionId"
+      "route",
+      "runtimeId",
+      "sessionId",
+      "status",
+      "to",
+      "transport"
     ]
   },
   {

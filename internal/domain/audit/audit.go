@@ -11,6 +11,19 @@ const (
 )
 
 type Event struct {
+	RequestID     string `json:"requestId,omitempty"`
+	CorrelationID string `json:"correlationId,omitempty"`
+	Transport     string `json:"transport,omitempty"`
+	Source        string `json:"source,omitempty"`
+	Method        string `json:"method,omitempty"`
+	Route         string `json:"route,omitempty"`
+	Status        int    `json:"status,omitempty"`
+	DurationMS    int64  `json:"durationMs,omitempty"`
+	AuthOutcome   string `json:"authOutcome,omitempty"`
+	ActivityID    string `json:"activityId,omitempty"`
+	Attempt       int    `json:"attempt,omitempty"`
+	OperationID   string `json:"operationId,omitempty"`
+
 	ID            string         `json:"id"`
 	EventType     string         `json:"eventType"`
 	ActorID       string         `json:"actorId,omitempty"`
@@ -29,6 +42,20 @@ type Event struct {
 }
 
 type Filter struct {
+	RequestID     string
+	CorrelationID string
+	ActorID       string
+	Method        string
+	Route         string
+	Status        int
+	Transport     string
+	RuntimeID     string
+	ActivityID    string
+	OperationID   string
+	Before        string
+	From          string
+	To            string
+
 	EventType     string
 	EnvironmentID string
 	ResourceID    string

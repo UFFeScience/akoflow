@@ -775,10 +775,37 @@ func (h *Handler) ListAuditEvents(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
-	filter := domainaudit.Filter{EventType: r.URL.Query().Get("eventType"), EnvironmentID: r.URL.Query().Get("environmentId"),
-		ResourceID: r.URL.Query().Get("resourceId"), ConnectionID: r.URL.Query().Get("connectionId"),
+	status, _ := strconv.Atoi(r.URL.Query().Get("status"))
+	filter := domainaudit.Filter{Status: status,
+		RequestID:     r.URL.Query().Get("requestId"),
+		CorrelationID: r.URL.Query().Get("correlationId"),
+		ActorID:       r.URL.Query().Get("actorId"),
+		Method:        r.URL.Query().Get("method"),
+		Route:         r.URL.Query().Get("route"),
+		Transport:     r.URL.Query().Get("transport"),
+		RuntimeID:     r.URL.Query().Get("runtimeId"),
+		ActivityID:    r.URL.Query().Get("activityId"),
+		OperationID:   r.URL.Query().Get("operationId"),
+		Before:        r.URL.Query().Get("before"),
+		From:          r.URL.Query().Get("from"),
+		To:            r.URL.Query().Get("to"),
+		EventType:     r.URL.Query().Get("eventType"),
+		EnvironmentID: r.URL.Query().Get("environmentId"),
+		ResourceID:    r.URL.Query().Get("resourceId"), ConnectionID: r.URL.Query().Get("connectionId"),
 		SessionID: r.URL.Query().Get("sessionId"), ExecutionID: r.URL.Query().Get("executionId"),
 		Outcome: domainaudit.Outcome(r.URL.Query().Get("outcome")), Limit: limit}
+	for _, value := range []string{filter.From, filter.To} {
+		if value != "" {
+			if _, err := time.Parse(time.RFC3339Nano, value); err != nil {
+				writeError(w, http.StatusBadRequest, fmt.Errorf("audit dates must use RFC3339"))
+				return
+			}
+		}
+	}
+	if filter.Status != 0 && (filter.Status < 100 || filter.Status > 599) {
+		writeError(w, http.StatusBadRequest, fmt.Errorf("invalid audit status"))
+		return
+	}
 	items, err := h.audit.ListAuditEvents(r.Context(), filter)
 	writeList(w, items, err)
 }
@@ -2272,6 +2299,8 @@ func (h *Handler) enqueueCloudOperation(w http.ResponseWriter, r *http.Request, 
 	operation := domain.CloudOperationRun{ID: "cloud-run-" + uuid.NewString(), Kind: kind,
 		Status: "queued", Phase: "queued", EnvironmentID: environmentID, InstanceID: instanceID,
 		CapacityTargetID: targetID, Request: request, CreatedAt: time.Now().UTC()}
+	r.SetPathValue("operationId", operation.ID)
+	r.SetPathValue("environmentId", environmentID)
 	if err := h.cloudOperations.CreateCloudOperation(r.Context(), operation); err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return
@@ -2760,6 +2789,7 @@ func (h *Handler) CreateExecution(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("execution commands are unavailable"))
 		return
 	}
+	r.SetPathValue("runId", request.Run.ID)
 	if err := h.executionCommands.CreateRun(r.Context(), request.Run); err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return

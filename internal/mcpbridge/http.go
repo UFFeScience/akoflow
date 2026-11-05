@@ -3,6 +3,7 @@ package mcpbridge
 import (
 	"crypto/subtle"
 	"errors"
+	"github.com/UFFeScience/akoflow/internal/application/auditcontext"
 	"net"
 	"net/http"
 	"net/url"
@@ -53,7 +54,7 @@ func (b *Bridge) HTTPHandler(options HTTPOptions) (http.Handler, error) {
 		b.redactor.mu.Lock()
 		b.redactor.secrets[options.Token] = true
 		b.redactor.mu.Unlock()
-		handler = staticBearer(transport, options.Token)
+		handler = staticBearer(transport, options.Token, b.options.ClientID)
 	}
 	if publicHost != "" {
 		handler = publicHostGate(handler, publicHost)
@@ -61,16 +62,22 @@ func (b *Bridge) HTTPHandler(options HTTPOptions) (http.Handler, error) {
 	return originGate(handler, options.AllowedOrigins), nil
 }
 
-func staticBearer(next http.Handler, token string) http.Handler {
+func staticBearer(next http.Handler, token string, clientIDs ...string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		value := r.Header.Get("Authorization")
 		valid := strings.HasPrefix(value, "Bearer ") &&
 			subtle.ConstantTimeCompare([]byte(strings.TrimPrefix(value, "Bearer ")), []byte(token)) == 1
 		if !valid {
+			auditcontext.Identify(r.Context(), "", "anonymous", "rejected")
 			w.Header().Set("WWW-Authenticate", "Bearer")
 			http.Error(w, "authentication required", http.StatusUnauthorized)
 			return
 		}
+		clientID := "mcp-service"
+		if len(clientIDs) > 0 && clientIDs[0] != "" {
+			clientID = clientIDs[0]
+		}
+		auditcontext.Identify(r.Context(), clientID, "service_client", "authenticated")
 		next.ServeHTTP(w, r)
 	})
 }

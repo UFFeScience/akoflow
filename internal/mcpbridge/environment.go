@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"github.com/UFFeScience/akoflow/internal/application/auditcontext"
 	"io"
 	"net/http"
 	"strings"
@@ -102,6 +103,9 @@ func (b *Bridge) validateConnection(ctx context.Context, data []byte) error {
 		return err
 	}
 	request.Header.Set("Authorization", "Bearer "+b.options.APIToken)
+	if trace := auditcontext.From(ctx); trace != nil {
+		request.Header.Set("X-Correlation-ID", trace.CorrelationID)
+	}
 	request.Header.Set("Content-Type", "application/json")
 	request.Header.Set("X-Akoflow-Client", "mcp/"+identityFromContext(ctx).client)
 	response, err := b.client.Do(request)

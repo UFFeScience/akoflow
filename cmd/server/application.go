@@ -34,6 +34,8 @@ import (
 type application struct {
 	settings          config.Settings
 	log               *logger.Logger
+	auditDatabase     *sql.DB
+	audit             ports.AuditStore
 	database          *sql.DB
 	analytics         *sql.DB
 	api               *workflow_engine_api_handler.Handler
@@ -48,6 +50,9 @@ func newApplication(ctx context.Context, settings config.Settings, log *logger.L
 		return nil, err
 	}
 	fail := func(err error) (*application, error) {
+		if storage.auditDatabase != nil {
+			_ = storage.auditDatabase.Close()
+		}
 		_ = storage.analytics.Close()
 		_ = storage.database.Close()
 		return nil, err
@@ -123,8 +128,13 @@ func newApplication(ctx context.Context, settings config.Settings, log *logger.L
 	}
 	api.WithAlgorithmLibrary(algorithmLibrary)
 	return &application{
-		settings: settings, log: log, database: storage.database, analytics: storage.analytics,
-		api: api, eventLoop: loop,
+		auditDatabase: storage.auditDatabase,
+		audit:         storage.audit,
+		settings:      settings,
+		log:           log,
+		database:      storage.database,
+		analytics:     storage.analytics,
+		api:           api, eventLoop: loop,
 		connectionMonitor: connectionMonitor,
 		readOnly:          storage.readOnly,
 	}, nil
@@ -136,13 +146,16 @@ func (a *application) Run(ctx context.Context) error {
 		a.startEventLoop(ctx)
 		go a.connectionMonitor.Run(ctx, a.settings.ConnectionCheckInterval)
 	}
-	if err := httpserver.Serve(ctx, a.settings.HTTPAddress, a.api); err != nil {
+	if err := httpserver.Serve(ctx, a.settings.HTTPAddress, a.api, a.audit); err != nil {
 		return fmt.Errorf("serve Akoflow API: %w", err)
 	}
 	return nil
 }
 
 func (a *application) Close() error {
+	if a.auditDatabase != nil {
+		defer a.auditDatabase.Close()
+	}
 	analyticsErr := a.analytics.Close()
 	databaseErr := a.database.Close()
 	if analyticsErr != nil {

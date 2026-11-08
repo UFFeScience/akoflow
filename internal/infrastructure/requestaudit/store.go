@@ -240,7 +240,12 @@ func (s *Store) record(r *http.Request, started time.Time, status int, actor str
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
-	_, err = s.db.ExecContext(ctx, `INSERT INTO api_request_log(time,method,path,status,duration_ms,ip,actor,client) VALUES(?,?,?,?,?,?,?,?)`, started.UTC().Format(time.RFC3339Nano), r.Method, path, status, time.Since(started).Milliseconds(), ip, actor, client)
+	_, err = s.db.ExecContext(ctx, `
+		INSERT INTO api_request_log(time,method,path,status,duration_ms,ip,actor,client)
+		VALUES(?,?,?,?,?,?,?,?)`,
+		started.UTC().Format(time.RFC3339Nano), r.Method, path, status,
+		time.Since(started).Milliseconds(), ip, actor, client,
+	)
 	if err != nil {
 		slog.Error("request audit write failed", "error", fmt.Sprint(err))
 	}

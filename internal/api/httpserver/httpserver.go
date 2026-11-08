@@ -5,17 +5,22 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/UFFeScience/akoflow/internal/application/ports"
-	"github.com/UFFeScience/akoflow/internal/mcpbridge"
+
 	"net"
 	"net/http"
 	"os/exec"
+	"path/filepath"
 	"strings"
 	"time"
 
 	"github.com/UFFeScience/akoflow/internal/api/handlers/workflow_engine_api_handler"
+	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/config"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/config/http_config"
+	"github.com/UFFeScience/akoflow/internal/infrastructure/database"
+	"github.com/UFFeScience/akoflow/internal/infrastructure/instancearchive"
+	"github.com/UFFeScience/akoflow/internal/infrastructure/requestaudit"
+	"github.com/UFFeScience/akoflow/internal/mcpbridge"
 )
 
 func HealthCheck(w http.ResponseWriter, r *http.Request) {
@@ -219,8 +224,22 @@ func ServeSecure(ctx context.Context, address string, workflowEngine *workflow_e
 	if auditStore == nil {
 		return fmt.Errorf("audit store is required")
 	}
+	auditDB, err := database.Open(filepath.Join(filepath.Dir(instancearchive.ResolveDatabasePath()), "request-audit.db"))
+	if err != nil {
+		return err
+	}
+	defer auditDB.Close()
+	audit, err := requestaudit.New(auditDB)
+	if err != nil {
+		return err
+	}
+	cleanupCtx, stopCleanup := context.WithCancel(ctx)
+	cleanupDone := make(chan struct{})
+	go func() { defer close(cleanupDone); audit.RunCleanup(cleanupCtx) }()
+	defer func() { stopCleanup(); <-cleanupDone }()
 	routes := NewMux(workflowEngine)
-	var handler http.Handler = AllowCORSFor(SecureAPI(readOnlyAPI(routes, workflowEngine), security), security.AllowedOrigins)
+	var handler http.Handler = AllowCORSFor(SecureAPI(audit.Routes(readOnlyAPI(routes, workflowEngine)), security), security.AllowedOrigins)
+
 	settings := config.Load()
 	handler, closeMCP, err := managedMCPRoutes(handler, address, security, settings, auditStore)
 	if err != nil {
@@ -229,6 +248,18 @@ func ServeSecure(ctx context.Context, address string, workflowEngine *workflow_e
 	defer closeMCP()
 	handler = AuditAccess(handler, routes, auditStore)
 
+	handler = audit.Middleware(handler, func(r *http.Request) string {
+		if security.BearerToken != "" && validBearer(r, security.BearerToken) {
+			return "authenticated API token"
+		}
+		if r.URL.Path == "/mcp" || strings.HasPrefix(r.URL.Path, "/mcp/") {
+			return "MCP transport (separate authentication)"
+		}
+		if security.BearerToken != "" && !isPublicBootstrapRequest(r) {
+			return "unauthenticated"
+		}
+		return "anonymous"
+	})
 	server := &http.Server{Addr: address, Handler: handler, ReadHeaderTimeout: 10 * time.Second, IdleTimeout: 60 * time.Second}
 	shutdownDone := make(chan struct{})
 	go func() { shutdownWhenCanceled(ctx, server); close(shutdownDone) }()

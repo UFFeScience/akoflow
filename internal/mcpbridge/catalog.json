@@ -6984,6 +6984,7 @@
     "handler": "Search",
     "description": "search. GET /akoflow-api/search/. Uses the daemon API and its domain validation.",
     "query": [
+      "cursor",
       "limit",
       "q",
       "types"

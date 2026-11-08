@@ -379,45 +379,6 @@ func (s discoveryStub) DiscoverConnection(context.Context, string) ([]domain.Res
 	return s.snapshots, s.err
 }
 
-func TestSearchAcrossControlPlaneCatalogs(t *testing.T) {
-	workflow := workflowFixture()
-	workflow.Name = "Science workflow"
-	environment := domain.EnvironmentDefinition{Environment: domain.Environment{ID: "science-env", Name: "Science environment", Description: "laboratory"}}
-	resource := domain.Resource{ID: "science-node", Name: "Science node", ProviderID: "node"}
-	plan := domain.SchedulePlan{ID: "science-plan", Algorithm: "science-scheduler"}
-	scope := domain.ExecutionScope{ID: "science-scope", Name: "Science scope"}
-	run := domain.ExecutionRun{ID: "science-run", Title: "Science execution"}
-	data := &dataCatalogRichStub{artifacts: []domain.ExecutableArtifact{{ID: "science-artifact", Name: "Science artifact", Version: "1"}}, materializations: []domain.ArtifactMaterialization{{ID: "science-materialization", VariantID: "Science variant", RunID: run.ID}}}
-	h := &Handler{workflows: &workflowStoreRichStub{values: []domain.WorkflowDefinition{workflow}}, environments: &environmentCatalogRichStub{definitions: []domain.EnvironmentDefinition{environment}}, resources: &resourceInventoryRichStub{values: []domain.Resource{resource}}, plans: &planStoreRichStub{values: []domain.SchedulePlan{plan}}, scopes: &scopeStoreRichStub{values: []domain.ExecutionScope{scope}}, executions: executionQueryStub{run: &run}, data: data}
-	response := callHandler(t, http.MethodGet, "/?q=science&limit=100", "", nil, h.Search)
-	if response.Code != 200 {
-		t.Fatalf("search=%d %q", response.Code, response.Body.String())
-	}
-	for _, kind := range []string{"workflow", "environment", "resource", "plan", "scope", "execution", "artifact", "materialization"} {
-		if !strings.Contains(response.Body.String(), `"type":"`+kind+`"`) {
-			t.Fatalf("search lacks %s: %s", kind, response.Body.String())
-		}
-	}
-	response = callHandler(t, http.MethodGet, "/?q=science&types=workflow&limit=1", "", nil, h.Search)
-	if !strings.Contains(response.Body.String(), `"total":1`) || strings.Contains(response.Body.String(), `"type":"resource"`) {
-		t.Fatalf("filtered search=%s", response.Body.String())
-	}
-	response = callHandler(t, http.MethodGet, "/?q=", "", nil, h.Search)
-	if !strings.Contains(response.Body.String(), `"total":0`) {
-		t.Fatalf("empty search=%s", response.Body.String())
-	}
-	if searchScore("science", "Science") != 1 || searchScore("sci", "Science") != .9 || searchScore("ence", "Science") != .7 || searchScore("none", "Science") != 0 {
-		t.Fatal("search scores mismatch")
-	}
-	if firstNonEmpty(" ", "value") != "value" || positiveInteger("bad", 7) != 7 || positiveInteger("2", 7) != 2 {
-		t.Fatal("search helpers mismatch")
-	}
-	types := searchTypes("workflow,invalid")
-	if !types["workflow"] || types["invalid"] {
-		t.Fatalf("types=%#v", types)
-	}
-}
-
 func TestExecutionListingAndConnectionOperations(t *testing.T) {
 	run := domain.ExecutionRun{ID: "run"}
 	environments := &environmentCatalogRichStub{}

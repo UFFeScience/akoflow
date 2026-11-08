@@ -22,6 +22,7 @@ import (
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/token"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/database"
 	databaseprovenance "github.com/UFFeScience/akoflow/internal/infrastructure/database/provenance"
+	databasesearch "github.com/UFFeScience/akoflow/internal/infrastructure/database/search"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/instancearchive"
 	planningplugin "github.com/UFFeScience/akoflow/internal/infrastructure/plugins/planning"
 	"github.com/UFFeScience/akoflow/internal/mcpcontrol"
@@ -100,6 +101,7 @@ func buildAPI(
 	}
 	return workflow_engine_api_handler.New(workflow_engine_api_handler.Dependencies{
 		Environments:        storage.environments,
+		Search:              databasesearch.New(storage.analytics),
 		Workflows:           storage.workflows,
 		Plans:               storage.plans,
 		Events:              storage.events,

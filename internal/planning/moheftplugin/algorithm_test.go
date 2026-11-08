@@ -2,8 +2,10 @@ package moheftplugin
 
 import (
 	"context"
+
 	"database/sql"
 	"encoding/json"
+	"github.com/UFFeScience/akoflow/internal/infrastructure/database"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -56,6 +58,9 @@ func TestCompiledPluginUsesRegistryAndCoordinatorContract(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer db.Close()
+	if err := database.Bootstrap(context.Background(), db); err != nil {
+		t.Fatal(err)
+	}
 	registry, _ := algorithms.NewRegistry(algorithms.HEFT{})
 	service, err := library.New(ctx, db, registry, t.TempDir(), false)
 	if err != nil {

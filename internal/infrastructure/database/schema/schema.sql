@@ -964,3 +964,15 @@ CREATE TABLE audit_entity_context (
  provenance TEXT NOT NULL,
  PRIMARY KEY(entity_type, entity_id)
 );
+
+CREATE TABLE scheduler_plugin_sources (
+    id TEXT PRIMARY KEY,
+    payload TEXT NOT NULL,
+    active_payload TEXT NOT NULL DEFAULT ''
+);
+CREATE TABLE scheduler_plugin_revisions (
+    id TEXT NOT NULL,
+    revision INTEGER NOT NULL,
+    payload TEXT NOT NULL,
+    PRIMARY KEY(id, revision)
+);

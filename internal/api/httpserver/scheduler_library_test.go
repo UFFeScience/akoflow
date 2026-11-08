@@ -2,8 +2,10 @@ package httpserver
 
 import (
 	"context"
+
 	"database/sql"
 	"encoding/json"
+	"github.com/UFFeScience/akoflow/internal/infrastructure/database"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -21,6 +23,9 @@ func TestSchedulerLibraryRoutesAndNativeProtection(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer db.Close()
+	if err := database.Bootstrap(context.Background(), db); err != nil {
+		t.Fatal(err)
+	}
 	registry, _ := algorithms.NewRegistry(algorithms.HEFT{}, algorithms.NewPRISMTime(), algorithms.NewPRISMCost())
 	service, err := library.New(context.Background(), db, registry, t.TempDir(), false)
 	if err != nil {

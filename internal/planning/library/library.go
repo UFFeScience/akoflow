@@ -49,16 +49,6 @@ type Catalog struct {
 
 func New(ctx context.Context, db *sql.DB, registry *algorithms.Registry, root string, readOnly bool) (*Catalog, error) {
 	s := &Catalog{db: db, registry: registry, root: root, readOnly: readOnly}
-	if !readOnly {
-		_,
-			err := db.ExecContext(ctx,
-			`CREATE TABLE IF NOT EXISTS scheduler_plugin_sources (id TEXT PRIMARY KEY, payload TEXT NOT NULL, active_payload TEXT NOT`+
-				` NULL DEFAULT ''); CREATE TABLE IF NOT EXISTS scheduler_plugin_revisions (id TEXT NOT NULL, revision INTEGER NOT NULL, p`+
-				`ayload TEXT NOT NULL, PRIMARY KEY(id,revision))`)
-		if err != nil {
-			return nil, err
-		}
-	}
 	rows, err := db.QueryContext(ctx, `SELECT active_payload FROM scheduler_plugin_sources WHERE active_payload <> ''`)
 	if err != nil {
 		if readOnly {

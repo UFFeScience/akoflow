@@ -2,7 +2,9 @@ package library
 
 import (
 	"context"
+
 	"database/sql"
+	"github.com/UFFeScience/akoflow/internal/infrastructure/database"
 	planningplugin "github.com/UFFeScience/akoflow/internal/infrastructure/plugins/planning"
 	"os"
 	"path/filepath"
@@ -28,6 +30,9 @@ func TestPluginCompilesRunsPersistsAndKeepsLastWorkingRevision(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer db.Close()
+	if err := database.Bootstrap(context.Background(), db); err != nil {
+		t.Fatal(err)
+	}
 	registry, _ := algorithms.NewRegistry(algorithms.HEFT{}, algorithms.NewPRISMTime(), algorithms.NewPRISMCost())
 	root := t.TempDir()
 	s, err := New(ctx, db, registry, root, false)
@@ -107,6 +112,9 @@ func TestNativeSourceAndClassification(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer db.Close()
+	if err := database.Bootstrap(context.Background(), db); err != nil {
+		t.Fatal(err)
+	}
 	registry, _ := algorithms.NewRegistry(algorithms.HEFT{}, algorithms.NewPRISMTime(), algorithms.NewPRISMCost())
 	s, err := New(context.Background(), db, registry, t.TempDir(), false)
 	if err != nil {

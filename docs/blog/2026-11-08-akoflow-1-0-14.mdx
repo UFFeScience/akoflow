@@ -1,0 +1,120 @@
+---
+slug: akoflow-1-0-14
+authors: [ovvesley, llms]
+title: AkôFlow 1.0.14 — global search, audit and infrastructure navigation
+description: Search control-plane records, explore API and runtime audit, discover keyboard shortcuts and inspect infrastructure by ownership.
+image: /img/releases/v1.0.14/01-audit-explorer.png
+tags: [Desktop, Experiments]
+---
+
+AkôFlow 1.0.14 adds fast global search, a keyboard shortcut reference, comprehensive audit exploration and a resource-oriented infrastructure map. These changes build on 1.0.13.
+
+<!-- truncate -->
+
+**Database compatibility:** this release consolidates the current schema into one canonical bootstrap. Existing databases with older schema checksums are not migrated in place. Preserve a verified backup and the previous installation before switching; use a new empty database for the new writable installation. The application does not silently reset incompatible databases. Request history is stored in a separate `request-audit.db` sidecar and must be backed up separately when needed.
+
+The screenshots show the actual release candidate. Audit and settings use the local installation; search and infrastructure use existing experiments opened by a separate daemon in read-only archive mode. Capturing these images did not start workflow execution, provisioning or connectivity checks. Capture provenance is stored alongside the images.
+
+## Explore recorded activity in Audit
+
+Use the event timeline, server-side counts, outcome and transport facets, configurable time ranges, grouped results and cursor pagination to investigate API access, MCP protocol activity and runtime lifecycle events. Access records include authentication outcome, request and correlation identifiers, method, status and duration. Shared tokens identify service clients, not invented human identities.
+
+![Audit explorer](/img/releases/v1.0.14/01-audit-explorer.png)
+
+## Search and combine audit filters
+
+Search available filter choices, inspect recorded counts and combine filters to narrow an investigation. Additional references include request/correlation identifiers, executions, activities and operations. Loading, empty, retry and outdated-daemon states are explicit.
+
+![Searchable audit filter](/img/releases/v1.0.14/02-audit-filter.png)
+
+## Inspect request and identity evidence
+
+Open an event in the shared full-height detail drawer without leaving the current results. Request, identity, target and correlation evidence stays together, with links to related records. Escape closes the drawer and restores focus. Bodies, authorization headers and secret values are not collected as audit payloads.
+
+![Audit event details](/img/releases/v1.0.14/03-audit-event-details.png)
+
+## Follow completed HTTP requests
+
+The API requests view lists completed calls with method, path, status, duration, direct peer IP and caller classification. Fetch 50 records per page, navigate with cursors and refresh to return to the newest entries. Long-lived requests appear after completion. Query strings, bodies, cookies and authorization headers are omitted; caller-supplied client labels are not verified identity.
+
+![API request history](/img/releases/v1.0.14/04-api-request-history.png)
+
+## Configure request retention
+
+Settings exposes request-log retention from 1 to 3650 days, with a default of 30 days. Bounded periodic cleanup removes expired request records; operational audit events are preserved separately. Reducing retention can permanently remove older request records.
+
+![Request retention settings](/img/releases/v1.0.14/05-request-retention.png)
+
+## Discover shortcuts and their controls
+
+Open Settings → Keyboard shortcuts, or use the shortcut icon in the top bar. The reference shows macOS and Windows/Linux combinations, where each shortcut applies and its matching button or control. Try global search directly from the reference. Contextual keys cover search results, audit menus, activity dependencies and detail panels.
+
+![Keyboard shortcuts](/img/releases/v1.0.14/06-keyboard-shortcuts.png)
+
+## Find records with global search
+
+Press Command/Ctrl+K or use the top-bar search field to find workflows, executions, environments and artifacts by ID or partial name. Resources, plans, execution scopes and materializations are also searchable. Results show type, version, status and owner context; owner and result links are independently clickable.
+
+The daemon reads bounded metadata projections instead of loading complete catalogs, logs or workflow definitions. Results use stable cursor pagination; the interface debounces typing, cancels obsolete requests and rejects stale responses. Keyboard navigation and mobile access are supported. A local Apple M4 Pro benchmark with 100,000 execution records measured approximately 73–120 ms per search; this is a local benchmark, not a universal latency guarantee.
+
+![Global search results](/img/releases/v1.0.14/07-global-search.png)
+
+## Navigate infrastructure by ownership
+
+The environment map uses a vertical ownership tree with separate local, cloud and simulation branches when configured. Resources and network links have explicit entry points. Simulation adapters without bound resources do not create empty branches, and Fit view helps navigate the graph. Availability observations remain separate from configuration.
+
+![Environment ownership map](/img/releases/v1.0.14/08-environment-map.png)
+
+## Inspect resources in the shared drawer
+
+Inspect resources and their recorded metadata in the shared full-height drawer, preserving opening/closing animations, focus handling and Escape dismissal. Search large resource lists and expand large HPC branches incrementally. Resource actions open their owning pages; on writable connected instances, available console actions hand sessions to the standard console bar instead of creating competing terminal views.
+
+![Resource inspector](/img/releases/v1.0.14/09-resource-inspector.png)
+
+## Read configured network links
+
+Inspect configured bandwidth, latency and link metadata from the environment map. Optional animated flow respects motion preferences. Diagram arrows illustrate configured relationships, not measured live traffic. The screenshot shows archived simulation configuration.
+
+![Network inspector](/img/releases/v1.0.14/10-network-inspector.png)
+
+## Find resources without expanding every branch
+
+The resource entry point opens a searchable side list. Filter recorded resources and inspect an item without losing the environment map. Available console actions on writable connected resources use the standard console bar.
+
+![Searchable resource list](/img/releases/v1.0.14/12-resource-list.png)
+
+## Keep large HPC environments readable
+
+Large HPC branches initially show a small set of nodes and an explicit remaining count. Expand incrementally while keeping the full recorded inventory searchable. This archived environment contains 132 resources.
+
+![Large HPC overview](/img/releases/v1.0.14/13-hpc-overview.png)
+
+## Keep the same tools in dark mode
+
+Audit timelines, facets, filter menus and shared drawers use the current appearance settings in both light and dark themes.
+
+![Audit in dark mode](/img/releases/v1.0.14/11-audit-dark.png)
+
+## Other improvements
+
+- Workflow command fields show shell highlighting and syntax-validation state. Daemon syntax validation checks scripts without executing them.
+- Environment editing preserves persisted identities, saved configuration and unbound resources.
+- Audit drawers retain the shared wrapper through closing animations, and older daemon responses display actionable update guidance.
+- The database's complete initial schema now includes scheduler-plugin tables; startup no longer applies the former incremental schema migrations.
+- Global search remains available for read-only imported archives and follows the selected instance's data.
+
+## Install and update
+
+Get the [1.0.14 release packages](https://github.com/UFFeScience/akoflow/releases/tag/v1.0.14) or follow the [installation guide](https://akoflow.com/docs/downloads). Desktop packages support macOS universal, Windows x64 and Linux x64. Matching daemon and BuildKit archives support Linux amd64 and arm64. Docker Desktop is required on macOS/Windows; Linux requires Docker Engine and Compose v2.
+
+Read the database compatibility note above before updating an existing installation. Runtime archives are loaded locally by Desktop; no container-registry deployment is required.
+
+## Validation
+
+- Daemon: complete Go suite, architecture checks and `go vet` passed.
+- Desktop: 118 unit tests, 20 packaging/MCP/appearance contract tests, dependency-security checks, formatting and production build passed.
+- Browser: 86 development checks passed, with one production-only check skipped; 46 selected production checks passed, including the shortcuts screen in both themes.
+- Global search: matching, owner navigation, pagination, invalid cursors, cancellation, stale responses and a 100,000-record benchmark were checked.
+- Screenshot capture: 13 actual-interface images with capture provenance and no workload execution.
+
+Frozen source tags: [daemon and documentation](https://github.com/UFFeScience/akoflow/tree/v1.0.14) and [Desktop](https://github.com/UFFeScience/akoflow-desktop/tree/v1.0.14). [Full release tour](https://akoflow.com/blog/akoflow-1-0-14/).

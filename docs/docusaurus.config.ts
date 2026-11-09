@@ -259,6 +259,7 @@ const config: Config = {
         {
           title: "Community",
           items: [
+            { label: "Video Publisher", to: "/integrations/youtube/" },
             {
               label: "GitHub",
               href: "https://github.com/UFFeScience/akoflow",

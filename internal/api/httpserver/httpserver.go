@@ -246,6 +246,10 @@ func ServeSecure(ctx context.Context, address string, workflowEngine *workflow_e
 		return err
 	}
 	defer closeMCP()
+	handler, err = managedHubRoutes(handler, routes, security, workflowEngine.IsReadOnly())
+	if err != nil {
+		return err
+	}
 	handler = AuditAccess(handler, routes, auditStore)
 
 	handler = audit.Middleware(handler, func(r *http.Request) string {

@@ -142,6 +142,9 @@ func auditRoute(routes *http.ServeMux, r *http.Request) (string, string) {
 	if strings.HasPrefix(r.URL.Path, "/akoflow-api/mcp") {
 		pattern = "mcp-control"
 	}
+	if strings.HasPrefix(r.URL.Path, "/akoflow-api/hub/") {
+		pattern = "hub-control"
+	}
 	return pattern, transport
 }
 func completeAccess(event domainaudit.Event, response *auditResponse, r *http.Request, identity *auditcontext.Trace, started time.Time, failure any) domainaudit.Event {

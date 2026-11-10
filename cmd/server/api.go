@@ -16,6 +16,7 @@ import (
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	appstorage "github.com/UFFeScience/akoflow/internal/application/storage"
 	"github.com/UFFeScience/akoflow/internal/domain"
+	"github.com/UFFeScience/akoflow/internal/hubpublish"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/config"
 	cloudcredential "github.com/UFFeScience/akoflow/internal/infrastructure/credentials/cloud"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/sshkey"
@@ -136,6 +137,9 @@ func buildAPI(
 		ReadOnly:            storage.readOnly,
 		Restart:             restart,
 		FactoryReset: func(_ context.Context) error {
+			if err := hubpublish.ScheduleReset(filepath.Join(filepath.Dir(instancearchive.ResolveDatabasePath()), "credentials", "hub")); err != nil {
+				return fmt.Errorf("schedule Hub credential reset: %w", err)
+			}
 			if err := mcpcontrol.ScheduleReset(mcpcontrol.StateDirectory(settings.MCPStateDirectory, instancearchive.ResolveDatabasePath())); err != nil {
 				return fmt.Errorf("schedule MCP credential reset: %w", err)
 			}

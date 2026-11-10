@@ -1,0 +1,48 @@
+package hubpublish
+
+import (
+	"context"
+	"net/url"
+)
+
+func (m *Manager) Publications(ctx context.Context) ([]Publication, error) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	if _, err := m.identityLocked(ctx); err != nil {
+		return nil, err
+	}
+	var items []Publication
+	err := m.requestLocked(ctx, "GET", "/desktop/publications", nil, nil, true, &items)
+	return items, err
+}
+func (m *Manager) CreatePublication(ctx context.Context, input Publication) (Publication, error) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	if _, err := m.identityLocked(ctx); err != nil {
+		return Publication{}, err
+	}
+	var receipt struct {
+		ID string `json:"id"`
+	}
+	fields := map[string]string{"title": input.Title, "slug": input.Slug, "description": input.Description, "readme": input.Readme, "visibility": input.Visibility}
+	if err := m.requestLocked(ctx, "POST", "/desktop/publications", fields, nil, true, &receipt); err != nil {
+		return Publication{}, err
+	}
+	item, err := m.publicationLocked(ctx, receipt.ID)
+	if err != nil {
+		return Publication{}, err
+	}
+	m.state.DefaultPublicationID = receipt.ID
+	if err = m.persistLocked(); err != nil {
+		return Publication{}, err
+	}
+	return item.Publication, nil
+}
+func (m *Manager) publicationLocked(ctx context.Context, id string) (publicationInfo, error) {
+	var item publicationInfo
+	if id == "" {
+		return item, failure(422, "publication_required", "Choose a destination publication.")
+	}
+	err := m.requestLocked(ctx, "GET", "/desktop/publications/"+url.PathEscape(id), nil, nil, true, &item)
+	return item, err
+}

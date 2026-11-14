@@ -40,7 +40,7 @@ func (m *Manager) requestLocked(ctx context.Context, method, path string, input 
 	}
 	request, err := http.NewRequestWithContext(ctx, method, m.state.HubURL+"/api/v1"+path, body)
 	if err != nil {
-		return failure(422, "invalid_hub_url", "Configure the Hub address before connecting.")
+		return failure(422, "invalid_hub_url", "AkôFlow Hub is not configured for this installation. Contact the administrator.")
 	}
 	request.Header.Set("Content-Type", "application/json")
 	if form != nil {
@@ -56,7 +56,7 @@ func (m *Manager) requestLocked(ctx context.Context, method, path string, input 
 	client.CheckRedirect = func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }
 	response, err := client.Do(request)
 	if err != nil {
-		return failure(502, "hub_unavailable", "Hub cannot be reached. Check the address and try again.")
+		return failure(502, "hub_unavailable", "AkôFlow Hub cannot be reached. Try again or contact the administrator.")
 	}
 	defer response.Body.Close()
 	data, err := io.ReadAll(io.LimitReader(response.Body, 24<<20+1))

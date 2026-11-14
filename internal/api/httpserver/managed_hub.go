@@ -11,7 +11,7 @@ import (
 
 func managedHubRoutes(next http.Handler, source http.Handler, security SecurityOptions, readOnly bool) (http.Handler, error) {
 	directory := filepath.Join(filepath.Dir(instancearchive.ResolveDatabasePath()), "credentials", "hub")
-	manager, err := hubpublish.New(hubpublish.Options{Directory: directory, HubURL: os.Getenv("AKOFLOW_HUB_URL"), Source: source, ReadOnly: readOnly})
+	manager, err := hubpublish.New(hubpublish.Options{Directory: directory, HubURL: os.Getenv("AKOFLOW_HUB_URL"), BrowserURL: os.Getenv("AKOFLOW_HUB_BROWSER_URL"), Source: source, ReadOnly: readOnly})
 	if err != nil {
 		return nil, err
 	}

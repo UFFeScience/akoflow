@@ -11,9 +11,13 @@ import (
 func (m *Manager) StartAuthorization(ctx context.Context) (Status, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	if err := m.enabledLocked(); err != nil {
-		return Status{}, err
+	if m.options.ReadOnly {
+		return Status{}, failure(403, "read_only", "Imported snapshots cannot connect to Hub.")
 	}
+	if m.state.HubURL == "" {
+		return Status{}, failure(503, "hub_not_configured", "AkôFlow Hub is not configured for this installation. Contact the administrator.")
+	}
+	m.state.Enabled = true
 	var instance struct {
 		Name string `json:"name"`
 		ID   string `json:"id"`

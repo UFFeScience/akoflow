@@ -41,7 +41,7 @@ func (m *Manager) Confirm(ctx context.Context, id string, acknowledgePublic bool
 		ownerKind = "o"
 	}
 	result = Receipt{
-		URL:          m.state.HubURL + "/" + ownerKind + "/" + url.PathEscape(current.Publication.Owner) + "/" + url.PathEscape(current.Publication.Slug),
+		URL:          m.options.BrowserURL + "/" + ownerKind + "/" + url.PathEscape(current.Publication.Owner) + "/" + url.PathEscape(current.Publication.Slug),
 		ExperimentID: receipt.ExperimentID,
 		ResultCount:  receipt.ResultCount,
 		Version:      receipt.Version.Number,

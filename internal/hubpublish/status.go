@@ -11,10 +11,10 @@ func (m *Manager) Status(ctx context.Context) (Status, error) {
 	return m.statusLocked(ctx, true)
 }
 func (m *Manager) statusLocked(ctx context.Context, verify bool) (Status, error) {
-	result := Status{Enabled: m.state.Enabled, HubURL: m.state.HubURL, ReadOnly: m.options.ReadOnly, DefaultPublicationID: m.state.DefaultPublicationID}
+	result := Status{Configured: m.state.HubURL != "", BrowserURL: m.options.BrowserURL, Enabled: m.state.Enabled, HubURL: m.state.HubURL, ReadOnly: m.options.ReadOnly, DefaultPublicationID: m.state.DefaultPublicationID}
 	if m.state.DeviceCode != "" && time.Now().Before(m.state.DeviceExpiresAt) {
 		result.UserCode = m.state.UserCode
-		result.VerificationURL = m.state.VerificationURL
+		result.VerificationURL = m.browserAddress(m.state.VerificationURL)
 		result.ExpiresAt = &m.state.DeviceExpiresAt
 	}
 	if !verify || m.state.AccessToken == "" || !m.state.Enabled {

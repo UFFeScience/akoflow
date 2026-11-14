@@ -2,8 +2,8 @@
 title: Publish execution results to AkôFlow Hub
 ---
 
-Open **Settings → AkôFlow Hub** in Desktop. Enter the Hub origin, enable the
-connection, and select **Sign in with AkôFlow Hub**. Continue in the browser,
+Open **Settings → AkôFlow Hub** in Desktop and select **Sign in to AkôFlow Hub**.
+Every project uses the same Hub service configured for the installation. Continue in the browser,
 check the displayed code, sign in using your Hub session, and authorize one
 Hub project. Desktop detects approval automatically. Your Hub password is never
 entered in Desktop.
@@ -32,13 +32,18 @@ immutable; the Hub stores metadata in PostgreSQL and content in GCS.
 The daemon stores the project connection outside the exportable database, in
 `credentials/hub/connection.json` beside the active instance database, with mode
 `0600` inside a `0700` directory. Tokens never pass through renderer responses or
-browser storage. Disconnect or disable the connection to revoke access; grants
+browser storage. Disconnect the project to revoke access; grants
 can also be revoked from the Hub account. Factory reset clears the saved
 connection on the next daemon start. Read-only imported instances cannot connect
 or publish. Instance archives do not carry Hub credentials.
 
-Operators can provide the initial origin through `AKOFLOW_HUB_URL`. This does not
-enable publishing automatically. HTTPS is required except for explicit local IP
+Operators configure the single service origin through `AKOFLOW_HUB_URL`. Projects
+cannot override it; sign-in enables the project connection without a separate
+configuration step. If the configured service changes, credentials and pending
+approvals for the previous service are cleared before any network request.
+`AKOFLOW_HUB_BROWSER_URL` optionally routes authorization and publication links
+through a browser-facing origin, such as `http://localhost:3100` for an SSH tunnel.
+It points to the same service; server requests continue to use `AKOFLOW_HUB_URL`. HTTPS is required except for explicit local IP
 addresses and localhost. Requests do not follow redirects. Protect the daemon API
 with its existing operator authentication, and restrict access to trusted users.
 
@@ -48,3 +53,8 @@ HTTP security and architecture tests with the race detector before building.
 The platform Compose can build that image while retaining the existing storage,
 BuildKit service and rollback images. The local GCS emulator and Mailpit setup
 is intended for development.
+
+If the release registry cannot be reached, the local Dockerfile accepts
+`AKOFLOW_RUNTIME_IMAGE` as a build argument. Preserve a separate tag for the
+verified installed v1.0.15 runtime, then use that tag as the base. Do not replace
+it with a newer release implicitly; the build replaces only the daemon binary.

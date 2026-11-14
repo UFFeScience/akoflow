@@ -21,12 +21,8 @@ func New(options Options) (*Manager, error) {
 	} else if !errors.Is(err, os.ErrNotExist) {
 		return nil, errors.New("cannot read saved Hub connection")
 	}
-	if manager.state.HubURL != "" {
-		origin, err := validateOrigin(manager.state.HubURL)
-		if err != nil {
-			return nil, err
-		}
-		manager.state.HubURL = origin
+	if err := manager.configureService(err == nil); err != nil {
+		return nil, err
 	}
 	if err := manager.applyPendingReset(); err != nil {
 		return nil, err

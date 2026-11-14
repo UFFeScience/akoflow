@@ -10,11 +10,12 @@ import (
 const packageLimit = 8 << 20
 
 type Options struct {
-	Directory string
-	HubURL    string
-	Source    http.Handler
-	ReadOnly  bool
-	Client    *http.Client
+	Directory  string
+	HubURL     string
+	BrowserURL string
+	Source     http.Handler
+	ReadOnly   bool
+	Client     *http.Client
 }
 type Manager struct {
 	options  Options
@@ -45,6 +46,8 @@ type Identity struct {
 	ExpiresAt       time.Time `json:"expiresAt"`
 }
 type Status struct {
+	Configured           bool       `json:"configured"`
+	BrowserURL           string     `json:"browserUrl"`
 	Enabled              bool       `json:"enabled"`
 	Connected            bool       `json:"connected"`
 	HubURL               string     `json:"hubUrl"`

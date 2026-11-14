@@ -207,3 +207,28 @@ func registerAndDownloadWorkspace(t *testing.T, repository *Repository, browser 
 	}
 	return location.StorageResourceID
 }
+
+func TestUnsupportedWorkspaceCannotEnableDaemonFilesystemBrowsing(t *testing.T) {
+	repository := testRepository(t)
+	ctx := context.Background()
+	workspace := domain.ActivityWorkspace{
+		ID: "workspace", RunID: "run", ActivityID: "activity",
+		ResourceID: "resource", RuntimeID: "cluster", URI: "kubernetes://cluster/workspace",
+		ExecutionPath: "/workspace", ObservationPath: "/workspace", Driver: "kubernetes",
+		State: domain.WorkspaceSealed, Retention: domain.WorkspaceFinal,
+	}
+	if err := dbexecution.New(repository.db).SaveWorkspace(ctx, workspace); err != nil {
+		t.Fatal(err)
+	}
+	if err := repository.CatalogArtifacts(ctx, workspaceFileHandle("run", "activity", "/workspace")); err != nil {
+		t.Fatal(err)
+	}
+	locations, err := repository.ListLocations(ctx, "run")
+	if err != nil {
+		t.Fatal(err)
+	}
+	storage, err := dbstorage.New(repository.db).FindStorage(ctx, locations[0].StorageResourceID)
+	if err != nil || len(storage.BrowseRoots) != 0 {
+		t.Fatalf("unsafe browse roots: %+v err=%v", storage, err)
+	}
+}

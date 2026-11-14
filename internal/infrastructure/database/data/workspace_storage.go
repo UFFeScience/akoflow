@@ -38,6 +38,9 @@ func registerWorkspaceStorage(ctx context.Context, tx *sql.Tx, handle domain.Act
 			roots = nil
 			metadata["unavailableReason"] = "Remote workspace has no connection identity"
 		}
+	} else if uri != "" && (parseErr != nil || workspace.Scheme != "file") {
+		roots = nil
+		metadata["unavailableReason"] = "Workspace requires a runtime-specific storage connection"
 	} else if target, _ := handle.Metadata["executionTarget"].(string); strings.HasPrefix(target, "remote-") {
 		roots = nil
 		metadata["unavailableReason"] = "Remote workspace connection is not recorded"

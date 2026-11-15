@@ -64,3 +64,23 @@ If the release registry cannot be reached, the local Dockerfile accepts
 `AKOFLOW_RUNTIME_IMAGE` as a build argument. Preserve a separate tag for the
 verified installed v1.0.15 runtime, then use that tag as the base. Do not replace
 it with a newer release implicitly; the build replaces only the daemon binary.
+
+## Embed a public workflow in the documentation
+
+Each showcase uses the shared Hub widget to load its versioned DAG and execution summary directly from the public Hub. It also offers the exact import URI, YAML, native experiment capture, versioned source and validated output archive. Publishing a new version does not silently change an existing showcase's selected version.
+
+The Hub serves the widget at `/embed/PUBLICATION_ID/VERSION`; append `?view=dag` for a DAG-focused view. For example:
+
+```html
+<iframe
+  src="https://hub.akoflow.com/embed/0d02c2c1-da65-4a17-9919-a8cbcf703341/1"
+  title="OpenOil ensemble: versioned DAG and execution results"
+  width="100%"
+  height="850"
+  loading="lazy"
+  sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-downloads"
+  allow="clipboard-write; fullscreen"
+></iframe>
+```
+
+Embeds fetch public data without account credentials. Missing or private publications return 404. The production framing policy permits `akoflow.com`, `www.akoflow.com` and the Hub itself; other embedding origins require an explicit operator configuration change. The interactive graph describes the published workflow definition, while the summary and result links refer to recorded executions of that exact version.

@@ -82,6 +82,7 @@ const groupMetadata = {
 };
 
 const queryDescriptions = {
+  name: "Override the imported workflow name before validation and registration.",
   repository:
     "Docker Hub repository, including its namespace (for example library/python).",
   workflowVersionId:
@@ -97,7 +98,8 @@ const queryDescriptions = {
   environmentId: "Limit results to this environment.",
   eventType: "Limit results to this audit event type.",
   executionId: "Limit results to this execution run.",
-  field: "Audit facet field whose distinct values and matching counts should be returned.",
+  field:
+    "Audit facet field whose distinct values and matching counts should be returned.",
   search: "Case-insensitive substring used to search audit facet values.",
   filterField: "Entity field to filter.",
   filterValue: "Value required in the selected filter field.",

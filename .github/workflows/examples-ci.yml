@@ -101,7 +101,7 @@ jobs:
         working-directory: ${{ matrix.category }}/${{ matrix.showcase }}
         run: ./run.sh
       - name: Authenticate with GHCR
-        if: inputs.publish
+        if: inputs.publish && startsWith(matrix.image, 'ghcr.io/uffescience/akoflow-examples/')
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
@@ -112,6 +112,6 @@ jobs:
         with:
           context: ${{ matrix.category }}/${{ matrix.showcase }}
           file: ${{ matrix.category }}/${{ matrix.showcase }}/docker/Dockerfile
-          push: ${{ inputs.publish }}
+          push: ${{ inputs.publish && startsWith(matrix.image, 'ghcr.io/uffescience/akoflow-examples/') }}
           tags: |
             ${{ matrix.image }}

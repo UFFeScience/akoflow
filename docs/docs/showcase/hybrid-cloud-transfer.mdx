@@ -3,18 +3,40 @@ title: Hybrid local or Kind to GCP
 description: Verify a real file transfer from a local host or Kind activity to an on-demand GCP worker.
 ---
 
-import InterfaceApiTabs from '@site/src/components/InterfaceApiTabs';
-import {FileList, WorkflowDag} from '@site/src/components/WorkflowShowcase';
+import InterfaceApiTabs from "@site/src/components/InterfaceApiTabs";
+import WorkflowHubLinks from "@site/src/components/WorkflowHubLinks";
+import { FileList, WorkflowDag } from "@site/src/components/WorkflowShowcase";
 
 # Hybrid local or Kind to GCP
 
-<WorkflowDag title="Cross-runtime handoff" stages={['produce on local host or Kind', 'transfer handoff.txt', 'consume on GCP']} />
+<WorkflowDag
+  title="Cross-runtime handoff"
+  stages={[
+    "produce on local host or Kind",
+    "transfer handoff.txt",
+    "consume on GCP",
+  ]}
+/>
 
 These are two separate two-activity workflows. The producer writes `handoff.txt` either on the AkôFlow server host or in a Kind cluster. A cloud activity on an on-demand GCP worker checks the file's exact content and writes `receipt.txt`. This tests a real data dependency across runtimes, not merely a network estimate.
 
 :::warning Cloud resources and cost
 Running this example provisions a GCP VM and may incur charges. The checked-in plans contain IDs from a specific test instance and a manual predicted value; they are not portable plans or calibrated forecasts. Review the project, network access, capacity target, and VM cleanup before submitting.
 :::
+
+## Portable local profiles
+
+The following published versions run the original producer/consumer byte checks in two Docker activities on the homeserver. They provide a local executable profile for the logical handoff. GCP VM provisioning, Kind scheduling and cross-cloud networking are **not** measured by these local captures. The original provider-specific definitions are preserved as version 1 in each publication; the measured local profile is version 2.
+
+### Local producer profile {#local-profile}
+
+<WorkflowHubLinks examplePath="connections/hybrid-local-cloud-profile" />
+
+### Kind-origin fixture profile {#kind-profile}
+
+<WorkflowHubLinks examplePath="connections/hybrid-kind-cloud-profile" />
+
+The fixture text retains its original `local-to-gcp` / `kind-to-gcp` labels; those labels alone are not proof of cloud execution. Configure the original provider prerequisites below to perform a cloud-specific validation.
 
 ## Prerequisites
 
@@ -28,12 +50,24 @@ Running this example provisions a GCP VM and may incur charges. The checked-in p
 The full bundle below includes the workflows, plans, runner, and an explicit description of the environment, scope, topology, runtime bindings, and cloud resource that must be registered in the target instance. Those cloud values deliberately remain instance-specific rather than shipping unusable credentials or project IDs.
 
 <FileList>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/real/hybrid-cloud-transfer/README.md">Bundle README: environment, scope, topology, and cloud prerequisites ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/real/hybrid-cloud-transfer/local-cloud-workflow.yaml">Local → GCP workflow YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/real/hybrid-cloud-transfer/local-cloud-plan.yaml">Local → GCP plan YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/real/hybrid-cloud-transfer/kind-cloud-workflow.yaml">Kind → GCP workflow YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/real/hybrid-cloud-transfer/kind-cloud-plan.yaml">Kind → GCP plan YAML ↓</a>
-  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/real/hybrid-cloud-transfer/submit-run.sh">Run submission script ↓</a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/real/hybrid-cloud-transfer/README.md">
+    Bundle README: environment, scope, topology, and cloud prerequisites ↓
+  </a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/real/hybrid-cloud-transfer/local-cloud-workflow.yaml">
+    Local → GCP workflow YAML ↓
+  </a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/real/hybrid-cloud-transfer/local-cloud-plan.yaml">
+    Local → GCP plan YAML ↓
+  </a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/real/hybrid-cloud-transfer/kind-cloud-workflow.yaml">
+    Kind → GCP workflow YAML ↓
+  </a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/real/hybrid-cloud-transfer/kind-cloud-plan.yaml">
+    Kind → GCP plan YAML ↓
+  </a>
+  <a href="https://raw.githubusercontent.com/UFFeScience/akoflow-examples/main/real/hybrid-cloud-transfer/submit-run.sh">
+    Run submission script ↓
+  </a>
 </FileList>
 
 <InterfaceApiTabs
@@ -45,21 +79,28 @@ The full bundle below includes the workflows, plans, runner, and an explicit des
   api={<div>
     <h2>Submit through the API</h2>
     <p>Complete <a href="/docs/tutorials/api-access">API connection setup</a> and use a checkout containing this example. Review and adapt the plan and script IDs before submitting them to another instance. Set the API URL to your own AkôFlow server; the loopback address below is only an example.</p>
-    <pre><code>{`git clone --depth 1 https://github.com/UFFeScience/akoflow.git akoflow-showcase
-cd akoflow-showcase
+    <pre><code>{`git clone https://github.com/UFFeScience/akoflow-examples.git
+cd akoflow-examples
 export AKOFLOW_API_URL=http://127.0.0.1:8080/akoflow-api
 export AKOFLOW_API_TOKEN='replace-with-your-daemon-token'
 
 curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \\
   -H 'Content-Type: application/yaml' \\
-  --data-binary @akoflow-examples/real/hybrid-cloud-transfer/local-cloud-workflow.yaml \\
+  --data-binary @real/hybrid-cloud-transfer/local-cloud-workflow.yaml \\
   "$AKOFLOW_API_URL/workflow-definitions/"
 curl --fail-with-body -H "Authorization: Bearer $AKOFLOW_API_TOKEN" \\
   -H 'Content-Type: application/yaml' \\
-  --data-binary @akoflow-examples/real/hybrid-cloud-transfer/local-cloud-plan.yaml \\
+  --data-binary @real/hybrid-cloud-transfer/local-cloud-plan.yaml \\
   "$AKOFLOW_API_URL/schedule-plans/import/"
-sh akoflow-examples/real/hybrid-cloud-transfer/submit-run.sh local my-local-cloud-run`}</code></pre>
-    <p>For Kind, submit <code>kind-cloud-workflow.yaml</code> and <code>kind-cloud-plan.yaml</code>, then call the script with <code>kind my-kind-cloud-run</code>. Run one variant at a time; wait for execution and cloud cleanup before starting the next.</p>
+sh real/hybrid-cloud-transfer/submit-run.sh local my-local-cloud-run`}</code></pre>
+
+<p>
+  For Kind, submit <code>kind-cloud-workflow.yaml</code> and{" "}
+  <code>kind-cloud-plan.yaml</code>, then call the script with{" "}
+  <code>kind my-kind-cloud-run</code>. Run one variant at a time; wait for
+  execution and cloud cleanup before starting the next.
+</p>
+
   </div>}
 />
 
@@ -67,9 +108,9 @@ sh akoflow-examples/real/hybrid-cloud-transfer/submit-run.sh local my-local-clou
 
 In the verified runs on 2026-09-13, each producer and consumer completed, the consumer read the transferred file, and the GCP VM was destroyed afterward:
 
-| Source → destination | Run | Data transferred | Observed makespan |
-| --- | --- | ---: | ---: |
-| Local → GCP | `goal-local-cloud-run-v6` | 21 B | 70.051 s |
-| Kind → GCP | `goal-kind-cloud-run-v1` | 20 B | 131.993 s |
+| Source → destination | Run                       | Data transferred | Observed makespan |
+| -------------------- | ------------------------- | ---------------: | ----------------: |
+| Local → GCP          | `goal-local-cloud-run-v6` |             21 B |          70.051 s |
+| Kind → GCP           | `goal-kind-cloud-run-v1`  |             20 B |         131.993 s |
 
 Those are observations from one GCP project and an `e2-small` target, not guaranteed timings for another environment. The plans' `predicted.makespanSeconds: 120` and cost are manual placeholder values; do not use them to assess scheduler accuracy. Check the run's activity and transfer records, then verify the VM is absent from both AkôFlow's cloud-instance list and GCP Compute Engine. If cleanup is delayed or a run fails, investigate the active transfer and VM lifecycle before retrying.

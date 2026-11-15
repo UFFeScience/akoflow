@@ -8,6 +8,7 @@ type Publication = {
   uri: string;
   publicationId: string;
   version: number;
+  experimentId: string;
 };
 
 export default function WorkflowHubLinks({
@@ -42,6 +43,19 @@ export default function WorkflowHubLinks({
         </a>
         . Configure the runtime prerequisites below before planning and
         executing it.
+      </p>
+      <p>
+        <a
+          href={`https://hub.akoflow.com/api/v1/publications/${publication.publicationId}/experiments/${publication.experimentId}`}
+        >
+          Download the native experiment capture
+        </a>
+        {" · "}
+        <a
+          href={`https://github.com/UFFeScience/akoflow-examples/releases/download/showcase-hub-v1/${publication.url.split("/").pop()}-results.tar.gz`}
+        >
+          Download the validated output files
+        </a>
       </p>
     </section>
   );

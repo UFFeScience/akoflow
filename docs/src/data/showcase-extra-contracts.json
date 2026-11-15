@@ -3,7 +3,10 @@
     "title": "Producer–Consumer Data Transfer",
     "examplePath": "connections/hybrid-local-cloud-profile",
     "localProfile": "Run the original two-activity producer/consumer fixture on local Docker; verify actual file handoff and receipt contents. GCP/Kind placements remain separate optional reference configurations and are not measured by this local profile.",
-    "artifacts": ["handoff.txt", "receipt.txt"],
+    "artifacts": [
+      "handoff.txt",
+      "receipt.txt"
+    ],
     "screenshots": {},
     "originalYAML": "real/hybrid-cloud-transfer/local-cloud-workflow.yaml",
     "resultImages": {
@@ -49,8 +52,16 @@
         "mdifffitid0000047",
         "mdifffitid0000048"
       ],
-      ["mconcatfitid0000011", "mconcatfitid0000030", "mconcatfitid0000049"],
-      ["mbgmodelid0000012", "mbgmodelid0000031", "mbgmodelid0000050"],
+      [
+        "mconcatfitid0000011",
+        "mconcatfitid0000030",
+        "mconcatfitid0000049"
+      ],
+      [
+        "mbgmodelid0000012",
+        "mbgmodelid0000031",
+        "mbgmodelid0000050"
+      ],
       [
         "mbackgroundid0000013",
         "mbackgroundid0000014",
@@ -65,8 +76,16 @@
         "mbackgroundid0000053",
         "mbackgroundid0000054"
       ],
-      ["mimgtblid0000017", "mimgtblid0000036", "mimgtblid0000055"],
-      ["maddid0000018", "maddid0000037", "maddid0000056"],
+      [
+        "mimgtblid0000017",
+        "mimgtblid0000036",
+        "mimgtblid0000055"
+      ],
+      [
+        "maddid0000018",
+        "maddid0000037",
+        "maddid0000056"
+      ],
       [
         "mviewerid0000019",
         "mviewerid0000038",
@@ -96,21 +115,63 @@
         "mbackgroundid0000054",
         "mimgtblid0000055"
       ],
-      "mbackgroundid0000013": ["mprojectid0000001", "mbgmodelid0000012"],
-      "mbackgroundid0000014": ["mprojectid0000002", "mbgmodelid0000012"],
-      "mbackgroundid0000015": ["mprojectid0000003", "mbgmodelid0000012"],
-      "mbackgroundid0000016": ["mprojectid0000004", "mbgmodelid0000012"],
-      "mbackgroundid0000032": ["mprojectid0000020", "mbgmodelid0000031"],
-      "mbackgroundid0000033": ["mprojectid0000021", "mbgmodelid0000031"],
-      "mbackgroundid0000034": ["mprojectid0000022", "mbgmodelid0000031"],
-      "mbackgroundid0000035": ["mprojectid0000023", "mbgmodelid0000031"],
-      "mbackgroundid0000051": ["mprojectid0000039", "mbgmodelid0000050"],
-      "mbackgroundid0000052": ["mprojectid0000040", "mbgmodelid0000050"],
-      "mbackgroundid0000053": ["mprojectid0000041", "mbgmodelid0000050"],
-      "mbackgroundid0000054": ["mprojectid0000042", "mbgmodelid0000050"],
-      "mbgmodelid0000012": ["mconcatfitid0000011"],
-      "mbgmodelid0000031": ["mconcatfitid0000030"],
-      "mbgmodelid0000050": ["mconcatfitid0000049"],
+      "mbackgroundid0000013": [
+        "mprojectid0000001",
+        "mbgmodelid0000012"
+      ],
+      "mbackgroundid0000014": [
+        "mprojectid0000002",
+        "mbgmodelid0000012"
+      ],
+      "mbackgroundid0000015": [
+        "mprojectid0000003",
+        "mbgmodelid0000012"
+      ],
+      "mbackgroundid0000016": [
+        "mprojectid0000004",
+        "mbgmodelid0000012"
+      ],
+      "mbackgroundid0000032": [
+        "mprojectid0000020",
+        "mbgmodelid0000031"
+      ],
+      "mbackgroundid0000033": [
+        "mprojectid0000021",
+        "mbgmodelid0000031"
+      ],
+      "mbackgroundid0000034": [
+        "mprojectid0000022",
+        "mbgmodelid0000031"
+      ],
+      "mbackgroundid0000035": [
+        "mprojectid0000023",
+        "mbgmodelid0000031"
+      ],
+      "mbackgroundid0000051": [
+        "mprojectid0000039",
+        "mbgmodelid0000050"
+      ],
+      "mbackgroundid0000052": [
+        "mprojectid0000040",
+        "mbgmodelid0000050"
+      ],
+      "mbackgroundid0000053": [
+        "mprojectid0000041",
+        "mbgmodelid0000050"
+      ],
+      "mbackgroundid0000054": [
+        "mprojectid0000042",
+        "mbgmodelid0000050"
+      ],
+      "mbgmodelid0000012": [
+        "mconcatfitid0000011"
+      ],
+      "mbgmodelid0000031": [
+        "mconcatfitid0000030"
+      ],
+      "mbgmodelid0000050": [
+        "mconcatfitid0000049"
+      ],
       "mconcatfitid0000011": [
         "mdifffitid0000005",
         "mdifffitid0000006",
@@ -135,24 +196,78 @@
         "mdifffitid0000047",
         "mdifffitid0000048"
       ],
-      "mdifffitid0000005": ["mprojectid0000001", "mprojectid0000002"],
-      "mdifffitid0000006": ["mprojectid0000001", "mprojectid0000003"],
-      "mdifffitid0000007": ["mprojectid0000001", "mprojectid0000004"],
-      "mdifffitid0000008": ["mprojectid0000002", "mprojectid0000003"],
-      "mdifffitid0000009": ["mprojectid0000002", "mprojectid0000004"],
-      "mdifffitid0000010": ["mprojectid0000003", "mprojectid0000004"],
-      "mdifffitid0000024": ["mprojectid0000020", "mprojectid0000021"],
-      "mdifffitid0000025": ["mprojectid0000020", "mprojectid0000022"],
-      "mdifffitid0000026": ["mprojectid0000020", "mprojectid0000023"],
-      "mdifffitid0000027": ["mprojectid0000021", "mprojectid0000022"],
-      "mdifffitid0000028": ["mprojectid0000021", "mprojectid0000023"],
-      "mdifffitid0000029": ["mprojectid0000022", "mprojectid0000023"],
-      "mdifffitid0000043": ["mprojectid0000039", "mprojectid0000040"],
-      "mdifffitid0000044": ["mprojectid0000039", "mprojectid0000041"],
-      "mdifffitid0000045": ["mprojectid0000039", "mprojectid0000042"],
-      "mdifffitid0000046": ["mprojectid0000040", "mprojectid0000041"],
-      "mdifffitid0000047": ["mprojectid0000040", "mprojectid0000042"],
-      "mdifffitid0000048": ["mprojectid0000041", "mprojectid0000042"],
+      "mdifffitid0000005": [
+        "mprojectid0000001",
+        "mprojectid0000002"
+      ],
+      "mdifffitid0000006": [
+        "mprojectid0000001",
+        "mprojectid0000003"
+      ],
+      "mdifffitid0000007": [
+        "mprojectid0000001",
+        "mprojectid0000004"
+      ],
+      "mdifffitid0000008": [
+        "mprojectid0000002",
+        "mprojectid0000003"
+      ],
+      "mdifffitid0000009": [
+        "mprojectid0000002",
+        "mprojectid0000004"
+      ],
+      "mdifffitid0000010": [
+        "mprojectid0000003",
+        "mprojectid0000004"
+      ],
+      "mdifffitid0000024": [
+        "mprojectid0000020",
+        "mprojectid0000021"
+      ],
+      "mdifffitid0000025": [
+        "mprojectid0000020",
+        "mprojectid0000022"
+      ],
+      "mdifffitid0000026": [
+        "mprojectid0000020",
+        "mprojectid0000023"
+      ],
+      "mdifffitid0000027": [
+        "mprojectid0000021",
+        "mprojectid0000022"
+      ],
+      "mdifffitid0000028": [
+        "mprojectid0000021",
+        "mprojectid0000023"
+      ],
+      "mdifffitid0000029": [
+        "mprojectid0000022",
+        "mprojectid0000023"
+      ],
+      "mdifffitid0000043": [
+        "mprojectid0000039",
+        "mprojectid0000040"
+      ],
+      "mdifffitid0000044": [
+        "mprojectid0000039",
+        "mprojectid0000041"
+      ],
+      "mdifffitid0000045": [
+        "mprojectid0000039",
+        "mprojectid0000042"
+      ],
+      "mdifffitid0000046": [
+        "mprojectid0000040",
+        "mprojectid0000041"
+      ],
+      "mdifffitid0000047": [
+        "mprojectid0000040",
+        "mprojectid0000042"
+      ],
+      "mdifffitid0000048": [
+        "mprojectid0000041",
+        "mprojectid0000042"
+      ],
       "mimgtblid0000017": [
         "mbackgroundid0000013",
         "mbackgroundid0000014",
@@ -183,10 +298,20 @@
       "mprojectid0000040": [],
       "mprojectid0000041": [],
       "mprojectid0000042": [],
-      "mviewerid0000019": ["maddid0000018"],
-      "mviewerid0000038": ["maddid0000037"],
-      "mviewerid0000057": ["maddid0000056"],
-      "mviewerid0000058": ["maddid0000018", "maddid0000037", "maddid0000056"]
+      "mviewerid0000019": [
+        "maddid0000018"
+      ],
+      "mviewerid0000038": [
+        "maddid0000037"
+      ],
+      "mviewerid0000057": [
+        "maddid0000056"
+      ],
+      "mviewerid0000058": [
+        "maddid0000018",
+        "maddid0000037",
+        "maddid0000056"
+      ]
     },
     "validationMode": "local-workload",
     "localProfile": "Run all 58 original Montage 050d activities locally, using the immutable amd64 image and its twelve bundled FITS observations. The default uses two CPU slots, preserves the 138 named file handoffs, creates three calibrated astronomical mosaics and a color preview, and provisions no cloud machines. This is a long-running scientific workload; on Apple Silicon Docker uses amd64 emulation.",
@@ -224,5 +349,216 @@
       "3-mosaic.png": "/showcase/results/montage-050/3-mosaic.png"
     },
     "description": "Construct three-band astronomical mosaics from twelve FITS observations using a 58-activity projection, background correction and image-composition workflow. Execution profiles and measured evidence are documented separately."
+  },
+  "/docs/showcase/scientific-workflows/openoil-ensemble-08": {
+    "title": "OpenOil ensemble — 8 members",
+    "examplePath": "scientific-workflows/openoil-ensemble-08",
+    "localProfile": "Real 8-member OpenDrift OpenOil ensemble, 1000 particles/member, 172 simulated hours, synthetic wind/current forcings; executed by native Docker activities on homeserver with two lanes.",
+    "artifacts": [
+      "scenario.json",
+      "parameters.json",
+      "probability.nc",
+      "arrival.csv",
+      "mass_balance.csv",
+      "summary.json",
+      "perfil_tarefas.csv",
+      "selected-member.nc",
+      "mapa_probabilidade.png",
+      "resumo_workflow.png",
+      "animacao.gif",
+      "membro_000.nc",
+      "membro_001.nc",
+      "membro_002.nc",
+      "membro_003.nc",
+      "membro_004.nc",
+      "membro_005.nc",
+      "membro_006.nc",
+      "membro_007.nc",
+      "profile-member-000.json",
+      "profile-member-001.json",
+      "profile-member-002.json",
+      "profile-member-003.json",
+      "profile-member-004.json",
+      "profile-member-005.json",
+      "profile-member-006.json",
+      "profile-member-007.json",
+      "profile-prepare.json",
+      "profile-aggregate.json",
+      "profile-map.json",
+      "profile-summary.json",
+      "profile-animate.json"
+    ],
+    "screenshots": {},
+    "resultImages": {},
+    "releaseTag": "openoil-ensemble-v1",
+    "tags": [
+      "oil",
+      "openoil",
+      "ensemble",
+      "scientific-computing",
+      "docker"
+    ]
+  },
+  "/docs/showcase/scientific-workflows/openoil-ensemble-16": {
+    "title": "OpenOil ensemble — 16 members",
+    "examplePath": "scientific-workflows/openoil-ensemble-16",
+    "localProfile": "Real 16-member OpenDrift OpenOil ensemble, 1000 particles/member, 172 simulated hours, synthetic wind/current forcings; executed by native Docker activities on homeserver with two lanes.",
+    "artifacts": [
+      "scenario.json",
+      "parameters.json",
+      "probability.nc",
+      "arrival.csv",
+      "mass_balance.csv",
+      "summary.json",
+      "perfil_tarefas.csv",
+      "selected-member.nc",
+      "mapa_probabilidade.png",
+      "resumo_workflow.png",
+      "animacao.gif",
+      "membro_000.nc",
+      "membro_001.nc",
+      "membro_002.nc",
+      "membro_003.nc",
+      "membro_004.nc",
+      "membro_005.nc",
+      "membro_006.nc",
+      "membro_007.nc",
+      "membro_008.nc",
+      "membro_009.nc",
+      "membro_010.nc",
+      "membro_011.nc",
+      "membro_012.nc",
+      "membro_013.nc",
+      "membro_014.nc",
+      "membro_015.nc",
+      "profile-member-000.json",
+      "profile-member-001.json",
+      "profile-member-002.json",
+      "profile-member-003.json",
+      "profile-member-004.json",
+      "profile-member-005.json",
+      "profile-member-006.json",
+      "profile-member-007.json",
+      "profile-member-008.json",
+      "profile-member-009.json",
+      "profile-member-010.json",
+      "profile-member-011.json",
+      "profile-member-012.json",
+      "profile-member-013.json",
+      "profile-member-014.json",
+      "profile-member-015.json",
+      "profile-prepare.json",
+      "profile-aggregate.json",
+      "profile-map.json",
+      "profile-summary.json",
+      "profile-animate.json"
+    ],
+    "screenshots": {},
+    "resultImages": {},
+    "releaseTag": "openoil-ensemble-v1",
+    "tags": [
+      "oil",
+      "openoil",
+      "ensemble",
+      "scientific-computing",
+      "docker"
+    ]
+  },
+  "/docs/showcase/scientific-workflows/openoil-ensemble-32": {
+    "title": "OpenOil ensemble — 32 members",
+    "examplePath": "scientific-workflows/openoil-ensemble-32",
+    "localProfile": "Real 32-member OpenDrift OpenOil ensemble, 1000 particles/member, 172 simulated hours, synthetic wind/current forcings; executed by native Docker activities on homeserver with four lanes.",
+    "artifacts": [
+      "scenario.json",
+      "parameters.json",
+      "probability.nc",
+      "arrival.csv",
+      "mass_balance.csv",
+      "summary.json",
+      "perfil_tarefas.csv",
+      "selected-member.nc",
+      "mapa_probabilidade.png",
+      "resumo_workflow.png",
+      "animacao.gif",
+      "membro_000.nc",
+      "membro_001.nc",
+      "membro_002.nc",
+      "membro_003.nc",
+      "membro_004.nc",
+      "membro_005.nc",
+      "membro_006.nc",
+      "membro_007.nc",
+      "membro_008.nc",
+      "membro_009.nc",
+      "membro_010.nc",
+      "membro_011.nc",
+      "membro_012.nc",
+      "membro_013.nc",
+      "membro_014.nc",
+      "membro_015.nc",
+      "membro_016.nc",
+      "membro_017.nc",
+      "membro_018.nc",
+      "membro_019.nc",
+      "membro_020.nc",
+      "membro_021.nc",
+      "membro_022.nc",
+      "membro_023.nc",
+      "membro_024.nc",
+      "membro_025.nc",
+      "membro_026.nc",
+      "membro_027.nc",
+      "membro_028.nc",
+      "membro_029.nc",
+      "membro_030.nc",
+      "membro_031.nc",
+      "profile-member-000.json",
+      "profile-member-001.json",
+      "profile-member-002.json",
+      "profile-member-003.json",
+      "profile-member-004.json",
+      "profile-member-005.json",
+      "profile-member-006.json",
+      "profile-member-007.json",
+      "profile-member-008.json",
+      "profile-member-009.json",
+      "profile-member-010.json",
+      "profile-member-011.json",
+      "profile-member-012.json",
+      "profile-member-013.json",
+      "profile-member-014.json",
+      "profile-member-015.json",
+      "profile-member-016.json",
+      "profile-member-017.json",
+      "profile-member-018.json",
+      "profile-member-019.json",
+      "profile-member-020.json",
+      "profile-member-021.json",
+      "profile-member-022.json",
+      "profile-member-023.json",
+      "profile-member-024.json",
+      "profile-member-025.json",
+      "profile-member-026.json",
+      "profile-member-027.json",
+      "profile-member-028.json",
+      "profile-member-029.json",
+      "profile-member-030.json",
+      "profile-member-031.json",
+      "profile-prepare.json",
+      "profile-aggregate.json",
+      "profile-map.json",
+      "profile-summary.json",
+      "profile-animate.json"
+    ],
+    "screenshots": {},
+    "resultImages": {},
+    "releaseTag": "openoil-ensemble-v1",
+    "tags": [
+      "oil",
+      "openoil",
+      "ensemble",
+      "scientific-computing",
+      "docker"
+    ]
   }
 }

@@ -1,0 +1,40 @@
+---
+title: OpenOil ensemble — 16 members
+description: Real Docker-backed OpenOil oil-spill ensemble with 16 members, measured execution results and reproducible scientific artifacts.
+---
+
+import WorkflowHubLinks from "@site/src/components/WorkflowHubLinks";
+
+# OpenOil ensemble — 16 members
+
+Track the drift and weathering of an oil spill offshore of Maricá/Niterói, Brazil. Each member executes the real OpenDrift OpenOil model in its own Docker activity. The 16 members fan out independently and join for ensemble aggregation; map, summary and animation rendering then run independently before a final scientific validation.
+
+<WorkflowHubLinks examplePath="scientific-workflows/openoil-ensemble-16" />
+
+## Scenario and scientific limits
+
+The executed scenario uses **1,000 particles per member**, **172 simulated hours**, and a **16-hour release at 250 m³/h (4,000 m³ total)**. Parameter sampling uses seed 42; member `i` uses OpenOil seed `42 + i`. The first eight members are shared across all three ensemble sizes, and the first sixteen are shared by the 16- and 32-member variants.
+
+Wind and current are synthetic, spatially and temporally constant within each member. The coastline mask and oil-weathering model are real, but these outputs are **not an operational forecast or response recommendation**. These are measured computations, not simulated workflow durations. The supplied notebook introduction describes different scenario values; this implementation follows its executable configuration.
+
+## Docker execution
+
+The image is published for **linux/amd64 and linux/arm64**. The 8- and 16-member runs use two CPU execution slots; the 32-member run uses four slots with 16 GiB of declared memory capacity. Consider these different resource profiles when comparing durations. The three full experiments were scheduled serially on the homeserver: **8 → 16 → 32**, with terminal status and scientific output validation required before the next run starts.
+
+Use the source bundle linked in the Hub widget for the Dockerfile, locked Python dependencies, workflow YAML, local environment, scope, topology and validator. Pull the image before an offline execution; no hosted API, cloud account or runtime internet connection is required.
+
+## Validated result images
+
+![Ensemble probability map for 16 members](/showcase/results/openoil-ensemble-16/mapa_probabilidade.png)
+
+![Oil mass balance, coast arrival and observed member timeline for 16 members](/showcase/results/openoil-ensemble-16/resumo_workflow.png)
+
+![Actual selected OpenOil member animation for 16 members](/showcase/results/openoil-ensemble-16/animacao.gif)
+
+The animation shows the member with the highest final stranded-particle fraction, choosing the first member when tied. Probability is the fraction of ensemble members whose recorded oil positions visited each cell; it is not a calibrated posterior probability.
+
+## Data and validation
+
+Download all member NetCDF trajectories, the gridded probability NetCDF, mass-balance and coast-arrival CSVs, per-stage measured profiles, PNGs, GIF, checksums and native AkôFlow execution capture from the Hub. Validation checks time axes, particle counts, finite nonnegative oil mass, post-release mass conservation within 1%, probability bounds/counts, decoded PNGs and a multi-frame GIF.
+
+Related variants: [8 members](/docs/showcase/scientific-workflows/openoil-ensemble-08) · [16 members](/docs/showcase/scientific-workflows/openoil-ensemble-16) · [32 members](/docs/showcase/scientific-workflows/openoil-ensemble-32).

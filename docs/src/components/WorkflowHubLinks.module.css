@@ -1,0 +1,64 @@
+.panel {
+  margin: 2rem 0;
+  padding: 1.2rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 14px;
+  background: var(--ifm-background-surface-color);
+}
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.header h2 {
+  margin: 0.4rem 0 0.6rem;
+  font-size: 1.45rem;
+}
+.header p {
+  margin-bottom: 1rem;
+  color: var(--ifm-color-emphasis-700);
+}
+.eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+}
+.open {
+  white-space: nowrap;
+  border: 1px solid var(--ifm-color-emphasis-400);
+  border-radius: 8px;
+  padding: 0.55rem 0.8rem;
+  color: var(--ifm-font-color-base);
+}
+.widget {
+  display: block;
+  width: 100%;
+  height: 850px;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 10px;
+  background: #ffffff;
+}
+.downloads {
+  margin-top: 1rem;
+}
+.downloads summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.downloads nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.2rem;
+}
+@media (max-width: 650px) {
+  .panel {
+    padding: 0.7rem;
+  }
+  .header {
+    flex-direction: column;
+  }
+  .widget {
+    height: 1000px;
+  }
+}

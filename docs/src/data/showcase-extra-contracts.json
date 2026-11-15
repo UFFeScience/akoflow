@@ -11,18 +11,6 @@
     },
     "description": "Produce a versioned text fixture, transfer its declared file dependency and verify the exact bytes in a consumer activity. Deployment profiles and measured execution details are documented separately."
   },
-  "/docs/showcase/hybrid-cloud-transfer#kind-profile": {
-    "title": "Distributed File Handoff",
-    "examplePath": "connections/hybrid-kind-cloud-profile",
-    "localProfile": "Run the original two-activity producer/consumer fixture on local Docker; verify actual file handoff and receipt contents. GCP/Kind placements remain separate optional reference configurations and are not measured by this local profile.",
-    "artifacts": ["handoff.txt", "receipt.txt"],
-    "screenshots": {},
-    "originalYAML": "real/hybrid-cloud-transfer/kind-cloud-workflow.yaml",
-    "resultImages": {
-      "Measured activity runtimes": "/showcase/results/hybrid-kind-cloud-profile/timing.svg"
-    },
-    "description": "Model a producer-to-consumer file handoff across execution environments, with content validation and a receipt. The included profiles separate reproducible computation from optional infrastructure placement."
-  },
   "/docs/showcase/scientific-workflows/montage-050": {
     "title": "Montage 050 — Astronomical Image Mosaicking",
     "examplePath": "scientific-workflows/montage-050",

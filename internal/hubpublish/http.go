@@ -87,15 +87,16 @@ func (m *Manager) serveCreate(w http.ResponseWriter, r *http.Request) {
 }
 func (m *Manager) servePreview(w http.ResponseWriter, r *http.Request) {
 	var input struct {
-		RunID         string `json:"runId"`
-		PublicationID string `json:"publicationId"`
-		Message       string `json:"message"`
+		RunID         string            `json:"runId"`
+		PublicationID string            `json:"publicationId"`
+		Message       string            `json:"message"`
+		Content       *ContentSelection `json:"content"`
 	}
 	if err := decodeRequest(w, r, &input); err != nil {
 		respond(w, nil, err)
 		return
 	}
-	value, err := m.Preview(r.Context(), input.RunID, input.PublicationID, input.Message)
+	value, err := m.Preview(r.Context(), input.RunID, input.PublicationID, input.Message, input.Content)
 	respond(w, value, err)
 }
 func (m *Manager) serveConfirm(w http.ResponseWriter, r *http.Request) {

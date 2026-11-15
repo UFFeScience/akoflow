@@ -16,7 +16,7 @@ func randomID() (string, error) {
 	}
 	return hex.EncodeToString(bytes[:]), nil
 }
-func (m *Manager) Preview(ctx context.Context, runID, publicationID, message string) (Preview, error) {
+func (m *Manager) Preview(ctx context.Context, runID, publicationID, message string, selections ...*ContentSelection) (Preview, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	var result Preview
@@ -30,6 +30,12 @@ func (m *Manager) Preview(ctx context.Context, runID, publicationID, message str
 	capture, err := m.capture(ctx, runID)
 	if err != nil {
 		return result, err
+	}
+	if len(selections) > 0 && selections[0] != nil {
+		capture, err = selectCapture(capture, *selections[0])
+		if err != nil {
+			return result, err
+		}
 	}
 	base := 0
 	for _, version := range destination.Versions {

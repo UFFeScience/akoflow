@@ -10,7 +10,13 @@ entered in Desktop.
 
 On a finished execution, select **Publish to Hub**. This action is also available
 in the workflow's selected result inspector. Choose an existing publication or
-explicitly create one. Publications default to private. Review the workflow YAML,
+explicitly create one. The new publication form generates an editable slug from
+the title and submits to the daemon API. Publications default to private.
+Select which optional sections to include: process logs, file references,
+activity metrics, and execution events. All four start unchecked. The workflow
+definition, scheduling context and execution summary are required. The daemon
+removes unchecked sections before requesting a preview from the Hub, then
+recomputes the bundle checksums. Review the workflow YAML,
 logs, file references, capture counts and version changes before confirming.
 Public destinations require an additional acknowledgement.
 

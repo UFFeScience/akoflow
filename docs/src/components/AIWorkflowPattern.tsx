@@ -1,4 +1,5 @@
 import WorkflowLocalRun from "./WorkflowLocalRun";
+import publications from "../data/showcase-hub.json";
 import WorkflowPatternDetails from "./WorkflowPatternDetails";
 import React from "react";
 import { findShowcase } from "../data/showcase-contracts";
@@ -37,7 +38,12 @@ export default function AIWorkflowPattern({
     );
   const contract = findShowcase(title);
   const examplePath = contract?.examplePath;
-  const exampleRepository = `https://github.com/UFFeScience/akoflow-examples/tree/${contract?.sourceCommit ?? "main"}/${examplePath}`;
+  const sourceRef = publications.some(
+    (item) => item.examplePath === examplePath,
+  )
+    ? "showcase-hub-v1"
+    : (contract?.sourceCommit ?? "main");
+  const exampleRepository = `https://github.com/UFFeScience/akoflow-examples/tree/${sourceRef}/${examplePath}`;
 
   return (
     <>

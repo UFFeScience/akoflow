@@ -1,5 +1,5 @@
 ---
-title: "Montage: project in GCP, finish locally"
+title: "Montage 050 — GCP execution profile"
 description: A 58-activity real Montage workflow with GCP e2-medium projection and local processing.
 ---
 
@@ -7,7 +7,7 @@ import InterfaceApiTabs from "@site/src/components/InterfaceApiTabs";
 import WorkflowHubLinks from "@site/src/components/WorkflowHubLinks";
 import { FileList, WorkflowDag } from "@site/src/components/WorkflowShowcase";
 
-# Montage: project on four GCP machines, finish locally
+# Montage 050 — GCP execution profile
 
 <WorkflowDag
   title="Montage across four GCP machines and local execution"
@@ -29,11 +29,13 @@ transfers the projected FITS outputs into the local activities' workspaces.
 The workflow pins the published image by digest, and the bundle registers it
 as an artifact with an additional SIF build for Apptainer environments.
 
-## Import the portable local reference profile
+## One workflow, separate execution profiles
 
 <WorkflowHubLinks examplePath="connections/montage-cloud-local-profile" />
 
-The published local profile preserves all 58 activities, the original twelve FITS inputs, the executable image contents and 138 handoffs. Its measured capture is explicitly shared with the identical Montage 050 local workload. It is not a second independent experiment and does not validate the original four-worker GCP placement. The original cloud configuration is retained as historical version 1; the validated local reference profile is version 2.
+Use the [single Montage workflow publication](https://hub.akoflow.com/o/akoflow/scientific-workflows-montage-050) and its [workflow overview](/docs/showcase/scientific-workflows/montage-050). This page documents the optional **GCP execution profile**, not another workflow publication.
+
+The measured Hub result is the **local Docker run: 58/58 activities completed**. The GCP placement below is a configuration reference and was **not executed in this validation**. It has no new measured GCP timing or cost result. Previous links and immutable version URIs remain compatible; the former standalone card has been consolidated into the Montage publication.
 
 The following image is an actual output from the completed local reference run:
 

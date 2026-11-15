@@ -1,6 +1,6 @@
 {
   "/docs/showcase/hybrid-cloud-transfer#local-profile": {
-    "title": "Hybrid local to GCP — portable local profile",
+    "title": "Producer–Consumer Data Transfer",
     "examplePath": "connections/hybrid-local-cloud-profile",
     "localProfile": "Run the original two-activity producer/consumer fixture on local Docker; verify actual file handoff and receipt contents. GCP/Kind placements remain separate optional reference configurations and are not measured by this local profile.",
     "artifacts": [
@@ -11,10 +11,11 @@
     "originalYAML": "real/hybrid-cloud-transfer/local-cloud-workflow.yaml",
     "resultImages": {
       "Measured activity runtimes": "/showcase/results/hybrid-local-cloud-profile/timing.svg"
-    }
+    },
+    "description": "Produce a versioned text fixture, transfer its declared file dependency and verify the exact bytes in a consumer activity. Deployment profiles and measured execution details are documented separately."
   },
   "/docs/showcase/hybrid-cloud-transfer#kind-profile": {
-    "title": "Hybrid kind to GCP — portable local profile",
+    "title": "Distributed File Handoff",
     "examplePath": "connections/hybrid-kind-cloud-profile",
     "localProfile": "Run the original two-activity producer/consumer fixture on local Docker; verify actual file handoff and receipt contents. GCP/Kind placements remain separate optional reference configurations and are not measured by this local profile.",
     "artifacts": [
@@ -25,346 +26,11 @@
     "originalYAML": "real/hybrid-cloud-transfer/kind-cloud-workflow.yaml",
     "resultImages": {
       "Measured activity runtimes": "/showcase/results/hybrid-kind-cloud-profile/timing.svg"
-    }
-  },
-  "/docs/showcase/montage-cloud-local": {
-    "title": "Montage GCP/local — portable reference profile",
-    "examplePath": "connections/montage-cloud-local-profile",
-    "stages": [
-      [
-        "mprojectid0000001",
-        "mprojectid0000002",
-        "mprojectid0000003",
-        "mprojectid0000004",
-        "mprojectid0000020",
-        "mprojectid0000021",
-        "mprojectid0000022",
-        "mprojectid0000023",
-        "mprojectid0000039",
-        "mprojectid0000040",
-        "mprojectid0000041",
-        "mprojectid0000042"
-      ],
-      [
-        "mdifffitid0000005",
-        "mdifffitid0000006",
-        "mdifffitid0000007",
-        "mdifffitid0000008",
-        "mdifffitid0000009",
-        "mdifffitid0000010",
-        "mdifffitid0000024",
-        "mdifffitid0000025",
-        "mdifffitid0000026",
-        "mdifffitid0000027",
-        "mdifffitid0000028",
-        "mdifffitid0000029",
-        "mdifffitid0000043",
-        "mdifffitid0000044",
-        "mdifffitid0000045",
-        "mdifffitid0000046",
-        "mdifffitid0000047",
-        "mdifffitid0000048"
-      ],
-      [
-        "mconcatfitid0000011",
-        "mconcatfitid0000030",
-        "mconcatfitid0000049"
-      ],
-      [
-        "mbgmodelid0000012",
-        "mbgmodelid0000031",
-        "mbgmodelid0000050"
-      ],
-      [
-        "mbackgroundid0000013",
-        "mbackgroundid0000014",
-        "mbackgroundid0000015",
-        "mbackgroundid0000016",
-        "mbackgroundid0000032",
-        "mbackgroundid0000033",
-        "mbackgroundid0000034",
-        "mbackgroundid0000035",
-        "mbackgroundid0000051",
-        "mbackgroundid0000052",
-        "mbackgroundid0000053",
-        "mbackgroundid0000054"
-      ],
-      [
-        "mimgtblid0000017",
-        "mimgtblid0000036",
-        "mimgtblid0000055"
-      ],
-      [
-        "maddid0000018",
-        "maddid0000037",
-        "maddid0000056"
-      ],
-      [
-        "mviewerid0000019",
-        "mviewerid0000038",
-        "mviewerid0000057",
-        "mviewerid0000058"
-      ]
-    ],
-    "dependencies": {
-      "maddid0000018": [
-        "mbackgroundid0000013",
-        "mbackgroundid0000014",
-        "mbackgroundid0000015",
-        "mbackgroundid0000016",
-        "mimgtblid0000017"
-      ],
-      "maddid0000037": [
-        "mbackgroundid0000032",
-        "mbackgroundid0000033",
-        "mbackgroundid0000034",
-        "mbackgroundid0000035",
-        "mimgtblid0000036"
-      ],
-      "maddid0000056": [
-        "mbackgroundid0000051",
-        "mbackgroundid0000052",
-        "mbackgroundid0000053",
-        "mbackgroundid0000054",
-        "mimgtblid0000055"
-      ],
-      "mbackgroundid0000013": [
-        "mprojectid0000001",
-        "mbgmodelid0000012"
-      ],
-      "mbackgroundid0000014": [
-        "mprojectid0000002",
-        "mbgmodelid0000012"
-      ],
-      "mbackgroundid0000015": [
-        "mprojectid0000003",
-        "mbgmodelid0000012"
-      ],
-      "mbackgroundid0000016": [
-        "mprojectid0000004",
-        "mbgmodelid0000012"
-      ],
-      "mbackgroundid0000032": [
-        "mprojectid0000020",
-        "mbgmodelid0000031"
-      ],
-      "mbackgroundid0000033": [
-        "mprojectid0000021",
-        "mbgmodelid0000031"
-      ],
-      "mbackgroundid0000034": [
-        "mprojectid0000022",
-        "mbgmodelid0000031"
-      ],
-      "mbackgroundid0000035": [
-        "mprojectid0000023",
-        "mbgmodelid0000031"
-      ],
-      "mbackgroundid0000051": [
-        "mprojectid0000039",
-        "mbgmodelid0000050"
-      ],
-      "mbackgroundid0000052": [
-        "mprojectid0000040",
-        "mbgmodelid0000050"
-      ],
-      "mbackgroundid0000053": [
-        "mprojectid0000041",
-        "mbgmodelid0000050"
-      ],
-      "mbackgroundid0000054": [
-        "mprojectid0000042",
-        "mbgmodelid0000050"
-      ],
-      "mbgmodelid0000012": [
-        "mconcatfitid0000011"
-      ],
-      "mbgmodelid0000031": [
-        "mconcatfitid0000030"
-      ],
-      "mbgmodelid0000050": [
-        "mconcatfitid0000049"
-      ],
-      "mconcatfitid0000011": [
-        "mdifffitid0000005",
-        "mdifffitid0000006",
-        "mdifffitid0000007",
-        "mdifffitid0000008",
-        "mdifffitid0000009",
-        "mdifffitid0000010"
-      ],
-      "mconcatfitid0000030": [
-        "mdifffitid0000024",
-        "mdifffitid0000025",
-        "mdifffitid0000026",
-        "mdifffitid0000027",
-        "mdifffitid0000028",
-        "mdifffitid0000029"
-      ],
-      "mconcatfitid0000049": [
-        "mdifffitid0000043",
-        "mdifffitid0000044",
-        "mdifffitid0000045",
-        "mdifffitid0000046",
-        "mdifffitid0000047",
-        "mdifffitid0000048"
-      ],
-      "mdifffitid0000005": [
-        "mprojectid0000001",
-        "mprojectid0000002"
-      ],
-      "mdifffitid0000006": [
-        "mprojectid0000001",
-        "mprojectid0000003"
-      ],
-      "mdifffitid0000007": [
-        "mprojectid0000001",
-        "mprojectid0000004"
-      ],
-      "mdifffitid0000008": [
-        "mprojectid0000002",
-        "mprojectid0000003"
-      ],
-      "mdifffitid0000009": [
-        "mprojectid0000002",
-        "mprojectid0000004"
-      ],
-      "mdifffitid0000010": [
-        "mprojectid0000003",
-        "mprojectid0000004"
-      ],
-      "mdifffitid0000024": [
-        "mprojectid0000020",
-        "mprojectid0000021"
-      ],
-      "mdifffitid0000025": [
-        "mprojectid0000020",
-        "mprojectid0000022"
-      ],
-      "mdifffitid0000026": [
-        "mprojectid0000020",
-        "mprojectid0000023"
-      ],
-      "mdifffitid0000027": [
-        "mprojectid0000021",
-        "mprojectid0000022"
-      ],
-      "mdifffitid0000028": [
-        "mprojectid0000021",
-        "mprojectid0000023"
-      ],
-      "mdifffitid0000029": [
-        "mprojectid0000022",
-        "mprojectid0000023"
-      ],
-      "mdifffitid0000043": [
-        "mprojectid0000039",
-        "mprojectid0000040"
-      ],
-      "mdifffitid0000044": [
-        "mprojectid0000039",
-        "mprojectid0000041"
-      ],
-      "mdifffitid0000045": [
-        "mprojectid0000039",
-        "mprojectid0000042"
-      ],
-      "mdifffitid0000046": [
-        "mprojectid0000040",
-        "mprojectid0000041"
-      ],
-      "mdifffitid0000047": [
-        "mprojectid0000040",
-        "mprojectid0000042"
-      ],
-      "mdifffitid0000048": [
-        "mprojectid0000041",
-        "mprojectid0000042"
-      ],
-      "mimgtblid0000017": [
-        "mbackgroundid0000013",
-        "mbackgroundid0000014",
-        "mbackgroundid0000015",
-        "mbackgroundid0000016"
-      ],
-      "mimgtblid0000036": [
-        "mbackgroundid0000032",
-        "mbackgroundid0000033",
-        "mbackgroundid0000034",
-        "mbackgroundid0000035"
-      ],
-      "mimgtblid0000055": [
-        "mbackgroundid0000051",
-        "mbackgroundid0000052",
-        "mbackgroundid0000053",
-        "mbackgroundid0000054"
-      ],
-      "mprojectid0000001": [],
-      "mprojectid0000002": [],
-      "mprojectid0000003": [],
-      "mprojectid0000004": [],
-      "mprojectid0000020": [],
-      "mprojectid0000021": [],
-      "mprojectid0000022": [],
-      "mprojectid0000023": [],
-      "mprojectid0000039": [],
-      "mprojectid0000040": [],
-      "mprojectid0000041": [],
-      "mprojectid0000042": [],
-      "mviewerid0000019": [
-        "maddid0000018"
-      ],
-      "mviewerid0000038": [
-        "maddid0000037"
-      ],
-      "mviewerid0000057": [
-        "maddid0000056"
-      ],
-      "mviewerid0000058": [
-        "maddid0000018",
-        "maddid0000037",
-        "maddid0000056"
-      ]
     },
-    "validationMode": "local-workload",
-    "localProfile": "Execute the complete original 58-activity Montage DAG on local Docker. The reference run is shared with the identical Montage 050 local workload; four-worker GCP placement is preserved separately and is not claimed as locally measured.",
-    "sourceCommit": "d890c3171e3661890305b763b8fc3ede48bb61b4",
-    "requirements": [],
-    "artifacts": [
-      "1-mosaic.fits",
-      "2-mosaic.fits",
-      "3-mosaic.fits",
-      "1-mosaic.png",
-      "2-mosaic.png",
-      "3-mosaic.png",
-      "mosaic-color.png"
-    ],
-    "executionMode": "daemon-local-docker",
-    "validationStatus": "running",
-    "screenshots": {
-      "workflow": "/showcase/evidence/scientific-workflows/montage-050/workflow.png"
-    },
-    "daemon": {
-      "activityCount": 58,
-      "completedActivityCount": 0,
-      "image": "ghcr.io/uffescience/akoflow-examples/montage-050-local:local-e93f234c8783ea13",
-      "imageId": "sha256:e93f234c8783ea13da8ec0912c8efdef8a1955787635eed6a1e969e367051d2f",
-      "observedAt": "2026-10-20T19:31:09.497Z",
-      "planId": "montage-050-local-local-4f5b7d857b-manual-plan-20261020t193048.863696000",
-      "runId": "montage-050-local-local-4f5b7d857b-run-20261020t193048.874693000",
-      "status": "running",
-      "workflowId": "montage-050-local-local-4f5b7d857b"
-    },
-    "originalYAML": "real/montage-cloud-local/workflow.json",
-    "resultImages": {
-      "mosaic-color.png": "/showcase/results/montage-050/mosaic-color.png",
-      "1-mosaic.png": "/showcase/results/montage-050/1-mosaic.png",
-      "2-mosaic.png": "/showcase/results/montage-050/2-mosaic.png",
-      "3-mosaic.png": "/showcase/results/montage-050/3-mosaic.png"
-    }
+    "description": "Model a producer-to-consumer file handoff across execution environments, with content validation and a receipt. The included profiles separate reproducible computation from optional infrastructure placement."
   },
   "/docs/showcase/scientific-workflows/montage-050": {
-    "title": "Montage 050 locally",
+    "title": "Montage 050 — Astronomical Image Mosaicking",
     "examplePath": "scientific-workflows/montage-050",
     "stages": [
       [
@@ -696,7 +362,8 @@
       "1-mosaic.png": "/showcase/results/montage-050/1-mosaic.png",
       "2-mosaic.png": "/showcase/results/montage-050/2-mosaic.png",
       "3-mosaic.png": "/showcase/results/montage-050/3-mosaic.png"
-    }
+    },
+    "description": "Construct three-band astronomical mosaics from twelve FITS observations using a 58-activity projection, background correction and image-composition workflow. Execution profiles and measured evidence are documented separately."
   },
   "/docs/showcase/scientific-workflows/openoil-ensemble-08": {
     "title": "OpenOil ensemble — 8 members",

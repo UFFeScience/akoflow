@@ -217,7 +217,7 @@ const sections: Section[] = [
         ],
       },
       {
-        title: "Local RAG Factory",
+        title: "RAG Pipeline",
         href: "/docs/showcase/ai/generative-ai/local-rag-factory",
         stages: ["ingest", "chunk", "index", "retrieve", "answer", "evaluate"],
       },
@@ -305,7 +305,7 @@ const sections: Section[] = [
       "Executable simulation, analysis, surrogate-model, and experiment-feedback workflows.",
     examples: [
       {
-        title: "Montage 050 locally",
+        title: "Montage 050 — Astronomical Image Mosaicking",
         href: "/docs/showcase/scientific-workflows/montage-050",
         stages: [],
       },

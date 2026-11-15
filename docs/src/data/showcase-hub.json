@@ -75,21 +75,6 @@
     "yamlHash": "9ca4425e39b7728e3764743ce770d6b79c46a623c9c2f9328e65c95bd8dd9ac0"
   },
   {
-    "activityCount": 58,
-    "examplePath": "connections/montage-cloud-local-profile",
-    "experimentId": "bbf224a9-b259-48a8-9638-f13ff1fec3b4",
-    "image": "ghcr.io/uffescience/akoflow-examples/montage-050-local@sha256:26b060b83b990557ea86ab40503cc8f17ab6016b5973e7e6f9201100a96440c9",
-    "publicationId": "bae34aba-fbc6-423f-8921-6e4dc5ea5d4a",
-    "resultCount": 1,
-    "route": "/docs/showcase/montage-cloud-local",
-    "runId": "montage-050-local-local-79df14ee2e-run-20261115t052715.750879194",
-    "uri": "akoflow://hub/publications/bae34aba-fbc6-423f-8921-6e4dc5ea5d4a/versions/2",
-    "url": "https://hub.akoflow.com/o/akoflow/connections-montage-cloud-local-profile",
-    "version": 2,
-    "versionId": "f0c5beca-e25f-4961-8ebf-cf41e9341d65",
-    "yamlHash": "ae50d66baf895d4a079774b57a577ac301a45633f94add4bb80bfee74980c06b"
-  },
-  {
     "activityCount": 5,
     "examplePath": "document-ai/document-intelligence",
     "experimentId": "54ec1072-9abf-410b-8f11-553a16f32340",

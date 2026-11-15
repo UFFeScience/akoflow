@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -18,6 +20,9 @@ type WorkflowDefinition struct {
 }
 
 func (m *Manager) WorkflowDefinition(ctx context.Context, uri string) (WorkflowDefinition, error) {
+	if strings.HasPrefix(strings.TrimSpace(uri), "/") {
+		return m.workflowReference(ctx, uri)
+	}
 	id, version, err := parseWorkflowURI(uri)
 	if err != nil {
 		return WorkflowDefinition{}, err
@@ -29,12 +34,12 @@ func (m *Manager) WorkflowDefinition(ctx context.Context, uri string) (WorkflowD
 		return WorkflowDefinition{}, failure(503, "hub_not_configured", "AkôFlow Hub is not configured for this installation.")
 	}
 	path := fmt.Sprintf("/publications/%s/versions/%d/yaml", id, version)
-	data, status, err := m.readWorkflowYAML(ctx, origin+"/api/v1"+path, "")
+	data, status, _, err := m.readWorkflowYAML(ctx, origin+"/api/v1"+path, "")
 	if err != nil {
 		return WorkflowDefinition{}, err
 	}
 	if status == 404 && token != "" {
-		data, status, err = m.readWorkflowYAML(ctx, origin+"/api/v1/desktop"+path, token)
+		data, status, _, err = m.readWorkflowYAML(ctx, origin+"/api/v1/desktop"+path, token)
 	}
 	if err != nil {
 		return WorkflowDefinition{}, err
@@ -48,10 +53,10 @@ func (m *Manager) WorkflowDefinition(ctx context.Context, uri string) (WorkflowD
 	hash := sha256.Sum256(data)
 	return WorkflowDefinition{URI: fmt.Sprintf("akoflow://hub/publications/%s/versions/%d", id, version), Version: version, YAML: string(data), Hash: hex.EncodeToString(hash[:])}, nil
 }
-func (m *Manager) readWorkflowYAML(ctx context.Context, address, token string) ([]byte, int, error) {
+func (m *Manager) readWorkflowYAML(ctx context.Context, address, token string) ([]byte, int, int, error) {
 	request, err := http.NewRequestWithContext(ctx, "GET", address, nil)
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, 0, err
 	}
 	request.Header.Set("Accept", "application/yaml")
 	if token != "" {
@@ -64,12 +69,13 @@ func (m *Manager) readWorkflowYAML(ctx context.Context, address, token string) (
 	client.CheckRedirect = func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }
 	response, err := client.Do(request)
 	if err != nil {
-		return nil, 0, failure(502, "hub_unavailable", "AkôFlow Hub cannot be reached. Try again.")
+		return nil, 0, 0, failure(502, "hub_unavailable", "AkôFlow Hub cannot be reached. Try again.")
 	}
 	defer response.Body.Close()
 	data, err := io.ReadAll(io.LimitReader(response.Body, 262145))
 	if err != nil || len(data) > 262144 || (response.StatusCode == 200 && len(data) == 0) {
-		return nil, 0, failure(502, "hub_response", "The workflow YAML is unavailable or exceeds the definition size limit.")
+		return nil, 0, 0, failure(502, "hub_response", "The workflow YAML is unavailable or exceeds the definition size limit.")
 	}
-	return data, response.StatusCode, nil
+	version, _ := strconv.Atoi(response.Header.Get("X-Akoflow-Workflow-Version"))
+	return data, response.StatusCode, version, nil
 }

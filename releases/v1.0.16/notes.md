@@ -27,12 +27,70 @@ The independently deployed Hub presents a large workflow DAG, immutable version 
 - Register browsable activity workspace storage and keep unsupported runtimes out of local browsing.
 - Enable the interactive console in the packaged Desktop runtime.
 
-## Screenshots
+## How it works: connect Desktop to Hub
 
-![Published workflow DAG](https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.16/releases/v1.0.16/screenshots/workflow.png)
+1. Open the Hub connection controls in Desktop and start the connection.
+2. In the browser, sign in to Hub and verify your email if requested.
+3. Confirm that the displayed device code matches Desktop, choose the destination project, and authorize access.
+4. Return to Desktop. The daemon stores the connection credentials and uses the selected Hub project for publishing.
 
-![Execution results](https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.16/releases/v1.0.16/screenshots/results.png)
+The packaged runtime points to `https://hub.akoflow.com`. A connection does not publish an execution automatically: publication still requires a review and confirmation.
 
-![Recorded execution navigation](https://raw.githubusercontent.com/UFFeScience/akoflow/v1.0.16/releases/v1.0.16/screenshots/execution.png)
+## Walkthrough: publish a recorded execution
 
-These captures show the local integration environment. The Hub is deployed separately from the Desktop and daemon release.
+Open an execution in Desktop and choose **Publish to Hub**. Select an existing publication or choose **New publication**.
+
+### 1. Describe the publication
+
+Enter a title, review the generated slug, and choose its visibility. You can edit the slug independently; **Reset** generates it again from the current title. Add a description and README to explain the experiment and how to interpret it.
+
+![Desktop publication details](screenshots/desktop-publication.png)
+
+### 2. Choose the information to share
+
+Select the available captured sections before requesting the preview. The workflow definition and execution identity provide the baseline; optional sections let you control the observations included in the capture. File references identify source paths and locations; they do not upload the referenced datasets or binaries.
+
+![Desktop content selection](screenshots/desktop-content.png)
+
+### 3. Review before publishing
+
+Choose **Review result** to inspect the prepared capture and destination. Check the YAML and selected sections, then choose **Publish reviewed result**. Public publishing requires its explicit visibility acknowledgement. The result links back to the publication after confirmation.
+
+![Desktop publication review](screenshots/desktop-review.png)
+
+The three Desktop screenshots above use the actual interface with controlled demonstration API responses. They illustrate the review flow; they are not evidence of delivery to the public Hub.
+
+## Walkthrough: inspect a publication
+
+### Start with the workflow graph
+
+The DAG is the main entry point. Pan and zoom to inspect the workflow, select an activity for its definition, or use the activity search. The README explains the experiment alongside immutable workflow versions.
+
+![Published workflow DAG](screenshots/workflow.png)
+
+### Open an execution from Results
+
+Use **Results** to locate recorded executions. Filter by environment, algorithm, mode or status, or search for an execution identifier. Click the execution ID or **Open execution** to inspect the corresponding capture. Recorded duration and cost describe the exported observations.
+
+![Execution results](screenshots/results.png)
+
+### Navigate captured details
+
+The fixed execution menu groups overview and activities, resources and plan-versus-execution timing, and workspaces, logs and events. Sections remain stacked; the highlighted menu item follows the visible section as you scroll. Each execution also has a directly addressable URL.
+
+![Recorded execution navigation](screenshots/execution.png)
+
+Unavailable observations remain unavailable: publishing does not reconstruct missing logs, retrieve dataset contents, or rerun the workflow. The Hub is deployed separately from the Desktop and daemon release. Hub screenshots show the local integration environment.
+
+## Walkthrough: reuse a definition in Desktop
+
+1. On a Hub publication, select **Latest** or a specific version and choose **Copy URI**.
+2. In Desktop workflow creation, choose **Import from Hub** and paste the URI.
+3. Choose **Load definition** and review the resolved YAML.
+4. Optionally enter a local workflow name to create a separate copy, then confirm the import.
+
+For example, `akoflow::ovvesley/story-signal-study:latest` follows the latest published definition. Use the version selector to obtain a fixed reference when reproducibility matters. Importing a definition does not import execution history, provision machines, or run activities. If the local name already exists, Desktop offers the existing workflow and lets you choose another name.
+
+## Release validation status
+
+Desktop production build, unit and packaging-contract tests, and targeted daemon Hub/import/HTTP tests passed locally. The tagged GitHub packaging run stopped because the generated MCP catalog needs refreshing. Public Hub connectivity also awaits DNS resolution from the installation. This release remains a draft and has not been validated as a publicly reachable deployment.

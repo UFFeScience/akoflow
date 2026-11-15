@@ -7,8 +7,9 @@ import (
 )
 
 type ConnectionHealth struct {
-	Healthy bool
-	Message string
+	Capacity *domain.LocalCapacity
+	Healthy  bool
+	Message  string
 }
 
 type ConnectionProber interface {

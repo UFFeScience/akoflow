@@ -23,5 +23,6 @@ func (p *ConnectionProber) Probe(ctx context.Context, _ domain.EnvironmentConnec
 	if _, err := p.executor.Run(ctx, "/bin/sh", []string{"-c", "true"}, nil); err != nil {
 		return ports.ConnectionHealth{Message: fmt.Sprintf("local execution target is unavailable: %v", err)}
 	}
-	return ports.ConnectionHealth{Healthy: true, Message: "local engine container accepted an execution probe"}
+	capacity, _ := detectCapacity(ctx, p.executor)
+	return ports.ConnectionHealth{Healthy: true, Capacity: capacity, Message: "local engine container accepted an execution probe"}
 }

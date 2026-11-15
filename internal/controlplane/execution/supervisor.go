@@ -359,7 +359,7 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 		admitted := plannedReadyActivities(
 			ready, assignments, pendingAllocations,
 		)
-		admitted = restrictedCapacityReady(admitted, assignments, resources, tasks, pendingAllocations)
+		admitted = capacityReadyActivities(admitted, assignments, resources, activities, tasks, pendingAllocations)
 		if err := s.queueReadyActivities(ctx, request, ready, assignments, tasks, attempts); err != nil {
 			return domain.ExecutionTrace{}, err
 		}
@@ -1492,7 +1492,7 @@ func validateRequest(request ports.ExecutionRequest) error {
 	lanes := make(map[string]map[string]bool)
 	for _, assignment := range request.Plan.Assignments {
 		resource := resources[assignment.ResourceID]
-		if resource.ExecutionTarget != domain.ExecutionTargetBatch && resource.CPUCapacity > 0 && resource.CPUCapacity < float64(resource.CPUCores) && assignment.CoreID != "" {
+		if resource.ExecutionTarget != domain.ExecutionTargetBatch && resource.CPUCapacity > 0 && (resource.HasLocalAllocation() || resource.CPUCapacity < float64(resource.CPUCores)) && assignment.CoreID != "" {
 			if lanes[resource.ID] == nil {
 				lanes[resource.ID] = make(map[string]bool)
 			}

@@ -135,6 +135,13 @@ func (a *Adapter) startContainer(ctx context.Context, execution domain.ActivityE
 	} else {
 		args = append(args, "--mount", "type=bind,source="+root+",target="+root)
 	}
+	if execution.Resource.HasLocalAllocation() {
+		cpu, memory := execution.Resource.LocalActivityBudget(activity.Resources.CPU, activity.Resources.MemoryBytes)
+		if cpu > execution.Resource.CPUCapacity || memory > execution.Resource.MemoryBytes {
+			return domain.ActivityHandle{}, fmt.Errorf("activity requirements exceed the local environment allocation")
+		}
+		args = append(args, "--cpus", strconv.FormatFloat(cpu, 'f', -1, 64), "--memory", strconv.FormatInt(memory, 10), "--memory-swap", strconv.FormatInt(memory, 10))
+	}
 	args = append(args, "--workdir", root)
 	for key, value := range activity.Command.Environment {
 		args = append(args, "--env", key+"="+value)

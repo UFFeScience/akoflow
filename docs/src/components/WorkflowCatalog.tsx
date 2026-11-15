@@ -11,6 +11,9 @@ type Section = { title: string; description: string; examples: Example[] };
 const contracts = contractData as Record<string, { stages: Stage[] }>;
 
 const sections: Section[] = [
+{title:"Oil spill ensembles",description:"Real OpenOil Docker computations with nested seeded ensembles, synthetic forcing and measured homeserver results.",examples:[{title:"OpenOil ensemble — 8 members",href:"/docs/showcase/scientific-workflows/openoil-ensemble-08",stages:["Prepare scenario",["Independent ensemble members"],"Aggregate",["Map","Summary","Animation"],"Validate outputs"]},
+{title:"OpenOil ensemble — 16 members",href:"/docs/showcase/scientific-workflows/openoil-ensemble-16",stages:["Prepare scenario",["Independent ensemble members"],"Aggregate",["Map","Summary","Animation"],"Validate outputs"]},
+{title:"OpenOil ensemble — 32 members",href:"/docs/showcase/scientific-workflows/openoil-ensemble-32",stages:["Prepare scenario",["Independent ensemble members"],"Aggregate",["Map","Summary","Animation"],"Validate outputs"]}]},
   {
     title: "Machine Learning",
     description:

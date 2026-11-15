@@ -47,17 +47,9 @@ func (r *Repository) CatalogArtifacts(ctx context.Context, handle domain.Activit
 		storageType = domain.StorageType(configured)
 		locationStatus = domain.DataLocationAvailable
 	}
-	storageID := stableID("storage", environmentVersionID, handle.ResourceID, string(storageType))
-	configuredStorageID, _ := handle.Metadata["artifactStorageResourceId"].(string)
-	if configuredStorageID != "" {
-		storageID = configuredStorageID
-	} else if _, err := tx.ExecContext(ctx, `INSERT INTO storage_resources (
-		id, environment_version_id, name, type, endpoint, shared, configuration, metadata
-	) VALUES (?, ?, ?, ?, ?, ?, '{}', '{"managedBy":"akoflow"}')
-	ON CONFLICT(id) DO NOTHING`, storageID, environmentVersionID,
-		"workspace-"+handle.ResourceID+"-"+string(storageType), storageType, handle.Artifacts.Root,
-		storageType == domain.StoragePVC || storageType == domain.StorageNFS); err != nil {
-		return fmt.Errorf("register workspace storage: %w", err)
+	storageID, err := registerWorkspaceStorage(ctx, tx, handle, environmentVersionID, storageType)
+	if err != nil {
+		return err
 	}
 	for _, artifact := range handle.Artifacts.Files {
 		if artifact.Change == domain.ArtifactDeleted {
@@ -91,7 +83,8 @@ func (r *Repository) CatalogArtifacts(ctx context.Context, handle domain.Activit
 			execution_run_id, uri, available_at, status, metadata
 		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 		ON CONFLICT(data_object_instance_id, uri) DO UPDATE SET
-			status=excluded.status, available_at=excluded.available_at`, locationID, instanceID,
+			status=excluded.status, available_at=excluded.available_at,
+			storage_resource_id=excluded.storage_resource_id`, locationID, instanceID,
 			storageID, handle.ResourceID, handle.RunID, locationURI, handle.FinishedAt,
 			locationStatus, locationMetadata(locationStatus)); err != nil {
 			return fmt.Errorf("register data location: %w", err)

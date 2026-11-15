@@ -415,7 +415,7 @@ func (h *Handler) TestEnvironmentConnection(w http.ResponseWriter, r *http.Reque
 		return
 	}
 	health := h.connectionTest(r.Context(), connection)
-	writeJSON(w, http.StatusOK, map[string]any{"healthy": health.Healthy, "message": health.Message})
+	writeJSON(w, http.StatusOK, map[string]any{"healthy": health.Healthy, "message": health.Message, "capacity": health.Capacity})
 }
 
 func (h *Handler) FactoryReset(w http.ResponseWriter, r *http.Request) {
@@ -1651,6 +1651,10 @@ func (h *Handler) CreateEnvironment(w http.ResponseWriter, r *http.Request) {
 	if !decode(w, r, &definition) {
 		return
 	}
+	if err := h.validateLocalAllocation(r.Context(), &definition); err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
 	if err := h.environments.Create(r.Context(), definition); err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return
@@ -2318,6 +2322,10 @@ func (h *Handler) ReplaceEnvironment(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusUnprocessableEntity, fmt.Errorf("environment id must match the request path"))
 		return
 	}
+	if err := h.validateLocalAllocation(r.Context(), &definition); err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
 	if err := h.environments.Replace(r.Context(), definition); err != nil {
 		if err == sql.ErrNoRows {
 			writeError(w, http.StatusNotFound, fmt.Errorf("environment not found"))
@@ -2651,6 +2659,10 @@ func (h *Handler) GetPlan(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) CreateExecution(w http.ResponseWriter, r *http.Request) {
 	var request ports.ExecutionRequest
 	if !decode(w, r, &request) {
+		return
+	}
+	if err := h.resolveLocalExecutionAllocation(r.Context(), &request); err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
 		return
 	}
 	if err := h.resolveWorkspaceHomes(r.Context(), &request); err != nil {

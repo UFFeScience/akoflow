@@ -41,6 +41,14 @@ The states above mirror the persisted `environment.status` field. Planning and e
 
 Simulation creation collects a SimGrid platform model and can also define an execution host used by the simulation engine. It does not validate a remote SSH or Kubernetes endpoint.
 
+### Allocate local CPU and memory
+
+Both initial setup and **Connect environment → Local machine** detect capacity on the execution server. For container execution, detection uses the Docker device rather than the browser's computer. The form initially recommends whole CPUs within a 70% target (at least one CPU) and approximately 70% of RAM. CPU allocation starts at one; memory starts at 256 MiB, bounded by the detected device memory. The form shows the detected maximums and validates the allocation again on the server when saved.
+
+With one CPU, AkôFlow admits one activity at a time in that environment. An allocation of at least 85% of either detected CPU or memory shows a warning about device responsiveness and other services. Discovery records hardware observations without replacing the selected budget.
+
+The allocation is an environment scheduling budget, not an exclusive operating-system reservation. Local admission accounts for CPU and memory used by preparing and running activities in each execution. Docker activities receive CPU, memory, and swap limits; native processes use the scheduling budget without additional operating-system isolation. Separate environments and concurrent executions share the device, so their combined usage and other applications must also fit the host.
+
 ### Using the API
 
 Set the daemon address and token once:

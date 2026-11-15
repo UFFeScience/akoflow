@@ -47,6 +47,10 @@ type EnvironmentRuntime = environment.EnvironmentRuntime
 type RuntimeDriver = environment.RuntimeDriver
 type RuntimeMode = environment.RuntimeMode
 type ExecutionScope = environment.ExecutionScope
+type LocalCapacity = environment.LocalCapacity
+
+var NewLocalCapacity = environment.NewLocalCapacity
+
 type EnvironmentConnection = environment.EnvironmentConnection
 type ConnectionCheck = environment.ConnectionCheck
 type TransferConnector = environment.TransferConnector

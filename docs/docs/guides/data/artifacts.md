@@ -9,6 +9,14 @@ AkôFlow separates **scientific data** from **executable artifacts**. Files prod
 
 The Desktop is the easiest way to perform these operations. Every view described below uses the same HTTP API, so the API examples are suitable for scripts and integrations.
 
+## Preview and download generated files
+
+Open an execution's **Workspaces & data** graph and select a file. The panel checks its recorded copies before enabling **Preview** and **Download file**. Text and image previews are limited to 2 MiB. Files whose workspace was released remain in the execution history with their metadata; an inaccessible resource is reported separately from a file that was not preserved.
+
+When an activity publishes its file observations, AkôFlow automatically registers storage scoped to that workspace, including its browse root. Activities and runs on the same resource therefore keep independent storage roots. An explicitly selected storage resource keeps its existing configuration. Remote workspaces use their saved SSH connection or concrete cloud instance identity.
+
+A self-managed daemon must enable local disk browsing with `AKOFLOW_LOCAL_STORAGE_ROOT` before local previews or downloads are available. This is a daemon configuration set once, rather than a setting for every execution. Use the mounted workspace directory, for example `/akoflow/workspace`. Registration does not preserve deleted file contents or make an offline resource reachable.
+
 ## How artifacts and storage relate
 
 ```mermaid

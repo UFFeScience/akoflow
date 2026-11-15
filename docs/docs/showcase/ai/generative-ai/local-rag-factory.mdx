@@ -1,5 +1,5 @@
 ---
-title: Local RAG Factory
+title: RAG Pipeline
 description: Build and evaluate a network-free retrieval pipeline over a versioned local corpus.
 ---
 
@@ -12,12 +12,12 @@ import {
   WorkflowPatternDetails,
 } from "@site/src/components/WorkflowShowcase";
 
-# Local RAG Factory
+# RAG Pipeline
 
 The workflow normalizes a local Markdown corpus, creates chunks, builds a hashed TF-IDF index, retrieves evidence, generates extractive answers with citations, and evaluates grounding. Its deterministic implementation makes retrieval behavior inspectable before an optional Ollama adapter is introduced.
 
 <WorkflowDag
-  title="Local RAG Factory"
+  title="RAG Pipeline"
   stages={["ingest", "chunk", "index", "retrieve", "answer", "evaluate"]}
 />
 
@@ -41,6 +41,6 @@ The workflow normalizes a local Markdown corpus, creates chunks, builds a hashed
 <WorkflowLocalRun examplePath="generative-ai/local-rag" />
 
 <WorkflowExecutionEvidence
-  title="Local RAG Factory"
+  title="RAG Pipeline"
   examplePath="generative-ai/local-rag"
 />

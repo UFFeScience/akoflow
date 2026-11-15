@@ -285,7 +285,7 @@
     }
   },
   "/docs/showcase/ai/generative-ai/local-rag-factory": {
-    "title": "Local RAG Factory",
+    "title": "RAG Pipeline",
     "examplePath": "generative-ai/local-rag",
     "stages": [
       ["ingest"],
@@ -1313,7 +1313,7 @@
     }
   },
   "/docs/showcase/scientific-workflows/montage-050": {
-    "title": "Montage 050 locally",
+    "title": "Montage 050 — Astronomical Image Mosaicking",
     "examplePath": "scientific-workflows/montage-050",
     "stages": [
       [

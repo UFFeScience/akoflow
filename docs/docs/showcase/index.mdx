@@ -8,7 +8,7 @@ import WorkflowCatalog from "@site/src/components/WorkflowCatalog";
 
 # Showcases
 
-Explore 28 core executable workflows organized by technical domain, plus three portable profiles for the historical infrastructure showcases. Each page explains the workflow DAG, activity responsibilities, inputs, outputs, provenance, and execution considerations without embedding implementation code in the documentation.
+Explore 28 core executable workflows organized by technical domain, plus two data-transfer examples and optional deployment profiles. Each page explains the workflow DAG, activity responsibilities, inputs, outputs, provenance, and execution considerations without embedding implementation code in the documentation.
 
 The complete Dockerfiles, Python programs, generators, input fixtures, runners, and validators are maintained separately in [`UFFeScience/akoflow-examples`](https://github.com/UFFeScience/akoflow-examples). A single source-bundle link on each page connects the explanation to its versioned implementation.
 
@@ -34,8 +34,8 @@ Published showcase pages include an immutable import URI, the workflow YAML, an 
 
 The original infrastructure definitions remain available as historical Hub versions. Their portable local profiles execute the same computation and file-content checks on a local Docker host. These measurements do not verify GCP provisioning or Kubernetes placement.
 
-- [Hybrid local or Kind to GCP: local reproducibility profiles](/docs/showcase/hybrid-cloud-transfer).
-- [Montage GCP/local: shared local reference capture](/docs/showcase/montage-cloud-local).
+- [Data-transfer workflows and their execution profiles](/docs/showcase/hybrid-cloud-transfer).
+- [Montage 050 execution profiles: validated local run and optional GCP configuration](/docs/showcase/scientific-workflows/montage-050#execution-profiles).
 - [Download the publication and immutable import-URI manifest](/showcase/hub-publications.json).
 
 ## Validation model
@@ -44,6 +44,6 @@ Each page includes a copyable local command, its prerequisites, a precise descri
 
 The local profiles are deliberately small and explicit: for example, geometric images instead of CIFAR-10, a rank-one adapter on a tiny matrix instead of an LLM, TF-IDF retrieval instead of hosted embeddings, and a synthetic tone vocabulary instead of natural-speech recognition. GPU, edge, and infrastructure comparison profiles distinguish CPU measurements from declared placement assumptions. The training example uses the actual MLflow SDK and a local SQLite tracking store.
 
-Montage 050 is the full 58-activity scientific workflow. Its new homeserver execution completed all 58 activities; the three 1800×1800 FITS mosaics and four PNG previews passed their output validator. The historical GCP/local page explicitly shares this identical local reference capture rather than claiming a second independent or cloud execution.
+Montage 050 is the full 58-activity scientific workflow. Its new homeserver execution completed all 58 activities; the three 1800×1800 FITS mosaics and four PNG previews passed their output validator. The GCP deployment profile belongs to this same publication and is marked as an unexecuted reference configuration. The public catalog contains 30 distinct publications.
 
 [Read the historical standalone verification records](/showcase/validation/summary.json). Provider-specific execution on HPC, Kubernetes, or cloud infrastructure still requires the environment described by the corresponding infrastructure guide.

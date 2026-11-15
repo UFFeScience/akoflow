@@ -2360,9 +2360,15 @@ func (h *Handler) CreateWorkflow(w http.ResponseWriter, r *http.Request) {
 	if !decode(w, r, &request) {
 		return
 	}
+	if name := strings.TrimSpace(r.URL.Query().Get("name")); name != "" {
+		request.Name = name
+	}
 	definition, err := request.Domain()
 	if err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	if !h.checkWorkflowImportConflict(w, r, definition.ID) {
 		return
 	}
 	if err := h.workflows.Create(r.Context(), definition); err != nil {

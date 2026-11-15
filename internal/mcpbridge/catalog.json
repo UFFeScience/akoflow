@@ -4682,7 +4682,10 @@
         }
       },
       "type": "object"
-    }
+    },
+    "query": [
+      "name"
+    ]
   },
   {
     "name": "create_workflow_compat",
@@ -4973,7 +4976,10 @@
         }
       },
       "type": "object"
-    }
+    },
+    "query": [
+      "name"
+    ]
   },
   {
     "name": "delete_cloud_capacity_target",

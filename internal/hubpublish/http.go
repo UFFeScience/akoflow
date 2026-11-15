@@ -9,6 +9,7 @@ import (
 
 func (m *Manager) Handler() http.Handler {
 	mux := http.NewServeMux()
+	mux.HandleFunc("POST /akoflow-api/hub/workflow-definition/", m.serveWorkflowDefinition)
 	mux.HandleFunc("GET /akoflow-api/hub/status/", m.serveStatus)
 	mux.HandleFunc("PUT /akoflow-api/hub/settings/", m.serveSettings)
 	mux.HandleFunc("POST /akoflow-api/hub/authorization/", m.serveStart)

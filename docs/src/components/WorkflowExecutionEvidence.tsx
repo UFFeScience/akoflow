@@ -1,4 +1,5 @@
 import React from "react";
+import publications from "../data/showcase-hub.json";
 import useBaseUrl from "@docusaurus/useBaseUrl";
 import { findShowcase } from "../data/showcase-contracts";
 import ExpandableImage from "./ExpandableImage";
@@ -16,6 +17,9 @@ export default function WorkflowExecutionEvidence({
   const evidenceBase = useBaseUrl(`/showcase/validation/${examplePath}`);
   const graphImage = useBaseUrl(contract?.screenshots?.workflow ?? "");
   if (!contract) return null;
+  const publication = publications.find(
+    (item) => item.examplePath === examplePath,
+  );
   const complete = contract.validationStatus === "passed";
   const daemonComplete = contract.daemon?.status === "completed";
   const activities = contract.stages.flat();
@@ -24,7 +28,17 @@ export default function WorkflowExecutionEvidence({
   return (
     <section>
       <h2>Execution evidence</h2>
-      {daemonComplete ? (
+      {publication ? (
+        <p>
+          Latest validated Docker execution: {publication.activityCount} /{" "}
+          {publication.activityCount} activities completed.{" "}
+          <a href={`${publication.url}#publication-results`}>
+            Open the measured run, logs, metrics and output downloads in Hub
+          </a>
+          . The documentation screenshots below are historical reference
+          captures; they are separate from the latest Hub execution.
+        </p>
+      ) : daemonComplete ? (
         <p>
           Verified on local Docker: {contract.daemon?.completedActivityCount}/
           {contract.daemon?.activityCount} activities completed. These captures
@@ -49,7 +63,7 @@ export default function WorkflowExecutionEvidence({
       {contract.daemon && (
         <p>
           <a href={`${evidenceBase}/daemon-run.json`}>
-            Read the daemon execution record
+            Read the historical documentation execution record
           </a>
           {complete && (
             <>
@@ -70,7 +84,8 @@ export default function WorkflowExecutionEvidence({
             loading="lazy"
           />
           <figcaption>
-            The observed activity graph. Click to see the complete capture.
+            The reference activity graph from the documentation capture. Click
+            to see the complete image.
           </figcaption>
         </figure>
       )}
@@ -95,7 +110,7 @@ export default function WorkflowExecutionEvidence({
           />
         ))}
       </div>
-      {!complete && (
+      {!complete && !publication && (
         <p>
           <a href={`${evidenceBase}/image-contract.json`}>
             Pinned-image and 58-activity contract validation

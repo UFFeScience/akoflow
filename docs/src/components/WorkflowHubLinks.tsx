@@ -16,8 +16,12 @@ export default function WorkflowHubLinks({
 }: {
   examplePath: string;
 }) {
+  const canonicalPath =
+    examplePath === "connections/montage-cloud-local-profile"
+      ? "scientific-workflows/montage-050"
+      : examplePath;
   const publication = (publications as Publication[]).find(
-    (item) => item.examplePath === examplePath,
+    (item) => item.examplePath === canonicalPath,
   );
   if (!publication) return null;
   return (
@@ -44,7 +48,7 @@ export default function WorkflowHubLinks({
         . Configure the runtime prerequisites below before planning and
         executing it.{" "}
         <a
-          href={`https://github.com/UFFeScience/akoflow-examples/tree/showcase-hub-v1/${examplePath}`}
+          href={`https://github.com/UFFeScience/akoflow-examples/tree/showcase-hub-v1/${canonicalPath}`}
         >
           Open the versioned source bundle
         </a>

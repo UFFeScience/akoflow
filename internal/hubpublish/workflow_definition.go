@@ -20,7 +20,7 @@ type WorkflowDefinition struct {
 }
 
 func (m *Manager) WorkflowDefinition(ctx context.Context, uri string) (WorkflowDefinition, error) {
-	if strings.HasPrefix(strings.TrimSpace(uri), "/") {
+	if strings.HasPrefix(strings.TrimSpace(uri), "/") || strings.HasPrefix(strings.TrimSpace(uri), "akoflow::") {
 		return m.workflowReference(ctx, uri)
 	}
 	id, version, err := parseWorkflowURI(uri)

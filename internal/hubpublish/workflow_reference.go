@@ -14,8 +14,16 @@ var workflowReferencePattern = regexp.MustCompile(`^/(u|o)/[a-z0-9][a-z0-9_.-]{1
 
 func (m *Manager) workflowReference(ctx context.Context, reference string) (WorkflowDefinition, error) {
 	reference = strings.TrimSpace(reference)
+	if strings.HasPrefix(reference, "akoflow::") {
+		reference = strings.TrimPrefix(reference, "akoflow::")
+		if strings.HasPrefix(reference, "o/") {
+			reference = "/" + reference
+		} else {
+			reference = "/u/" + reference
+		}
+	}
 	if !workflowReferencePattern.MatchString(reference) {
-		return WorkflowDefinition{}, failure(422, "invalid_workflow_uri", "Use /u/owner/workflow:latest or /u/owner/workflow:v1.")
+		return WorkflowDefinition{}, failure(422, "invalid_workflow_uri", "Use akoflow::owner/workflow:latest or akoflow::owner/workflow:v1.")
 	}
 	m.mu.Lock()
 	origin, token := m.state.HubURL, m.state.AccessToken
@@ -39,5 +47,5 @@ func (m *Manager) workflowReference(ctx context.Context, reference string) (Work
 	}
 	hash := sha256.Sum256(data)
 	base, _, _ := strings.Cut(reference, ":")
-	return WorkflowDefinition{URI: base + ":v" + strconv.Itoa(version), Version: version, YAML: string(data), Hash: hex.EncodeToString(hash[:])}, nil
+	return WorkflowDefinition{URI: "akoflow::" + strings.TrimPrefix(strings.TrimPrefix(base, "/u/"), "/") + ":v" + strconv.Itoa(version), Version: version, YAML: string(data), Hash: hex.EncodeToString(hash[:])}, nil
 }

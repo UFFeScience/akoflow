@@ -22,13 +22,13 @@ func TestNamedReferencesResolveLatestOnEachLoadAndPinSpecificVersions(t *testing
 		w.Header().Set("X-Akoflow-Workflow-Version", fmt.Sprint(version))
 		fmt.Fprintf(w, "name: study-version-%d\n", version)
 	})
-	first, err := manager.WorkflowDefinition(context.Background(), "/u/ovvesley/story-signal-study:latest")
+	first, err := manager.WorkflowDefinition(context.Background(), "akoflow::ovvesley/story-signal-study:latest")
 	if err != nil || first.Version != 1 {
 		t.Fatal(err, first)
 	}
 	latest = 2
-	second, err := manager.WorkflowDefinition(context.Background(), "/u/ovvesley/story-signal-study:latest")
-	if err != nil || second.Version != 2 || second.URI != "/u/ovvesley/story-signal-study:v2" {
+	second, err := manager.WorkflowDefinition(context.Background(), "akoflow::ovvesley/story-signal-study:latest")
+	if err != nil || second.Version != 2 || second.URI != "akoflow::ovvesley/story-signal-study:v2" {
 		t.Fatal(err, second)
 	}
 	fixed, err := manager.WorkflowDefinition(context.Background(), "/u/ovvesley/story-signal-study:v1")

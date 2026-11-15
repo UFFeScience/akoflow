@@ -108,6 +108,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and optionally publish image
+        if: ${{ !contains(matrix.image, '@sha256:') }}
         uses: docker/build-push-action@v6
         with:
           context: ${{ matrix.category }}/${{ matrix.showcase }}

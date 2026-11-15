@@ -42,7 +42,13 @@ export default function WorkflowHubLinks({
           Download the exact workflow YAML (v{publication.version})
         </a>
         . Configure the runtime prerequisites below before planning and
-        executing it.
+        executing it.{" "}
+        <a
+          href={`https://github.com/UFFeScience/akoflow-examples/tree/showcase-hub-v1/${examplePath}`}
+        >
+          Open the versioned source bundle
+        </a>
+        .
       </p>
       <p>
         <a

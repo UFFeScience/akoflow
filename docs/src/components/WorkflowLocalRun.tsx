@@ -2,6 +2,7 @@ import React from "react";
 import WorkflowHubLinks from "./WorkflowHubLinks";
 import CodeBlock from "@theme/CodeBlock";
 import contracts from "../data/showcase-contracts.json";
+import publications from "../data/showcase-hub.json";
 
 type LocalContract = {
   examplePath: string;
@@ -25,12 +26,15 @@ export default function WorkflowLocalRun({
     examplePath === "rendering/blender-render-farm" ||
     examplePath.startsWith("scientific-workflows/");
   const longRunning = examplePath.startsWith("scientific-workflows/");
+  const sourceRef = publications.some(
+    (item) => item.examplePath === examplePath,
+  )
+    ? "showcase-hub-v1"
+    : contract.sourceCommit;
   const commands = [
     "git clone https://github.com/UFFeScience/akoflow-examples.git",
     "cd akoflow-examples",
-    ...(contract.sourceCommit
-      ? [`git checkout --detach ${contract.sourceCommit}`]
-      : []),
+    ...(sourceRef ? [`git checkout --detach ${sourceRef}`] : []),
     `cd ${examplePath}`,
     "./prepare.sh",
     "./run.sh",

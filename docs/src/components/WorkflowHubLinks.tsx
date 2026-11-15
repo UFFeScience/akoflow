@@ -23,7 +23,9 @@ export default function WorkflowHubLinks({
   const canonicalPath =
     examplePath === "connections/montage-cloud-local-profile"
       ? "scientific-workflows/montage-050"
-      : examplePath;
+      : examplePath === "connections/hybrid-kind-cloud-profile"
+        ? "connections/hybrid-local-cloud-profile"
+        : examplePath;
   const publication = (publications as Publication[]).find(
     (item) => item.examplePath === canonicalPath,
   );

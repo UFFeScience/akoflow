@@ -1,13 +1,15 @@
 ---
-title: Data Transfer Workflows — Execution Profiles
-description: Verify a real file transfer from a local host or Kind activity to an on-demand GCP worker.
+title: Producer–Consumer Data Transfer — Execution Profiles
+description: One producer–consumer workflow with measured Docker fixtures and optional GCP/Kind execution profiles.
 ---
 
 import InterfaceApiTabs from "@site/src/components/InterfaceApiTabs";
 import WorkflowHubLinks from "@site/src/components/WorkflowHubLinks";
 import { FileList, WorkflowDag } from "@site/src/components/WorkflowShowcase";
 
-# Data Transfer Workflows — Execution Profiles
+# Producer–Consumer Data Transfer — Execution Profiles
+
+This is **one producer–consumer workflow**. The two historical examples differ only in their fixture label and deployment references, not the computation or file-validation contract. The Hub preserves two independent **local Docker** measurements (2/2 activities each) under this one publication. Local/GCP and Kind/GCP are optional infrastructure profiles; neither cloud nor Kubernetes placement was executed in this validation.
 
 <WorkflowDag
   title="Cross-runtime handoff"
@@ -18,15 +20,36 @@ import { FileList, WorkflowDag } from "@site/src/components/WorkflowShowcase";
   ]}
 />
 
-These are two separate two-activity workflows. The producer writes `handoff.txt` either on the AkôFlow server host or in a Kind cluster. A cloud activity on an on-demand GCP worker checks the file's exact content and writes `receipt.txt`. This tests a real data dependency across runtimes, not merely a network estimate.
+These are infrastructure profiles of the same two-activity workflow. In these optional configurations, the producer writes `handoff.txt` either on the AkôFlow server host or in a Kind cluster. A cloud activity on an on-demand GCP worker checks the file's exact content and writes `receipt.txt`. These configurations exercise a data dependency across runtimes when executed with the required infrastructure; the published measurements below used local Docker.
 
 :::warning Cloud resources and cost
 Running this example provisions a GCP VM and may incur charges. The checked-in plans contain IDs from a specific test instance and a manual predicted value; they are not portable plans or calibrated forecasts. Review the project, network access, capacity target, and VM cleanup before submitting.
 :::
 
+## Execution profiles
+
+This is one producer–consumer workflow, with separate fixture and infrastructure profiles. Both measured captures execute the same two-activity contract on local Docker; the fixture label differs. Neither capture measures Kubernetes or GCP execution.
+
+| Profile                | Definition                                                                                                                                                               | What actually ran                                                    |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------- |
+| Local-origin fixture   | [Workflow v2](https://hub.akoflow.com/api/v1/publications/a057adf4-35da-4f7f-95c1-2a28651c66cd/versions/2/yaml)                                                          | Local Docker, **2/2 activities completed**, 1.382106 s               |
+| Cluster-origin fixture | [Workflow v3](https://hub.akoflow.com/api/v1/publications/a057adf4-35da-4f7f-95c1-2a28651c66cd/versions/3/yaml)                                                          | Local Docker, **2/2 activities completed**, 1.272317 s; not Kind/GCP |
+| Local → GCP placement  | [Original reference](https://github.com/UFFeScience/akoflow-examples/blob/bf4539082b4c8bcf97197046c251c6174d314e24/real/hybrid-cloud-transfer/local-cloud-workflow.yaml) | Configuration only; not executed in this validation                  |
+| Kind → GCP placement   | [Original reference](https://github.com/UFFeScience/akoflow-examples/blob/bf4539082b4c8bcf97197046c251c6174d314e24/real/hybrid-cloud-transfer/kind-cloud-workflow.yaml)  | Configuration only; not executed in this validation                  |
+
+### Cluster-origin fixture: measured local Docker run
+
+Run `hubv1-showcase-hybrid-kind-cloud-profile-local-f6b6e2337f-run-20261115t062828.129149837` completed **2/2 activities**. The fixture is `akoflow-kind-to-gcp`; the inherited receipt text `cloud consumed` does not imply cloud execution.
+
+[Native experiment capture](https://hub.akoflow.com/api/v1/publications/a057adf4-35da-4f7f-95c1-2a28651c66cd/experiments/087d9e8b-08cf-4454-83d8-94e46243d3d1) · [Validated output files](https://github.com/UFFeScience/akoflow-examples/releases/download/showcase-hub-v1/connections-hybrid-kind-cloud-profile-results.tar.gz) · [Companion environment and source](https://github.com/UFFeScience/akoflow-examples/tree/showcase-hub-v1/connections/hybrid-kind-cloud-profile)
+
+Import this measured fixture into Desktop with `akoflow://hub/publications/a057adf4-35da-4f7f-95c1-2a28651c66cd/versions/3`. Use v2 for the local-origin fixture. The publication's Results section retains both independent runs and their original identifiers.
+
+![Cluster-origin fixture measured activity runtimes](https://akoflow.com/showcase/results/hybrid-kind-cloud-profile/timing.svg)
+
 ## Portable local profiles
 
-The following published versions run the original producer/consumer byte checks in two Docker activities on the homeserver. They provide a local executable profile for the logical handoff. GCP VM provisioning, Kind scheduling and cross-cloud networking are **not** measured by these local captures. The original provider-specific definitions are preserved as version 1 in each publication; the measured local profile is version 2.
+The following published versions run the original producer/consumer byte checks in two Docker activities on the homeserver. They provide a local executable profile for the logical handoff. GCP VM provisioning, Kind scheduling and cross-cloud networking are **not** measured by these local captures. The original provider-specific definitions remain in the source bundle and historical versions. The canonical publication contains the measured local-origin fixture as v2 and the measured cluster-origin fixture as v3.
 
 ### Local producer profile {#local-profile}
 
@@ -34,7 +57,7 @@ The following published versions run the original producer/consumer byte checks 
 
 ### Kind-origin fixture profile {#kind-profile}
 
-<WorkflowHubLinks examplePath="connections/hybrid-kind-cloud-profile" />
+The cluster-origin fixture belongs to the same [data-transfer publication](https://hub.akoflow.com/o/akoflow/connections-hybrid-local-cloud-profile). Its separately recorded local Docker run and profile definition are documented there; it is not evidence of a Kind or GCP execution.
 
 The fixture text retains its original `local-to-gcp` / `kind-to-gcp` labels; those labels alone are not proof of cloud execution. Configure the original provider prerequisites below to perform a cloud-specific validation.
 

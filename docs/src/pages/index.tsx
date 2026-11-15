@@ -103,6 +103,9 @@ export default function Home(): React.JSX.Element {
           <Link to="/docs/getting-started" className={styles.btnPrimary}>
             Get Started
           </Link>
+          <Link href="https://hub.akoflow.com" className={styles.btnPrimary}>
+            Explore AkôFlow Hub
+          </Link>
         </div>
       </main>
     </Layout>

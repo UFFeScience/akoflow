@@ -224,6 +224,7 @@ const config: Config = {
         },
         { to: "/docs/changelog", position: "left", label: "Changelog" },
         { to: "/blog", position: "left", label: "Blog" },
+        { href: "https://hub.akoflow.com", position: "left", label: "Hub" },
         {
           href: "https://github.com/UFFeScience/akoflow",
           label: "GitHub",
@@ -259,6 +260,7 @@ const config: Config = {
         {
           title: "Community",
           items: [
+            { label: "AkôFlow Hub", href: "https://hub.akoflow.com" },
             {
               label: "GitHub",
               href: "https://github.com/UFFeScience/akoflow",

@@ -448,5 +448,39 @@
     "version": 1,
     "versionId": "0791e4a7-d5ea-4ebb-a1cb-e3545427950c",
     "yamlHash": "ae50d66baf895d4a079774b57a577ac301a45633f94add4bb80bfee74980c06b"
+  },
+  {
+    "activityCount": 14,
+    "examplePath": "scientific-workflows/openoil-ensemble-08",
+    "experimentId": "d20a815a-2c57-4a01-b774-4b7533421d41",
+    "image": "ghcr.io/uffescience/openoil-ensemble@sha256:267348059d11049d42458ab2e3a30cedb4efa143b619f60686d44525f1bba19a",
+    "publicationId": "0d02c2c1-da65-4a17-9919-a8cbcf703341",
+    "releaseTag": "openoil-ensemble-v1",
+    "resultCount": 1,
+    "route": "/docs/showcase/scientific-workflows/openoil-ensemble-08",
+    "runId": "oilv1-openoil-ensemble-08-local-6f5ac4d22a-run-20261115t161927.919327106",
+    "sourceRef": "1108f013b6bbe80897008c346d1a02069214f682",
+    "uri": "akoflow://hub/publications/0d02c2c1-da65-4a17-9919-a8cbcf703341/versions/1",
+    "url": "https://hub.akoflow.com/o/akoflow/scientific-workflows-openoil-ensemble-08",
+    "version": 1,
+    "versionId": "770cdc45-3c18-4ebb-8a79-ffca67906b76",
+    "yamlHash": "0ef0aa83a1d40e60ad831089c9a02939d81f8f96e6b0d2fb349ba076ce80d560"
+  },
+  {
+    "activityCount": 22,
+    "examplePath": "scientific-workflows/openoil-ensemble-16",
+    "experimentId": "56d3e162-9639-4da0-8bd0-4d44d84e9dea",
+    "image": "ghcr.io/uffescience/openoil-ensemble@sha256:267348059d11049d42458ab2e3a30cedb4efa143b619f60686d44525f1bba19a",
+    "publicationId": "9ffb35a3-5b3d-4655-8976-271e164876f7",
+    "releaseTag": "openoil-ensemble-v1",
+    "resultCount": 1,
+    "route": "/docs/showcase/scientific-workflows/openoil-ensemble-16",
+    "runId": "oilv1-openoil-ensemble-16-local-55de9dd488-run-20261115t162240.890267020",
+    "sourceRef": "1108f013b6bbe80897008c346d1a02069214f682",
+    "uri": "akoflow://hub/publications/9ffb35a3-5b3d-4655-8976-271e164876f7/versions/1",
+    "url": "https://hub.akoflow.com/o/akoflow/scientific-workflows-openoil-ensemble-16",
+    "version": 1,
+    "versionId": "c5059318-bb40-4903-8a06-c4521a78a04c",
+    "yamlHash": "16e5f49258610700cf6eb9d7ba85abba8d5b85fdec77f98f8db00d94dac4bca4"
   }
 ]

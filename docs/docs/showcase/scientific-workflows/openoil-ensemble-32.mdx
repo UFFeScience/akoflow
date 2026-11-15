@@ -19,7 +19,7 @@ Wind and current are synthetic, spatially and temporally constant within each me
 
 ## Docker execution
 
-The image is published for **linux/amd64 and linux/arm64**. Each run uses two CPU execution slots, so only two ensemble members run at once. The three full experiments were scheduled serially on the homeserver: **8 → 16 → 32**, with terminal status and scientific output validation required before the next run starts.
+The image is published for **linux/amd64 and linux/arm64**. The 8- and 16-member runs use two CPU execution slots; the 32-member run uses four slots with 16 GiB of declared memory capacity. Consider these different resource profiles when comparing durations. The three full experiments were scheduled serially on the homeserver: **8 → 16 → 32**, with terminal status and scientific output validation required before the next run starts.
 
 Use the source bundle linked in the Hub widget for the Dockerfile, locked Python dependencies, workflow YAML, local environment, scope, topology and validator. Pull the image before an offline execution; no hosted API, cloud account or runtime internet connection is required.
 
@@ -38,3 +38,7 @@ The animation shows the member with the highest final stranded-particle fraction
 Download all member NetCDF trajectories, the gridded probability NetCDF, mass-balance and coast-arrival CSVs, per-stage measured profiles, PNGs, GIF, checksums and native AkôFlow execution capture from the Hub. Validation checks time axes, particle counts, finite nonnegative oil mass, post-release mass conservation within 1%, probability bounds/counts, decoded PNGs and a multi-frame GIF.
 
 Related variants: [8 members](/docs/showcase/scientific-workflows/openoil-ensemble-08) · [16 members](/docs/showcase/scientific-workflows/openoil-ensemble-16) · [32 members](/docs/showcase/scientific-workflows/openoil-ensemble-32).
+
+## Natural model termination
+
+A member can finish before 172 hours after all of its particles strand. The raw NetCDF and GIF retain the actual simulated duration. Only the ensemble accounting series carries terminal mass pools forward onto the common hourly grid; no further model integration is claimed. Validation rejects early termination with any active, missing or unreleased particle.

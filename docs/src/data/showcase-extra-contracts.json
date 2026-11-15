@@ -482,7 +482,7 @@
   "/docs/showcase/scientific-workflows/openoil-ensemble-32": {
     "title": "OpenOil ensemble — 32 members",
     "examplePath": "scientific-workflows/openoil-ensemble-32",
-    "localProfile": "Real 32-member OpenDrift OpenOil ensemble, 1000 particles/member, 172 simulated hours, synthetic wind/current forcings; executed by native Docker activities on homeserver with two lanes.",
+    "localProfile": "Real 32-member OpenDrift OpenOil ensemble, 1000 particles/member, 172 simulated hours, synthetic wind/current forcings; executed by native Docker activities on homeserver with four lanes.",
     "artifacts": [
       "scenario.json",
       "parameters.json",

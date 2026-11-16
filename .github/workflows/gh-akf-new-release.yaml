@@ -176,11 +176,7 @@ jobs:
           - runner: macos-15
             command: npx electron-builder --mac --universal --publish never
             artifact: macos-universal
-            # Signing is opt-in. Do not pass a certificate value unless the
-            # repository has a valid exported signing identity; an invalid
-            # CSC_LINK otherwise makes an otherwise usable Desktop release
-            # fail while producing the universal macOS package.
-            signing: none
+            signing: macos
           - runner: windows-latest
             command: npx electron-builder --win --x64 --publish never --config.nsis.artifactName='Akoflow-Desktop-${version}-win-${arch}-setup.${ext}' --config.portable.artifactName='Akoflow-Desktop-${version}-win-${arch}-portable.${ext}'
             artifact: windows-x64
@@ -233,6 +229,24 @@ jobs:
       - run: npm version "${{ steps.version.outputs.value }}" --no-git-tag-version --allow-same-version
       - run: npm run build
 
+      - name: Configure macOS signing and notarization
+        if: runner.os == 'macOS'
+        shell: bash
+        env:
+          CSC_LINK: ${{ secrets.MACOS_CSC_LINK }}
+          APPLE_ID: ${{ secrets.MACOS_APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.MACOS_APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.MACOS_TEAM_ID }}
+        run: |
+          if [[ -f scripts/configure-macos-signing.cjs ]]; then
+            node scripts/configure-macos-signing.cjs
+          elif [[ -n "$CSC_LINK" ]]; then
+            echo "The frozen Desktop source predates verified macOS signing support." >&2
+            exit 1
+          else
+            echo "Legacy unsigned macOS source: automatic installation updates are unsupported."
+          fi
+
       - name: Package desktop application
         run: ${{ matrix.command }}
         env:
@@ -242,6 +256,18 @@ jobs:
           APPLE_ID: ${{ matrix.signing == 'macos' && secrets.MACOS_APPLE_ID || '' }}
           APPLE_APP_SPECIFIC_PASSWORD: ${{ matrix.signing == 'macos' && secrets.MACOS_APP_SPECIFIC_PASSWORD || '' }}
           APPLE_TEAM_ID: ${{ matrix.signing == 'macos' && secrets.MACOS_TEAM_ID || '' }}
+
+      - name: Verify signed macOS application and notarization
+        if: runner.os == 'macOS' && env.AKOFLOW_MACOS_SIGNING_REQUESTED == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          app_path=$(find release/mac-universal -maxdepth 1 -type d -name '*.app' -print -quit)
+          test -n "$app_path"
+          codesign --verify --deep --strict "$app_path"
+          codesign --display --verbose=4 "$app_path" 2>&1 | grep -q '^Authority=Developer ID Application:'
+          xcrun stapler validate "$app_path"
+          spctl --assess --type execute "$app_path"
 
       - name: Verify desktop artifact versions
         shell: bash

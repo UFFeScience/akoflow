@@ -1,0 +1,41 @@
+{
+  "capturedAt": "2026-11-16T03:38:28.082Z",
+  "viewport": {
+    "width": 1440,
+    "height": 960
+  },
+  "sources": {
+    "hub": "https://hub.akoflow.com",
+    "desktop": "http://192.168.1.13:5173"
+  },
+  "workflow": "hubv1-showcase-hyperparameter-search-local-14e6b92f12",
+  "run": "hubv1-showcase-hyperparameter-search-local-14e6b92f12-run-20261115t054313.323670620",
+  "note": "Real public Hub and local Desktop. Export YAML downloaded; A new private tutorial publication in the connected local Hub was created and confirmed with process logs. One workflow definition was imported into local Desktop as hub-tutorial-hyperparameter-search. No existing publications were modified. Account email masked in connection screenshot. No infrastructure or executions started.",
+  "stepReplay": {
+    "export-and-publish": [
+      "05-export-yaml.png",
+      "04-connection.png",
+      "06-completed-run.png",
+      "08-new-publication.png",
+      "07-publish-selection.png",
+      "09-review.png",
+      "09b-published.png"
+    ],
+    "import-workflow": [
+      "02-publication.png",
+      "03-version.png",
+      "10-import-reference.png",
+      "11-import-review.png",
+      "12-imported-workflow.png"
+    ]
+  },
+  "gifFormat": {
+    "width": 1080,
+    "height": 800,
+    "colors": 128,
+    "frameDurationMs": 2600,
+    "lastFrameDurationMs": 4000
+  },
+  "importReference": "akoflow::ovvesley/akoflow-hub-tutorial-hyperparameter-search:v1",
+  "accountMask": "Connection screenshot masks account email with a neutral rectangle."
+}

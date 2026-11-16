@@ -1,0 +1,180 @@
+---
+slug: akoflow-hub-is-alive
+authors: [ovvesley, llms]
+title: AkôFlow Hub is alive — publish, discover and reuse workflows
+description: "A step-by-step tour of AkôFlow Hub: explore public experiments, export workflows, publish execution results and import a version into Desktop."
+image: /img/blog/hub-is-alive/01-explore.png
+tags: [Desktop, Experiments]
+---
+
+**AkôFlow Hub is alive.** Open [hub.akoflow.com](https://hub.akoflow.com) to discover workflows, inspect their graphs and recorded experiments, and bring a published definition into your own AkôFlow Desktop.
+
+You can now share the workflow behind a result, keep its versions together and let someone else start from the same definition. Here is the complete journey: discover → export → publish → import → prepare a local run.
+
+<!-- truncate -->
+
+![AkôFlow Hub homepage with public workflows and research categories](/img/blog/hub-is-alive/01-explore.png)
+
+## What is available today?
+
+The public Hub brings together workflow definitions, README instructions, immutable workflow versions, executable-image references and recorded execution results. Depending on what the author included, an experiment can also show activity observations, timing, resource metrics, process output and file references.
+
+Start with the official [Hyperparameter search](https://hub.akoflow.com/o/akoflow/machine-learning-hyperparameter-search) example used in this tutorial. Its six activities prepare a dataset, run three training trials, compare their measured errors and register the best model.
+
+The catalog also includes astronomical image mosaicking, OpenOil ensembles, model conversion, RAG pipelines, agent workflows, document processing and rendering. Browse by category or search for a workflow that matches your work. The [Showcase](/docs/showcase) connects examples to their source and supporting evidence.
+
+![A public workflow with its import reference, description and activity graph](/img/blog/hub-is-alive/02-publication.png)
+
+**AkôFlow Hub and Docker Hub have different jobs.** AkôFlow Hub shares workflows and experiment evidence. Docker Hub supplies container images that activities can use. Workflows may also reference images from other registries; this tutorial's example uses an immutable image from GHCR.
+
+## Before you begin
+
+Use a current AkôFlow Desktop and daemon with the Hub controls shown below. You can browse public publications without signing in. Publishing requires a Hub account, a destination project and a finished local execution. Importing creates a local definition; running it also requires compatible infrastructure and access to the workflow's images and inputs.
+
+These screenshots come from the live public Hub and a working local Desktop. The publishing walkthrough uses a new **private** tutorial publication. Its result was uploaded successfully, and the import walkthrough creates a separate local copy from that same private publication. Public Hub screenshots show the official example; the Desktop screenshots use our tutorial reference on the local Hub service. The GIFs replay captured steps; pause on any still image for the details. No new execution or infrastructure provisioning was started while recording.
+
+## Export a workflow as YAML
+
+1. In Desktop, open **Workflows → Definitions** and select a workflow.
+2. Select **Export YAML**, the download action beside the workflow title.
+3. Save the `.yaml` file. This exports the portable definition, including its activities and dependencies.
+
+![Workflow definition and the Export YAML download action](/img/blog/hub-is-alive/05-export-yaml.png)
+
+A YAML export carries the definition. It does not package your execution history, local infrastructure or datasets. To share recorded results with the definition, use **Publish to Hub** below. To move just the file to another Desktop, select **Import YAML** in its workflow catalog.
+
+## Publish a finished execution to AkôFlow Hub
+
+### 1. Connect Desktop to your Hub project
+
+Open **Settings → AkôFlow Hub** and select **Sign in to AkôFlow Hub**. Continue in the browser, check the displayed authorization code, sign in and authorize the destination project. Desktop detects approval automatically.
+
+When ready, the settings page shows **Connected to AkôFlow Hub** and the selected destination. You enter your Hub password in the browser, and the connection is scoped to the authorized project.
+
+![Desktop settings showing a connected Hub account and destination project; account email masked](/img/blog/hub-is-alive/04-connection.png)
+
+### 2. Open the result you want to share
+
+Open a finished execution and select **Publish to Hub**. This publishes a snapshot of that execution with the workflow version it actually used, even if you edited the definition afterward.
+
+![A completed execution with the Publish to Hub action](/img/blog/hub-is-alive/06-completed-run.png)
+
+### 3. Choose or create a publication
+
+Choose an existing destination when you want to add evidence to the same publication. For a new workflow, select **New publication**, enter a title, review the generated slug and choose its visibility. Select **Create publication** to continue.
+
+Publications start **private**. A public publication makes the selected content available to other people; choose that visibility when you intend to share it openly.
+
+![New publication form with title, editable slug and private visibility](/img/blog/hub-is-alive/08-new-publication.png)
+
+### 4. Select the evidence to include
+
+The workflow definition, scheduling context and execution summary are always included. Add a version message, then choose any optional sections:
+
+| Option           | What it adds                                               |
+| ---------------- | ---------------------------------------------------------- |
+| Process logs     | Recorded output from activities.                           |
+| File references  | Recorded file metadata and locations.                      |
+| Activity metrics | Detailed resource measurements collected during execution. |
+| Execution events | Recorded events and execution timeline.                    |
+
+All four options start unchecked. File references describe files; their contents are not uploaded by this publishing flow. Full datasets and binary artifacts stay outside the capture.
+
+![Publication destination, version message and optional evidence controls](/img/blog/hub-is-alive/07-publish-selection.png)
+
+### 5. Review, then publish
+
+Select **Review result**. Inspect the destination, visibility, workflow YAML, version changes and any selected logs or file references. Review the content even when automatic redaction reports no secrets.
+
+![Review of a private execution capture with workflow YAML, process logs and workflow changes](/img/blog/hub-is-alive/09-review.png)
+
+Select **Publish reviewed result**. Public destinations also require you to acknowledge making the capture public. Wait for **Result published**, then select **Open publication in AkôFlow Hub** to get its link.
+
+![Successful publication receipt with a link to open the publication](/img/blog/hub-is-alive/09b-published.png)
+
+The Hub keeps workflow versions immutable and attaches captured results to their version. A new execution can add evidence without requiring you to change the workflow definition.
+
+<details>
+<summary>Watch the export and publication steps</summary>
+
+![Step replay: export YAML, open a completed execution, create a private publication, review its evidence and view the publication receipt](/img/blog/hub-is-alive/export-and-publish.gif)
+
+</details>
+
+## Import a published workflow into Desktop
+
+### 1. Choose a workflow version in the Hub
+
+Open a public publication and find **Import into Desktop**. Choose **v1** for a fixed version, or **Latest** when you want the version that is newest at import time. Select **Copy URI**.
+
+For the official example on the public Hub service, the fixed reference is:
+
+```text
+akoflow::o/akoflow/machine-learning-hyperparameter-search:v1
+```
+
+The Desktop screenshots use `akoflow::ovvesley/akoflow-hub-tutorial-hyperparameter-search:v1`, our private demonstration copy. Copy a reference you can access from your own configured Hub service rather than typing the demonstration reference.
+
+The `o/akoflow` part identifies the organization. Personal publications use the author's username instead. The final `:v1` selects a workflow version; `:latest` resolves the latest available version. Record the resolved version when you need to repeat an experiment.
+
+![An immutable Hub workflow version and its version-specific import URI](/img/blog/hub-is-alive/03-version.png)
+
+### 2. Load the definition in Desktop
+
+Open **Workflows → Definitions → Create workflow**, choose **Import from Hub**, paste the reference into **Hub workflow URI** and select **Load definition**.
+
+![Desktop Import from Hub form with a versioned publication reference](/img/blog/hub-is-alive/10-import-reference.png)
+
+### 3. Review the YAML and name your copy
+
+Check the resolved reference and version. Expand **Preview workflow YAML** to inspect the activities and commands. Desktop suggests a unique local name; keep it or enter your own.
+
+![Loaded workflow definition with a YAML preview control and a local workflow name](/img/blog/hub-is-alive/11-import-review.png)
+
+Select **Import workflow definition**. Desktop opens the imported workflow, where you can inspect its graph and generate a plan.
+
+![Imported six-activity workflow open in Desktop](/img/blog/hub-is-alive/12-imported-workflow.png)
+
+Importing creates your own local definition. Execution history, environments and datasets remain at the source. It also leaves the author's publication unchanged.
+
+<details>
+<summary>Watch the import steps</summary>
+
+![Step replay: find the Hub version, paste its reference, review the YAML and open the imported local workflow](/img/blog/hub-is-alive/import-workflow.gif)
+
+</details>
+
+## Make the imported workflow runnable
+
+An imported graph is the starting point. Before selecting **Generate plan**, open the publication's README and **Images & environment** section to check its requirements.
+
+For Hyperparameter search:
+
+1. Open the [example source directory](https://github.com/UFFeScience/akoflow-examples/tree/main/machine-learning/hyperparameter-search) and follow its local setup instructions.
+2. Make the declared executable image available to your runtime. Preserve its immutable digest when reproducing the published capture.
+3. Register the companion `environment.yaml`, `scope.yaml` and `topology.yaml` in the order documented by the example. Check that the environment's resource, runtime and workspace paths match your machine.
+4. In Desktop, open the imported workflow, select **Generate plan**, choose the prepared execution scope and run **HEFT**. Review a feasible candidate.
+5. Select **Execute plan**, confirm **Real execution**, and follow the run until it completes. Check the activity outcomes and generated files before publishing your result.
+
+For an introduction to local execution, follow [From a DAG to your first run](/blog/from-a-dag-to-your-first-run). Your timing and outputs should be assessed against your own inputs and environment; a published result is a record of its original run.
+
+### Where Docker Hub fits
+
+When building or adapting an activity, open **Choose an artifact → Import from Docker Hub**. Search for a public repository, choose a tag and a compatible Linux architecture, then review the artifact ID and version. The import registers the artifact and builds its Apptainer SIF. Wait for verification before selecting it in the activity; monitor its artifact page if the build fails.
+
+![Desktop artifact picker searching public images on Docker Hub](/img/blog/hub-is-alive/13-docker-hub.png)
+
+Docker/OCI and SIF/Apptainer execution depend on the target environment. Choose an image that contains the tools your activity command needs. Replacing this example's GHCR image with a generic Python image would omit its packaged application code.
+
+## If a step does not work
+
+| What you see                           | What to check                                                                                                                        |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Hub is not configured                  | Ask the installation operator to configure the Hub service, then reopen Hub settings.                                                |
+| Cannot publish                         | Connect the project in Hub settings and use a finished execution in a writable instance.                                             |
+| Reference cannot be loaded             | Copy the URI again, verify the owner and version, and check access to private content and the installation's configured Hub service. |
+| Local name already exists              | Accept Desktop's suggested alternative or choose another name.                                                                       |
+| Review expired or destination changed  | Return to the selection step and request a fresh review.                                                                             |
+| Imported workflow has no feasible plan | Check the companion environment, execution scope, resources, images and workspace configuration.                                     |
+
+Explore [AkôFlow Hub](https://hub.akoflow.com), import a version that interests you, and publish the evidence from your own run. The next person can start from your workflow and see how you reached the result.

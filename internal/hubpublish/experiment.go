@@ -51,7 +51,7 @@ func (m *Manager) capture(ctx context.Context, runID string) (capturedExperiment
 		return result, failure(422, "unfinished_run", "Only finished workflow executions can be published.")
 	}
 	var context map[string]any
-	if err := m.readSource(ctx, "/schedule-plans/"+url.PathEscape(planID)+"/context/", &context); err != nil {
+	if err := m.readSource(ctx, "/schedule-plans/"+url.PathEscape(planID)+"/context/?portable=1", &context); err != nil {
 		return result, err
 	}
 	var metrics struct {

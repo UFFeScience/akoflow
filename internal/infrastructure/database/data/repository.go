@@ -773,6 +773,11 @@ func (r *Repository) PublishBuildOutput(ctx context.Context, runID string, varia
 			return fmt.Errorf("register artifact store endpoint: %w", err)
 		}
 	}
+	if location.EndpointID == "local-docker" {
+		if _, err := tx.ExecContext(ctx, `INSERT INTO transfer_endpoints(id,kind,uri,configuration) VALUES('local-docker','local','docker-image://','{}') ON CONFLICT(id) DO NOTHING`); err != nil {
+			return fmt.Errorf("register local Docker endpoint: %w", err)
+		}
+	}
 	if _, err := tx.ExecContext(ctx, insertLocation,
 		location.ID, variant.ID, location.EndpointID, location.URI,
 		location.Digest, location.Scope, location.ScopeID, location.Available); err != nil {
@@ -798,4 +803,26 @@ func stableID(parts ...string) string {
 		_, _ = hash.Write([]byte{0})
 	}
 	return hex.EncodeToString(hash.Sum(nil)[:16])
+}
+
+func (r *Repository) FindArtifactBuildForCatalog(ctx context.Context, artifactID, version string) (*domain.ArtifactBuild, error) {
+	var id string
+	const query = `SELECT b.id FROM artifact_builds b JOIN artifact_versions v ON v.id=b.artifact_version_id
+ WHERE v.artifact_id=? AND (?='' OR v.version=?) ORDER BY v.version DESC,b.created_at DESC,b.id DESC LIMIT 1`
+	err := r.db.QueryRowContext(ctx, query, artifactID, version, version).Scan(&id)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	return r.FindArtifactBuild(ctx, id)
+}
+
+func (r *Repository) SetPortableOriginAvailability(ctx context.Context, key, variantID string, available bool) error {
+	const query = `UPDATE artifact_locations SET available=? WHERE endpoint_id='local-docker'
+ AND (?='' OR variant_id=?) AND variant_id IN (
+ SELECT v.id FROM artifact_variants v JOIN artifact_versions av ON av.id=v.artifact_version_id WHERE av.artifact_id=?)`
+	_, err := r.db.ExecContext(ctx, query, available, variantID, variantID, "origin-"+key)
+	return err
 }

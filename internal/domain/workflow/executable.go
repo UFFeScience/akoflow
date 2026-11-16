@@ -52,6 +52,7 @@ type ExecutableReference struct {
 	*/
 }
 type ExecutableSource struct {
+	Origin         *ArtifactOrigin      `json:"origin,omitempty"`
 	Type           ExecutableSourceType `json:"type"`
 	Reference      string               `json:"reference,omitempty"`
 	Path           string               `json:"path,omitempty"`
@@ -110,6 +111,11 @@ func (e ExecutableReference) empty() bool {
 }
 
 func (e ExecutableReference) Validate() error {
+	if e.Source.Origin != nil {
+		if err := e.Source.Origin.Validate(); err != nil {
+			return err
+		}
+	}
 	if e.Source.Type == "" {
 		return fmt.Errorf("executable source.type is required")
 	}
@@ -118,7 +124,7 @@ func (e ExecutableReference) Validate() error {
 	}
 	switch e.Source.Type {
 	case ExecutableSourceCatalog:
-		if e.Source.ArtifactRef == nil || e.Source.ArtifactRef.ID == "" {
+		if e.Source.Origin == nil && (e.Source.ArtifactRef == nil || e.Source.ArtifactRef.ID == "") {
 			return fmt.Errorf("catalog executable requires source.artifactRef")
 		}
 	case ExecutableSourceOCI, ExecutableSourceLocalContainerImage:
@@ -126,7 +132,7 @@ func (e ExecutableReference) Validate() error {
 			return fmt.Errorf("%s executable requires source.reference", e.Source.Type)
 		}
 	case ExecutableSourceBuild:
-		if e.Source.ArtifactBuildRef == "" {
+		if e.Source.ArtifactBuildRef == "" && e.Source.Origin == nil {
 			return fmt.Errorf("build executable requires source.artifactBuildRef")
 		}
 	case ExecutableSourceLocalFile:

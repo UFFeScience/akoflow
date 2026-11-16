@@ -50,7 +50,15 @@ func PreparationForCatalog(ctx context.Context, catalog CatalogOutput, artifactI
 		return domain.PreparationRequirement{}, err
 	}
 	if variant == nil || location == nil {
-		return domain.PreparationRequirement{}, fmt.Errorf("catalog artifact %q version %q has no available variant for %q", artifactID, version, normalizedArchitecture(resource.Architecture))
+		architecture := normalizedArchitecture(resource.Architecture)
+		if architecture == "" {
+			architecture = "unspecified target architecture"
+		}
+		return domain.PreparationRequirement{}, fmt.Errorf(
+			"catalog artifact %q version %q has no available variant for %s; "+
+				"registration alone does not download the payload: prepare its build or re-export the workflow with source.origin",
+			artifactID, version, architecture,
+		)
 	}
 	return preparationForOutput(variant, location, activityID, resource, destination), nil
 }

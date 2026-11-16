@@ -1221,6 +1221,9 @@
                       "id": {
                         "type": "string"
                       },
+                      "ociReference": {
+                        "type": "string"
+                      },
                       "resourceId": {
                         "type": "string"
                       },
@@ -1659,6 +1662,58 @@
                       },
                       "syncWorkspace": {
                         "type": "boolean"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "reproduction": {
+                "anyOf": [
+                  {
+                    "properties": {
+                      "build": {
+                        "anyOf": [
+                          {
+                            "properties": {
+                              "arguments": {
+                                "additionalProperties": {
+                                  "type": "string"
+                                },
+                                "type": "object"
+                              },
+                              "contextArchive": {
+                                "contentEncoding": "base64",
+                                "type": "string"
+                              },
+                              "contextDigest": {
+                                "type": "string"
+                              },
+                              "recipeDigest": {
+                                "type": "string"
+                              },
+                              "recipePath": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "expectedDigest": {
+                        "type": "string"
+                      },
+                      "image": {
+                        "type": "string"
+                      },
+                      "platform": {
+                        "type": "string"
                       }
                     },
                     "type": "object"
@@ -3030,6 +3085,58 @@
                                   "format": {
                                     "type": "string"
                                   },
+                                  "origin": {
+                                    "anyOf": [
+                                      {
+                                        "properties": {
+                                          "build": {
+                                            "anyOf": [
+                                              {
+                                                "properties": {
+                                                  "arguments": {
+                                                    "additionalProperties": {
+                                                      "type": "string"
+                                                    },
+                                                    "type": "object"
+                                                  },
+                                                  "contextArchive": {
+                                                    "contentEncoding": "base64",
+                                                    "type": "string"
+                                                  },
+                                                  "contextDigest": {
+                                                    "type": "string"
+                                                  },
+                                                  "recipeDigest": {
+                                                    "type": "string"
+                                                  },
+                                                  "recipePath": {
+                                                    "type": "string"
+                                                  }
+                                                },
+                                                "type": "object"
+                                              },
+                                              {
+                                                "type": "null"
+                                              }
+                                            ]
+                                          },
+                                          "expectedDigest": {
+                                            "type": "string"
+                                          },
+                                          "image": {
+                                            "type": "string"
+                                          },
+                                          "platform": {
+                                            "type": "string"
+                                          }
+                                        },
+                                        "type": "object"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
                                   "path": {
                                     "type": "string"
                                   },
@@ -3970,6 +4077,58 @@
                                   "format": {
                                     "type": "string"
                                   },
+                                  "origin": {
+                                    "anyOf": [
+                                      {
+                                        "properties": {
+                                          "build": {
+                                            "anyOf": [
+                                              {
+                                                "properties": {
+                                                  "arguments": {
+                                                    "additionalProperties": {
+                                                      "type": "string"
+                                                    },
+                                                    "type": "object"
+                                                  },
+                                                  "contextArchive": {
+                                                    "contentEncoding": "base64",
+                                                    "type": "string"
+                                                  },
+                                                  "contextDigest": {
+                                                    "type": "string"
+                                                  },
+                                                  "recipeDigest": {
+                                                    "type": "string"
+                                                  },
+                                                  "recipePath": {
+                                                    "type": "string"
+                                                  }
+                                                },
+                                                "type": "object"
+                                              },
+                                              {
+                                                "type": "null"
+                                              }
+                                            ]
+                                          },
+                                          "expectedDigest": {
+                                            "type": "string"
+                                          },
+                                          "image": {
+                                            "type": "string"
+                                          },
+                                          "platform": {
+                                            "type": "string"
+                                          }
+                                        },
+                                        "type": "object"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
                                   "path": {
                                     "type": "string"
                                   },
@@ -4480,6 +4639,58 @@
                                   "format": {
                                     "type": "string"
                                   },
+                                  "origin": {
+                                    "anyOf": [
+                                      {
+                                        "properties": {
+                                          "build": {
+                                            "anyOf": [
+                                              {
+                                                "properties": {
+                                                  "arguments": {
+                                                    "additionalProperties": {
+                                                      "type": "string"
+                                                    },
+                                                    "type": "object"
+                                                  },
+                                                  "contextArchive": {
+                                                    "contentEncoding": "base64",
+                                                    "type": "string"
+                                                  },
+                                                  "contextDigest": {
+                                                    "type": "string"
+                                                  },
+                                                  "recipeDigest": {
+                                                    "type": "string"
+                                                  },
+                                                  "recipePath": {
+                                                    "type": "string"
+                                                  }
+                                                },
+                                                "type": "object"
+                                              },
+                                              {
+                                                "type": "null"
+                                              }
+                                            ]
+                                          },
+                                          "expectedDigest": {
+                                            "type": "string"
+                                          },
+                                          "image": {
+                                            "type": "string"
+                                          },
+                                          "platform": {
+                                            "type": "string"
+                                          }
+                                        },
+                                        "type": "object"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
                                   "path": {
                                     "type": "string"
                                   },
@@ -4773,6 +4984,58 @@
                                   },
                                   "format": {
                                     "type": "string"
+                                  },
+                                  "origin": {
+                                    "anyOf": [
+                                      {
+                                        "properties": {
+                                          "build": {
+                                            "anyOf": [
+                                              {
+                                                "properties": {
+                                                  "arguments": {
+                                                    "additionalProperties": {
+                                                      "type": "string"
+                                                    },
+                                                    "type": "object"
+                                                  },
+                                                  "contextArchive": {
+                                                    "contentEncoding": "base64",
+                                                    "type": "string"
+                                                  },
+                                                  "contextDigest": {
+                                                    "type": "string"
+                                                  },
+                                                  "recipeDigest": {
+                                                    "type": "string"
+                                                  },
+                                                  "recipePath": {
+                                                    "type": "string"
+                                                  }
+                                                },
+                                                "type": "object"
+                                              },
+                                              {
+                                                "type": "null"
+                                              }
+                                            ]
+                                          },
+                                          "expectedDigest": {
+                                            "type": "string"
+                                          },
+                                          "image": {
+                                            "type": "string"
+                                          },
+                                          "platform": {
+                                            "type": "string"
+                                          }
+                                        },
+                                        "type": "object"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
                                   },
                                   "path": {
                                     "type": "string"
@@ -5291,7 +5554,10 @@
     "method": "GET",
     "path": "/akoflow-api/schedule-plans/{planId}/context/",
     "handler": "GetPlanContext",
-    "description": "get plan context. GET /akoflow-api/schedule-plans/{planId}/context/. Uses the daemon API and its domain validation."
+    "description": "get plan context. GET /akoflow-api/schedule-plans/{planId}/context/. Uses the daemon API and its domain validation.",
+    "query": [
+      "portable"
+    ]
   },
   {
     "name": "get_planning_candidate",
@@ -6691,6 +6957,9 @@
           "type": "string"
         },
         "id": {
+          "type": "string"
+        },
+        "ociReference": {
           "type": "string"
         },
         "resourceId": {

@@ -329,3 +329,24 @@ func TestLifecycleLogHelpers(t *testing.T) {
 		t.Fatalf("lifecycle log not preserved: %q", got)
 	}
 }
+
+func TestPreparedOCIImageOverridesAuthoredReferenceOnlyAfterVerification(t *testing.T) {
+	execution := executionFixture()
+	execution.Activity.Command.Image = "mutable:tag"
+	execution.Preparation = &domain.PreparationGate{Executable: &domain.ArtifactMaterialization{
+		OCIReference: "sha256:verified-image", Digest: "sha256:verified-image", VerifiedDigest: "sha256:other", Status: domain.MaterializationCommitted,
+	}}
+	if err := prepareActivityCommand(&execution); err == nil {
+		t.Fatal("unverified executable reached activity")
+	}
+	if execution.Activity.Command.Image != "mutable:tag" {
+		t.Fatal("failed gate changed activity image")
+	}
+	execution.Preparation.Executable.VerifiedDigest = execution.Preparation.Executable.Digest
+	if err := prepareActivityCommand(&execution); err != nil {
+		t.Fatal(err)
+	}
+	if execution.Activity.Command.Image != "sha256:verified-image" {
+		t.Fatal("verified loaded image was not selected")
+	}
+}

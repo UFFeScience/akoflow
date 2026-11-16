@@ -21,6 +21,14 @@ func (h *Handler) GetPlanContext(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusInternalServerError, err)
 		return
 	}
+	if workflow != nil && r.URL.Query().Get("portable") == "1" {
+		portable, exportErr := h.portableDefinition(r.Context(), *workflow)
+		if exportErr != nil {
+			writeError(w, http.StatusUnprocessableEntity, exportErr)
+			return
+		}
+		workflow = &portable
+	}
 	query, ok := h.environments.(environmentSummaryQuery)
 	if !ok {
 		writeError(w, http.StatusNotImplemented, fmt.Errorf("scoped environment summaries unavailable"))

@@ -16,6 +16,9 @@ type MaterializationCatalog interface {
 // Coordinator is the orchestration boundary: it returns only verified,
 // committed materializations to providers.
 type Coordinator struct {
+	Reproducer interface {
+		Reproduce(context.Context, domain.ArtifactOrigin) (*domain.ArtifactMaterialization, error)
+	}
 	Materializer    Materializer
 	Catalog         MaterializationCatalog
 	WorkspaceSyncer WorkspaceSyncer
@@ -28,6 +31,21 @@ type WorkspaceSyncer interface {
 }
 
 func (c Coordinator) Prepare(ctx context.Context, activityID string, requirement domain.PreparationRequirement) (*domain.PreparationGate, error) {
+	var reproduced *domain.ArtifactMaterialization
+	if requirement.Reproduction != nil {
+		if c.Reproducer == nil {
+			return nil, fmt.Errorf("artifact reproduction is not configured")
+		}
+		var err error
+		reproduced, err = c.Reproducer.Reproduce(ctx, *requirement.Reproduction)
+		if err != nil {
+			return nil, fmt.Errorf("reproduce executable: %w", err)
+		}
+		reproduced.ActivityID = activityID
+		if !reproduced.Committed() {
+			return nil, fmt.Errorf("reproduced executable is not verified")
+		}
+	}
 	transferRuns := make([]domain.DataTransferRun, 0, 2)
 	if requirement.Artifact != nil {
 		if requirement.ArtifactTransfer == nil {
@@ -69,6 +87,9 @@ func (c Coordinator) Prepare(ctx context.Context, activityID string, requirement
 		transferRuns = append(transferRuns, runs...)
 	}
 	gate := &domain.PreparationGate{Executable: requirement.Artifact, Workspace: requirement.Workspace, TransferRuns: transferRuns}
+	if reproduced != nil {
+		gate.Executable = reproduced
+	}
 	if err := gate.Ready(); err != nil {
 		return nil, err
 	}

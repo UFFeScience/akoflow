@@ -185,11 +185,17 @@ func prepareActivityCommand(execution *domain.ActivityExecutionContext) error {
 		return fmt.Errorf("activity preparation is not ready: %w", err)
 	}
 	if executable := execution.Preparation.Executable; executable != nil {
+		if executable.OCIReference != "" {
+			execution.Activity.Command.Image = executable.OCIReference
+		}
 		execution.Activity.Command.ResolvedExecutable = &domain.ResolvedExecutable{
 			VariantID: executable.VariantID, Digest: executable.Digest,
 			LocalPath: executable.DestinationPath, EnvironmentID: executable.EnvironmentID,
 			ResourceID: executable.ResourceID, MaterializationID: executable.ID,
 			MaterializationDone: executable.Committed(),
+		}
+		if executable.OCIReference != "" {
+			execution.Activity.Command.ResolvedExecutable.Format = domain.ExecutableFormat("oci")
 		}
 	}
 	if workspace := execution.Preparation.Workspace; workspace != nil && execution.Activity.Command.WorkingDirectory == "" {

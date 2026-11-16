@@ -1086,7 +1086,12 @@ func (h *Handler) ExportWorkflow(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusNotFound, nil)
 		return
 	}
-	payload, err := apirequests.FromDomain(*definition).YAML()
+	portable, err := h.portableDefinition(r.Context(), *definition)
+	if err != nil {
+		writeError(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	payload, err := apirequests.FromDomain(portable).YAML()
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, err)
 		return
@@ -3029,6 +3034,11 @@ func (h *Handler) resolveBuildPreparations(ctx context.Context, request *ports.E
 		resource, ok := resources[assignment.ResourceID]
 		if !ok {
 			return fmt.Errorf("build activity %q has unknown resource %q", activity.ID, assignment.ResourceID)
+		}
+		if prepared, err := h.preparePortableOrigin(ctx, request, index, assignment, resource); err != nil {
+			return err
+		} else if prepared {
+			continue
 		}
 		if activity.Command.Executable.Source.Type == domain.ExecutableSourceCatalog && executionRuntimeDriver(*request, assignment) == domain.RuntimeDriverKubernetes {
 			if err := h.resolveCatalogImage(ctx, activity, resource, &request.Workflow.Activities[index].Command.Image); err != nil {

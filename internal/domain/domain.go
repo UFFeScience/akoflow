@@ -256,6 +256,9 @@ type TransferChunkRun = execution.TransferChunkRun
 type ArtifactBuild = execution.ArtifactBuild
 type BuildRun = execution.BuildRun
 type BuildContextArtifact = execution.BuildContextArtifact
+
+type ArtifactOrigin = workflow.ArtifactOrigin
+type PortableArtifactBuild = workflow.PortableArtifactBuild
 type TransferLocation = execution.TransferLocation
 type BlobDescriptor = execution.BlobDescriptor
 type TransferEndpoint = execution.TransferEndpoint
@@ -362,6 +365,7 @@ const (
 	DeliveryPreferInPlace       = workflow.DeliveryPreferInPlace
 	ExecutableSourceOCI         = workflow.ExecutableSourceOCI
 	ExecutableSourceCatalog     = workflow.ExecutableSourceCatalog
+	ExecutableSourceBuild       = workflow.ExecutableSourceBuild
 	ExecutableSourceRemoteFile  = workflow.ExecutableSourceRemoteFile
 	ExecutableFormatSIF         = workflow.ExecutableFormatSIF
 )

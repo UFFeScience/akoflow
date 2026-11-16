@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"time"
 
+	applicationbuild "github.com/UFFeScience/akoflow/internal/application/build"
 	applicationexecution "github.com/UFFeScience/akoflow/internal/application/execution"
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	applicationtransfer "github.com/UFFeScience/akoflow/internal/application/transfer"
@@ -14,6 +15,7 @@ import (
 	controlexecution "github.com/UFFeScience/akoflow/internal/controlplane/execution"
 	domainevents "github.com/UFFeScience/akoflow/internal/domain/events"
 	infratransfer "github.com/UFFeScience/akoflow/internal/infrastructure/transfer"
+	"github.com/UFFeScience/akoflow/internal/provider"
 )
 
 func buildEventLoop(
@@ -84,12 +86,13 @@ func registerExecutionHandlers(
 		Connections: connections, Cloud: cloud, Provisioner: cloudProvisioner,
 	}
 	verifiedArtifacts := &applicationtransfer.VerifiedArtifactCache{}
+	reproducer := &applicationbuild.Reproducer{Manager: applicationbuild.Manager{Root: artifactStoreRoot, Catalog: data}, Catalog: data, Runner: provider.OSCommandExecutor{}, Buildctl: os.Getenv("AKOFLOW_BUILDCTL")}
 	kubernetesTransfer := &infratransfer.KubernetesExec{BufferSize: bufferSize}
 	parallelism, err := strconv.Atoi(os.Getenv("AKOFLOW_WORKSPACE_TRANSFER_PARALLELISM"))
 	if err != nil || parallelism <= 0 {
 		parallelism = 8
 	}
-	preparer := applicationtransfer.Coordinator{Catalog: data, WorkspaceSyncer: infratransfer.WorkspaceRsync{Resolver: resolver, Parallelism: parallelism}, Materializer: applicationtransfer.Materializer{Resolver: resolver, Progress: data, VerifiedArtifacts: verifiedArtifacts, Connectors: []ports.TransferConnector{
+	preparer := applicationtransfer.Coordinator{Catalog: data, Reproducer: reproducer, WorkspaceSyncer: infratransfer.WorkspaceRsync{Resolver: resolver, Parallelism: parallelism}, Materializer: applicationtransfer.Materializer{Resolver: resolver, Progress: data, VerifiedArtifacts: verifiedArtifacts, Connectors: []ports.TransferConnector{
 		infratransfer.ArtifactStore{Root: artifactStoreRoot}, infratransfer.LocalFilesystem{BufferSize: bufferSize}, infratransfer.RsyncSSH{BufferSize: bufferSize}, kubernetesTransfer, infratransfer.HTTPDownload{}, infratransfer.S3Compatible{BufferSize: bufferSize}, infratransfer.GCS{},
 	}}}
 	supervisor, err := controlexecution.New(

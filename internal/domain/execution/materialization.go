@@ -1,6 +1,9 @@
 package execution
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/UFFeScience/akoflow/internal/domain/workflow"
+)
 
 type MaterializationStatus string
 type TransferStatus string
@@ -52,6 +55,7 @@ type ArtifactVariant struct {
 	SizeBytes    int64  `json:"sizeBytes,omitempty"`
 }
 type ArtifactMaterialization struct {
+	OCIReference    string                `json:"ociReference,omitempty"`
 	ID              string                `json:"id"`
 	RunID           string                `json:"runId,omitempty"`
 	ActivityID      string                `json:"activityId,omitempty"`
@@ -302,6 +306,7 @@ type WorkspaceMaterialization struct {
 }
 
 type PreparationRequirement struct {
+	Reproduction       *workflow.ArtifactOrigin  `json:"reproduction,omitempty"`
 	Artifact           *ArtifactMaterialization  `json:"artifact,omitempty"`
 	ArtifactTransfer   *DataTransferPlan         `json:"artifactTransfer,omitempty"`
 	Workspace          *WorkspaceMaterialization `json:"workspace,omitempty"`

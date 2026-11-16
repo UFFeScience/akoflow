@@ -21,10 +21,10 @@ func (m *Manager) Confirm(ctx context.Context, id string, acknowledgePublic bool
 	if err != nil {
 		return result, err
 	}
-	if current.Publication.Visibility != prepared.Publication.Visibility {
+	if current.Publication.Visibility != prepared.Publication.Visibility || current.Publication.Authorship != prepared.Publication.Authorship || current.Publication.AnonymousOwner != prepared.Publication.AnonymousOwner {
 		return result, failure(409, "visibility_changed", "Publication visibility changed. Review the destination again before publishing.")
 	}
-	if current.Publication.Visibility == "public" && !acknowledgePublic {
+	if current.Publication.Visibility != "private" && !acknowledgePublic {
 		return result, failure(422, "public_confirmation", "Confirm that you reviewed the content of this public publication.")
 	}
 	var receipt struct {
@@ -37,11 +37,16 @@ func (m *Manager) Confirm(ctx context.Context, id string, acknowledgePublic bool
 		return result, err
 	}
 	ownerKind := "u"
+	owner := current.Publication.Owner
 	if current.Publication.Kind == "organization" {
 		ownerKind = "o"
 	}
+	if current.Publication.Visibility == "unlisted" {
+		ownerKind = "a"
+		owner = current.Publication.AnonymousOwner
+	}
 	result = Receipt{
-		URL:          m.options.BrowserURL + "/" + ownerKind + "/" + url.PathEscape(current.Publication.Owner) + "/" + url.PathEscape(current.Publication.Slug),
+		URL:          m.options.BrowserURL + "/" + ownerKind + "/" + url.PathEscape(owner) + "/" + url.PathEscape(current.Publication.Slug),
 		ExperimentID: receipt.ExperimentID,
 		ResultCount:  receipt.ResultCount,
 		Version:      receipt.Version.Number,

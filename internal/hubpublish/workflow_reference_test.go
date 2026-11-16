@@ -49,3 +49,17 @@ func TestNamedReferencesRejectOriginsAndInvalidTagsBeforeFetching(t *testing.T) 
 		}
 	}
 }
+
+func TestAnonymousReferencesKeepWorkflowNameAndPinVersion(t *testing.T) {
+	manager := testManager(t, func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Query().Get("reference") != "/a/3f6f378d-dcb8-4a28-883e-2b26697c0393/montage-50d:latest" {
+			t.Fatal("anonymous URI changed", r.URL.RawQuery)
+		}
+		w.Header().Set("X-Akoflow-Workflow-Version", "2")
+		fmt.Fprint(w, "name: montage-50d\n")
+	})
+	result, err := manager.WorkflowDefinition(context.Background(), "akoflow::a/3f6f378d-dcb8-4a28-883e-2b26697c0393/montage-50d:latest")
+	if err != nil || result.URI != "akoflow::a/3f6f378d-dcb8-4a28-883e-2b26697c0393/montage-50d:v2" {
+		t.Fatal(result, err)
+	}
+}

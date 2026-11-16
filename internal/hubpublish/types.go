@@ -60,14 +60,16 @@ type Status struct {
 	Message              string     `json:"message,omitempty"`
 }
 type Publication struct {
-	ID          string `json:"id"`
-	Title       string `json:"title"`
-	Slug        string `json:"slug"`
-	Description string `json:"description"`
-	Readme      string `json:"readme"`
-	Visibility  string `json:"visibility"`
-	Owner       string `json:"owner"`
-	Kind        string `json:"kind"`
+	Authorship     string `json:"authorship"`
+	AnonymousOwner string `json:"anonymousOwner"`
+	ID             string `json:"id"`
+	Title          string `json:"title"`
+	Slug           string `json:"slug"`
+	Description    string `json:"description"`
+	Readme         string `json:"readme"`
+	Visibility     string `json:"visibility"`
+	Owner          string `json:"owner"`
+	Kind           string `json:"kind"`
 }
 type publicationVersion struct {
 	Number int `json:"number"`

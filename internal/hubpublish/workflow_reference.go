@@ -10,13 +10,13 @@ import (
 	"strings"
 )
 
-var workflowReferencePattern = regexp.MustCompile(`^/(u|o)/[a-z0-9][a-z0-9_.-]{1,63}/[a-z0-9][a-z0-9-]{1,63}:(latest|v?[1-9][0-9]*)$`)
+var workflowReferencePattern = regexp.MustCompile(`^/(u|o|a)/[a-z0-9][a-z0-9_.-]{1,63}/[a-z0-9][a-z0-9-]{1,63}:(latest|v?[1-9][0-9]*)$`)
 
 func (m *Manager) workflowReference(ctx context.Context, reference string) (WorkflowDefinition, error) {
 	reference = strings.TrimSpace(reference)
 	if strings.HasPrefix(reference, "akoflow::") {
 		reference = strings.TrimPrefix(reference, "akoflow::")
-		if strings.HasPrefix(reference, "o/") {
+		if strings.HasPrefix(reference, "o/") || strings.HasPrefix(reference, "a/") {
 			reference = "/" + reference
 		} else {
 			reference = "/u/" + reference

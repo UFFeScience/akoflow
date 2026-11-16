@@ -82,6 +82,7 @@ const groupMetadata = {
 };
 
 const queryDescriptions = {
+  portable: "Set to `1` to enrich the saved workflow with immutable artifact origins and portable build recipes for export or Hub publication. Missing source data returns a validation error.",
   name: "Override the imported workflow name before validation and registration.",
   repository:
     "Docker Hub repository, including its namespace (for example library/python).",

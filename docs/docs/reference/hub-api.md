@@ -4,19 +4,19 @@ title: Hub and execution APIs
 
 The daemon exposes Hub operations below `/akoflow-api/hub/`. Authenticate with the normal daemon credential. The daemon keeps the Hub connection token on the server; callers never supply or receive it. Desktop connections can access only writable publications in the project approved during authorization.
 
-| Method | Path below `/hub/` | Operation |
-| --- | --- | --- |
-| GET | `status/` | Connection and destination status |
-| GET / POST | `publications/` | List / create a destination |
-| GET / PATCH / DELETE | `publications/{publicationId}/` | Read / partially update / soft-delete a publication |
-| GET | `publications/{publicationId}/versions/` | List versions |
-| GET | `publications/{publicationId}/results/` | List published execution results |
-| GET | `publications/{publicationId}/compare/?base=1&target=2` | Compare version YAML |
-| POST | `publications/workflow-preview/` | Review an exported workflow before creating its next version |
-| POST | `publications/preview/` | Review an execution bundle and selected results |
-| POST | `publications/confirm/` | Publish the exact reviewed snapshot |
-| POST | `workflow-definition/` | Fetch an immutable Hub workflow URI |
-| POST | `workflows/import/` | Import that URI as a local workflow |
+| Method               | Path below `/hub/`                                      | Operation                                                    |
+| -------------------- | ------------------------------------------------------- | ------------------------------------------------------------ |
+| GET                  | `status/`                                               | Connection and destination status                            |
+| GET / POST           | `publications/`                                         | List / create a destination                                  |
+| GET / PATCH / DELETE | `publications/{publicationId}/`                         | Read / partially update / soft-delete a publication          |
+| GET                  | `publications/{publicationId}/versions/`                | List versions                                                |
+| GET                  | `publications/{publicationId}/results/`                 | List published execution results                             |
+| GET                  | `publications/{publicationId}/compare/?base=1&target=2` | Compare version YAML                                         |
+| POST                 | `publications/workflow-preview/`                        | Review an exported workflow before creating its next version |
+| POST                 | `publications/preview/`                                 | Review an execution bundle and selected results              |
+| POST                 | `publications/confirm/`                                 | Publish the exact reviewed snapshot                          |
+| POST                 | `workflow-definition/`                                  | Fetch an immutable Hub workflow URI                          |
+| POST                 | `workflows/import/`                                     | Import that URI as a local workflow                          |
 
 A partial update accepts `title`, `slug`, `description`, `readme`, `visibility`, `authorship`, `tags` and `imageTags`. Omitted fields stay unchanged. Setting public or unlisted visibility also requires `acknowledgePublic: true`. Deletion invalidates pending reviews and clears the default destination when it matches.
 

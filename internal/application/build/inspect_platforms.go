@@ -13,7 +13,7 @@ func (m Manager) inspectRegistryPlatforms(ctx context.Context, image string, res
 	if !qualified || !strings.Contains(host, ".") || !strings.Contains(image, "@sha256:") {
 		return
 	}
-	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
 	defer cancel()
 	output, err := m.Executor.Runner.Run(ctx, "docker", []string{"manifest", "inspect", image}, nil)
 	if err != nil {

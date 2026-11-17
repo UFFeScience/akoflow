@@ -19,6 +19,9 @@ func (m Manager) inspectRegistryPlatforms(ctx context.Context, image string, res
 	}
 	if platforms := provider.RegistryPlatforms(ctx, m.Executor.Runner, image); len(platforms) > 0 {
 		result["platforms"] = platforms
+		if !strings.Contains(image, "@sha256:") {
+			result["platformsObservedFromTag"] = true
+		}
 	}
 }
 
@@ -35,9 +38,10 @@ func inspectedRegistryReference(reference string, image map[string]any) string {
 		return strings.TrimPrefix(value, "library/")
 	}
 	digests, _ := image["RepoDigests"].([]any)
+	config, _ := image["Id"].(string)
 	for _, value := range digests {
 		digest, _ := value.(string)
-		if strings.Contains(digest, "@sha256:") && repository(digest) == repository(reference) {
+		if strings.Contains(digest, "@sha256:") && !strings.HasSuffix(digest, "@"+config) && repository(digest) == repository(reference) {
 			return digest
 		}
 	}

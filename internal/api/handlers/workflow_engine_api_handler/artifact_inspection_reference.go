@@ -14,6 +14,9 @@ func pinInspectedOCI(source *domain.ExecutableSource) error {
 		return nil
 	}
 	data := source.Inspection.Data
+	if source.Type == domain.ExecutableSourceOCI && source.ExpectedDigest == "" && data["platformsObservedFromTag"] == true {
+		return nil
+	}
 	digest, _ := data["Id"].(string)
 	if digest == "" {
 		return nil

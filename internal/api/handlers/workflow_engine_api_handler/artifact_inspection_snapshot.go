@@ -41,6 +41,10 @@ func (h *Handler) inspectArtifactSource(ctx context.Context, source domain.Execu
 	}
 	if live["platforms"] != nil {
 		snapshot["platforms"] = live["platforms"]
+		delete(snapshot, "platformsObservedFromTag")
+		if live["platformsObservedFromTag"] == true {
+			snapshot["platformsObservedFromTag"] = true
+		}
 	}
 	snapshot["available"] = false
 	snapshot["metadataProvenance"] = "published-snapshot"
@@ -73,6 +77,10 @@ func (h *Handler) captureArtifactInspection(ctx context.Context, source *domain.
 	if source.Inspection != nil && inspection["metadataProvenance"] == "published-snapshot" {
 		if platforms := inspection["platforms"]; platforms != nil {
 			source.Inspection.Data["platforms"] = platforms
+			delete(source.Inspection.Data, "platformsObservedFromTag")
+			if inspection["platformsObservedFromTag"] == true {
+				source.Inspection.Data["platformsObservedFromTag"] = true
+			}
 		}
 		return source.Inspection.Validate()
 	}

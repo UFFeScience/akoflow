@@ -33,3 +33,12 @@ The independently deployed Hub main branch includes anonymous publication links,
 The synchronized `v1.0.22` tags freeze the daemon/documentation and Desktop sources. The existing GitHub Actions release pipeline builds runtime archives for Linux amd64/arm64 and Desktop packages for Linux, Windows and macOS; packages and updater manifests are attached by that pipeline.
 
 Use Docker Desktop on macOS/Windows or Docker Engine with the Compose v2 plugin on Linux. On macOS, copy the app from its DMG into Applications before launching. Secure automatic macOS installation updates require a configured Developer ID signing identity; use manual installation for unsigned builds.
+
+## Validation
+
+- Daemon: full `go test ./...` passed with CGO/SQLite and rsync available.
+- Desktop: 143 unit tests, 52 packaging contracts and patched dependency-security checks passed.
+- Browser: 113 development checks passed with one Electron-only skip; all 46 selected production checks passed. Coverage includes complete-plan loading from summary records, Gantt/stage rendering, owner-specific detail links and drawer portal interactions.
+- Screenshots: three actual-interface captures with no browser page errors.
+
+Native installation and automatic-update flows have not been manually revalidated on macOS or Windows for this release. GitHub Actions packaging status remains separate from these source and browser checks.

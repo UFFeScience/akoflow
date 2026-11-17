@@ -84,10 +84,11 @@ type importInput struct {
 	Message     string `json:"message"`
 }
 type preparedPublication struct {
-	Input       importInput
-	Publication Publication
-	TokenHash   string
-	ExpiresAt   time.Time
+	VersionInput *publicationVersionInput
+	Input        importInput
+	Publication  Publication
+	TokenHash    string
+	ExpiresAt    time.Time
 }
 type Preview struct {
 	ID           string           `json:"id"`

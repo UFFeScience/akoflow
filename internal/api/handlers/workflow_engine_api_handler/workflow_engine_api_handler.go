@@ -32,7 +32,6 @@ import (
 	domainevents "github.com/UFFeScience/akoflow/internal/domain/events"
 	domaininstance "github.com/UFFeScience/akoflow/internal/domain/instance"
 	domainqueue "github.com/UFFeScience/akoflow/internal/domain/queue"
-	"github.com/UFFeScience/akoflow/internal/domain/storagebudget"
 	cloudcredential "github.com/UFFeScience/akoflow/internal/infrastructure/credentials/cloud"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/sshkey"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/token"
@@ -2682,28 +2681,7 @@ func (h *Handler) CreateExecution(w http.ResponseWriter, r *http.Request) {
 	if h.rejectArchivedWorkflow(w, r, firstNonEmpty(request.Plan.WorkflowVersionID, request.Workflow.ID)) {
 		return
 	}
-	if err := h.resolveLocalExecutionAllocation(r.Context(), &request); err != nil {
-		writeError(w, http.StatusUnprocessableEntity, err)
-		return
-	}
-	if err := h.resolveWorkspaceHomes(r.Context(), &request); err != nil {
-		writeError(w, http.StatusUnprocessableEntity, err)
-		return
-	}
-	storageResources, overrideErr := preflightStorageResources(request)
-	if overrideErr != nil {
-		writeError(w, http.StatusUnprocessableEntity, overrideErr)
-		return
-	}
-	storageTimings := []storagebudget.Timing{}
-	for _, assignment := range request.Plan.Assignments {
-		storageTimings = append(storageTimings, storagebudget.Timing{ActivityID: assignment.ActivityID, ResourceID: assignment.ResourceID, Start: assignment.PredictedStartAt, Finish: assignment.PredictedFinishAt})
-	}
-	if _, _, err := storagebudget.CheckScheduled(request.Workflow, storageResources, storageTimings); err != nil {
-		writeError(w, http.StatusUnprocessableEntity, err)
-		return
-	}
-	if err := h.resolveBuildPreparations(r.Context(), &request); err != nil {
+	if err := h.enforceExecutionPreflight(r.Context(), &request); err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return
 	}
@@ -3061,43 +3039,9 @@ func (h *Handler) resolveBuildPreparations(ctx context.Context, request *ports.E
 			}
 			continue
 		}
-		var requirement domain.PreparationRequirement
-		var required bool
-		switch activity.Command.Executable.Source.Type {
-		case domain.ExecutableSourceCatalog:
-			catalog, ok := any(h.data).(applicationbuild.CatalogOutput)
-			if !ok {
-				return fmt.Errorf("artifact catalog output resolver is unavailable")
-			}
-			ref := activity.Command.Executable.Source.ArtifactRef
-			if ref == nil {
-				return fmt.Errorf("activity %q catalog executable has no artifact reference", activity.ID)
-			}
-			var err error
-			requirement, err = applicationbuild.PreparationForCatalog(ctx, catalog, ref.ID, ref.Version, activity.ID, resource, "")
-			if err != nil {
-				return err
-			}
-			required = true
-		case domain.ExecutableSourceType("build"):
-			var err error
-			requirement, err = resolver.Preparation(ctx, activity.Command.Executable.Source.ArtifactBuildRef, activity.ID, resource, "")
-			if err != nil {
-				return err
-			}
-			required = true
-		case domain.ExecutableSourceOCI:
-			if executionRuntimeDriver(*request, assignment) != domain.RuntimeDriverSlurm {
-				continue
-			}
-			var err error
-			requirement, required, err = resolver.PreparationForDockerImage(ctx, activity.Command.Executable.Source.Reference, activity.ID, resource, "")
-			if err != nil {
-				return err
-			}
-			if !required {
-				return operationerror.Wrap(fmt.Errorf("activity %q requires a completed SIF build for OCI image %q before Slurm execution", activity.ID, activity.Command.Executable.Source.Reference), "artifact_sif_required", "artifact_compatibility", activity.ID, false, "Build and register a SIF artifact for this image and destination architecture before executing on Slurm.")
-			}
+		requirement, required, err := h.catalogPreparation(ctx, resolver, activity, resource, executionRuntimeDriver(*request, assignment))
+		if err != nil {
+			return err
 		}
 		if !required {
 			continue
@@ -3330,4 +3274,51 @@ func (h *Handler) resolveCatalogImage(ctx context.Context, activity domain.Activ
 	}
 	*imageTarget = image
 	return nil
+}
+
+func (h *Handler) catalogPreparation(ctx context.Context, resolver applicationbuild.OutputResolver, activity domain.Activity, resource domain.Resource, driver domain.RuntimeDriver) (domain.PreparationRequirement, bool, error) {
+	var requirement domain.PreparationRequirement
+	var required bool
+	switch activity.Command.Executable.Source.Type {
+	case domain.ExecutableSourceCatalog:
+		catalog, ok := any(h.data).(applicationbuild.CatalogOutput)
+		if !ok {
+			return domain.PreparationRequirement{}, false, fmt.Errorf("artifact catalog output resolver is unavailable")
+		}
+		ref := activity.Command.Executable.Source.ArtifactRef
+		if ref == nil {
+			return domain.PreparationRequirement{}, false, fmt.Errorf("activity %q catalog executable has no artifact reference", activity.ID)
+		}
+		var err error
+		requirement, err = applicationbuild.PreparationForCatalog(ctx, catalog, ref.ID, ref.Version, activity.ID, resource, "")
+		if err != nil {
+			return domain.PreparationRequirement{}, false, err
+		}
+		required = true
+	case domain.ExecutableSourceType("build"):
+		var err error
+		requirement, err = resolver.Preparation(ctx, activity.Command.Executable.Source.ArtifactBuildRef, activity.ID, resource, "")
+		if err != nil {
+			return domain.PreparationRequirement{}, false, err
+		}
+		required = true
+	case domain.ExecutableSourceOCI:
+		if driver != domain.RuntimeDriverSlurm {
+			return requirement, false, nil
+		}
+		var err error
+		requirement, required, err = resolver.PreparationForDockerImage(ctx, activity.Command.Executable.Source.Reference, activity.ID, resource, "")
+		if err != nil {
+			return domain.PreparationRequirement{}, false, err
+		}
+		if !required {
+			return domain.PreparationRequirement{}, false, operationerror.Wrap(
+				fmt.Errorf("activity %q requires a completed SIF build for OCI image %q before Slurm execution", activity.ID, activity.Command.Executable.Source.Reference),
+				"artifact_sif_required", "artifact_compatibility", activity.ID, false,
+				"Build and register a SIF artifact for this image and destination architecture before executing on Slurm.",
+			)
+		}
+	}
+
+	return requirement, required, nil
 }

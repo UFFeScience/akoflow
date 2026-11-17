@@ -1,0 +1,133 @@
+package workflow_engine_api_handler
+
+import (
+	"context"
+	"errors"
+	"strings"
+	"testing"
+	"time"
+
+	"github.com/UFFeScience/akoflow/internal/application/ports"
+	"github.com/UFFeScience/akoflow/internal/domain"
+	domainpreflight "github.com/UFFeScience/akoflow/internal/domain/preflight"
+)
+
+type preflightCommandStub struct {
+	ExecutionCommandStore
+	reports map[string]domainpreflight.Report
+}
+
+func (s *preflightCommandStub) SavePreflight(_ context.Context, report domainpreflight.Report) error {
+	if s.reports == nil {
+		s.reports = map[string]domainpreflight.Report{}
+	}
+	s.reports[report.ID] = report
+	return nil
+}
+func (s *preflightCommandStub) FindPreflight(_ context.Context, id string) (*domainpreflight.Report, error) {
+	value, found := s.reports[id]
+	if !found {
+		return nil, nil
+	}
+	return &value, nil
+}
+
+func preflightRequest() ports.ExecutionRequest {
+	return ports.ExecutionRequest{Run: domain.ExecutionRun{ID: "run", Mode: domain.ExecutionModeReal}, Plan: domain.SchedulePlan{ID: "plan"}, Workflow: domain.WorkflowVersion{ID: "workflow"}}
+}
+func TestPreflightReceiptRejectsExpiryChangesAndUnreviewedWarnings(t *testing.T) {
+	request := preflightRequest()
+	report := domainpreflight.Report{ID: "report", ContextHash: executionContextHash(request), Ready: true, ExpiresAt: time.Now().Add(time.Minute), Warnings: 1}
+	store := &preflightCommandStub{reports: map[string]domainpreflight.Report{report.ID: report}}
+	h := &Handler{executionCommands: store}
+	request.PreflightID = report.ID
+	if err := h.validatePreflightReceipt(context.Background(), request); err == nil {
+		t.Fatal("warnings silently accepted")
+	}
+	request.AcknowledgeWarnings = true
+	if err := h.validatePreflightReceipt(context.Background(), request); err != nil {
+		t.Fatal(err)
+	}
+	request.Run.ID = "changed"
+	if err := h.validatePreflightReceipt(context.Background(), request); err == nil {
+		t.Fatal("changed context accepted")
+	}
+	request.Run.ID = "run"
+	report.ExpiresAt = time.Now().Add(-time.Second)
+	store.reports[report.ID] = report
+	if err := h.validatePreflightReceipt(context.Background(), request); err == nil {
+		t.Fatal("expired report accepted")
+	}
+}
+func TestRequiredInputsDistinguishExistingFilesFromPredecessorOutputs(t *testing.T) {
+	h := &Handler{storage: &storageNavigatorStub{err: errors.New("file missing")}}
+	request := preflightRequest()
+	request.Workflow.Activities = []domain.Activity{{ID: "consumer", Metadata: map[string]any{"requiredInputs": []domainpreflight.Input{{StorageID: "storage", Path: "input.csv"}}}}}
+	probe := h.preflightInputs(request)[0]
+	status, message, _ := probe.Run(context.Background())
+	if status != "blocked" || !strings.Contains(message, "input.csv") {
+		t.Fatalf("missing input approved: %s %s", status, message)
+	}
+	request.Workflow.Activities[0].Metadata["requiredInputs"] = []domainpreflight.Input{{ProducerActivityID: "producer", Path: "output.csv"}}
+	request.Workflow.Dependencies = []domain.ActivityDependency{{ActivityID: "consumer", DependsOnActivityID: "producer"}}
+	status, _, _ = h.preflightInputs(request)[0].Run(context.Background())
+	if status != "passed" {
+		t.Fatal("future output required prematurely")
+	}
+}
+func TestSimulationPreflightDoesNotProbeInfrastructure(t *testing.T) {
+	h := &Handler{connectionTest: func(context.Context, domain.EnvironmentConnection) ports.ConnectionHealth {
+		t.Fatal("simulation probed infrastructure")
+		return ports.ConnectionHealth{}
+	}}
+	request := preflightRequest()
+	request.Run.Mode = domain.ExecutionModeSimulation
+	report := h.evaluateExecutionPreflight(context.Background(), &request)
+	if !report.Ready || report.Warnings != 1 || len(report.Checks) != 3 {
+		t.Fatalf("unexpected simulation report: %+v", report)
+	}
+}
+func TestPreflightBlocksLaunchOnFreshInputFailure(t *testing.T) {
+	request := preflightRequest()
+	request.Workflow.Activities = []domain.Activity{{ID: "activity", Metadata: map[string]any{"requiredInputs": []domainpreflight.Input{{StorageID: "storage", Path: "missing.csv"}}}}}
+	request.Plan.Assignments = []domain.PlanAssignment{{ActivityID: "activity", ResourceID: "resource"}}
+	request.Resources = []domain.Resource{{ID: "resource", Type: domain.ResourceLocalMachine}}
+	request.Runtimes = []domain.EnvironmentRuntime{{ID: "runtime", Driver: domain.RuntimeDriverLocal, Mode: domain.RuntimeModeExecution}}
+	request.RuntimeBindings = []domain.ResourceRuntimeBinding{{ResourceID: "resource", RuntimeID: "runtime", Enabled: true}}
+	h := &Handler{storage: &storageNavigatorStub{err: errors.New("not found")}, connectionTest: func(context.Context, domain.EnvironmentConnection) ports.ConnectionHealth {
+		return ports.ConnectionHealth{Healthy: true}
+	}}
+	request.AcknowledgeWarnings = true
+	if err := h.enforceExecutionPreflight(context.Background(), &request); err == nil || !strings.Contains(err.Error(), "missing.csv") {
+		t.Fatalf("launch escaped preflight: %v", err)
+	}
+}
+
+func TestLaunchRechecksMutableInputsAfterApprovedReport(t *testing.T) {
+	request := preflightRequest()
+	request.Workflow.Activities = []domain.Activity{{ID: "activity", Metadata: map[string]any{
+		"requiredInputs": []domainpreflight.Input{{StorageID: "storage", Path: "input.csv"}},
+	}}}
+	request.Plan.Assignments = []domain.PlanAssignment{{ActivityID: "activity", ResourceID: "resource"}}
+	request.Resources = []domain.Resource{{ID: "resource", Type: domain.ResourceLocalMachine}}
+	request.Runtimes = []domain.EnvironmentRuntime{{ID: "runtime", Driver: domain.RuntimeDriverLocal, Mode: domain.RuntimeModeExecution}}
+	request.RuntimeBindings = []domain.ResourceRuntimeBinding{{ResourceID: "resource", RuntimeID: "runtime", Enabled: true}}
+	storage := &storageNavigatorStub{}
+	store := &preflightCommandStub{}
+	h := &Handler{executionCommands: store, storage: storage, connectionTest: func(context.Context, domain.EnvironmentConnection) ports.ConnectionHealth {
+		return ports.ConnectionHealth{Healthy: true}
+	}}
+	report := h.evaluateExecutionPreflight(context.Background(), &request)
+	if !report.Ready {
+		t.Fatal(report)
+	}
+	if err := store.SavePreflight(context.Background(), report); err != nil {
+		t.Fatal(err)
+	}
+	request.PreflightID, request.AcknowledgeWarnings = report.ID, true
+	storage.err = errors.New("file removed after review")
+	err := h.enforceExecutionPreflight(context.Background(), &request)
+	if err == nil || !strings.Contains(err.Error(), "file removed after review") {
+		t.Fatalf("stale input approval reused: %v", err)
+	}
+}

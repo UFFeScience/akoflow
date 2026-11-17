@@ -9,6 +9,8 @@ Start a run from a saved plan, follow its activities, and inspect the result. Ak
 
 For the API commands on this page, complete [API connection setup](/docs/tutorials/api-access) first.
 
+Before starting, review [execution prerequisite validation](/docs/guides/workflows/preflight).
+
 ## Choose real execution or simulation
 
 - **Real** runs send activities to resources configured for execution, such as the local machine, Kubernetes, or SLURM.
@@ -64,11 +66,11 @@ Depending on the runtime and available observations, the completed trace can inc
 
 <img src={require('@site/static/img/interface/runs/workflow-history.png').default} alt="AkôFlow Desktop Runs history filtered to Workflow, showing type, real or simulation mode, status, target, start time and activity progress." />
 
-*Start with the **Type** filter when investigating a workflow. The table then separates real and simulation runs, exposes the target and completion state, and reports activity progress. Select a row or **Details** to move from the compact history into the run evidence.*
+_Start with the **Type** filter when investigating a workflow. The table then separates real and simulation runs, exposes the target and completion state, and reports activity progress. Select a row or **Details** to move from the compact history into the run evidence._
 
 <img src={require('@site/static/img/interface/runs/simgrid-run-decomposition.png').default} alt="Completed SimGrid run detail in AkôFlow Desktop with run status, observed makespan, transferred data and the execution-time decomposition chart." />
 
-*In the run detail, **Workflow makespan** is wall-clock completion time. **Accumulated stage time** is the sum of work attributed to stages across activities, so it can be greater than makespan when activities overlap. The decomposition makes transfer, execution, queue, boot and interference visible instead of treating them as a single unexplained duration.*
+_In the run detail, **Workflow makespan** is wall-clock completion time. **Accumulated stage time** is the sum of work attributed to stages across activities, so it can be greater than makespan when activities overlap. The decomposition makes transfer, execution, queue, boot and interference visible instead of treating them as a single unexplained duration._
 
 ## Using the API
 

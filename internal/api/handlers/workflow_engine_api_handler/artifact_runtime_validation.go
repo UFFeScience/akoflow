@@ -21,10 +21,18 @@ func validatePortableRuntime(activity domain.Activity, resource domain.Resource,
 	}
 	architecture := strings.Split(origin.Platform, "/")[1]
 	if resource.Architecture != "" && architecture != normalizedOriginArchitecture(resource.Architecture) {
-		return fail(fmt.Errorf("artifact platform %q does not match resource architecture %q", origin.Platform, resource.Architecture), "artifact_platform_mismatch", "Select a compatible resource or publish an image for the destination architecture.")
+		return fail(
+			fmt.Errorf("artifact platform %q does not match resource architecture %q", origin.Platform, resource.Architecture),
+			"artifact_platform_mismatch",
+			"Select a compatible resource or publish an image for the destination architecture.",
+		)
 	}
 	if origin.Build != nil && driver != domain.RuntimeDriverLocal {
-		return fail(fmt.Errorf("portable source builds cannot be prepared directly by runtime %q", driver), "artifact_runtime_unsupported", "Prepare the image locally, then publish an OCI image for Kubernetes or register a completed SIF build for Slurm.")
+		return fail(
+			fmt.Errorf("portable source builds cannot be prepared directly by runtime %q", driver),
+			"artifact_runtime_unsupported",
+			"Prepare the image locally, then publish an OCI image for Kubernetes or register a completed SIF build for Slurm.",
+		)
 	}
 	return nil
 }

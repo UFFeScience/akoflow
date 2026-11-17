@@ -35,7 +35,7 @@ const groupRules = [
   ["Resources", /^\/(resources|network-topologies|execution-scopes)/],
   ["Workflows", /^\/(workflow-definitions|workflow-definition-actions)/],
   ["Planning", /^\/(schedule-plans|planning-)/],
-  ["Executions", /^\/execution-runs/],
+  ["Executions", /^\/execution-(runs|preflights)/],
   ["Artifacts", /^\/(artifacts|artifact-|build-)/],
   ["Provenance", /^\/provenance/],
   ["Console", /^\/console-/],
@@ -381,6 +381,8 @@ const runnableSimulationRequests = {
 // These notes come from handler calls and the credential/operation services,
 // not from JSON tags alone. Keep them scoped to fields the service validates.
 const verifiedRequestNotes = {
+  "POST /akoflow-api/execution-preflights/":
+    "Accepts the execution request and returns a persisted prerequisite report with 200 OK. Checks are read-only, individually bounded to five seconds and bounded to thirty seconds overall. Reports expire after two minutes and do not provision resources, pull images or start work. Review blocked and unverified checks before launching with preflightId and explicit acknowledgeWarnings.",
   "POST /akoflow-api/scheduling-algorithms/":
     "Submit a scheduler package with a unique id and trusted Go source. The writable daemon compiles it and returns the saved package with 201 Created. Compilation diagnostics are recorded on the package; inspect its status before planning. Installed code runs with daemon permissions.",
   "PUT /akoflow-api/scheduling-algorithms/{algorithmId}/":
@@ -392,7 +394,7 @@ const verifiedRequestNotes = {
   "POST /akoflow-api/execution-runs/{runId}/preserve-cloud-workspaces/":
     "Supply `downloadId`, `instanceId` and the actual `sha256` of a ready archive for `runs/{runId}.tar.gz` in `cloud-workspace:{instanceId}`. The run must be cancelled and every handle terminal. The server requires matching run/generation identity, an unpinned retained workspace set, and both source and relay checksum validation before releasing preserved workspace leases. It copies the verified archive to daemon-local storage; it does not remove source files or VMs. No standalone request is supplied because these values must come from your verified recovery evidence.",
   "POST /akoflow-api/execution-runs/":
-    "`202 Accepted` publishes a queue job. The returned `id` is the job ID, while `aggregateId` is the submitted `run.id`. The worker validates the request before saving a run; `GET /execution-runs/{runId}/` can return `404` until then, or remain `404` if validation fails. Use the original `run.id` to read the run, and do not treat the queue job's status as the run's status. Repeating the same `run.id` returns the existing idempotent job rather than creating a second one.",
+    "The daemon runs fresh prerequisite checks before saving a run and publishing its command. Blocking failures return 422. Real requests with advisory or unverified requirements must explicitly set acknowledgeWarnings. Optional preflightId must match the request and remain valid. `202 Accepted` returns the queue job: `id` identifies the job and `aggregateId` identifies the submitted run. Inspect the run rather than treating job status as scientific completion.",
   "POST /akoflow-api/execution-runs/{runId}/cancel/":
     "No JSON body is required. The run must exist and the instance must be writable. AkôFlow interrupts unfinished activities, cancels queued execution work, marks the run cancelled, and returns the updated run with `200 OK`. Cancelling an already-cancelled run is idempotent and also returns `200`; an unknown run returns `404`.",
   "POST /akoflow-api/execution-runs/{runId}/recovery/":

@@ -1767,3 +1767,7 @@ func appendLanePredecessors(assignments []domain.PlanAssignment, predecessors ma
 		predecessors[successor] = append(predecessors[successor], predecessor)
 	}
 }
+
+func ValidateRequest(request ports.ExecutionRequest) error {
+	return validateRequest(request)
+}

@@ -26,6 +26,9 @@ func (h *Handler) inspectArtifactSource(ctx context.Context, source domain.Execu
 		return live, err
 	}
 	if err == nil && live["available"] == true {
+		if live["platforms"] == nil && source.Inspection.Data["platforms"] != nil {
+			live["platforms"] = source.Inspection.Data["platforms"]
+		}
 		return live, nil
 	}
 	data, marshalErr := json.Marshal(source.Inspection.Data)
@@ -35,6 +38,9 @@ func (h *Handler) inspectArtifactSource(ctx context.Context, source domain.Execu
 	var snapshot map[string]any
 	if json.Unmarshal(data, &snapshot) != nil {
 		return nil, fmt.Errorf("invalid artifact inspection snapshot")
+	}
+	if live["platforms"] != nil {
+		snapshot["platforms"] = live["platforms"]
 	}
 	snapshot["available"] = false
 	snapshot["metadataProvenance"] = "published-snapshot"

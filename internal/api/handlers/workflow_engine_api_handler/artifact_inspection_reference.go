@@ -14,6 +14,13 @@ func pinInspectedOCI(source *domain.ExecutableSource) error {
 		return nil
 	}
 	data := source.Inspection.Data
+	if source.Type == domain.ExecutableSourceOCI && source.ExpectedDigest == "" && strings.Contains(source.Reference, "@sha256:") {
+		encoded, _ := json.Marshal(data["platforms"])
+		var platforms []string
+		if json.Unmarshal(encoded, &platforms) == nil && len(platforms) > 1 {
+			return nil
+		}
+	}
 	digest, _ := data["Id"].(string)
 	if digest == "" {
 		return nil

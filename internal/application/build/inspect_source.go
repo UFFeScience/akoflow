@@ -47,6 +47,9 @@ func (m Manager) InspectSource(ctx context.Context, source domain.ExecutableSour
 	if m.Executor.Runner == nil {
 		return result, nil
 	}
+	if source.Type == domain.ExecutableSourceOCI {
+		m.inspectRegistryPlatforms(ctx, image, result)
+	}
 	output, err := m.Executor.Runner.Run(ctx, "docker", []string{"image", "inspect", image}, nil)
 	if err != nil {
 		return result, nil

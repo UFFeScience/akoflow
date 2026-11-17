@@ -30,6 +30,7 @@ const sidebars: SidebarsConfig = {
               collapsed: true,
               items: [
                 "showcase/scientific-workflows/montage-050",
+                "showcase/scientific-workflows/opendronemap",
                 "showcase/scientific-workflows/openoil-ensemble-08",
                 "showcase/scientific-workflows/openoil-ensemble-16",
                 "showcase/scientific-workflows/openoil-ensemble-32",

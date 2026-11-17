@@ -10,5 +10,5 @@
   ],
   "browserPageErrors": [],
   "executionStartedForCapture": false,
-  "notes": "Plan and execution values are previously recorded observations. The artifact picker shows the local catalog. Capturing these pages did not create a workflow, execute activities or publish results."
+  "notes": "Plan and execution values are previously recorded observations. The artifact picker shows the Docker Hub search results for Python. Capturing these pages did not create a workflow, execute activities or publish results."
 }

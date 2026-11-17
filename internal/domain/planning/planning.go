@@ -195,17 +195,18 @@ type PlanningEstimate struct {
 // PlanCandidate is intentionally separate from SchedulePlan. Only a selected
 // candidate is promoted to the canonical plan aggregate used by execution.
 type PlanCandidate struct {
-	ID                string           `json:"id"`
-	PlanningSessionID string           `json:"planningSessionId"`
-	AlgorithmRunID    string           `json:"algorithmRunId"`
-	Algorithm         string           `json:"algorithm"`
-	Objective         string           `json:"objective"`
-	Rank              int              `json:"rank"`
-	ParetoOptimal     bool             `json:"paretoOptimal"`
-	Dominated         bool             `json:"dominated"`
-	Feasible          bool             `json:"feasible"`
-	Predicted         PredictedMetrics `json:"predicted"`
-	Plan              SchedulePlan     `json:"plan,omitempty"`
-	Fingerprint       string           `json:"fingerprint"`
-	CreatedAt         time.Time        `json:"createdAt"`
+	ID                  string           `json:"id"`
+	PlanningSessionID   string           `json:"planningSessionId"`
+	AlgorithmRunID      string           `json:"algorithmRunId"`
+	Algorithm           string           `json:"algorithm"`
+	Objective           string           `json:"objective"`
+	Rank                int              `json:"rank"`
+	ParetoOptimal       bool             `json:"paretoOptimal"`
+	Dominated           bool             `json:"dominated"`
+	Feasible            bool             `json:"feasible"`
+	Predicted           PredictedMetrics `json:"predicted"`
+	Plan                SchedulePlan     `json:"plan,omitempty"`
+	Fingerprint         string           `json:"fingerprint"`
+	ScheduleFingerprint string           `json:"scheduleFingerprint,omitempty"`
+	CreatedAt           time.Time        `json:"createdAt"`
 }

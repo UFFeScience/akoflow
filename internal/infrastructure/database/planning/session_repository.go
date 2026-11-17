@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
+	domainplanning "github.com/UFFeScience/akoflow/internal/domain/planning"
 )
 
 func encodeJSON(value any) (string, error) {
@@ -331,6 +332,7 @@ func (r *Repository) ListCandidates(ctx context.Context, sessionID string) ([]do
 
 func scanCandidateSummary(scanner interface{ Scan(...any) error }) (*domain.PlanCandidate, error) {
 	var candidate domain.PlanCandidate
+	var planJSON []byte
 	err := scanner.Scan(
 		&candidate.ID,
 		&candidate.PlanningSessionID,
@@ -344,17 +346,26 @@ func scanCandidateSummary(scanner interface{ Scan(...any) error }) (*domain.Plan
 		&candidate.Predicted.MakespanSeconds,
 		&candidate.Predicted.Cost,
 		&candidate.Plan.AssignmentCount,
+		&planJSON,
 		&candidate.Fingerprint,
 		&candidate.CreatedAt,
 	)
+	if err != nil {
+		return nil, err
+	}
+	var plan domain.SchedulePlan
+	if err := json.Unmarshal(planJSON, &plan); err != nil {
+		return nil, err
+	}
 	candidate.Predicted.Feasible = candidate.Feasible
+	candidate.ScheduleFingerprint, err = domainplanning.ScheduleFingerprint(plan, candidate.Predicted)
 	return &candidate, err
 }
 
 func (r *Repository) ListCandidateSummaries(ctx context.Context, sessionID string) ([]domain.PlanCandidate, error) {
 	const columns = `id, planning_session_id, algorithm_run_id, algorithm, objective,
 		rank, pareto_optimal, dominated, feasible, predicted_makespan_seconds, predicted_cost,
-		COALESCE(json_array_length(json_extract(plan, '$.assignments')), 0), fingerprint, created_at`
+		COALESCE(json_array_length(json_extract(plan, '$.assignments')), 0), plan, fingerprint, created_at`
 	rows, err := r.db.QueryContext(ctx, `SELECT `+columns+` FROM planning_candidates
 		WHERE planning_session_id=? ORDER BY rank, predicted_makespan_seconds, predicted_cost`, sessionID)
 	if err != nil {

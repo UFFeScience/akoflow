@@ -27,6 +27,7 @@ import (
 	applicationconfiguration "github.com/UFFeScience/akoflow/internal/application/machineconfiguration"
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/controlplane/eventloop"
+	executioncontrol "github.com/UFFeScience/akoflow/internal/controlplane/execution"
 	"github.com/UFFeScience/akoflow/internal/domain"
 	domainconsole "github.com/UFFeScience/akoflow/internal/domain/console"
 	domainevents "github.com/UFFeScience/akoflow/internal/domain/events"
@@ -2681,7 +2682,7 @@ func (h *Handler) CreateExecution(w http.ResponseWriter, r *http.Request) {
 	if h.rejectArchivedWorkflow(w, r, firstNonEmpty(request.Plan.WorkflowVersionID, request.Workflow.ID)) {
 		return
 	}
-	if err := h.enforceExecutionPreflight(r.Context(), &request); err != nil {
+	if err := executioncontrol.ValidateRequest(request); err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return
 	}
@@ -2950,10 +2951,6 @@ func (h *Handler) RecoverExecution(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	request.Recovery = &ports.ExecutionRecovery{Mode: input.Mode, ReuseActivityIDs: preview.Reusable}
-	if err := h.resolveWorkspaceHomes(r.Context(), &request); err != nil {
-		writeError(w, http.StatusUnprocessableEntity, err)
-		return
-	}
 	request.Recovery.RetryActivityIDs = append(append([]string{}, preview.Failed...), preview.Interrupted...)
 	payload, err := json.Marshal(request)
 	if err != nil {

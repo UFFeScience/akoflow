@@ -36,30 +36,6 @@ func (s *preflightCommandStub) FindPreflight(_ context.Context, id string) (*dom
 func preflightRequest() ports.ExecutionRequest {
 	return ports.ExecutionRequest{Run: domain.ExecutionRun{ID: "run", Mode: domain.ExecutionModeReal}, Plan: domain.SchedulePlan{ID: "plan"}, Workflow: domain.WorkflowVersion{ID: "workflow"}}
 }
-func TestPreflightReceiptRejectsExpiryChangesAndUnreviewedWarnings(t *testing.T) {
-	request := preflightRequest()
-	report := domainpreflight.Report{ID: "report", ContextHash: executionContextHash(request), Ready: true, ExpiresAt: time.Now().Add(time.Minute), Warnings: 1}
-	store := &preflightCommandStub{reports: map[string]domainpreflight.Report{report.ID: report}}
-	h := &Handler{executionCommands: store}
-	request.PreflightID = report.ID
-	if err := h.validatePreflightReceipt(context.Background(), request); err == nil {
-		t.Fatal("warnings silently accepted")
-	}
-	request.AcknowledgeWarnings = true
-	if err := h.validatePreflightReceipt(context.Background(), request); err != nil {
-		t.Fatal(err)
-	}
-	request.Run.ID = "changed"
-	if err := h.validatePreflightReceipt(context.Background(), request); err == nil {
-		t.Fatal("changed context accepted")
-	}
-	request.Run.ID = "run"
-	report.ExpiresAt = time.Now().Add(-time.Second)
-	store.reports[report.ID] = report
-	if err := h.validatePreflightReceipt(context.Background(), request); err == nil {
-		t.Fatal("expired report accepted")
-	}
-}
 func TestRequiredInputsDistinguishExistingFilesFromPredecessorOutputs(t *testing.T) {
 	h := &Handler{storage: &storageNavigatorStub{err: errors.New("file missing")}}
 	request := preflightRequest()
@@ -99,7 +75,7 @@ func TestPreflightBlocksLaunchOnFreshInputFailure(t *testing.T) {
 		return ports.ConnectionHealth{Healthy: true}
 	}}
 	request.AcknowledgeWarnings = true
-	if err := h.enforceExecutionPreflight(context.Background(), &request); err == nil || !strings.Contains(err.Error(), "missing.csv") {
+	if err := h.PrepareExecution(context.Background(), &request); err == nil || !strings.Contains(err.Error(), "missing.csv") {
 		t.Fatalf("launch escaped preflight: %v", err)
 	}
 }
@@ -127,7 +103,7 @@ func TestLaunchRechecksMutableInputsAfterApprovedReport(t *testing.T) {
 	}
 	request.PreflightID, request.AcknowledgeWarnings = report.ID, true
 	storage.err = errors.New("file removed after review")
-	err := h.enforceExecutionPreflight(context.Background(), &request)
+	err := h.PrepareExecution(context.Background(), &request)
 	if err == nil || !strings.Contains(err.Error(), "file removed after review") {
 		t.Fatalf("stale input approval reused: %v", err)
 	}

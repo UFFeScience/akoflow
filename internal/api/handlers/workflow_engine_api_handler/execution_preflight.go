@@ -59,31 +59,11 @@ func (h *Handler) GetExecutionPreflight(w http.ResponseWriter, r *http.Request) 
 	writeItem(w, report, err)
 }
 
-func (h *Handler) validatePreflightReceipt(ctx context.Context, request ports.ExecutionRequest) error {
-	if request.PreflightID == "" {
-		return nil
-	}
-	store, ok := h.executionCommands.(preflightStore)
-	if !ok {
-		return fmt.Errorf("preflight persistence is unavailable")
-	}
-	report, err := store.FindPreflight(ctx, request.PreflightID)
-	if err != nil {
-		return err
-	}
-	if report == nil || !time.Now().Before(report.ExpiresAt) || report.ContextHash != executionContextHash(request) {
-		return operationerror.Wrap(fmt.Errorf("execution validation expired or its configuration changed"), "preflight_stale", "preflight", "", false, "Validate the selected execution again.")
-	}
-	if !report.Ready {
-		return fmt.Errorf("execution validation contains blocking failures")
-	}
-	if report.Warnings > 0 && !request.AcknowledgeWarnings {
-		return fmt.Errorf("review and acknowledge preflight warnings before starting")
-	}
-	return nil
+func (h *Handler) evaluateExecutionPreflight(ctx context.Context, request *ports.ExecutionRequest) domainpreflight.Report {
+	return h.evaluateExecutionPrerequisites(ctx, request, true)
 }
 
-func (h *Handler) evaluateExecutionPreflight(ctx context.Context, request *ports.ExecutionRequest) domainpreflight.Report {
+func (h *Handler) evaluateExecutionPrerequisites(ctx context.Context, request *ports.ExecutionRequest, inspectImages bool) domainpreflight.Report {
 	hash := executionContextHash(*request)
 	probe := func(code, stage string, check func(context.Context) error) apppreflight.Probe {
 		return apppreflight.Probe{Code: code, Stage: stage, Run: func(ctx context.Context) (string, string, string) {
@@ -133,15 +113,14 @@ func (h *Handler) evaluateExecutionPreflight(ctx context.Context, request *ports
 	)
 	probes = append(probes, h.preflightConnections(request)...)
 	probes = append(probes, h.preflightInputs(*request)...)
-	probes = append(probes, h.preflightImages(request)...)
+	if inspectImages {
+		probes = append(probes, h.preflightImages(request)...)
+	}
 	return apppreflight.Evaluate(ctx, "preflight-"+uuid.NewString(), hash, string(request.Run.Mode), probes)
 }
 
-func (h *Handler) enforceExecutionPreflight(ctx context.Context, request *ports.ExecutionRequest) error {
-	if err := h.validatePreflightReceipt(ctx, *request); err != nil {
-		return err
-	}
-	report := h.evaluateExecutionPreflight(ctx, request)
+func (h *Handler) PrepareExecution(ctx context.Context, request *ports.ExecutionRequest) error {
+	report := h.evaluateExecutionPrerequisites(ctx, request, false)
 	if store, ok := h.executionCommands.(preflightStore); ok {
 		if err := store.SavePreflight(ctx, report); err != nil {
 			return fmt.Errorf("persist launch validation: %w", err)
@@ -153,9 +132,6 @@ func (h *Handler) enforceExecutionPreflight(ctx context.Context, request *ports.
 				return operationerror.Wrap(fmt.Errorf("%s", check.Message), check.Code, check.Stage, check.EntityID, false, check.NextAction)
 			}
 		}
-	}
-	if request.Run.Mode != domain.ExecutionModeSimulation && report.Warnings > 0 && !request.AcknowledgeWarnings {
-		return fmt.Errorf("new preflight warnings require review; validate again")
 	}
 	return nil
 }

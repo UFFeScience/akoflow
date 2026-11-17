@@ -494,7 +494,7 @@ func TestGetExecutionReturnsActivitiesAndEvents(t *testing.T) {
 
 func TestCreateExecutionPublishesPersistentCommand(t *testing.T) {
 	recorder := httptest.NewRecorder()
-	request := yamlRequest("run:\n  id: run\n  mode: simulation\nplan:\n  id: plan\nworkflow:\n  id: workflow\nresources: []\nnetworkTopology: {}\nactivityProfiles: []\n")
+	request := yamlRequest("preflightId: expired-report\nrun:\n  id: run\n  mode: real\nplan:\n  id: plan\nworkflow:\n  id: workflow\nresources: []\nnetworkTopology: {}\nactivityProfiles: []\n")
 	newTestHandler().CreateExecution(recorder, request)
 	require.Equal(t, http.StatusAccepted, recorder.Code)
 	require.Contains(t, recorder.Body.String(), `"eventType":"execution.run.requested"`)

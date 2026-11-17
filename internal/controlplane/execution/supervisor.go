@@ -31,6 +31,7 @@ type ActivityController interface {
 }
 
 type Config struct {
+	PrepareRun     func(context.Context, *ports.ExecutionRequest) error
 	PollInterval   time.Duration
 	Preparer       ports.PreparationCoordinator
 	Data           ports.DataCatalog
@@ -124,6 +125,11 @@ func (s *Supervisor) Execute(ctx context.Context, request ports.ExecutionRequest
 			}
 		}
 	}()
+	if s.config.PrepareRun != nil {
+		if err = s.config.PrepareRun(ctx, &request); err != nil {
+			return domain.ExecutionTrace{}, err
+		}
+	}
 	if request.Run.Mode == domain.ExecutionModeSimulation {
 		trace, err = s.simulation.Execute(ctx, request)
 	} else {

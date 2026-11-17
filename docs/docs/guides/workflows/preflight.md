@@ -2,13 +2,9 @@
 title: Validate execution prerequisites
 ---
 
-Desktop validates the selected execution before starting it. Select **Validate execution**, review every check, correct blockers and explicitly acknowledge warnings or requirements that could not be verified. Then select **Start execution**. Changing the run ID or selected plan clears the review.
+Select **Start execution** to create a run from the selected plan. The daemon checks runtime prerequisites for the queued run before launching its activities. Missing images are pulled or built during activity preparation. If a blocking check fails, the run remains visible with the failure reason. Warnings and unverified observations do not require acknowledgment.
 
-The daemon checks configuration, local allocation, workspace storage budgets, artifact/runtime compatibility, configured connection access and declared existing input files. It inspects locally available OCI images or reads registry manifests without pulling images. Portable source contexts are checked and BuildKit workers inspected; actual build success remains unverified until preparation. Kubernetes node registry access and resources that do not exist until provisioning remain runtime checks.
-
-Checks have individual five-second deadlines and a thirty-second report budget. A timeout blocks launch. Results distinguish passed, warning, blocked and unverified; unknown capacity is never displayed as sufficient storage. Simulation validates configuration without probing real infrastructure.
-
-Reports are persisted using the existing event store, contain sanitized observations rather than credentials or execution payloads, and expire after two minutes. Old reports beyond the most recent 1,000 are pruned once they are at least one day old. A report is bound to the submitted workflow, plan, scope, resources, runtimes and execution mode. It does not reserve capacity. The daemon checks critical prerequisites again before queueing an execution.
+The daemon checks configuration, local allocation, workspace storage budgets, artifact compatibility, connection access and declared existing inputs. Simulation checks configuration without probing real infrastructure. The optional preflight report can also inspect cached images and registry manifests.
 
 ## Declare existing input assertions
 
@@ -38,7 +34,7 @@ Undeclared external input requirements are reported as unverified. The platform 
 
 `POST /execution-preflights/` accepts the same execution request as `POST /execution-runs/` and returns a completed bounded report. `GET /execution-preflights/:id/` reads it. MCP exposes the corresponding daemon operations.
 
-To launch a reviewed request, include `preflightId` and, when warnings were reviewed, `acknowledgeWarnings: true`. Expired or changed request receipts are rejected. Real API/MCP execution requests without a receipt still undergo fresh checks and must explicitly acknowledge warnings; they cannot bypass blockers. Existing simulation callers retain configuration-only execution behavior.
+The preflight report is diagnostic. Requests to create executions do not require a report ID or warning acknowledgment. Runtime prerequisites are checked from current state after the run is queued.
 
 Operational errors preserve the `error` message and add `details` with a stable code, stage, optional affected entity, retryability, next action and correlation ID. Retryable preparation is distinct from permission to repeat a scientific workload. Runtime observation failures retain live-process ownership; after three consecutive failures, the supervisor attempts cancellation and retains reconciliation when stopping cannot be confirmed.
 

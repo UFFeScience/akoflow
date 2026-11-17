@@ -83,14 +83,6 @@ func newApplication(ctx context.Context, settings config.Settings, log *logger.L
 		Scopes: storage.topologies, Topologies: storage.topologies,
 		Validator: planningplugin.NewValidator(), Registry: registry, Events: storage.events,
 	}
-	loop, err := buildEventLoop(
-		storage.events, storage.executions, storage.data, storage.instance,
-		storage.environments, activities, simulator, settings.ArtifactStoreRoot,
-		planningService, storage.cloud, cloudProvisioner,
-	)
-	if err != nil {
-		return fail(err)
-	}
 	connectionMonitor := applicationenvironment.NewConnectionMonitor(storage.environments,
 		map[domain.ConnectionType]ports.ConnectionProber{
 			domain.ConnectionKubernetes: kubernetes.NewConnectionProber(settings.DefaultNamespace),
@@ -127,6 +119,14 @@ func newApplication(ctx context.Context, settings config.Settings, log *logger.L
 		return fail(err)
 	}
 	api.WithAlgorithmLibrary(algorithmLibrary)
+	loop, err := buildEventLoop(
+		storage.events, storage.executions, storage.data, storage.instance,
+		storage.environments, activities, simulator, settings.ArtifactStoreRoot,
+		planningService, storage.cloud, cloudProvisioner, api.PrepareExecution,
+	)
+	if err != nil {
+		return fail(err)
+	}
 	return &application{
 		auditDatabase: storage.auditDatabase,
 		audit:         storage.audit,

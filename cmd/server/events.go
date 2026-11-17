@@ -33,11 +33,12 @@ func buildEventLoop(
 		ports.CloudOperationStore
 	},
 	cloudProvisioner ports.CloudProvisioner,
+	prepare func(context.Context, *ports.ExecutionRequest) error,
 ) (*eventloop.Loop, error) {
 	dispatcher := eventloop.NewDispatcher()
 	if err := registerExecutionHandlers(
 		dispatcher, events, executions, data, instance, connections, activities, simulator,
-		artifactStoreRoot, cloud, cloudProvisioner,
+		artifactStoreRoot, cloud, cloudProvisioner, prepare,
 	); err != nil {
 		return nil, err
 	}
@@ -76,6 +77,7 @@ func registerExecutionHandlers(
 		ports.CloudOperationStore
 	},
 	cloudProvisioner ports.CloudProvisioner,
+	prepare func(context.Context, *ports.ExecutionRequest) error,
 ) error {
 	if err := dispatcher.Register(eventloop.EventActivityExecutionRequested,
 		eventloop.NewActivityExecutionHandler(activities)); err != nil {
@@ -98,7 +100,7 @@ func registerExecutionHandlers(
 	supervisor, err := controlexecution.New(
 		executions, activities, simulator,
 		controlexecution.Config{
-			PollInterval: time.Second, Preparer: preparer,
+			PollInterval: time.Second, Preparer: preparer, PrepareRun: prepare,
 			Data: data, Cloud: cloudProvisioner, CloudStore: cloud,
 			Workspaces:     infratransfer.ActivityWorkspaceManager{Resolver: resolver, Kubernetes: kubernetesTransfer},
 			CloudAllocator: controlexecution.QueuedCloudAllocator{Cloud: cloud, Operations: cloud, Queue: events, PollInterval: 500 * time.Millisecond},

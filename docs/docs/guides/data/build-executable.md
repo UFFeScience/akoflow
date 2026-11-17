@@ -1,11 +1,29 @@
 ---
-title: Build an executable from a Docker image
-description: Register a Docker image and build a versioned SIF executable for later runs.
+title: Build and inspect OCI executable images
+description: Save portable Dockerfile recipes, prepare missing OCI images locally, and inspect image layers.
 ---
 
-# Build an executable from a Docker image
+# Build and inspect OCI executable images
 
-Use this guide when a workflow needs a versioned executable built from a Docker image. AkôFlow registers the image as an artifact, then starts a build for a SIF file. A live registry pull and SIF conversion have not yet been verified. To register a SIF file already on storage, use [Browse and manage storage](/docs/guides/infrastructure/storage#register-an-existing-file).
+Activities can use a published OCI image or a portable Dockerfile recipe. Saving a recipe does not require an existing image or start a build. Before local execution, AkôFlow verifies and reuses the local image or builds it with BuildKit, loads it into Docker, and verifies its platform and digest. Activity execution waits for preparation to finish.
+
+## Save a Dockerfile before the first build
+
+In an activity's executable picker, choose **Build from Dockerfile**. Enter the Dockerfile or upload a sanitized `.tar.gz` context containing it. Set the relative Dockerfile path, platform (`linux/amd64` or `linux/arm64`), and non-secret build arguments. Base images must use immutable `reference@sha256` digests; `FROM scratch` is also supported.
+
+The context archive is limited to 4 MiB compressed, 16 MiB expanded, and 2048 entries. AkôFlow saves context and recipe digests, registers an OCI build specification, and makes the source selectable in the catalog before a build exists. Workflow publications carry the source bytes, so another installation can build the image without the original local catalog. Published workflow YAML is limited to 8 MiB and experiment packages to 24 MiB.
+
+Preflight reads availability without pulling or building. A cached verified image passes even when BuildKit is unavailable. A missing image reports **Build required** after checking the context and builder; the actual build happens during execution preparation. Build failures keep the activity from launching.
+
+## Inspect an image
+
+Open an artifact in **Artifacts**, or choose **View image details, Dockerfile and layers** from an activity. Desktop shows platform, local size, image and registry digests, tags, creation time, Dockerfile, context digests, image configuration, filesystem layer digests, and command history. Select a history row to inspect its complete command and size. Unbuilt recipes show their source; layer history is available once the image exists locally. Inspection never starts a build or pull.
+
+The Hub shows images and build recipes for published versions, including versions without a recorded execution. It displays the Dockerfile and source digests without executing uploaded content.
+
+## Docker and Apptainer
+
+Dockerfile recipes describe OCI containers. Local execution prepares OCI images in Docker. The existing SIF build flow derives an Apptainer artifact for HPC environments. Portable source builds currently execute through the local runtime; Kubernetes needs a registry image, and Slurm needs a completed SIF build. Local preparation does not push images to a registry.
 
 For the API commands below, complete [API connection setup](/docs/tutorials/api-access) first.
 

@@ -153,6 +153,8 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 	mux.HandleFunc("GET /akoflow-api/artifacts/", http_config.KernelHandler(workflowEngine.ListArtifacts))
 	mux.HandleFunc("GET /akoflow-api/artifact-materializations/", http_config.KernelHandler(workflowEngine.ListArtifactMaterializations))
 	mux.HandleFunc("POST /akoflow-api/artifact-materializations/", http_config.KernelHandler(workflowEngine.SaveArtifactMaterialization))
+	mux.HandleFunc("POST /akoflow-api/artifacts/inspect/", http_config.KernelHandler(workflowEngine.InspectArtifactImage))
+	mux.HandleFunc("POST /akoflow-api/artifacts/recipe/", http_config.KernelHandler(workflowEngine.RegisterArtifactRecipe))
 	mux.HandleFunc("POST /akoflow-api/build-contexts/", http_config.KernelHandler(workflowEngine.SaveBuildContext))
 	mux.HandleFunc("POST /akoflow-api/artifact-builds/", http_config.KernelHandler(workflowEngine.CreateArtifactBuild))
 	mux.HandleFunc("POST /akoflow-api/artifacts/docker/", http_config.KernelHandler(workflowEngine.RegisterDockerArtifact))

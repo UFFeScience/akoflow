@@ -99,7 +99,7 @@ func buildExperiment(context, execution map[string]any, metrics []any) (captured
 		return result, failure(422, "invalid_workflow", "The captured workflow is invalid.")
 	}
 	yaml, err := apirequests.FromDomain(definition).YAML()
-	if err != nil || len(yaml) > 256<<10 {
+	if err != nil || len(yaml) > 8<<20 {
 		return result, failure(422, "invalid_workflow", "The captured workflow YAML is invalid or too large.")
 	}
 	execution = exportExecution(execution, snapshot["metrics"])

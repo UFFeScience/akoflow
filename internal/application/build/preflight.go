@@ -2,6 +2,7 @@ package build
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -20,6 +21,12 @@ func (m Manager) CheckExecutable(ctx context.Context, source domain.ExecutableSo
 			}
 			if m.Executor.Runner == nil {
 				return false, nil
+			}
+			payload, _ := json.Marshal(source.Origin)
+			key := strings.TrimPrefix(contentDigest(payload), "sha256:")
+			reproducer := &Reproducer{Runner: m.Executor.Runner}
+			if _, err := reproducer.inspect(ctx, "akoflow-reproduced:"+key, *source.Origin); err == nil {
+				return true, nil
 			}
 			name := m.Executor.Buildctl
 			if name == "" {

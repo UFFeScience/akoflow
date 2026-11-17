@@ -94,11 +94,13 @@ func inspectPortableContext(b domain.PortableArtifactBuild) error {
 
 func validatePortableRecipe(recipe string) error {
 	stages := map[string]bool{"scratch": true}
+	found := false
 	for _, line := range strings.Split(strings.ReplaceAll(recipe, "\\\n", " "), "\n") {
 		fields := strings.Fields(line)
 		if len(fields) == 0 || strings.ToUpper(fields[0]) != "FROM" {
 			continue
 		}
+		found = true
 		index := 1
 		for index < len(fields) && strings.HasPrefix(fields[index], "--") {
 			index++
@@ -116,6 +118,9 @@ func validatePortableRecipe(recipe string) error {
 		if index+2 < len(fields) && strings.EqualFold(fields[index+1], "AS") {
 			stages[strings.ToLower(fields[index+2])] = true
 		}
+	}
+	if !found {
+		return fmt.Errorf("Dockerfile requires a FROM instruction")
 	}
 	return nil
 }

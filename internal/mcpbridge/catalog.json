@@ -8104,6 +8104,38 @@
     ]
   },
   {
+    "name": "get_execution_activity",
+    "method": "GET",
+    "path": "/akoflow-api/execution-runs/{runId}/activities/{activityId}/",
+    "handler": "GetExecutionActivity",
+    "description": "get execution activity. GET /akoflow-api/execution-runs/{runId}/activities/{activityId}/. Uses the daemon API and its domain validation."
+  },
+  {
+    "name": "get_execution_artifacts",
+    "method": "GET",
+    "path": "/akoflow-api/execution-runs/{runId}/artifacts/",
+    "handler": "GetExecutionArtifacts",
+    "description": "get execution artifacts. GET /akoflow-api/execution-runs/{runId}/artifacts/. Uses the daemon API and its domain validation."
+  },
+  {
+    "name": "get_execution_events",
+    "method": "GET",
+    "path": "/akoflow-api/execution-runs/{runId}/events/",
+    "handler": "GetExecutionEvents",
+    "description": "get execution events. GET /akoflow-api/execution-runs/{runId}/events/. Uses the daemon API and its domain validation.",
+    "query": [
+      "page",
+      "pageSize"
+    ]
+  },
+  {
+    "name": "get_execution_logs",
+    "method": "GET",
+    "path": "/akoflow-api/execution-runs/{runId}/logs/",
+    "handler": "GetExecutionLogs",
+    "description": "get execution logs. GET /akoflow-api/execution-runs/{runId}/logs/. Uses the daemon API and its domain validation."
+  },
+  {
     "name": "get_execution_preflight",
     "method": "GET",
     "path": "/akoflow-api/execution-preflights/{preflightId}/",
@@ -8123,6 +8155,13 @@
     "path": "/akoflow-api/execution-scopes/{scopeId}/",
     "handler": "GetExecutionScope",
     "description": "get execution scope. GET /akoflow-api/execution-scopes/{scopeId}/. Uses the daemon API and its domain validation."
+  },
+  {
+    "name": "get_execution_status",
+    "method": "GET",
+    "path": "/akoflow-api/execution-runs/{runId}/status/",
+    "handler": "GetExecutionStatus",
+    "description": "get execution status. GET /akoflow-api/execution-runs/{runId}/status/. Uses the daemon API and its domain validation."
   },
   {
     "name": "get_instance",
@@ -8231,6 +8270,361 @@
     "path": "/",
     "handler": "HealthCheck",
     "description": "health check. GET /. Uses the daemon API and its domain validation."
+  },
+  {
+    "name": "hub_compare_versions",
+    "method": "GET",
+    "path": "/akoflow-api/hub/publications/{publicationId}/compare/",
+    "handler": "serveCompareVersions",
+    "description": "hub compare versions. GET /akoflow-api/hub/publications/{publicationId}/compare/. Uses the daemon API and its domain validation.",
+    "query": [
+      "base",
+      "target"
+    ]
+  },
+  {
+    "name": "hub_confirm_publication",
+    "method": "POST",
+    "path": "/akoflow-api/hub/publications/confirm/",
+    "handler": "serveConfirm",
+    "description": "hub confirm publication. POST /akoflow-api/hub/publications/confirm/. Uses the daemon API and its domain validation.",
+    "body": {
+      "properties": {
+        "acknowledgePublic": {
+          "type": "boolean"
+        },
+        "previewId": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
+    "name": "hub_create_publication",
+    "method": "POST",
+    "path": "/akoflow-api/hub/publications/",
+    "handler": "serveCreate",
+    "description": "hub create publication. POST /akoflow-api/hub/publications/. Uses the daemon API and its domain validation.",
+    "body": {
+      "properties": {
+        "anonymousOwner": {
+          "type": "string"
+        },
+        "authorship": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "string"
+        },
+        "readme": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "visibility": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
+    "name": "hub_delete_publication",
+    "method": "DELETE",
+    "path": "/akoflow-api/hub/publications/{publicationId}/",
+    "handler": "serveDeletePublication",
+    "description": "hub delete publication. DELETE /akoflow-api/hub/publications/{publicationId}/. Uses the daemon API and its domain validation."
+  },
+  {
+    "name": "hub_disconnect",
+    "method": "DELETE",
+    "path": "/akoflow-api/hub/connection/",
+    "handler": "serveDisconnect",
+    "description": "hub disconnect. DELETE /akoflow-api/hub/connection/. Uses the daemon API and its domain validation."
+  },
+  {
+    "name": "hub_get_publication",
+    "method": "GET",
+    "path": "/akoflow-api/hub/publications/{publicationId}/",
+    "handler": "serveGetPublication",
+    "description": "hub get publication. GET /akoflow-api/hub/publications/{publicationId}/. Uses the daemon API and its domain validation."
+  },
+  {
+    "name": "hub_get_workflow_definition",
+    "method": "POST",
+    "path": "/akoflow-api/hub/workflow-definition/",
+    "handler": "serveWorkflowDefinition",
+    "description": "hub get workflow definition. POST /akoflow-api/hub/workflow-definition/. Uses the daemon API and its domain validation.",
+    "body": {
+      "properties": {
+        "uri": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
+    "name": "hub_import_workflow",
+    "method": "POST",
+    "path": "/akoflow-api/hub/workflows/import/",
+    "handler": "serveImportWorkflow",
+    "description": "hub import workflow. POST /akoflow-api/hub/workflows/import/. Uses the daemon API and its domain validation.",
+    "body": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "uri": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
+    "name": "hub_list_publications",
+    "method": "GET",
+    "path": "/akoflow-api/hub/publications/",
+    "handler": "servePublications",
+    "description": "hub list publications. GET /akoflow-api/hub/publications/. Uses the daemon API and its domain validation."
+  },
+  {
+    "name": "hub_list_results",
+    "method": "GET",
+    "path": "/akoflow-api/hub/publications/{publicationId}/results/",
+    "handler": "serveListResults",
+    "description": "hub list results. GET /akoflow-api/hub/publications/{publicationId}/results/. Uses the daemon API and its domain validation."
+  },
+  {
+    "name": "hub_list_versions",
+    "method": "GET",
+    "path": "/akoflow-api/hub/publications/{publicationId}/versions/",
+    "handler": "serveListVersions",
+    "description": "hub list versions. GET /akoflow-api/hub/publications/{publicationId}/versions/. Uses the daemon API and its domain validation."
+  },
+  {
+    "name": "hub_poll_authorization",
+    "method": "POST",
+    "path": "/akoflow-api/hub/authorization/poll/",
+    "handler": "servePoll",
+    "description": "hub poll authorization. POST /akoflow-api/hub/authorization/poll/. Uses the daemon API and its domain validation."
+  },
+  {
+    "name": "hub_preview_execution",
+    "method": "POST",
+    "path": "/akoflow-api/hub/publications/preview/",
+    "handler": "servePreview",
+    "description": "hub preview execution. POST /akoflow-api/hub/publications/preview/. Uses the daemon API and its domain validation.",
+    "body": {
+      "properties": {
+        "content": {
+          "anyOf": [
+            {
+              "properties": {
+                "events": {
+                  "type": "boolean"
+                },
+                "files": {
+                  "type": "boolean"
+                },
+                "logs": {
+                  "type": "boolean"
+                },
+                "metrics": {
+                  "type": "boolean"
+                }
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "message": {
+          "type": "string"
+        },
+        "publicationId": {
+          "type": "string"
+        },
+        "runId": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
+    "name": "hub_preview_workflow",
+    "method": "POST",
+    "path": "/akoflow-api/hub/publications/workflow-preview/",
+    "handler": "servePreviewWorkflow",
+    "description": "hub preview workflow. POST /akoflow-api/hub/publications/workflow-preview/. Uses the daemon API and its domain validation.",
+    "body": {
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "publicationId": {
+          "type": "string"
+        },
+        "workflowId": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
+    "name": "hub_start_authorization",
+    "method": "POST",
+    "path": "/akoflow-api/hub/authorization/",
+    "handler": "serveStart",
+    "description": "hub start authorization. POST /akoflow-api/hub/authorization/. Uses the daemon API and its domain validation."
+  },
+  {
+    "name": "hub_status",
+    "method": "GET",
+    "path": "/akoflow-api/hub/status/",
+    "handler": "serveStatus",
+    "description": "hub status. GET /akoflow-api/hub/status/. Uses the daemon API and its domain validation."
+  },
+  {
+    "name": "hub_update_publication",
+    "method": "PATCH",
+    "path": "/akoflow-api/hub/publications/{publicationId}/",
+    "handler": "serveUpdatePublication",
+    "description": "hub update publication. PATCH /akoflow-api/hub/publications/{publicationId}/. Uses the daemon API and its domain validation.",
+    "body": {
+      "properties": {
+        "acknowledgePublic": {
+          "type": "boolean"
+        },
+        "authorship": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "imageTags": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "readme": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "slug": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "tags": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "visibility": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
+    "name": "hub_update_settings",
+    "method": "PUT",
+    "path": "/akoflow-api/hub/settings/",
+    "handler": "serveSettings",
+    "description": "hub update settings. PUT /akoflow-api/hub/settings/. Uses the daemon API and its domain validation.",
+    "body": {
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "hubUrl": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
   },
   {
     "name": "import_archive_instance",
@@ -9010,7 +9404,31 @@
     "method": "POST",
     "path": "/akoflow-api/artifacts/recipe/",
     "handler": "RegisterArtifactRecipe",
-    "description": "register artifact recipe. POST /akoflow-api/artifacts/recipe/. Uses the daemon API and its domain validation."
+    "description": "register artifact recipe. POST /akoflow-api/artifacts/recipe/. Uses the daemon API and its domain validation.",
+    "body": {
+      "properties": {
+        "arguments": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        },
+        "contextArchive": {
+          "contentEncoding": "base64",
+          "type": "string"
+        },
+        "dockerfile": {
+          "type": "string"
+        },
+        "platform": {
+          "type": "string"
+        },
+        "recipePath": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
   },
   {
     "name": "register_docker_artifact",

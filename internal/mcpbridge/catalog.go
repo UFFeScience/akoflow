@@ -39,10 +39,10 @@ func Catalog() []Operation {
 }
 
 func (op Operation) Permission() Permission {
-	if op.Name == "stream_console_session" {
+	if op.Name == "stream_console_session" || op.Name == "hub_update_settings" || op.Name == "hub_start_authorization" || op.Name == "hub_poll_authorization" {
 		return Admin
 	}
-	if op.Method == "GET" || op.Name == "query_provenance_sql" || op.Name == "explain_provenance_sql" {
+	if op.Name == "inspect_artifact_image" || op.Name == "hub_get_workflow_definition" || op.Method == "GET" || op.Name == "query_provenance_sql" || op.Name == "explain_provenance_sql" {
 		return Read
 	}
 	if op.Method == "DELETE" {

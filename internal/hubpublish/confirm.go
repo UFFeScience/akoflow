@@ -27,13 +27,8 @@ func (m *Manager) Confirm(ctx context.Context, id string, acknowledgePublic bool
 	if current.Publication.Visibility != "private" && !acknowledgePublic {
 		return result, failure(422, "public_confirmation", "Confirm that you reviewed the content of this public publication.")
 	}
-	var receipt struct {
-		ExperimentID string             `json:"experimentId"`
-		ResultCount  int                `json:"resultCount"`
-		Version      publicationVersion `json:"version"`
-	}
-	path := "/desktop/publications/" + url.PathEscape(prepared.Publication.ID) + "/import/confirm"
-	if err = m.requestLocked(ctx, "POST", path, prepared.Input, nil, true, &receipt); err != nil {
+	receipt, err := m.confirmPreparedLocked(ctx, prepared)
+	if err != nil {
 		return result, err
 	}
 	ownerKind := "u"
@@ -56,4 +51,23 @@ func (m *Manager) Confirm(ctx context.Context, id string, acknowledgePublic bool
 		return result, err
 	}
 	return result, nil
+}
+
+type publicationReceipt struct {
+	ExperimentID string             `json:"experimentId"`
+	ResultCount  int                `json:"resultCount"`
+	Version      publicationVersion `json:"version"`
+}
+
+func (m *Manager) confirmPreparedLocked(ctx context.Context, prepared preparedPublication) (publicationReceipt, error) {
+	var receipt publicationReceipt
+	path := "/desktop/publications/" + url.PathEscape(prepared.Publication.ID)
+	if prepared.VersionInput != nil {
+		var version publicationVersion
+		err := m.requestLocked(ctx, "POST", path+"/versions", prepared.VersionInput, nil, true, &version)
+		receipt.Version = version
+		return receipt, err
+	}
+	err := m.requestLocked(ctx, "POST", path+"/import/confirm", prepared.Input, nil, true, &receipt)
+	return receipt, err
 }

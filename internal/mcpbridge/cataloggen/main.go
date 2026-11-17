@@ -82,7 +82,7 @@ func indexFile(path string, entry fs.DirEntry, err error) error {
 	if err != nil {
 		return err
 	}
-	if filepath.Base(filepath.Dir(path)) == "httpserver" {
+	if filepath.Base(filepath.Dir(path)) == "httpserver" || (filepath.Base(filepath.Dir(path)) == "hubpublish" && filepath.Base(path) == "http.go") {
 		routers = append(routers, file)
 	}
 	base, _ := filepath.Abs("../..")
@@ -98,7 +98,7 @@ func indexFile(path string, entry fs.DirEntry, err error) error {
 			}
 		}
 		fn, ok := decl.(*ast.FuncDecl)
-		if ok && fn.Body != nil && (strings.Contains(path, "workflow_engine_api_handler") || strings.HasSuffix(path, "httpserver.go")) {
+		if ok && fn.Body != nil && (strings.Contains(path, "workflow_engine_api_handler") || strings.HasSuffix(path, "httpserver.go") || strings.Contains(path, "/hubpublish/")) {
 			handlers[fn.Name.Name] = definition{nil, file, pkg}
 			funcs[fn.Name.Name] = fn
 		}
@@ -127,7 +127,7 @@ func routeOperation(node ast.Node) (operation, bool) {
 	name := ""
 	ast.Inspect(call.Args[1], func(n ast.Node) bool {
 		if selector, ok := n.(*ast.SelectorExpr); ok {
-			if id, ok := selector.X.(*ast.Ident); ok && id.Name == "workflowEngine" {
+			if id, ok := selector.X.(*ast.Ident); ok && (id.Name == "workflowEngine" || strings.HasPrefix(path, "/akoflow-api/hub/") && id.Name == "m") {
 				name = selector.Sel.Name
 			}
 		}
@@ -142,6 +142,9 @@ func routeOperation(node ast.Node) (operation, bool) {
 	// ServeMux end-of-path markers are routing syntax, not API arguments.
 	path = strings.TrimSuffix(path, "{$}")
 	tool := snake(name)
+	if strings.HasPrefix(path, "/akoflow-api/hub/") {
+		tool = hubToolName(name)
+	}
 	description := strings.ReplaceAll(tool, "_", " ") + ". " + method + " " + path + ". Uses the daemon API and its domain validation."
 	return operation{Name: tool, Method: method, Path: path, Handler: name, Description: description}, true
 }
@@ -161,7 +164,7 @@ func operationContract(name string) (map[string]any, []string) {
 		decode := false
 		switch fun := call.Fun.(type) {
 		case *ast.Ident:
-			decode = fun.Name == "decode"
+			decode = fun.Name == "decode" || fun.Name == "decodeRequest"
 		case *ast.SelectorExpr:
 			decode = fun.Sel.Name == "Decode"
 		}

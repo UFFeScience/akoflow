@@ -182,6 +182,7 @@ const sidebars: SidebarsConfig = {
       collapsed: false,
       items: [
         "reference/api-overview",
+        "reference/hub-api",
         "reference/mcp",
         "reference/environment-yaml",
         "reference/execution-scopes-and-topologies",

@@ -6,12 +6,10 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 	"strings"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
-	"github.com/UFFeScience/akoflow/internal/domain/workflow"
 )
 
 func (h *Handler) RegisterArtifactRecipe(w http.ResponseWriter, r *http.Request) {
@@ -22,34 +20,20 @@ func (h *Handler) RegisterArtifactRecipe(w http.ResponseWriter, r *http.Request)
 		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("portable build storage is unavailable"))
 		return
 	}
-	r.Body = http.MaxBytesReader(w, r.Body, workflow.MaxPortableContextBytes+(1<<20))
-	if err := r.ParseMultipartForm(1 << 20); err != nil {
-		writeError(w, http.StatusBadRequest, err)
+	r.Body = http.MaxBytesReader(w, r.Body, 7<<20)
+	var input ArtifactRecipeInput
+	if strings.HasPrefix(r.Header.Get("Content-Type"), "multipart/form-data") {
+		var err error
+		input, err = multipartArtifactRecipe(w, r)
+		if err != nil {
+			writeError(w, http.StatusUnprocessableEntity, err)
+			return
+		}
+	} else if !decode(w, r, &input) {
 		return
 	}
-	defer r.MultipartForm.RemoveAll()
-	var archive []byte
-	if len(r.MultipartForm.File["context"]) > 0 {
-		file, _, err := r.FormFile("context")
-		if err != nil {
-			writeError(w, http.StatusUnprocessableEntity, err)
-			return
-		}
-		defer file.Close()
-		archive, err = io.ReadAll(io.LimitReader(file, workflow.MaxPortableContextBytes+1))
-		if err != nil {
-			writeError(w, http.StatusUnprocessableEntity, err)
-			return
-		}
-	}
-	arguments := map[string]string{}
-	if value := r.FormValue("arguments"); value != "" {
-		if err := json.Unmarshal([]byte(value), &arguments); err != nil {
-			writeError(w, http.StatusUnprocessableEntity, fmt.Errorf("build arguments must be a JSON string map"))
-			return
-		}
-	}
-	origin, err := builder.RecipeOrigin(r.Context(), r.FormValue("dockerfile"), archive, r.FormValue("recipePath"), r.FormValue("platform"), arguments)
+	arguments := input.Arguments
+	origin, err := builder.RecipeOrigin(r.Context(), input.Dockerfile, input.ContextArchive, input.RecipePath, input.Platform, arguments)
 	if err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return

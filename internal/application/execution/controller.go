@@ -131,6 +131,9 @@ func (s *Controller) Inspect(ctx context.Context, handleID string, mode domain.E
 	if err != nil {
 		return s.persistInspectionFailure(ctx, handle, err)
 	}
+	delete(updated.Metadata, "observationFailures")
+	delete(updated.Metadata, "observationError")
+	delete(updated.Metadata, ports.RuntimeReconciliationPending)
 	updated.Log = mergeLogs(handle.Log, updated.Log)
 	s.saveInspectionMetrics(ctx, handle, &updated)
 	if updated.Status != handle.Status {
@@ -234,12 +237,27 @@ func (s *Controller) persistInspectionFailure(ctx context.Context, handle *domai
 		// Observation cancellation is not evidence that computation failed.
 		return handle, ctx.Err()
 	}
-	handle.Status = domain.HandleFailed
-	handle.FinishedAt = float64(time.Now().UnixNano()) / float64(time.Second)
-	handle.Failure = "inspect activity: " + err.Error()
-	handle.Log = appendLog(handle.Log, "error", handle.Failure)
+	metadata := make(map[string]any, len(handle.Metadata)+3)
+	for key, value := range handle.Metadata {
+		metadata[key] = value
+	}
+	var failures int
+	switch value := metadata["observationFailures"].(type) {
+	case int:
+		failures = value
+	case float64:
+		failures = int(value)
+	}
+	metadata["observationFailures"] = failures + 1
+	metadata["observationError"] = err.Error()
+	metadata[ports.RuntimeReconciliationPending] = true
+	handle.Metadata = metadata
+	handle.Log = appendLog(handle.Log, "error", "Runtime observation unavailable; computation state is unconfirmed.")
 	if saveErr := s.handles.Save(ctx, *handle); saveErr != nil {
-		return nil, fmt.Errorf("inspect activity: %w; save failed handle: %v", err, saveErr)
+		return handle, fmt.Errorf("inspect activity: %w; save observation state: %v", err, saveErr)
+	}
+	if failures+1 >= 3 {
+		return handle, ports.NewRuntimeReconciliationError(fmt.Errorf("runtime observation unavailable after 3 checks: %w", err), metadata)
 	}
 	return handle, nil
 }

@@ -182,7 +182,11 @@ func (r *Repository) ListArtifacts(ctx context.Context, selectable bool) ([]doma
 			SELECT 1 FROM artifact_variants available_variant
 			JOIN artifact_locations available_location ON available_location.variant_id=available_variant.id
 			WHERE available_variant.artifact_version_id=av.id AND available_location.available=1
-		)`
+        ) OR EXISTS (
+            SELECT 1 FROM artifact_builds recipe
+            JOIN build_contexts context ON context.digest=recipe.context_digest
+            WHERE recipe.artifact_version_id=av.id AND recipe.source_type='dockerfile' AND recipe.target_format='oci'
+        )`
 	}
 	query += ` ORDER BY av.artifact_id, av.version, av.scope, av.scope_id, v.format, v.architecture`
 	rows, err := r.db.QueryContext(ctx, query)
@@ -215,26 +219,34 @@ func (r *Repository) ListArtifacts(ctx context.Context, selectable bool) ([]doma
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
-	dockerRows, err := r.db.QueryContext(ctx, `SELECT DISTINCT av.artifact_id, av.version, b.target_architecture
+	return r.enrichArtifactBuilds(ctx, values, indexes)
+}
+
+func (r *Repository) enrichArtifactBuilds(ctx context.Context, values []domain.ExecutableArtifact, indexes map[string]int) ([]domain.ExecutableArtifact, error) {
+	dockerRows, err := r.db.QueryContext(ctx, `SELECT DISTINCT av.artifact_id, av.version, b.target_architecture, b.source_type, b.target_format
 		FROM artifact_versions av
 		JOIN artifact_builds b ON b.artifact_version_id=av.id
-		JOIN build_runs br ON br.artifact_build_id=b.id AND br.status='completed'
-		WHERE b.source_type='docker-image'`)
+		LEFT JOIN build_runs br ON br.artifact_build_id=b.id AND br.status='completed'
+		WHERE (b.source_type='docker-image' AND br.id IS NOT NULL) OR (b.source_type='dockerfile' AND b.target_format='oci')`)
 	if err != nil {
 		return nil, err
 	}
 	defer dockerRows.Close()
 	for dockerRows.Next() {
-		var artifactID, version, architecture string
-		if err := dockerRows.Scan(&artifactID, &version, &architecture); err != nil {
+		var artifactID, version, architecture, sourceType, targetFormat string
+		if err := dockerRows.Scan(&artifactID, &version, &architecture, &sourceType, &targetFormat); err != nil {
 			return nil, err
 		}
 		index, exists := indexes[artifactID+"\x00"+version]
 		if !exists {
 			continue
 		}
-		if !containsString(values[index].Formats, "docker") {
-			values[index].Formats = append(values[index].Formats, "docker")
+		format := "docker"
+		if sourceType == "dockerfile" {
+			format = targetFormat
+		}
+		if !containsString(values[index].Formats, format) {
+			values[index].Formats = append(values[index].Formats, format)
 		}
 		if architecture != "" && !containsString(values[index].Architectures, architecture) {
 			values[index].Architectures = append(values[index].Architectures, architecture)

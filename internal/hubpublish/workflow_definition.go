@@ -72,8 +72,8 @@ func (m *Manager) readWorkflowYAML(ctx context.Context, address, token string) (
 		return nil, 0, 0, failure(502, "hub_unavailable", "AkôFlow Hub cannot be reached. Try again.")
 	}
 	defer response.Body.Close()
-	data, err := io.ReadAll(io.LimitReader(response.Body, 262145))
-	if err != nil || len(data) > 262144 || (response.StatusCode == 200 && len(data) == 0) {
+	data, err := io.ReadAll(io.LimitReader(response.Body, (8<<20)+1))
+	if err != nil || len(data) > 8<<20 || (response.StatusCode == 200 && len(data) == 0) {
 		return nil, 0, 0, failure(502, "hub_response", "The workflow YAML is unavailable or exceeds the definition size limit.")
 	}
 	version, _ := strconv.Atoi(response.Header.Get("X-Akoflow-Workflow-Version"))

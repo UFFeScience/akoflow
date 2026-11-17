@@ -305,3 +305,23 @@ func seedCatalogParents(t *testing.T, db *sql.DB) {
 		}
 	}
 }
+
+func TestSourceOnlyOCIRecipeIsSelectableWithoutClaimingImageAvailability(t *testing.T) {
+	repository, ctx := testRepository(t), context.Background()
+	version := domain.ArtifactVersion{ID: "recipe-version", ArtifactID: "recipe", Version: "1", Scope: domain.CatalogScope("system")}
+	if err := repository.RegisterArtifactVersion(ctx, version); err != nil {
+		t.Fatal(err)
+	}
+	digest := "sha256:" + strings.Repeat("c", 64)
+	if err := repository.SaveBuildContext(ctx, domain.BuildContextArtifact{Digest: digest, StorageURI: "artifact://contexts/recipe", SizeBytes: 50}); err != nil {
+		t.Fatal(err)
+	}
+	spec := domain.ArtifactBuild{ID: "recipe-build", ArtifactVersionID: version.ID, SourceType: "dockerfile", ContextDigest: digest, RecipePath: "Dockerfile", RecipeDigest: digest, TargetFormat: "oci", TargetOS: "linux", TargetArchitecture: "arm64", BuildArguments: "{}", CacheKey: "recipe-cache"}
+	if err := repository.SaveArtifactBuild(ctx, spec); err != nil {
+		t.Fatal(err)
+	}
+	artifacts, err := repository.ListArtifacts(ctx, true)
+	if err != nil || len(artifacts) != 1 || artifacts[0].Available || !slices.Contains(artifacts[0].Formats, "oci") || !slices.Contains(artifacts[0].Architectures, "arm64") {
+		t.Fatalf("source-only recipe availability: %+v %v", artifacts, err)
+	}
+}

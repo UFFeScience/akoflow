@@ -54,7 +54,7 @@ func TestPortableRecipePreflightValidatesContextWithoutBuilding(t *testing.T) {
 	manager := Manager{Executor: Executor{Runner: runner}}
 	origin := portableBuildFixture(t, map[string]string{"Dockerfile": "FROM scratch"})
 	observed, err := manager.CheckExecutable(context.Background(), domain.ExecutableSource{Origin: &origin})
-	if err != nil || observed || len(runner.calls) != 1 || runner.calls[0] != "buildctl debug workers" {
+	if err != nil || observed || len(runner.calls) != 2 || !strings.Contains(runner.calls[0], "docker image inspect") || runner.calls[1] != "buildctl debug workers" {
 		t.Fatalf("preflight started a build: %v %+v", err, runner.calls)
 	}
 }

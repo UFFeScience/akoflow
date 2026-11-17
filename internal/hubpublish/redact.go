@@ -116,3 +116,11 @@ func (r *snapshotRedactor) visitObject(item map[string]any, path string, depth i
 	}
 	return result, nil
 }
+
+func SanitizeArtifactInspection(value map[string]any) (map[string]any, error) {
+	cleaned, _, err := redactSnapshot(value)
+	if err != nil {
+		return nil, err
+	}
+	return cleaned.(map[string]any), nil
+}

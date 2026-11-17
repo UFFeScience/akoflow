@@ -526,6 +526,10 @@ const verifiedRequestNotes = {
     "Upload the build context first and use its returned digest as `contextDigest`; `artifactVersionId` must identify a saved artifact version. Required fields are `id`, `artifactVersionId`, `contextDigest`, `recipeDigest`, and `cacheKey`. An existing cache key returns that build with `200 OK`; a new specification returns `201 Created`. Creating a specification does not start a build run. See [Build an executable](/docs/guides/data/build-executable) for the simpler Docker-image path.",
   "POST /akoflow-api/artifacts/docker/":
     "Required: `artifactId`, `version`, and a Docker image reference without whitespace. `architecture` defaults to `amd64`. This registers a version and build specification; it does not pull the image or create a SIF yet. Use `build.id` from the response in `POST /artifact-builds/{buildId}/runs/` to start conversion. The build run returns a separate ID.",
+  "POST /akoflow-api/artifacts/inspect/":
+    "Send a JSON executable source identifying an OCI image or a SIF artifact. The response includes available image metadata, build recipe details, layers or SIF objects. The inspection does not execute the artifact.",
+  "POST /akoflow-api/artifacts/recipe/":
+    "Send multipart form data with Dockerfile text in `dockerfile` or a context archive in the `context` file field. Use `recipePath` for a Dockerfile inside an archive, `platform` for the target platform, and `arguments` for optional build arguments encoded as a JSON string map. The response includes the portable origin and build specification. Registration does not start a build.",
   "POST /akoflow-api/artifact-builds/{buildId}/runs/":
     "`buildId` must identify an existing build specification. This request starts a build run and returns its record with `202 Accepted`; inspect `GET /build-runs/{runId}/` for its outcome. The request has no JSON body.",
   "POST /akoflow-api/artifact-materializations/":

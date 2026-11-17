@@ -52,6 +52,7 @@ type ExecutableReference struct {
 	*/
 }
 type ExecutableSource struct {
+	Inspection     *ArtifactInspection  `json:"inspection,omitempty"`
 	Origin         *ArtifactOrigin      `json:"origin,omitempty"`
 	Type           ExecutableSourceType `json:"type"`
 	Reference      string               `json:"reference,omitempty"`
@@ -111,6 +112,11 @@ func (e ExecutableReference) empty() bool {
 }
 
 func (e ExecutableReference) Validate() error {
+	if e.Source.Inspection != nil {
+		if err := e.Source.Inspection.Validate(); err != nil {
+			return err
+		}
+	}
 	if e.Source.Origin != nil {
 		if err := e.Source.Origin.Validate(); err != nil {
 			return err

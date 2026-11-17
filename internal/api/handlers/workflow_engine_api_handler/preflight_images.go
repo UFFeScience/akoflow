@@ -39,6 +39,12 @@ func (h *Handler) preflightImages(request *ports.ExecutionRequest) []appprefligh
 			if err != nil {
 				return "blocked", err.Error(), operationerror.Describe(err).NextAction
 			}
+			if source.Origin != nil && source.Origin.Build != nil {
+				if observed {
+					return "passed", "The locally built OCI image is verified and will be reused.", ""
+				}
+				return "warning", "Build required: the Dockerfile context and local builder are available.", "AkôFlow will build and verify the missing OCI image before starting this activity."
+			}
 			if !observed {
 				return "warning", "Source context is valid, but build success cannot be confirmed without preparing the artifact.", "Preparation will build and verify the artifact before starting its activity."
 			}

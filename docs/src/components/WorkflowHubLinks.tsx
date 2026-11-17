@@ -12,6 +12,7 @@ type Publication = {
   experimentId: string;
   sourceRef?: string;
   releaseTag?: string;
+  resultsURL?: string;
   activityCount?: number;
 };
 
@@ -91,7 +92,10 @@ export default function WorkflowHubLinks({
             Versioned source bundle
           </a>
           <a
-            href={`https://github.com/UFFeScience/akoflow-examples/releases/download/${releaseTag}/${publication.url.split("/").pop()}-results.tar.gz`}
+            href={
+              publication.resultsURL ??
+              `https://github.com/UFFeScience/akoflow-examples/releases/download/${releaseTag}/${publication.url.split("/").pop()}-results.tar.gz`
+            }
           >
             Validated output files
           </a>

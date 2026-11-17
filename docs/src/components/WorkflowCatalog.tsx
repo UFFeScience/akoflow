@@ -342,6 +342,19 @@ const sections: Section[] = [
       "Executable simulation, analysis, surrogate-model, and experiment-feedback workflows.",
     examples: [
       {
+        title: "OpenDroneMap — Caliterra split/merge",
+        href: "/docs/showcase/scientific-workflows/opendronemap",
+        stages: [
+          "split",
+          ["reconstruct-0", "reconstruct-1"],
+          "align",
+          ["process-0", "process-1"],
+          "merge",
+          "previews",
+          "validate",
+        ],
+      },
+      {
         title: "Montage 050 — Astronomical Image Mosaicking",
         href: "/docs/showcase/scientific-workflows/montage-050",
         stages: [],

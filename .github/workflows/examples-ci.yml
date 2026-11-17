@@ -8,6 +8,16 @@ on:
         required: false
         type: string
         default: main
+      examples_base_ref:
+        description: Base revision for selecting changed example directories; empty preserves full-catalog callers.
+        required: false
+        type: string
+        default: ""
+      all_examples:
+        description: Explicitly validate and build every example.
+        required: false
+        type: boolean
+        default: false
       publish:
         description: Publish validated OCI images to GHCR.
         required: false
@@ -20,6 +30,16 @@ on:
         required: true
         type: string
         default: main
+      examples_base_ref:
+        description: Base revision for selecting changed example directories; compared to examples_ref.
+        required: false
+        type: string
+        default: "HEAD^"
+      all_examples:
+        description: Explicitly validate and build every example.
+        required: false
+        type: boolean
+        default: false
       publish:
         description: Publish validated OCI images to GHCR.
         required: true
@@ -36,22 +56,43 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.catalog.outputs.matrix }}
+      has_examples: ${{ steps.catalog.outputs.has_examples }}
     steps:
       - name: Checkout examples
         uses: actions/checkout@v4
         with:
           repository: UFFeScience/akoflow-examples
           ref: ${{ inputs.examples_ref }}
+          fetch-depth: 0
       - uses: actions/setup-go@v5
         with:
           go-version: stable
           cache: false
-      - name: Build and validate the complete showcase matrix
+      - name: Select changed example directories
         id: catalog
         shell: bash
+        env:
+          BASE_REF: ${{ inputs.examples_base_ref }}
+          ALL_EXAMPLES: ${{ inputs.all_examples }}
+          CHANGE_EVENT: ${{ github.event_name }}
         run: |
-          matrix=$(go run ./tools/catalog)
+          args=()
+          if [ "$ALL_EXAMPLES" != "true" ] && [ -n "$BASE_REF" ]; then
+            if [[ ! "$BASE_REF" =~ ^0+$ ]] && ! git rev-parse --verify --end-of-options "${BASE_REF}^{commit}" >/dev/null 2>&1; then
+              git fetch --no-tags origin "$BASE_REF"
+            fi
+            args+=(-changed-base "$BASE_REF")
+            if [ "$CHANGE_EVENT" = "pull_request" ]; then
+              args+=(-merge-base)
+            fi
+          fi
+          matrix=$(go run ./tools/catalog "${args[@]}")
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+          echo "has_examples=$(jq 'length > 0' <<< "$matrix")" >> "$GITHUB_OUTPUT"
+          {
+            echo "### Selected examples"
+            jq -r 'if length == 0 then "No example directories changed; workload execution and image builds are skipped." else .[] | "- \(.category)/\(.showcase)" end' <<< "$matrix"
+          } >> "$GITHUB_STEP_SUMMARY"
 
   experiment-tools:
     name: Test experiment tools
@@ -71,6 +112,7 @@ jobs:
   showcase:
     name: Validate ${{ matrix.showcase }}
     needs: discover
+    if: needs.discover.outputs.has_examples == 'true'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false

@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"strings"
 
+	applicationbuild "github.com/UFFeScience/akoflow/internal/application/build"
 	"github.com/UFFeScience/akoflow/internal/domain"
 )
 
@@ -72,7 +73,11 @@ func (h *Handler) InspectArtifactImage(w http.ResponseWriter, r *http.Request) {
 	if !decode(w, r, &source) {
 		return
 	}
-	result, err := h.inspectArtifactSource(r.Context(), source)
+	ctx := r.Context()
+	if r.URL.Query().Get("localOnly") == "true" {
+		ctx = applicationbuild.LocalInspectionOnly(ctx)
+	}
+	result, err := h.inspectArtifactSource(ctx, source)
 	if err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return

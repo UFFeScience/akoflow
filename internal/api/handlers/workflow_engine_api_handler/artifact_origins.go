@@ -135,7 +135,7 @@ func (h *Handler) preparePortableOrigin(ctx context.Context, request *ports.Exec
 		return false, nil
 	}
 	architecture := strings.Split(origin.Platform, "/")[1]
-	if resource.Architecture != "" && architecture != normalizedOriginArchitecture(resource.Architecture) {
+	if origin.Build != nil && resource.Architecture != "" && architecture != normalizedOriginArchitecture(resource.Architecture) {
 		return false, fmt.Errorf("activity %q artifact platform %q does not match resource architecture %q", activity.ID, origin.Platform, resource.Architecture)
 	}
 	if request.PreparationRequirementsByActivity == nil {

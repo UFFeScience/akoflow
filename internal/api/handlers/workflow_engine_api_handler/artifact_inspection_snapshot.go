@@ -71,7 +71,10 @@ func (h *Handler) captureArtifactInspection(ctx context.Context, source *domain.
 		return fmt.Errorf("capture image metadata: %w", err)
 	}
 	if source.Inspection != nil && inspection["metadataProvenance"] == "published-snapshot" {
-		return nil
+		if platforms := inspection["platforms"]; platforms != nil {
+			source.Inspection.Data["platforms"] = platforms
+		}
+		return source.Inspection.Validate()
 	}
 	if format, ok := inspection["format"].(string); !ok || format == "" {
 		format = string(source.Format)

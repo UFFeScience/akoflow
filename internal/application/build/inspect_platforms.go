@@ -2,49 +2,44 @@ package build
 
 import (
 	"context"
-	"encoding/json"
-	"sort"
 	"strings"
-	"time"
+
+	"github.com/UFFeScience/akoflow/internal/provider"
 )
 
+type localInspectionKey struct{}
+
+func LocalInspectionOnly(ctx context.Context) context.Context {
+	return context.WithValue(ctx, localInspectionKey{}, true)
+}
+
 func (m Manager) inspectRegistryPlatforms(ctx context.Context, image string, result map[string]any) {
-	host, _, qualified := strings.Cut(image, "/")
-	if !qualified || !strings.Contains(host, ".") || !strings.Contains(image, "@sha256:") {
+	if ctx.Value(localInspectionKey{}) == true {
 		return
 	}
-	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
-	defer cancel()
-	output, err := m.Executor.Runner.Run(ctx, "docker", []string{"manifest", "inspect", image}, nil)
-	if err != nil {
-		return
-	}
-	var index struct {
-		Manifests []struct {
-			Platform struct {
-				OS           string
-				Architecture string
-			}
-		}
-	}
-	if json.Unmarshal(output, &index) != nil {
-		return
-	}
-	seen := map[string]bool{}
-	var platforms []string
-	for _, descriptor := range index.Manifests {
-		platform := descriptor.Platform
-		if platform.OS != "linux" || (platform.Architecture != "amd64" && platform.Architecture != "arm64") {
-			continue
-		}
-		name := platform.OS + "/" + platform.Architecture
-		if !seen[name] {
-			seen[name] = true
-			platforms = append(platforms, name)
-		}
-	}
-	if len(platforms) > 0 {
-		sort.Strings(platforms)
+	if platforms := provider.RegistryPlatforms(ctx, m.Executor.Runner, image); len(platforms) > 0 {
 		result["platforms"] = platforms
 	}
+}
+
+func inspectedRegistryReference(reference string, image map[string]any) string {
+	if strings.Contains(reference, "@") {
+		return reference
+	}
+	repository := func(value string) string {
+		value = strings.SplitN(value, "@", 2)[0]
+		if i := strings.LastIndex(value, ":"); i > strings.LastIndex(value, "/") {
+			value = value[:i]
+		}
+		value = strings.TrimPrefix(strings.TrimPrefix(value, "docker.io/"), "index.docker.io/")
+		return strings.TrimPrefix(value, "library/")
+	}
+	digests, _ := image["RepoDigests"].([]any)
+	for _, value := range digests {
+		digest, _ := value.(string)
+		if strings.Contains(digest, "@sha256:") && repository(digest) == repository(reference) {
+			return digest
+		}
+	}
+	return reference
 }

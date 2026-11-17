@@ -152,7 +152,7 @@ func (a *Adapter) startContainer(ctx context.Context, execution domain.ActivityE
 	}
 	args = append(args, activity.Command.Entrypoint)
 	args = append(args, activity.Command.Arguments...)
-	output, err := exec.CommandContext(ctx, "docker", args...).CombinedOutput()
+	output, warning, err := startContainerForPlatform(ctx, args, image)
 	if err != nil {
 		return domain.ActivityHandle{}, fmt.Errorf("start local activity: %w: %s", err, strings.TrimSpace(string(output)))
 	}
@@ -169,6 +169,10 @@ func (a *Adapter) startContainer(ctx context.Context, execution domain.ActivityE
 			domain.TimingSubmittedAt: startedAt, "artifactObservationDriver": "filesystem-diff",
 			"artifactObservationRoot": root, "localContainerName": name, "executionTarget": "local-docker",
 		}}
+	if warning != "" {
+		handle.Metadata[compatibilityWarning] = warning
+		handle.Log = "[AKOFLOW WARN] " + warning + "\n"
+	}
 	a.mu.Lock()
 	a.logs[handle.ID], a.observations[handle.ID] = &logBuffer{}, before
 	a.mu.Unlock()

@@ -37,6 +37,7 @@ import (
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/sshkey"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/credentials/token"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/dockerhub"
+	"github.com/UFFeScience/akoflow/internal/operationerror"
 	planningalgorithms "github.com/UFFeScience/akoflow/internal/planning/algorithms"
 	"github.com/UFFeScience/akoflow/internal/planning/library"
 	"github.com/google/uuid"
@@ -3265,9 +3266,12 @@ func writeJSON(w http.ResponseWriter, status int, value any) {
 func writeError(w http.ResponseWriter, status int, err error) {
 	message := http.StatusText(status)
 	if err != nil {
-		message = err.Error()
+		message = operationerror.Sanitize(err.Error())
 	}
-	writeJSON(w, status, map[string]string{"error": message})
+	details := operationerror.Describe(err)
+	details.CorrelationID = "error-" + uuid.NewString()
+	w.Header().Set("X-Akoflow-Error-ID", details.CorrelationID)
+	writeJSON(w, status, map[string]any{"error": message, "details": details})
 }
 
 func (h *Handler) reconcileRecoveryPreview(ctx context.Context, runID string, latestByActivity map[string]domain.TaskExecution, reusable, available, interrupted map[string]bool) error {

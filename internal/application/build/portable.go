@@ -21,6 +21,7 @@ import (
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
 	"github.com/UFFeScience/akoflow/internal/domain/workflow"
+	"github.com/UFFeScience/akoflow/internal/operationerror"
 	"github.com/UFFeScience/akoflow/internal/provider"
 )
 
@@ -181,7 +182,11 @@ func (r *Reproducer) run(ctx context.Context, name string, args ...string) ([]by
 	}
 	out, err := r.Runner.Run(ctx, name, args, nil)
 	if err != nil {
-		return nil, fmt.Errorf("%s failed while preparing artifact: %w: %.2048s", name, err, out)
+		code, action, retryable := "artifact_preparation_failed", "Review artifact build logs and correct the build configuration.", false
+		if name == "docker" && len(args) > 0 && args[0] == "pull" {
+			code, action, retryable = "registry_pull_failed", "Check registry access and image availability, then retry preparation.", true
+		}
+		return nil, operationerror.Wrap(fmt.Errorf("%s failed while preparing artifact: %w: %s", name, err, operationerror.Sanitize(string(out))), code, "artifact_preparation", "", retryable, action)
 	}
 	return out, nil
 }

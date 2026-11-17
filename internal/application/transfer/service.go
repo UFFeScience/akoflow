@@ -12,6 +12,7 @@ import (
 
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
+	"github.com/UFFeScience/akoflow/internal/operationerror"
 )
 
 type Planner struct{}
@@ -498,6 +499,7 @@ func (m Materializer) verify(ctx context.Context, c ports.TransferConnector, end
 	return strings.TrimPrefix(fmt.Sprintf("sha256:%x", hash.Sum(nil)), "sha256:") == strings.TrimPrefix(expected, "sha256:"), nil
 }
 func failed(target domain.ArtifactMaterialization, run domain.DataTransferRun, err error) (domain.ArtifactMaterialization, domain.DataTransferRun, error) {
+	err = operationerror.Wrap(err, "transfer_failed", "transfer", run.ActivityID, false, "Check source, destination and checksums before retrying the transfer.")
 	target.Status, run.Status, run.Error = domain.MaterializationFailed, domain.TransferFailed, err.Error()
 	if run.FinishedAt == 0 {
 		run.FinishedAt = unixNow()

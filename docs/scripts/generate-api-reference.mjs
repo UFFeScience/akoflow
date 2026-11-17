@@ -82,7 +82,8 @@ const groupMetadata = {
 };
 
 const queryDescriptions = {
-  portable: "Set to `1` to enrich the saved workflow with immutable artifact origins and portable build recipes for export or Hub publication. Missing source data returns a validation error.",
+  portable:
+    "Set to `1` to enrich the saved workflow with immutable artifact origins and portable build recipes for export or Hub publication. Missing source data returns a validation error.",
   name: "Override the imported workflow name before validation and registration.",
   repository:
     "Docker Hub repository, including its namespace (for example library/python).",
@@ -450,6 +451,8 @@ const verifiedRequestNotes = {
     "Discovers through a saved connection and returns a `snapshots` array. The connection needs a configured discovery driver and bound resources; missing prerequisites return `422`. A successful request records observed inventory but does not reserve a scheduler allocation or guarantee that every site resource was found.",
   "POST /akoflow-api/workflow-definitions/import/":
     "This compatibility route uses the same portable YAML/JSON importer as `POST /workflow-definitions/`. Supply `name`, `spec.namespace`, and activities with valid dependencies and execution or simulation fields. The [workflow specification](/docs/internal/workflow-spec) defines the authoring format; a duplicate normalized workflow ID returns `422`.",
+  "PUT /akoflow-api/workflow-definitions/{workflowId}/archive/":
+    "Send `archived` as an explicit boolean: `true` archives the workflow and `false` restores it. This changes the latest workflow version status and returns the updated definition with `200 OK`; historical definitions and executions remain stored. A missing boolean returns `422`, an unknown workflow returns `404`, and imported read-only snapshots return `403`. Archived workflows reject new plans and executions until restored.",
   "POST /akoflow-api/workflow-definition-actions/duplicate/{workflowId}/":
     "Send a non-empty new `name`; `namespace` is optional and otherwise inherited. The source workflow must exist. AkôFlow generates new workflow and activity IDs from the new name and returns the independent definition with `201 Created`; an ID collision or invalid name returns `422`.",
   "POST /akoflow-api/planning-sessions/{sessionId}/candidates/{candidateId}/select/":

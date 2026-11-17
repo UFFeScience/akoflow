@@ -21,7 +21,15 @@ func TestRecipeRegistrationAndInspectionBeforeFirstBuild(t *testing.T) {
 	if err != nil || info["available"] != false || !strings.Contains(info["dockerfile"].(string), "FROM scratch") {
 		t.Fatalf("source-only inspection: %+v %v", info, err)
 	}
-	exported, err := manager.PortableOrigin(context.Background(), domain.ArtifactBuild{SourceType: "dockerfile", ContextDigest: origin.Build.ContextDigest, RecipePath: "Dockerfile", RecipeDigest: origin.Build.RecipeDigest, TargetOS: "linux", TargetArchitecture: "amd64"})
+	spec := domain.ArtifactBuild{
+		SourceType:         "dockerfile",
+		ContextDigest:      origin.Build.ContextDigest,
+		RecipePath:         "Dockerfile",
+		RecipeDigest:       origin.Build.RecipeDigest,
+		TargetOS:           "linux",
+		TargetArchitecture: "amd64",
+	}
+	exported, err := manager.PortableOrigin(context.Background(), spec)
 	if err != nil || exported.Build.ContextDigest != origin.Build.ContextDigest {
 		t.Fatalf("source export: %+v %v", exported, err)
 	}

@@ -219,6 +219,10 @@ func (r *Repository) ListArtifacts(ctx context.Context, selectable bool) ([]doma
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
+	return r.enrichArtifactBuilds(ctx, values, indexes)
+}
+
+func (r *Repository) enrichArtifactBuilds(ctx context.Context, values []domain.ExecutableArtifact, indexes map[string]int) ([]domain.ExecutableArtifact, error) {
 	dockerRows, err := r.db.QueryContext(ctx, `SELECT DISTINCT av.artifact_id, av.version, b.target_architecture, b.source_type, b.target_format
 		FROM artifact_versions av
 		JOIN artifact_builds b ON b.artifact_version_id=av.id

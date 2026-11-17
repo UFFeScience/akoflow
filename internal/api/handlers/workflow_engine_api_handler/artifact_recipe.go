@@ -74,8 +74,8 @@ func (h *Handler) RegisterArtifactRecipe(w http.ResponseWriter, r *http.Request)
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return
 	}
-	args, _ := json.Marshal(arguments)
-	spec := domain.ArtifactBuild{ID: "recipe-build-" + key, ArtifactVersionID: version.ID, SourceType: "dockerfile", ContextDigest: origin.Build.ContextDigest, RecipePath: origin.Build.RecipePath, RecipeDigest: origin.Build.RecipeDigest, TargetFormat: "oci", TargetOS: "linux", TargetArchitecture: strings.TrimPrefix(origin.Platform, "linux/"), BuildArguments: string(args), CacheKey: cacheKey}
+	spec := recipeBuildSpecification(key, version.ID, origin, arguments)
+
 	if err := h.data.SaveArtifactBuild(r.Context(), spec); err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return
@@ -110,4 +110,23 @@ func (h *Handler) InspectArtifactImage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, http.StatusOK, result)
+}
+
+func recipeBuildSpecification(key, versionID string, origin *domain.ArtifactOrigin, arguments map[string]string) domain.ArtifactBuild {
+	cacheKey := "recipe:" + key
+	args, _ := json.Marshal(arguments)
+	return domain.ArtifactBuild{
+		ID:                 "recipe-build-" + key,
+		ArtifactVersionID:  versionID,
+		SourceType:         "dockerfile",
+		ContextDigest:      origin.Build.ContextDigest,
+		RecipePath:         origin.Build.RecipePath,
+		RecipeDigest:       origin.Build.RecipeDigest,
+		TargetFormat:       "oci",
+		TargetOS:           "linux",
+		TargetArchitecture: strings.TrimPrefix(origin.Platform, "linux/"),
+		BuildArguments:     string(args),
+		CacheKey:           cacheKey,
+	}
+
 }

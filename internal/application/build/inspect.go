@@ -27,7 +27,14 @@ func (m Manager) InspectOrigin(ctx context.Context, origin domain.ArtifactOrigin
 		payload, _ := json.Marshal(origin)
 		image = "akoflow-reproduced:" + strings.TrimPrefix(contentDigest(payload), "sha256:")
 		result["reference"] = image
-		result["build"] = map[string]any{"recipePath": origin.Build.RecipePath, "recipeDigest": origin.Build.RecipeDigest, "contextDigest": origin.Build.ContextDigest, "contextSize": len(origin.Build.ContextArchive), "arguments": origin.Build.Arguments}
+		result["build"] = map[string]any{
+			"recipePath":    origin.Build.RecipePath,
+			"recipeDigest":  origin.Build.RecipeDigest,
+			"contextDigest": origin.Build.ContextDigest,
+			"contextSize":   len(origin.Build.ContextArchive),
+			"arguments":     origin.Build.Arguments,
+		}
+
 		gz, err := gzip.NewReader(bytes.NewReader(origin.Build.ContextArchive))
 		if err != nil {
 			return nil, err
@@ -71,6 +78,10 @@ func (m Manager) InspectOrigin(ctx context.Context, origin domain.ArtifactOrigin
 		result[key] = images[0][key]
 	}
 	result["available"] = true
+	return m.inspectImageHistory(ctx, image, result)
+}
+
+func (m Manager) inspectImageHistory(ctx context.Context, image string, result map[string]any) (map[string]any, error) {
 	history, err := m.Executor.Runner.Run(ctx, "docker", []string{"image", "history", "--no-trunc", "--format", "{{json .}}", image}, nil)
 	if err != nil {
 		result["historyUnavailable"] = true

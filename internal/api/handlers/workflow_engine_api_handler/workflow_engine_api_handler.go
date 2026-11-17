@@ -3045,6 +3045,11 @@ func (h *Handler) resolveBuildPreparations(ctx context.Context, request *ports.E
 		if !ok {
 			return fmt.Errorf("build activity %q has unknown resource %q", activity.ID, assignment.ResourceID)
 		}
+		if request.Run.Mode != domain.ExecutionModeSimulation {
+			if err := validatePortableRuntime(activity, resource, executionRuntimeDriver(*request, assignment)); err != nil {
+				return err
+			}
+		}
 		if prepared, err := h.preparePortableOrigin(ctx, request, index, assignment, resource); err != nil {
 			return err
 		} else if prepared {
@@ -3091,7 +3096,7 @@ func (h *Handler) resolveBuildPreparations(ctx context.Context, request *ports.E
 				return err
 			}
 			if !required {
-				return fmt.Errorf("activity %q requires a completed SIF build for OCI image %q before Slurm execution", activity.ID, activity.Command.Executable.Source.Reference)
+				return operationerror.Wrap(fmt.Errorf("activity %q requires a completed SIF build for OCI image %q before Slurm execution", activity.ID, activity.Command.Executable.Source.Reference), "artifact_sif_required", "artifact_compatibility", activity.ID, false, "Build and register a SIF artifact for this image and destination architecture before executing on Slurm.")
 			}
 		}
 		if !required {

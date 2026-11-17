@@ -12,6 +12,10 @@ This screenshot is the actual Desktop renderer with controlled API fixtures used
 
 [Validation guide](https://github.com/UFFeScience/akoflow/blob/v1.0.23/docs/docs/guides/workflows/preflight.md).
 
+## Execution overview visibility
+
+Completed runs no longer depend on asynchronous browser node measurements to display their fixed-size overview cards. The graph waits for a visible container, uses explicit card dimensions and recalculates framing when the available area changes. This covers narrow-to-wide windows and returning to the Workflow tab. A regression reproduces the previous empty canvas by delaying node measurements.
+
 ## Reliable failure handling
 
 - Runtime observation outages preserve live activity ownership and prevent duplicate starts. After three consecutive failed observations, cancellation and reconciliation remain tracked instead of assuming the workload stopped.
@@ -33,13 +37,13 @@ Real API/MCP clients must explicitly acknowledge advisory/unverified requirement
 
 - Daemon source suites pass with CGO/SQLite and rsync available, including failure injection, uncertainty, publication reconciliation, preflight receipts and mutable input rechecks.
 - Desktop: 148 unit tests, 52 packaging contracts and production web build pass.
-- Chromium: prerequisite review, blockers, acknowledgment and context invalidation and actionable launch errors are covered by three focused browser regressions.
+- Chromium: prerequisite review, blockers, acknowledgment and context invalidation, actionable launch errors and overview visibility are covered by six focused browser regressions.
 - MCP catalog and generated API documentation include the new validation endpoints.
 
 Native macOS/Windows installation, signing, updates and live remote registry/HPC/cloud execution have not been revalidated in this change. Source/browser validation is separate from release packaging.
 
 ## Release preparation
 
-Tracking issue: #265. Scope: #208 and #266–#271. The coordinated source changes are available in the daemon and Desktop `AKO-265` branches and their release PRs.
+Tracking issue: #265. Scope: #208, #266–#271 and #282. The coordinated source changes are available in the daemon and Desktop `AKO-265` branches and their release PRs.
 
 This is a draft release. Desktop package version is prepared as 1.0.23. Platform installers, runtime archives and updater manifests must be built from synchronized frozen tags by the existing release workflow before stable publication.

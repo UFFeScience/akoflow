@@ -121,6 +121,12 @@ func (h *Handler) evaluateExecutionPreflight(ctx context.Context, request *ports
 			if len(missing) > 0 || len(reservations) == 0 {
 				return "unverified", "A measured storage budget is unavailable for one or more destinations.", "Check destination capacity before starting; runtime storage limits remain enforced."
 			}
+			for _, reservation := range reservations {
+				age := time.Since(reservation.ObservedAt)
+				if age > 2*time.Minute || age < -30*time.Second {
+					return "unverified", "Storage capacity observations are stale or have an invalid observation time.", "Refresh destination storage capacity before starting."
+				}
+			}
 			return "passed", "Declared workspace requirements fit the observed storage budgets.", ""
 		}},
 		probe("artifact_compatibility", "artifacts", func(ctx context.Context) error { return h.resolveBuildPreparations(ctx, request) }),

@@ -10,6 +10,7 @@ import (
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
 	domainpreflight "github.com/UFFeScience/akoflow/internal/domain/preflight"
+	"github.com/UFFeScience/akoflow/internal/domain/storagebudget"
 )
 
 type preflightCommandStub struct {
@@ -168,4 +169,25 @@ func TestConnectionProbeUsesRefreshedResourceConfiguration(t *testing.T) {
 	if status != "unverified" {
 		t.Fatalf("stale resource approved: %s", status)
 	}
+}
+
+func TestPreflightDoesNotApproveStaleStorageCapacity(t *testing.T) {
+	request := preflightRequest()
+	request.Workflow.Activities = []domain.Activity{{ID: "activity", Metadata: map[string]any{
+		"workspaceProjection": map[string]any{"contract": "whole-workspace-v1", "source": "measured", "inputs": []map[string]any{{"path": "input", "sizeBytes": 100, "contentId": "hash"}}},
+	}}}
+	request.Plan.Assignments = []domain.PlanAssignment{{ActivityID: "activity", ResourceID: "resource"}}
+	request.Resources = []domain.Resource{{ID: "resource", Metadata: map[string]any{
+		"workspaceStorageBudget": storagebudget.Snapshot{StorageID: "storage", AvailableBytes: 10000, Source: "quota-api", ObservedAt: time.Now().Add(-time.Hour)},
+	}}}
+	report := (&Handler{}).evaluateExecutionPreflight(context.Background(), &request)
+	for _, check := range report.Checks {
+		if check.Code == "storage_budget" {
+			if check.Status != "unverified" || !strings.Contains(check.Message, "stale") {
+				t.Fatalf("stale capacity approved: %+v", check)
+			}
+			return
+		}
+	}
+	t.Fatal("missing storage check")
 }

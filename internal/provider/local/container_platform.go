@@ -63,5 +63,6 @@ func startContainerWithRegistry(ctx context.Context, args []string, image string
 func dockerPlatformMismatch(output string) bool {
 	output = strings.ToLower(output)
 	return strings.Contains(output, "no matching manifest") ||
+		strings.Contains(output, "does not provide the specified platform") ||
 		(strings.Contains(output, "platform") && strings.Contains(output, "does not match"))
 }

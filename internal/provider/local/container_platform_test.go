@@ -20,7 +20,7 @@ func TestContainerRetriesVerifiedForeignPlatform(t *testing.T) {
 	dir := t.TempDir()
 	script := `#!/bin/sh
 if [ "$3" = linux/` + runtime.GOARCH + ` ]; then
-  echo 'no matching manifest for the host platform' >&2
+  echo 'image was found but does not provide the specified platform' >&2
   exit 125
 elif [ "$3" = linux/` + target + ` ]; then
   echo proof-container

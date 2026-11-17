@@ -15,7 +15,7 @@ type executableInspector interface {
 	InspectSource(context.Context, domain.ExecutableSource) (map[string]any, error)
 }
 
-func (h *Handler) inspectArtifactSource(ctx context.Context, source domain.ExecutableSource) (map[string]any, error) {
+func (h *Handler) inspectLiveArtifactSource(ctx context.Context, source domain.ExecutableSource) (map[string]any, error) {
 	inspector, ok := h.build.(executableInspector)
 	if !ok {
 		return nil, fmt.Errorf("artifact inspection is unavailable")

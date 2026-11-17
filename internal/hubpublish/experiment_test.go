@@ -80,3 +80,22 @@ func TestHubCaptureRejectsUnrelatedPlanAndOversizedPackage(t *testing.T) {
 		t.Fatal("oversized capture silently truncated")
 	}
 }
+
+func TestExperimentPackageCarriesArtifactInspectionInYAMLAndSnapshot(t *testing.T) {
+	inspection := map[string]any{"schemaVersion": 1, "data": map[string]any{"format": "sif", "reference": "/apps/tool.sif", "sifPartitions": "1 |1 |NONE |100-200 |Def.FILE"}}
+	activity := map[string]any{"id": "activity", "name": "Activity", "command": map[string]any{"executable": map[string]any{"source": map[string]any{"type": "local-file", "path": "/apps/tool.sif", "format": "sif", "inspection": inspection}}}}
+	workflow := map[string]any{"id": "workflow", "name": "Workflow", "version": map[string]any{"id": "version", "activities": []any{activity}}}
+	contextData := map[string]any{"workflow": workflow, "plan": map[string]any{"id": "plan", "workflowVersionId": "version"}}
+	execution := map[string]any{"run": map[string]any{"id": "run", "schedulePlanId": "plan", "workflowVersionId": "version"}}
+	capture, err := buildExperiment(contextData, execution, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, file := range capture.bundle.Files {
+		if file.Path == "workflow.yaml" || file.Path == "workflow.json" || file.Path == "plans.json" {
+			if !strings.Contains(file.Content, "sifPartitions") || !strings.Contains(file.Content, "Def.FILE") {
+				t.Fatalf("%s lost inspected image data", file.Path)
+			}
+		}
+	}
+}

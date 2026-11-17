@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
+	domainworkflow "github.com/UFFeScience/akoflow/internal/domain/workflow"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/dockerhub"
 )
 
@@ -90,27 +91,21 @@ func (h *Handler) portableDefinition(ctx context.Context, definition domain.Work
 		return definition, err
 	}
 	for i := range portable.Version.Activities {
-		command := &portable.Version.Activities[i].Command
-		if command.Executable == nil {
+		activity := &portable.Version.Activities[i]
+		executable := activity.Command.EffectiveExecutable()
+		if executable == nil {
 			continue
 		}
-		source := &command.Executable.Source
-		if source.Type != domain.ExecutableSourceCatalog && source.Type != domain.ExecutableSourceBuild {
-			continue
+		activity.Command.Executable = executable
+		source := &executable.Source
+		if err := h.captureArtifactInspection(ctx, source); err != nil {
+			return definition, fmt.Errorf("activity %q: %w", activity.Name, err)
 		}
-		origin, err := h.artifactOrigin(ctx, *source)
-		if err != nil {
-			return definition, fmt.Errorf("activity %q artifact origin: %w", portable.Version.Activities[i].Name, err)
+		if err := pinInspectedOCI(source); err != nil {
+			return definition, fmt.Errorf("activity %q image reference: %w", activity.Name, err)
 		}
-		if origin == nil {
-			return definition, fmt.Errorf("activity %q has only a local artifact identifier; register its image digest or upload its source build context before exporting", portable.Version.Activities[i].Name)
-		}
-		source.Origin = origin
-		source.ArtifactRef = nil
-		source.ArtifactBuildRef = ""
-		if origin.Image != "" {
-			source.Type = domain.ExecutableSourceOCI
-			source.Reference = origin.Image
+		if err := h.makeArtifactSourcePortable(ctx, source); err != nil {
+			return definition, fmt.Errorf("activity %q artifact origin: %w", activity.Name, err)
 		}
 	}
 	return portable, nil
@@ -152,4 +147,46 @@ func (h *Handler) preparePortableOrigin(ctx context.Context, request *ports.Exec
 	reference.Source.Origin = origin
 	activity.Command.Executable = &reference
 	return true, nil
+}
+
+func (h *Handler) makeArtifactSourcePortable(ctx context.Context, source *domain.ExecutableSource) error {
+	if source.Type != domain.ExecutableSourceCatalog && source.Type != domain.ExecutableSourceBuild {
+		return nil
+	}
+	origin, err := h.artifactOrigin(ctx, *source)
+	if err != nil {
+		return err
+	}
+	if origin == nil {
+		if source.Inspection != nil && source.Inspection.Data["format"] == "sif" {
+			return portableSIFSource(source)
+		}
+		return fmt.Errorf("artifact has only a local identifier; register its image digest or upload its source context before exporting")
+	}
+	source.Origin = origin
+	source.ArtifactRef = nil
+	source.ArtifactBuildRef = ""
+	if origin.Image != "" {
+		source.Type = domain.ExecutableSourceOCI
+		source.Reference = origin.Image
+	}
+	return nil
+}
+
+func portableSIFSource(source *domain.ExecutableSource) error {
+	data := source.Inspection.Data
+	reference, _ := data["reference"].(string)
+	if reference == "" {
+		return fmt.Errorf("SIF artifact has no exportable source location")
+	}
+	source.Type = domainworkflow.ExecutableSourceLocalFile
+	source.Format = domain.ExecutableFormatSIF
+	source.URI = ""
+	source.Path = reference
+	source.ArtifactRef = nil
+	source.ArtifactBuildRef = ""
+	if digest, ok := data["Id"].(string); ok {
+		source.ExpectedDigest = digest
+	}
+	return nil
 }

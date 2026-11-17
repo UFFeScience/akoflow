@@ -3091,6 +3091,25 @@
                                   "format": {
                                     "type": "string"
                                   },
+                                  "inspection": {
+                                    "anyOf": [
+                                      {
+                                        "properties": {
+                                          "data": {
+                                            "additionalProperties": {},
+                                            "type": "object"
+                                          },
+                                          "schemaVersion": {
+                                            "type": "integer"
+                                          }
+                                        },
+                                        "type": "object"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
                                   "origin": {
                                     "anyOf": [
                                       {
@@ -5580,6 +5599,25 @@
                                   "format": {
                                     "type": "string"
                                   },
+                                  "inspection": {
+                                    "anyOf": [
+                                      {
+                                        "properties": {
+                                          "data": {
+                                            "additionalProperties": {},
+                                            "type": "object"
+                                          },
+                                          "schemaVersion": {
+                                            "type": "integer"
+                                          }
+                                        },
+                                        "type": "object"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
                                   "origin": {
                                     "anyOf": [
                                       {
@@ -6575,6 +6613,25 @@
                                   "format": {
                                     "type": "string"
                                   },
+                                  "inspection": {
+                                    "anyOf": [
+                                      {
+                                        "properties": {
+                                          "data": {
+                                            "additionalProperties": {},
+                                            "type": "object"
+                                          },
+                                          "schemaVersion": {
+                                            "type": "integer"
+                                          }
+                                        },
+                                        "type": "object"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
                                   "origin": {
                                     "anyOf": [
                                       {
@@ -7140,6 +7197,25 @@
                                   "format": {
                                     "type": "string"
                                   },
+                                  "inspection": {
+                                    "anyOf": [
+                                      {
+                                        "properties": {
+                                          "data": {
+                                            "additionalProperties": {},
+                                            "type": "object"
+                                          },
+                                          "schemaVersion": {
+                                            "type": "integer"
+                                          }
+                                        },
+                                        "type": "object"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
                                   "origin": {
                                     "anyOf": [
                                       {
@@ -7485,6 +7561,25 @@
                                   },
                                   "format": {
                                     "type": "string"
+                                  },
+                                  "inspection": {
+                                    "anyOf": [
+                                      {
+                                        "properties": {
+                                          "data": {
+                                            "additionalProperties": {},
+                                            "type": "object"
+                                          },
+                                          "schemaVersion": {
+                                            "type": "integer"
+                                          }
+                                        },
+                                        "type": "object"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
                                   },
                                   "origin": {
                                     "anyOf": [
@@ -8324,6 +8419,138 @@
     }
   },
   {
+    "name": "inspect_artifact_image",
+    "method": "POST",
+    "path": "/akoflow-api/artifacts/inspect/",
+    "handler": "InspectArtifactImage",
+    "description": "inspect artifact image. POST /akoflow-api/artifacts/inspect/. Uses the daemon API and its domain validation.",
+    "body": {
+      "properties": {
+        "artifactBuildRef": {
+          "description": "ArtifactBuildRef identifies an immutable, server-created build\nspecification. Authored workflows never contain browser/host paths.",
+          "type": "string"
+        },
+        "artifactRef": {
+          "anyOf": [
+            {
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "credentialRef": {
+          "type": "string"
+        },
+        "environmentRef": {
+          "type": "string"
+        },
+        "expectedDigest": {
+          "type": "string"
+        },
+        "format": {
+          "type": "string"
+        },
+        "inspection": {
+          "anyOf": [
+            {
+              "properties": {
+                "data": {
+                  "additionalProperties": {},
+                  "type": "object"
+                },
+                "schemaVersion": {
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "origin": {
+          "anyOf": [
+            {
+              "properties": {
+                "build": {
+                  "anyOf": [
+                    {
+                      "properties": {
+                        "arguments": {
+                          "additionalProperties": {
+                            "type": "string"
+                          },
+                          "type": "object"
+                        },
+                        "contextArchive": {
+                          "contentEncoding": "base64",
+                          "type": "string"
+                        },
+                        "contextDigest": {
+                          "type": "string"
+                        },
+                        "recipeDigest": {
+                          "type": "string"
+                        },
+                        "recipePath": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "expectedDigest": {
+                  "type": "string"
+                },
+                "image": {
+                  "type": "string"
+                },
+                "platform": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "path": {
+          "type": "string"
+        },
+        "reference": {
+          "type": "string"
+        },
+        "resourceRef": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "uri": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
     "name": "interrupt_execution_activity",
     "method": "POST",
     "path": "/akoflow-api/execution-runs/{runId}/activities/{activityId}/interrupt/",
@@ -8777,6 +9004,13 @@
     "query": [
       "async"
     ]
+  },
+  {
+    "name": "register_artifact_recipe",
+    "method": "POST",
+    "path": "/akoflow-api/artifacts/recipe/",
+    "handler": "RegisterArtifactRecipe",
+    "description": "register artifact recipe. POST /akoflow-api/artifacts/recipe/. Uses the daemon API and its domain validation."
   },
   {
     "name": "register_docker_artifact",

@@ -2,6 +2,10 @@ name: AkôFlow example CI
 
 on:
   workflow_call:
+    outputs:
+      has_examples:
+        description: Whether any example directories were selected.
+        value: ${{ jobs.discover.outputs.has_examples }}
     inputs:
       examples_ref:
         description: Commit, branch, or tag from UFFeScience/akoflow-examples.

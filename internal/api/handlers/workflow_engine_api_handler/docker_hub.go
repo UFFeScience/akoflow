@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/UFFeScience/akoflow/internal/infrastructure/dockerhub"
+	"github.com/UFFeScience/akoflow/internal/operationerror"
 )
 
 func writeDockerHubError(w http.ResponseWriter, err error) {
@@ -15,10 +16,22 @@ func writeDockerHubError(w http.ResponseWriter, err error) {
 		if upstream.RetryAfter != "" {
 			w.Header().Set("Retry-After", upstream.RetryAfter)
 		}
-		writeError(w, upstream.Status, err)
+		code, retryable, action := "registry_unavailable", true, "Restore registry connectivity, then retry the lookup."
+		switch upstream.Status {
+		case http.StatusNotFound:
+			code, retryable, action = "registry_image_not_found", false, "Choose an existing repository and image tag."
+		case http.StatusTooManyRequests:
+			code, action = "registry_rate_limited", "Wait for the registry retry interval before trying again."
+		case http.StatusBadRequest:
+			code, retryable, action = "registry_selection_invalid", false, "Correct the repository, tag and platform selection."
+		}
+		writeError(w, upstream.Status, operationerror.Wrap(err, code, "registry", "", retryable, action))
 		return
 	}
-	writeError(w, http.StatusBadGateway, fmt.Errorf("Docker Hub is unavailable. Try again."))
+	writeError(w, http.StatusBadGateway, operationerror.Wrap(
+		fmt.Errorf("Docker Hub is unavailable. Try again."), "registry_unavailable", "registry", "", true,
+		"Restore registry connectivity, then retry the lookup.",
+	))
 }
 func dockerHubPage(r *http.Request) (int, error) {
 	value := r.URL.Query().Get("page")

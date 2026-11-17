@@ -32,8 +32,8 @@ Real API/MCP clients must explicitly acknowledge advisory/unverified requirement
 ## Validation
 
 - Daemon source suites pass with CGO/SQLite and rsync available, including failure injection, uncertainty, publication reconciliation, preflight receipts and mutable input rechecks.
-- Desktop: 148 unit tests and production web build pass.
-- Chromium: prerequisite review, blockers, acknowledgment and context invalidation are covered by two focused browser regressions.
+- Desktop: 148 unit tests, 52 packaging contracts and production web build pass.
+- Chromium: prerequisite review, blockers, acknowledgment and context invalidation and actionable launch errors are covered by three focused browser regressions.
 - MCP catalog and generated API documentation include the new validation endpoints.
 
 Native macOS/Windows installation, signing, updates and live remote registry/HPC/cloud execution have not been revalidated in this change. Source/browser validation is separate from release packaging.

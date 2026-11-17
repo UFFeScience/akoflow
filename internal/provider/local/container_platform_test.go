@@ -19,7 +19,9 @@ func TestContainerRetriesVerifiedForeignPlatform(t *testing.T) {
 	}
 	dir := t.TempDir()
 	script := `#!/bin/sh
-if [ "$1" = manifest ]; then
+if [ "$1" = manifest ] && [ "$3" != --verbose ]; then
+  echo '{"schemaVersion":2}'
+elif [ "$1" = manifest ]; then
   echo '{"Descriptor":{"platform":{"os":"linux","architecture":"'` + target + `'"}}}'
 elif [ "$3" = linux/` + runtime.GOARCH + ` ]; then
   echo 'no matching manifest for the host platform' >&2

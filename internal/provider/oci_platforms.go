@@ -8,46 +8,61 @@ import (
 	"time"
 )
 
-// RegistryPlatforms reads the registry manifest without pulling the image.
+type registryPlatform struct {
+	OS           string
+	Architecture string
+}
+
+// RegistryPlatforms reads the manifest without pulling the image.
 func RegistryPlatforms(ctx context.Context, runner CommandExecutor, image string) []string {
 	if runner == nil || image == "" || strings.HasPrefix(image, "-") || strings.ContainsAny(image, " \r\n\t") {
 		return nil
 	}
-	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
-	data, err := runner.Run(ctx, "docker", []string{"manifest", "inspect", "--verbose", image}, nil)
+	data, err := runner.Run(ctx, "docker", []string{"manifest", "inspect", image}, nil)
 	if err != nil {
 		return nil
 	}
-	type manifest struct {
-		Descriptor struct {
-			Platform struct {
-				OS           string
-				Architecture string
-			}
-		}
+	var index struct {
+		Manifests []struct{ Platform registryPlatform }
 	}
-	var manifests []manifest
-	if json.Unmarshal(data, &manifests) != nil {
-		var single manifest
-		if json.Unmarshal(data, &single) != nil {
-			return nil
-		}
-		manifests = []manifest{single}
+	if json.Unmarshal(data, &index) != nil {
+		return nil
 	}
+	if len(index.Manifests) > 0 {
+		platforms := make([]registryPlatform, 0, len(index.Manifests))
+		for _, descriptor := range index.Manifests {
+			platforms = append(platforms, descriptor.Platform)
+		}
+		return supportedRegistryPlatforms(platforms)
+	}
+	data, err = runner.Run(ctx, "docker", []string{"manifest", "inspect", "--verbose", image}, nil)
+	if err != nil {
+		return nil
+	}
+	var entry struct {
+		Descriptor struct{ Platform registryPlatform }
+	}
+	if json.Unmarshal(data, &entry) != nil {
+		return nil
+	}
+	return supportedRegistryPlatforms([]registryPlatform{entry.Descriptor.Platform})
+}
+
+func supportedRegistryPlatforms(platforms []registryPlatform) []string {
 	seen := map[string]bool{}
-	var platforms []string
-	for _, item := range manifests {
-		p := item.Descriptor.Platform
-		if p.OS != "linux" || (p.Architecture != "arm64" && p.Architecture != "amd64") {
+	var result []string
+	for _, platform := range platforms {
+		if platform.OS != "linux" || (platform.Architecture != "arm64" && platform.Architecture != "amd64") {
 			continue
 		}
-		platform := p.OS + "/" + p.Architecture
-		if !seen[platform] {
-			seen[platform] = true
-			platforms = append(platforms, platform)
+		name := platform.OS + "/" + platform.Architecture
+		if !seen[name] {
+			seen[name] = true
+			result = append(result, name)
 		}
 	}
-	sort.Strings(platforms)
-	return platforms
+	sort.Strings(result)
+	return result
 }

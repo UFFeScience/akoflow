@@ -58,3 +58,12 @@ func TestRecipeRegistrationPersistsSourceWithoutBuildAndCanInspect(t *testing.T)
 		t.Fatalf("source inspection: %d %s", response.Code, response.Body.String())
 	}
 }
+
+func TestArtifactInspectionAcceptsRemoteSIFFilesWithoutOCIOrigin(t *testing.T) {
+	h := newTestHandler()
+	h.build = appbuild.Manager{Root: t.TempDir()}
+	response := callHandler(t, http.MethodPost, "/", `{"type":"remote-file","path":"/apps/tool.sif","format":"sif","environmentRef":"cluster"}`, nil, h.InspectArtifactImage)
+	if response.Code != http.StatusOK || !bytes.Contains(response.Body.Bytes(), []byte(`"format":"sif"`)) || !bytes.Contains(response.Body.Bytes(), []byte(`"environmentRef":"cluster"`)) {
+		t.Fatalf("SIF artifact inspection: %d %s", response.Code, response.Body.String())
+	}
+}

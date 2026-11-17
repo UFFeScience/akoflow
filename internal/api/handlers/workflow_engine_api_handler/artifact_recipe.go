@@ -88,23 +88,7 @@ func (h *Handler) InspectArtifactImage(w http.ResponseWriter, r *http.Request) {
 	if !decode(w, r, &source) {
 		return
 	}
-	origin, err := h.artifactOrigin(r.Context(), source)
-	if err != nil {
-		writeError(w, http.StatusUnprocessableEntity, err)
-		return
-	}
-	if origin == nil {
-		writeError(w, http.StatusUnprocessableEntity, fmt.Errorf("register an immutable image origin or Dockerfile recipe to inspect this artifact"))
-		return
-	}
-	inspector, ok := h.build.(interface {
-		InspectOrigin(context.Context, domain.ArtifactOrigin) (map[string]any, error)
-	})
-	if !ok {
-		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("image inspection is unavailable"))
-		return
-	}
-	result, err := inspector.InspectOrigin(r.Context(), *origin)
+	result, err := h.inspectArtifactSource(r.Context(), source)
 	if err != nil {
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return

@@ -17,9 +17,13 @@ Preflight reads availability without pulling or building. A cached verified imag
 
 ## Inspect an image
 
-Open an artifact in **Artifacts**, or choose **View image details, Dockerfile and layers** from an activity. Desktop shows platform, local size, image and registry digests, tags, creation time, Dockerfile, context digests, image configuration, filesystem layer digests, and command history. Select a history row to inspect its complete command and size. Unbuilt recipes show their source; layer history is available once the image exists locally. Inspection never starts a build or pull.
+Every activity with an executable shows an **Executable artifact** link in its definition and execution details, including legacy image references. The link opens a dedicated page below the activity, so it can be copied and reloaded. You can also open an artifact in **Artifacts**, or inspect it from the executable picker. Desktop shows platform, local size, image and registry digests, tags, creation time, Dockerfile, context digests, image configuration, filesystem layer digests, and command history. Select a history row to inspect its complete command and size. Unbuilt recipes show their source; layer history is available once the image exists locally. Inspection never starts a build or pull.
 
 The Hub shows images and build recipes for published versions, including versions without a recorded execution. It displays the Dockerfile and source digests without executing uploaded content.
+
+## Inspect SIF artifacts
+
+The same artifact page supports local and cataloged `.sif` files, including artifacts without a registered build. It shows the location, expected and observed digests, size, Apptainer metadata and SIF data objects/partitions. Inspection reads the file without executing its payload. A remote SIF keeps its environment and resource references visible; internal metadata is available when the file can be read by the daemon. OCI layers are shown only for OCI images.
 
 ## Docker and Apptainer
 

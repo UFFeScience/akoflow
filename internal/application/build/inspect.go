@@ -18,7 +18,7 @@ func (m Manager) InspectOrigin(ctx context.Context, origin domain.ArtifactOrigin
 	if err := origin.Validate(); err != nil {
 		return nil, err
 	}
-	result := map[string]any{"platform": origin.Platform, "reference": origin.Image, "available": false}
+	result := map[string]any{"format": "oci", "platform": origin.Platform, "reference": origin.Image, "available": false}
 	image := origin.Image
 	if origin.Build != nil {
 		if err := inspectPortableContext(*origin.Build); err != nil {

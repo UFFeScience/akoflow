@@ -125,7 +125,7 @@ func (h *Handler) evaluateExecutionPreflight(ctx context.Context, request *ports
 		}},
 		probe("artifact_compatibility", "artifacts", func(ctx context.Context) error { return h.resolveBuildPreparations(ctx, request) }),
 	)
-	probes = append(probes, h.preflightConnections(*request)...)
+	probes = append(probes, h.preflightConnections(request)...)
 	probes = append(probes, h.preflightInputs(*request)...)
 	probes = append(probes, h.preflightImages(request)...)
 	return apppreflight.Evaluate(ctx, "preflight-"+uuid.NewString(), hash, string(request.Run.Mode), probes)

@@ -15,7 +15,9 @@ func (h *Handler) preflightImages(request *ports.ExecutionRequest) []appprefligh
 		activity := request.Workflow.Activities[index]
 		probes = append(probes, apppreflight.Probe{Code: "executable_availability", Stage: "artifacts", EntityID: activity.ID, Run: func(ctx context.Context) (string, string, string) {
 			if requirement, exists := request.PreparationRequirementsByActivity[activity.ID]; exists && requirement.Artifact != nil && requirement.Reproduction == nil {
-				return "unverified", "A compatible catalog artifact is selected; its bytes and transfer route are verified during preparation.", "Review the artifact location and destination access. Registry access is not required to reuse this artifact."
+				return "unverified",
+					"A compatible catalog artifact is selected; its bytes and transfer route are verified during preparation.",
+					"Review the artifact location and destination access. Registry access is not required to reuse this artifact."
 			}
 			source := domain.ExecutableSource{Type: domain.ExecutableSourceOCI, Reference: activity.Command.Image}
 			if executable := request.Workflow.Activities[index].Command.Executable; executable != nil {

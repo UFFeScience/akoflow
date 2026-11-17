@@ -8,27 +8,20 @@ import (
 	"github.com/UFFeScience/akoflow/internal/domain"
 )
 
-func (h *Handler) preflightConnections(request ports.ExecutionRequest) []apppreflight.Probe {
+func (h *Handler) preflightConnections(request *ports.ExecutionRequest) []apppreflight.Probe {
 	probes := []apppreflight.Probe{}
 	assigned := map[string]bool{}
 	for _, a := range request.Plan.Assignments {
 		assigned[a.ResourceID] = true
 	}
-	seen := map[string]bool{}
-	for _, resource := range request.Resources {
+	for index := range request.Resources {
+		resource := request.Resources[index]
 		if !assigned[resource.ID] {
 			continue
 		}
-		id, _ := resource.Metadata["connectionId"].(string)
-		key := id
-		if key == "" {
-			key = resource.ID
-		}
-		if seen[key] {
-			continue
-		}
-		seen[key] = true
 		probes = append(probes, apppreflight.Probe{Code: "environment_connection", Stage: "connections", EntityID: resource.ID, Path: "/environments", Run: func(ctx context.Context) (string, string, string) {
+			resource := request.Resources[index]
+			id, _ := resource.Metadata["connectionId"].(string)
 			connection := &domain.EnvironmentConnection{Type: domain.ConnectionLocal}
 			if id != "" {
 				store, ok := h.environments.(ports.ConnectionStore)

@@ -131,3 +131,41 @@ func TestLaunchRechecksMutableInputsAfterApprovedReport(t *testing.T) {
 		t.Fatalf("stale input approval reused: %v", err)
 	}
 }
+
+type imageProbeStub struct {
+	BuildOrchestrator
+	calls int
+}
+
+func (s *imageProbeStub) CheckExecutable(context.Context, domain.ExecutableSource) (bool, error) {
+	s.calls++
+	return false, errors.New("registry offline")
+}
+func TestPreflightReusesCatalogArtifactWithoutRegistryAccess(t *testing.T) {
+	checker := &imageProbeStub{}
+	h := &Handler{build: checker}
+	request := preflightRequest()
+	request.Workflow.Activities = []domain.Activity{{ID: "activity"}}
+	request.PreparationRequirementsByActivity = map[string]domain.PreparationRequirement{
+		"activity": {Artifact: &domain.ArtifactMaterialization{Digest: "verified-sif"}},
+	}
+	status, _, _ := h.preflightImages(&request)[0].Run(context.Background())
+	if status != "unverified" || checker.calls != 0 {
+		t.Fatalf("cached artifact incorrectly required registry: %s %d", status, checker.calls)
+	}
+}
+func TestConnectionProbeUsesRefreshedResourceConfiguration(t *testing.T) {
+	request := preflightRequest()
+	request.Plan.Assignments = []domain.PlanAssignment{{ActivityID: "a", ResourceID: "resource"}}
+	request.Resources = []domain.Resource{{ID: "resource", Type: domain.ResourceLocalMachine}}
+	h := &Handler{connectionTest: func(context.Context, domain.EnvironmentConnection) ports.ConnectionHealth {
+		t.Fatal("stale local connection was probed")
+		return ports.ConnectionHealth{}
+	}}
+	probes := h.preflightConnections(&request)
+	request.Resources[0].Type = domain.ResourceHPCMachine
+	status, _, _ := probes[0].Run(context.Background())
+	if status != "unverified" {
+		t.Fatalf("stale resource approved: %s", status)
+	}
+}

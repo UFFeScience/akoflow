@@ -19,11 +19,7 @@ func TestContainerRetriesVerifiedForeignPlatform(t *testing.T) {
 	}
 	dir := t.TempDir()
 	script := `#!/bin/sh
-if [ "$1" = manifest ] && [ "$3" != --verbose ]; then
-  echo '{"schemaVersion":2}'
-elif [ "$1" = manifest ]; then
-  echo '{"Descriptor":{"platform":{"os":"linux","architecture":"'` + target + `'"}}}'
-elif [ "$3" = linux/` + runtime.GOARCH + ` ]; then
+if [ "$3" = linux/` + runtime.GOARCH + ` ]; then
   echo 'no matching manifest for the host platform' >&2
   exit 125
 elif [ "$3" = linux/` + target + ` ]; then
@@ -36,7 +32,8 @@ fi
 		t.Fatal(err)
 	}
 	t.Setenv("PATH", dir)
-	output, warning, err := startContainerForPlatform(context.Background(), []string{"run", "example/image:1"}, "example/image:1")
+	output, warning, err := startContainerWithRegistry(context.Background(), []string{"run", "example/image:1"}, "example/image:1",
+		func(context.Context, string) []string { return []string{"linux/" + target} })
 	if err != nil || strings.TrimSpace(string(output)) != "proof-container" || !strings.Contains(warning, "linux/"+target) || !strings.Contains(warning, "emulation") {
 		t.Fatalf("unexpected fallback: %q %q %v", output, warning, err)
 	}

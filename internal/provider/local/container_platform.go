@@ -14,6 +14,15 @@ import (
 const compatibilityWarning = "platformCompatibilityWarning"
 
 func startContainerForPlatform(ctx context.Context, args []string, image string) ([]byte, string, error) {
+	return startContainerWithRegistry(ctx, args, image, func(ctx context.Context, image string) []string {
+		if platforms, _ := provider.ResolveOCIPlatforms(ctx, image); len(platforms) > 0 {
+			return platforms
+		}
+		return provider.RegistryPlatforms(ctx, provider.OSCommandExecutor{}, image)
+	})
+}
+
+func startContainerWithRegistry(ctx context.Context, args []string, image string, lookup func(context.Context, string) []string) ([]byte, string, error) {
 	native := "linux/" + runtime.GOARCH
 	platformArgs := func(platform string) []string {
 		return append([]string{"run", "--platform", platform}, args[1:]...)
@@ -24,7 +33,7 @@ func startContainerForPlatform(ctx context.Context, args []string, image string)
 	}
 	var platforms []string
 	if !strings.HasPrefix(image, "sha256:") {
-		platforms = provider.RegistryPlatforms(ctx, provider.OSCommandExecutor{}, image)
+		platforms = lookup(ctx, image)
 	}
 	if slices.Contains(platforms, native) {
 		if pullOutput, pullErr := exec.CommandContext(ctx, "docker", "pull", "--platform", native, image).CombinedOutput(); pullErr != nil {

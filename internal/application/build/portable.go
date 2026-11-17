@@ -8,6 +8,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -15,6 +16,7 @@ import (
 	"sort"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
@@ -342,12 +344,22 @@ func (r *Reproducer) publish(ctx context.Context, origin domain.ArtifactOrigin, 
 	variant = &domain.ArtifactVariant{ID: "variant-" + run.ID, Digest: image.ID, Format: "oci", Architecture: image.Architecture, SizeBytes: image.Size}
 	location = &domain.ArtifactLocation{ID: "location-" + run.ID, VariantID: variant.ID, Digest: image.ID, URI: "docker-image://" + image.ID, EndpointID: "local-docker", Scope: domain.CatalogScope("system"), Available: true}
 	if err := r.Catalog.PublishBuildOutput(ctx, run.ID, *variant, *location); err != nil {
+		reconcile, cancel := context.WithTimeout(context.WithoutCancel(ctx), 15*time.Second)
+		defer cancel()
+		published, stored, lookupErr := r.Catalog.FindBuildOutput(reconcile, spec.ID)
+		if lookupErr != nil {
+			return "", errors.Join(err, fmt.Errorf("publication outcome requires reconciliation: %w", lookupErr))
+		}
+		if published != nil && stored != nil && published.Digest == image.ID {
+			return published.ID, nil
+		}
+		run.Status, run.Error = "failed", err.Error()
+		if saveErr := r.Catalog.SaveBuildRun(reconcile, run); saveErr != nil {
+			return "", errors.Join(err, fmt.Errorf("persist publication failure: %w", saveErr))
+		}
 		return "", err
 	}
-	run.Status = "completed"
-	run.OutputVariantID = variant.ID
-	run.OutputDigest = image.ID
-	return variant.ID, r.Catalog.SaveBuildRun(ctx, run)
+	return variant.ID, nil
 }
 
 func sensitiveContextName(name string) bool {

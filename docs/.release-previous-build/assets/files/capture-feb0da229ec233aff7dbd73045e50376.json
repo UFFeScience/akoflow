@@ -1,0 +1,88 @@
+{
+  "release": "v1.0.12",
+  "capturedAt": "2026-11-02T23:57:39.268659+00:00",
+  "desktopPackage": "Akoflow-Desktop-1.0.12-linux-amd64.deb",
+  "desktopSourceCommit": "c97be669c8cbbc2729b3ed2b4cb933f2813deb06",
+  "daemonSourceCommit": "1ab856d3a1e47a89253080fab93de916e44379bb",
+  "method": "Native published Electron Desktop package and matching released Docker runtime in an isolated documentation installation",
+  "mcp": {
+    "nativeConfigurationInstalled": true,
+    "sdkProbeHealthy": true,
+    "administrationTools": 150,
+    "protocol": "2026-07-28"
+  },
+  "scheduling": {
+    "moheftImportedAndCompiled": true,
+    "sourceTypesChecked": true
+  },
+  "artifact": {
+    "repository": "library/busybox",
+    "tag": "1.36",
+    "architecture": "amd64",
+    "status": "completed",
+    "sourceDigest": "sha256:b7f3d86d6e84fc17718c48bcde1450807faa2d56704205c697b4bd5df7b9e29f",
+    "sifDigest": "sha256:464cca0c87fec88d6e9ef5da398492f9e934f620d1f1ad5bb8cbffd6b2848e14"
+  },
+  "images": [
+    {
+      "file": "01-mcp-disabled.png",
+      "width": 1280,
+      "height": 860
+    },
+    {
+      "file": "02-mcp-permissions.png",
+      "width": 1280,
+      "height": 860
+    },
+    {
+      "file": "03-mcp-configuration.png",
+      "width": 1280,
+      "height": 860
+    },
+    {
+      "file": "04-mcp-verified.png",
+      "width": 1280,
+      "height": 860
+    },
+    {
+      "file": "05-algorithm-library.png",
+      "width": 1280,
+      "height": 860
+    },
+    {
+      "file": "06-moheft-plugin.png",
+      "width": 1280,
+      "height": 860
+    },
+    {
+      "file": "07-desktop-version.png",
+      "width": 1280,
+      "height": 860
+    },
+    {
+      "file": "08-go-plugin-editor.png",
+      "width": 1280,
+      "height": 860
+    },
+    {
+      "file": "09-docker-hub-search.png",
+      "width": 1280,
+      "height": 860
+    },
+    {
+      "file": "10-docker-hub-platform.png",
+      "width": 1280,
+      "height": 860
+    },
+    {
+      "file": "11-sif-verified.png",
+      "width": 1280,
+      "height": 860
+    },
+    {
+      "file": "12-artifact-detail.png",
+      "width": 1280,
+      "height": 860
+    }
+  ]
+}

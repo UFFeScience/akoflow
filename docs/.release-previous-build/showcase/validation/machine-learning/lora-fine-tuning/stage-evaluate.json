@@ -1,0 +1,37 @@
+{
+  "dependencies": [
+    "fine-tune-adapters"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:39.952298Z",
+  "finishedAtUnixNs": 1792523559946801000,
+  "inputDigest": "3d810a4233efa806bfaa7d1e21a57826a7cb67f6f2b8aeed7547aa3dc787e200",
+  "result": {
+    "adapterA": [
+      0.8976244712494995,
+      0.44881223562474937
+    ],
+    "adapterB": [
+      0.8912412992555718,
+      -0.44562064962778586
+    ],
+    "baseWeights": [
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "finalMse": 2.11390070695943e-31,
+    "initialMse": 0.4800000000000001
+  },
+  "showcase": "lora-fine-tuning",
+  "stage": "evaluate",
+  "startedAt": "2026-10-20T19:12:39.905655Z",
+  "startedAtUnixNs": 1792523559946361000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

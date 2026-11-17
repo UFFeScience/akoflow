@@ -1,0 +1,15 @@
+{
+  "dependencies": [
+    "compose"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T18:30:59.172581Z",
+  "result": {
+    "commandCompleted": true,
+    "stdout": ""
+  },
+  "showcase": "ai-video-studio",
+  "stage": "quality-control",
+  "startedAt": "2026-10-20T18:30:59.131259Z",
+  "status": "success"
+}

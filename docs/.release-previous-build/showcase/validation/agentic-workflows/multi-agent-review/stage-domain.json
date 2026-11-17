@@ -1,0 +1,20 @@
+{
+  "dependencies": [
+    "shared-context"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:47.668204Z",
+  "finishedAtUnixNs": 1792523567663227000,
+  "inputDigest": "515725fca7c650aa18f2c2af0438ac3160938890c432b1b81a828a2f831d7567",
+  "result": {
+    "claimedMean": 7,
+    "role": "domain",
+    "withinBounds": true
+  },
+  "showcase": "multi-agent-review",
+  "stage": "domain",
+  "startedAt": "2026-10-20T19:12:47.620147Z",
+  "startedAtUnixNs": 1792523567663134000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

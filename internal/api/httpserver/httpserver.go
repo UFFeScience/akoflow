@@ -356,6 +356,7 @@ func registerWorkflowRoutes(mux *http.ServeMux, workflowEngine *workflow_engine_
 	mux.HandleFunc("GET /akoflow-api/workflow-definitions/", http_config.KernelHandler(workflowEngine.ListWorkflows))
 	mux.HandleFunc("GET /akoflow-api/workflow-versions/{versionId}/", http_config.KernelHandler(workflowEngine.GetWorkflowVersion))
 	mux.HandleFunc("GET /akoflow-api/schedule-plans/{planId}/context/", http_config.KernelHandler(workflowEngine.GetPlanContext))
+	mux.HandleFunc("PUT /akoflow-api/workflow-definitions/{workflowId}/archive/", http_config.KernelHandler(workflowEngine.SetWorkflowArchived))
 	mux.HandleFunc("GET /akoflow-api/workflow-definitions/{workflowId}/", http_config.KernelHandler(workflowEngine.GetWorkflow))
 	mux.HandleFunc("GET /akoflow-api/workflow-definitions/{workflowId}/export/", http_config.KernelHandler(workflowEngine.ExportWorkflow))
 	mux.HandleFunc("POST /akoflow-api/workflow-definition-actions/duplicate/{workflowId}/", http_config.KernelHandler(workflowEngine.DuplicateWorkflow))

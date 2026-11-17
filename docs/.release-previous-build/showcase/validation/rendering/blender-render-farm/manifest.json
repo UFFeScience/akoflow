@@ -1,0 +1,24 @@
+{
+  "artifacts": [
+    "render-plan.json",
+    "scene.blend",
+    "animation.mp4",
+    "render-report.json"
+  ],
+  "sha256": {
+    "animation.mp4": "0c4435d1819c5c08a633edb7aceba1eb1b8f598fff3a4f184d5c62e742bd3337",
+    "render-plan.json": "e83dee132df2c6861d6cff3a5ac52ba9ccc0766b52b9fa3e1868903f2a3b5c05",
+    "render-report.json": "c2b80956ba35fc8c76d16762d7f0385c4e16e6677203c8a5ac82a312c64e861c",
+    "scene.blend": "b839d93bfd4dab2eba102e6de3b09f00d85412579764da2948e09b1092cedd50"
+  },
+  "showcase": "blender-render-farm",
+  "stages": [
+    "setup",
+    "render-even",
+    "render-odd",
+    "compose",
+    "verify"
+  ],
+  "status": "success",
+  "validationMode": "local-pipeline"
+}

@@ -1,0 +1,2630 @@
+{
+  "activityCount": 6,
+  "completedActivityCount": 6,
+  "image": "ghcr.io/uffescience/akoflow-examples/showcase-lora-fine-tuning:local-3390bedec77f6a55",
+  "imageId": "sha256:3390bedec77f6a55617da6ad689fb076e2cad9558565141c113af94b1458a245",
+  "observedAt": "2026-10-20T19:10:34Z",
+  "planId": "showcase-lora-fine-tuning-local-2accb78860-manual-plan-20261020t191024.389646000",
+  "projection": {
+    "activities": [
+      {
+        "activityId": "showcase-lora-fine-tuning-local-2accb78860-fetch-base-model",
+        "allocatedResourceId": "showcase-lora-fine-tuning-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "finishedAt": 1792523424.8626783,
+        "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-fetch-base-model",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-lora-fine-tuning-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-lora-fine-tuning-local-2accb78860-manual-plan-20261020t191024.389646000-showcase-lora-fine-tuning-local-2accb78860-fetch-base-model",
+        "plannedResourceId": "showcase-lora-fine-tuning-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523424.629726,
+        "readyAt": 1792523424.629726,
+        "runtimeId": "showcase-lora-fine-tuning-local",
+        "runtimeSeconds": 0.11178874969482422,
+        "startedAt": 1792523424.7508895,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+        "allocatedResourceId": "showcase-lora-fine-tuning-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "finishedAt": 1792523426.2581162,
+        "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1192159652709961,
+          "preparationFinishedAt": 1792523426.029946,
+          "preparationStartedAt": 1792523425.8690622,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0014872550964355469,
+          "runtimeId": "showcase-lora-fine-tuning-local",
+          "transferElapsedSeconds": 0.16088390350341797,
+          "transferWorkSeconds": 0.16088390350341797
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-lora-fine-tuning-local-2accb78860-manual-plan-20261020t191024.389646000-showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+        "plannedResourceId": "showcase-lora-fine-tuning-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523425.8635256,
+        "readyAt": 1792523425.8635256,
+        "runtimeId": "showcase-lora-fine-tuning-local",
+        "runtimeSeconds": 0.10895419120788574,
+        "startedAt": 1792523426.149162,
+        "status": "completed",
+        "transferBytes": 494,
+        "transferSeconds": 0.16088390350341797
+      },
+      {
+        "activityId": "showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+        "allocatedResourceId": "showcase-lora-fine-tuning-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "finishedAt": 1792523428.2829728,
+        "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1279747486114502,
+          "preparationFinishedAt": 1792523428.0353208,
+          "preparationStartedAt": 1792523427.870216,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0013682842254638672,
+          "runtimeId": "showcase-lora-fine-tuning-local",
+          "transferElapsedSeconds": 0.16510486602783203,
+          "transferWorkSeconds": 0.16510486602783203
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-lora-fine-tuning-local-2accb78860-manual-plan-20261020t191024.389646000-showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+        "plannedResourceId": "showcase-lora-fine-tuning-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523427.8662534,
+        "readyAt": 1792523427.8662534,
+        "runtimeId": "showcase-lora-fine-tuning-local",
+        "runtimeSeconds": 0.11967730522155762,
+        "startedAt": 1792523428.1632955,
+        "status": "completed",
+        "transferBytes": 1603,
+        "transferSeconds": 0.16510486602783203
+      },
+      {
+        "activityId": "showcase-lora-fine-tuning-local-2accb78860-evaluate",
+        "allocatedResourceId": "showcase-lora-fine-tuning-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "finishedAt": 1792523430.2441833,
+        "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-evaluate",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.12554693222045898,
+          "preparationFinishedAt": 1792523430.0046365,
+          "preparationStartedAt": 1792523429.862709,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0015926361083984375,
+          "runtimeId": "showcase-lora-fine-tuning-local",
+          "transferElapsedSeconds": 0.14192748069763184,
+          "transferWorkSeconds": 0.14192748069763184
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-lora-fine-tuning-local-2accb78860-manual-plan-20261020t191024.389646000-showcase-lora-fine-tuning-local-2accb78860-evaluate",
+        "plannedResourceId": "showcase-lora-fine-tuning-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523429.8589442,
+        "readyAt": 1792523429.8589442,
+        "runtimeId": "showcase-lora-fine-tuning-local",
+        "runtimeSeconds": 0.11399984359741211,
+        "startedAt": 1792523430.1301835,
+        "status": "completed",
+        "transferBytes": 2304,
+        "transferSeconds": 0.14192748069763184
+      },
+      {
+        "activityId": "showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+        "allocatedResourceId": "showcase-lora-fine-tuning-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "finishedAt": 1792523432.2769926,
+        "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1339879035949707,
+          "preparationFinishedAt": 1792523432.0321283,
+          "preparationStartedAt": 1792523431.8690474,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0035767555236816406,
+          "runtimeId": "showcase-lora-fine-tuning-local",
+          "transferElapsedSeconds": 0.16308093070983887,
+          "transferWorkSeconds": 0.16308093070983887
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-lora-fine-tuning-local-2accb78860-manual-plan-20261020t191024.389646000-showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+        "plannedResourceId": "showcase-lora-fine-tuning-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523431.8619678,
+        "readyAt": 1792523431.8619678,
+        "runtimeId": "showcase-lora-fine-tuning-local",
+        "runtimeSeconds": 0.11087632179260254,
+        "startedAt": 1792523432.1661162,
+        "status": "completed",
+        "transferBytes": 3085,
+        "transferSeconds": 0.16308093070983887
+      },
+      {
+        "activityId": "showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+        "allocatedResourceId": "showcase-lora-fine-tuning-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "finishedAt": 1792523432.318797,
+        "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14049172401428223,
+          "preparationFinishedAt": 1792523432.0567052,
+          "preparationStartedAt": 1792523431.8715472,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.00473785400390625,
+          "runtimeId": "showcase-lora-fine-tuning-local",
+          "transferElapsedSeconds": 0.18515801429748535,
+          "transferWorkSeconds": 0.18515801429748535
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-lora-fine-tuning-local-2accb78860-manual-plan-20261020t191024.389646000-showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+        "plannedResourceId": "showcase-lora-fine-tuning-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523431.863396,
+        "readyAt": 1792523431.863396,
+        "runtimeId": "showcase-lora-fine-tuning-local",
+        "runtimeSeconds": 0.12160015106201172,
+        "startedAt": 1792523432.197197,
+        "status": "completed",
+        "transferBytes": 3085,
+        "transferSeconds": 0.18515801429748535
+      }
+    ],
+    "activityAttempts": [
+      {
+        "activityId": "showcase-lora-fine-tuning-local-2accb78860-fetch-base-model",
+        "allocatedResourceId": "showcase-lora-fine-tuning-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "finishedAt": 1792523424.8626783,
+        "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-fetch-base-model",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-lora-fine-tuning-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-lora-fine-tuning-local-2accb78860-manual-plan-20261020t191024.389646000-showcase-lora-fine-tuning-local-2accb78860-fetch-base-model",
+        "plannedResourceId": "showcase-lora-fine-tuning-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523424.629726,
+        "readyAt": 1792523424.629726,
+        "runtimeId": "showcase-lora-fine-tuning-local",
+        "runtimeSeconds": 0.11178874969482422,
+        "startedAt": 1792523424.7508895,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+        "allocatedResourceId": "showcase-lora-fine-tuning-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "finishedAt": 1792523426.2581162,
+        "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1192159652709961,
+          "preparationFinishedAt": 1792523426.029946,
+          "preparationStartedAt": 1792523425.8690622,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0014872550964355469,
+          "runtimeId": "showcase-lora-fine-tuning-local",
+          "transferElapsedSeconds": 0.16088390350341797,
+          "transferWorkSeconds": 0.16088390350341797
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-lora-fine-tuning-local-2accb78860-manual-plan-20261020t191024.389646000-showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+        "plannedResourceId": "showcase-lora-fine-tuning-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523425.8635256,
+        "readyAt": 1792523425.8635256,
+        "runtimeId": "showcase-lora-fine-tuning-local",
+        "runtimeSeconds": 0.10895419120788574,
+        "startedAt": 1792523426.149162,
+        "status": "completed",
+        "transferBytes": 494,
+        "transferSeconds": 0.16088390350341797
+      },
+      {
+        "activityId": "showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+        "allocatedResourceId": "showcase-lora-fine-tuning-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "finishedAt": 1792523428.2829728,
+        "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1279747486114502,
+          "preparationFinishedAt": 1792523428.0353208,
+          "preparationStartedAt": 1792523427.870216,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0013682842254638672,
+          "runtimeId": "showcase-lora-fine-tuning-local",
+          "transferElapsedSeconds": 0.16510486602783203,
+          "transferWorkSeconds": 0.16510486602783203
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-lora-fine-tuning-local-2accb78860-manual-plan-20261020t191024.389646000-showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+        "plannedResourceId": "showcase-lora-fine-tuning-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523427.8662534,
+        "readyAt": 1792523427.8662534,
+        "runtimeId": "showcase-lora-fine-tuning-local",
+        "runtimeSeconds": 0.11967730522155762,
+        "startedAt": 1792523428.1632955,
+        "status": "completed",
+        "transferBytes": 1603,
+        "transferSeconds": 0.16510486602783203
+      },
+      {
+        "activityId": "showcase-lora-fine-tuning-local-2accb78860-evaluate",
+        "allocatedResourceId": "showcase-lora-fine-tuning-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "finishedAt": 1792523430.2441833,
+        "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-evaluate",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.12554693222045898,
+          "preparationFinishedAt": 1792523430.0046365,
+          "preparationStartedAt": 1792523429.862709,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0015926361083984375,
+          "runtimeId": "showcase-lora-fine-tuning-local",
+          "transferElapsedSeconds": 0.14192748069763184,
+          "transferWorkSeconds": 0.14192748069763184
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-lora-fine-tuning-local-2accb78860-manual-plan-20261020t191024.389646000-showcase-lora-fine-tuning-local-2accb78860-evaluate",
+        "plannedResourceId": "showcase-lora-fine-tuning-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523429.8589442,
+        "readyAt": 1792523429.8589442,
+        "runtimeId": "showcase-lora-fine-tuning-local",
+        "runtimeSeconds": 0.11399984359741211,
+        "startedAt": 1792523430.1301835,
+        "status": "completed",
+        "transferBytes": 2304,
+        "transferSeconds": 0.14192748069763184
+      },
+      {
+        "activityId": "showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+        "allocatedResourceId": "showcase-lora-fine-tuning-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "finishedAt": 1792523432.2769926,
+        "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1339879035949707,
+          "preparationFinishedAt": 1792523432.0321283,
+          "preparationStartedAt": 1792523431.8690474,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0035767555236816406,
+          "runtimeId": "showcase-lora-fine-tuning-local",
+          "transferElapsedSeconds": 0.16308093070983887,
+          "transferWorkSeconds": 0.16308093070983887
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-lora-fine-tuning-local-2accb78860-manual-plan-20261020t191024.389646000-showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+        "plannedResourceId": "showcase-lora-fine-tuning-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523431.8619678,
+        "readyAt": 1792523431.8619678,
+        "runtimeId": "showcase-lora-fine-tuning-local",
+        "runtimeSeconds": 0.11087632179260254,
+        "startedAt": 1792523432.1661162,
+        "status": "completed",
+        "transferBytes": 3085,
+        "transferSeconds": 0.16308093070983887
+      },
+      {
+        "activityId": "showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+        "allocatedResourceId": "showcase-lora-fine-tuning-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "finishedAt": 1792523432.318797,
+        "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14049172401428223,
+          "preparationFinishedAt": 1792523432.0567052,
+          "preparationStartedAt": 1792523431.8715472,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.00473785400390625,
+          "runtimeId": "showcase-lora-fine-tuning-local",
+          "transferElapsedSeconds": 0.18515801429748535,
+          "transferWorkSeconds": 0.18515801429748535
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-lora-fine-tuning-local-2accb78860-manual-plan-20261020t191024.389646000-showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+        "plannedResourceId": "showcase-lora-fine-tuning-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523431.863396,
+        "readyAt": 1792523431.863396,
+        "runtimeId": "showcase-lora-fine-tuning-local",
+        "runtimeSeconds": 0.12160015106201172,
+        "startedAt": 1792523432.197197,
+        "status": "completed",
+        "transferBytes": 3085,
+        "transferSeconds": 0.18515801429748535
+      }
+    ],
+    "artifactMaterializations": null,
+    "artifactTransferRuns": [
+      {
+        "activityId": "showcase-lora-fine-tuning-local-2accb78860-evaluate",
+        "durationSeconds": 0.14192748069763184,
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "filesTransferred": 3,
+        "finishedAt": 1792523430.0046365,
+        "id": "transfer-workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-evaluate-0",
+        "logicalBytes": 2304,
+        "planId": "transfer-workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-evaluate-0",
+        "route": {
+          "consumerActivityId": "showcase-lora-fine-tuning-local-2accb78860-evaluate",
+          "filesTransferred": 3,
+          "producerActivityId": "showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.072532917,
+          "sourceEnvironmentId": "showcase-lora-fine-tuning-v1",
+          "sourceResourceId": "showcase-lora-fine-tuning-local-docker",
+          "sshChannelWaitSeconds": 2.08e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-lora-fine-tuning-v1",
+          "targetResourceId": "showcase-lora-fine-tuning-local-docker"
+        },
+        "startedAt": 1792523429.862709,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 2304
+      },
+      {
+        "activityId": "showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+        "durationSeconds": 0.16510486602783203,
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "filesTransferred": 2,
+        "finishedAt": 1792523428.0353208,
+        "id": "transfer-workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters-0",
+        "logicalBytes": 1603,
+        "planId": "transfer-workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters-0",
+        "route": {
+          "consumerActivityId": "showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.094219708,
+          "sourceEnvironmentId": "showcase-lora-fine-tuning-v1",
+          "sourceResourceId": "showcase-lora-fine-tuning-local-docker",
+          "sshChannelWaitSeconds": 5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-lora-fine-tuning-v1",
+          "targetResourceId": "showcase-lora-fine-tuning-local-docker"
+        },
+        "startedAt": 1792523427.870216,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 1603
+      },
+      {
+        "activityId": "showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+        "durationSeconds": 0.16088390350341797,
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523426.029946,
+        "id": "transfer-workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-prepare-examples-0",
+        "logicalBytes": 494,
+        "planId": "transfer-workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-prepare-examples-0",
+        "route": {
+          "consumerActivityId": "showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-lora-fine-tuning-local-2accb78860-fetch-base-model",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.068771125,
+          "sourceEnvironmentId": "showcase-lora-fine-tuning-v1",
+          "sourceResourceId": "showcase-lora-fine-tuning-local-docker",
+          "sshChannelWaitSeconds": 4.17e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-lora-fine-tuning-v1",
+          "targetResourceId": "showcase-lora-fine-tuning-local-docker"
+        },
+        "startedAt": 1792523425.8690622,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 494
+      },
+      {
+        "activityId": "showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+        "durationSeconds": 0.16308093070983887,
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "filesTransferred": 5,
+        "finishedAt": 1792523432.0321283,
+        "id": "transfer-workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-publish-adapter-0",
+        "logicalBytes": 3085,
+        "planId": "transfer-workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-publish-adapter-0",
+        "route": {
+          "consumerActivityId": "showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+          "filesTransferred": 5,
+          "producerActivityId": "showcase-lora-fine-tuning-local-2accb78860-evaluate",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.072407209,
+          "sourceEnvironmentId": "showcase-lora-fine-tuning-v1",
+          "sourceResourceId": "showcase-lora-fine-tuning-local-docker",
+          "sshChannelWaitSeconds": 2.91e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-lora-fine-tuning-v1",
+          "targetResourceId": "showcase-lora-fine-tuning-local-docker"
+        },
+        "startedAt": 1792523431.8690474,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 3085
+      },
+      {
+        "activityId": "showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+        "durationSeconds": 0.18515801429748535,
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "filesTransferred": 5,
+        "finishedAt": 1792523432.0567052,
+        "id": "transfer-workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-record-lineage-0",
+        "logicalBytes": 3085,
+        "planId": "transfer-workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-record-lineage-0",
+        "route": {
+          "consumerActivityId": "showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+          "filesTransferred": 5,
+          "producerActivityId": "showcase-lora-fine-tuning-local-2accb78860-evaluate",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09416487500000001,
+          "sourceEnvironmentId": "showcase-lora-fine-tuning-v1",
+          "sourceResourceId": "showcase-lora-fine-tuning-local-docker",
+          "sshChannelWaitSeconds": 2.08e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-lora-fine-tuning-v1",
+          "targetResourceId": "showcase-lora-fine-tuning-local-docker"
+        },
+        "startedAt": 1792523431.8715472,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 3085
+      }
+    ],
+    "cloudBilling": {
+      "asOf": "2026-10-20T19:10:34.789540583Z",
+      "costBasis": "VM compute and boot-disk lifecycle at on-demand marginal rates; not a provider invoice",
+      "estimatedCost": 0,
+      "excludedCosts": [
+        "network-egress",
+        "public-ipv4",
+        "image-storage",
+        "discounts-and-tax"
+      ],
+      "instances": [],
+      "knownCost": 0,
+      "status": "estimated"
+    },
+    "dataLocations": [
+      {
+        "dataObjectInstanceId": "f6cec7df25c4c66763f0669aed7e400c",
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "id": "19d36eb7d8a3da96f379ef439c241696",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-lora-fine-tuning-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "92cfe429a20aef77e4893324118e4103",
+        "uri": "file:///akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-evaluate/evaluation.json"
+      },
+      {
+        "dataObjectInstanceId": "8f0734e4dc09969b92ca1e98ae0a6dce",
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "id": "de55a44d85f5aaadd93759b4e0909fc3",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-lora-fine-tuning-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "92cfe429a20aef77e4893324118e4103",
+        "uri": "file:///akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-evaluate/stage-evaluate.json"
+      },
+      {
+        "dataObjectInstanceId": "b48980e6827cb3f14ec3579b774688a2",
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "id": "07144a2c0f70e20c88639dc21b2df91f",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-lora-fine-tuning-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "92cfe429a20aef77e4893324118e4103",
+        "uri": "file:///akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-fetch-base-model/stage-fetch-base-model.json"
+      },
+      {
+        "dataObjectInstanceId": "543cc7b52a662dd46919281dfcaaa15e",
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "id": "a5af8806ecb916d88f4f946e9e0fd9ce",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-lora-fine-tuning-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "92cfe429a20aef77e4893324118e4103",
+        "uri": "file:///akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters/stage-fine-tune-adapters.json"
+      },
+      {
+        "dataObjectInstanceId": "42d4576ff138a0a9b28d149e8e8c08ff",
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "id": "f497f7a92df841e794e4073e4b1b9d9a",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-lora-fine-tuning-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "92cfe429a20aef77e4893324118e4103",
+        "uri": "file:///akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-prepare-examples/stage-prepare-examples.json"
+      },
+      {
+        "dataObjectInstanceId": "94f5b47676ff754fd0d964ca5014975b",
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "id": "acc4abfb024fe911b91856556728df91",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-lora-fine-tuning-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "92cfe429a20aef77e4893324118e4103",
+        "uri": "file:///akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-publish-adapter/adapter.bin"
+      },
+      {
+        "dataObjectInstanceId": "55d44e600e1dc5dd17c7e5764c589752",
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "id": "510835e0ecbe8516494dae783c15dfee",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-lora-fine-tuning-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "92cfe429a20aef77e4893324118e4103",
+        "uri": "file:///akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-publish-adapter/stage-publish-adapter.json"
+      },
+      {
+        "dataObjectInstanceId": "5a4367f287f9d49432ad68dd130cf003",
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "id": "b97aecb13fe58e73a5929891ae2580fc",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-lora-fine-tuning-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "92cfe429a20aef77e4893324118e4103",
+        "uri": "file:///akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-record-lineage/lineage.json"
+      },
+      {
+        "dataObjectInstanceId": "7c5e23f9d849c8a2e2095c53c17803dd",
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "id": "b435bd016a1fb44da3747252733be21f",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-lora-fine-tuning-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "92cfe429a20aef77e4893324118e4103",
+        "uri": "file:///akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-record-lineage/stage-record-lineage.json"
+      }
+    ],
+    "dataObjects": [
+      {
+        "attempt": 1,
+        "checksum": "sha256:5dd705d10810d4f34fb229cb213ada791ce14cd51d6568458736536734969e73",
+        "dataObjectId": "08c895d0674ac5ee2f913a46559619d1",
+        "discovered": true,
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "id": "f6cec7df25c4c66763f0669aed7e400c",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-lora-fine-tuning-local-2accb78860-evaluate",
+        "relativePath": "evaluation.json",
+        "sizeBytes": 88
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:37ef242921941539d8a8405b372dca5dbfa26d6daf266770168f030bc03b2f16",
+        "dataObjectId": "ae99949c9f95734d9747dd3780a4ebed",
+        "discovered": true,
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "id": "8f0734e4dc09969b92ca1e98ae0a6dce",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-lora-fine-tuning-local-2accb78860-evaluate",
+        "relativePath": "stage-evaluate.json",
+        "sizeBytes": 693
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:827e40f5f3519ca16b8cd70ffb5923ec5622eef4b4d4959840b94d1b63b55bc7",
+        "dataObjectId": "fb13d41490982316bf14324cba2f6c30",
+        "discovered": true,
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "id": "b48980e6827cb3f14ec3579b774688a2",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-lora-fine-tuning-local-2accb78860-fetch-base-model",
+        "relativePath": "stage-fetch-base-model.json",
+        "sizeBytes": 494
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:45339cd9523cd499d9530e9472b9962e63f074cd9372ba973fa692b55cb93af7",
+        "dataObjectId": "46129e4b261ad499f5769448d8a61c15",
+        "discovered": true,
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "id": "543cc7b52a662dd46919281dfcaaa15e",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+        "relativePath": "stage-fine-tune-adapters.json",
+        "sizeBytes": 701
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:0aac28002308a60f608c7792fa3710ad8b97170948b9cf2d5d03c4931d366413",
+        "dataObjectId": "04772aa1f30cf62a3e8518c82a24a4ec",
+        "discovered": true,
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "id": "42d4576ff138a0a9b28d149e8e8c08ff",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+        "relativePath": "stage-prepare-examples.json",
+        "sizeBytes": 1109
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:5f072908cf4aecfdeb968d36f3f7ea23e05341a21eb47e9ca03de560bab93df6",
+        "dataObjectId": "30145e106a1dc29467b5650761f50501",
+        "discovered": true,
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "id": "94f5b47676ff754fd0d964ca5014975b",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+        "relativePath": "adapter.bin",
+        "sizeBytes": 77
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:f86b0244d7a7cb1000a8c3a78d800bf528fca1a276b23b0212a1944f1f88b92d",
+        "dataObjectId": "fcd3577313c7e4c962c6b8277cac727e",
+        "discovered": true,
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "id": "55d44e600e1dc5dd17c7e5764c589752",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+        "relativePath": "stage-publish-adapter.json",
+        "sizeBytes": 425
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:69205180b7a4d43b576a31ed2d0b0602f68afec251e2620bed268ad7f4cd7f0b",
+        "dataObjectId": "86d19c530a9852477bec2e228c6b7878",
+        "discovered": true,
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "id": "5a4367f287f9d49432ad68dd130cf003",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+        "relativePath": "lineage.json",
+        "sizeBytes": 237
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:d6781f459acfa5b9b12f6d785fbb9dfc78db3a80ce77f5fa861297849bf02609",
+        "dataObjectId": "a0019472ccccc96d9e0c9d07cfd54e03",
+        "discovered": true,
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "id": "7c5e23f9d849c8a2e2095c53c17803dd",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+        "relativePath": "stage-record-lineage.json",
+        "sizeBytes": 595
+      }
+    ],
+    "dataTransfers": [
+      {
+        "bytes": 494,
+        "consumerActivityId": "showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+        "cost": 0,
+        "durationSeconds": 0.16088390350341797,
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "finishedAt": 1792523426.029946,
+        "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-prepare-examples:transfer-workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-prepare-examples-0",
+        "logicalBytes": 494,
+        "producerActivityId": "showcase-lora-fine-tuning-local-2accb78860-fetch-base-model",
+        "route": {
+          "consumerActivityId": "showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-lora-fine-tuning-local-2accb78860-fetch-base-model",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.068771125,
+          "sourceEnvironmentId": "showcase-lora-fine-tuning-v1",
+          "sourceResourceId": "showcase-lora-fine-tuning-local-docker",
+          "sshChannelWaitSeconds": 4.17e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-lora-fine-tuning-v1",
+          "targetResourceId": "showcase-lora-fine-tuning-local-docker"
+        },
+        "sourceResourceId": "showcase-lora-fine-tuning-local-docker",
+        "startedAt": 1792523425.8690622,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-lora-fine-tuning-local-docker"
+      },
+      {
+        "bytes": 1603,
+        "consumerActivityId": "showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+        "cost": 0,
+        "durationSeconds": 0.16510486602783203,
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "finishedAt": 1792523428.0353208,
+        "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters:transfer-workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters-0",
+        "logicalBytes": 1603,
+        "producerActivityId": "showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+        "route": {
+          "consumerActivityId": "showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.094219708,
+          "sourceEnvironmentId": "showcase-lora-fine-tuning-v1",
+          "sourceResourceId": "showcase-lora-fine-tuning-local-docker",
+          "sshChannelWaitSeconds": 5e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-lora-fine-tuning-v1",
+          "targetResourceId": "showcase-lora-fine-tuning-local-docker"
+        },
+        "sourceResourceId": "showcase-lora-fine-tuning-local-docker",
+        "startedAt": 1792523427.870216,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-lora-fine-tuning-local-docker"
+      },
+      {
+        "bytes": 2304,
+        "consumerActivityId": "showcase-lora-fine-tuning-local-2accb78860-evaluate",
+        "cost": 0,
+        "durationSeconds": 0.14192748069763184,
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "finishedAt": 1792523430.0046365,
+        "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-evaluate:transfer-workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-evaluate-0",
+        "logicalBytes": 2304,
+        "producerActivityId": "showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+        "route": {
+          "consumerActivityId": "showcase-lora-fine-tuning-local-2accb78860-evaluate",
+          "filesTransferred": 3,
+          "producerActivityId": "showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.072532917,
+          "sourceEnvironmentId": "showcase-lora-fine-tuning-v1",
+          "sourceResourceId": "showcase-lora-fine-tuning-local-docker",
+          "sshChannelWaitSeconds": 2.08e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-lora-fine-tuning-v1",
+          "targetResourceId": "showcase-lora-fine-tuning-local-docker"
+        },
+        "sourceResourceId": "showcase-lora-fine-tuning-local-docker",
+        "startedAt": 1792523429.862709,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-lora-fine-tuning-local-docker"
+      },
+      {
+        "bytes": 3085,
+        "consumerActivityId": "showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+        "cost": 0,
+        "durationSeconds": 0.16308093070983887,
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "finishedAt": 1792523432.0321283,
+        "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-publish-adapter:transfer-workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-publish-adapter-0",
+        "logicalBytes": 3085,
+        "producerActivityId": "showcase-lora-fine-tuning-local-2accb78860-evaluate",
+        "route": {
+          "consumerActivityId": "showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+          "filesTransferred": 5,
+          "producerActivityId": "showcase-lora-fine-tuning-local-2accb78860-evaluate",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.072407209,
+          "sourceEnvironmentId": "showcase-lora-fine-tuning-v1",
+          "sourceResourceId": "showcase-lora-fine-tuning-local-docker",
+          "sshChannelWaitSeconds": 2.91e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-lora-fine-tuning-v1",
+          "targetResourceId": "showcase-lora-fine-tuning-local-docker"
+        },
+        "sourceResourceId": "showcase-lora-fine-tuning-local-docker",
+        "startedAt": 1792523431.8690474,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-lora-fine-tuning-local-docker"
+      },
+      {
+        "bytes": 3085,
+        "consumerActivityId": "showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+        "cost": 0,
+        "durationSeconds": 0.18515801429748535,
+        "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "finishedAt": 1792523432.0567052,
+        "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-record-lineage:transfer-workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-record-lineage-0",
+        "logicalBytes": 3085,
+        "producerActivityId": "showcase-lora-fine-tuning-local-2accb78860-evaluate",
+        "route": {
+          "consumerActivityId": "showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+          "filesTransferred": 5,
+          "producerActivityId": "showcase-lora-fine-tuning-local-2accb78860-evaluate",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09416487500000001,
+          "sourceEnvironmentId": "showcase-lora-fine-tuning-v1",
+          "sourceResourceId": "showcase-lora-fine-tuning-local-docker",
+          "sshChannelWaitSeconds": 2.08e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-lora-fine-tuning-v1",
+          "targetResourceId": "showcase-lora-fine-tuning-local-docker"
+        },
+        "sourceResourceId": "showcase-lora-fine-tuning-local-docker",
+        "startedAt": 1792523431.8715472,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-lora-fine-tuning-local-docker"
+      }
+    ],
+    "events": [
+      {
+        "aggregateId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.started",
+        "id": "78586f86bac7f6e75f56d4ba5148742c",
+        "occurredAt": "2026-10-20T19:10:24.608129968Z",
+        "payload": {
+          "mode": "real",
+          "schedulePlanId": "showcase-lora-fine-tuning-local-2accb78860-manual-plan-20261020t191024.389646000"
+        }
+      },
+      {
+        "aggregateId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-fetch-base-model",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "6d1625d35c954b5bc85ec5d9d2d4a2cb",
+        "occurredAt": "2026-10-20T19:10:25.785390177Z",
+        "payload": {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-fetch-base-model",
+          "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-fetch-base-model",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "95fd64eb5264188f987eaccbf24a9cea",
+        "occurredAt": "2026-10-20T19:10:25.861011343Z",
+        "payload": {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-fetch-base-model",
+          "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11178874969482422,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "586ea6fc5e65210d666cca195e74e23a",
+        "occurredAt": "2026-10-20T19:10:27.789743052Z",
+        "payload": {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+          "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "2c4924ea7b49c27c5123950562413608",
+        "occurredAt": "2026-10-20T19:10:27.864286511Z",
+        "payload": {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+          "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+          "failureReason": "",
+          "runtimeSeconds": 0.10895419120788574,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "0eae2aaaa8b99862e93b624243d2adaf",
+        "occurredAt": "2026-10-20T19:10:29.789060512Z",
+        "payload": {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+          "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "d3ec5169386bc1839f8dda5f1e461a2b",
+        "occurredAt": "2026-10-20T19:10:29.85754947Z",
+        "payload": {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+          "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11967730522155762,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-evaluate",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "2011be3b9269d5fa864d1047f9aac988",
+        "occurredAt": "2026-10-20T19:10:31.785687263Z",
+        "payload": {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-evaluate",
+          "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-evaluate",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "36b76472477b9e57927c7983071a7277",
+        "occurredAt": "2026-10-20T19:10:31.859740179Z",
+        "payload": {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-evaluate",
+          "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11399984359741211,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "80355c37ce857764e92d4cd9c9120819",
+        "occurredAt": "2026-10-20T19:10:33.79060618Z",
+        "payload": {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+          "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "6aac190c72ca180153088f942642b049",
+        "occurredAt": "2026-10-20T19:10:33.793388847Z",
+        "payload": {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+          "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "cafda54d889e3b8a5c63addb926a9caa",
+        "occurredAt": "2026-10-20T19:10:33.886398139Z",
+        "payload": {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+          "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11087632179260254,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "8c35dba43123f6d6f1af7be77fe442c4",
+        "occurredAt": "2026-10-20T19:10:33.892969764Z",
+        "payload": {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+          "executionRunId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+          "failureReason": "",
+          "runtimeSeconds": 0.12160015106201172,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.completed",
+        "id": "abc1b71999a778df0baec62f1b28f675",
+        "occurredAt": "2026-10-20T19:10:33.896442014Z",
+        "payload": {
+          "cost": 0,
+          "makespanSeconds": 7.5679075717926025
+        }
+      }
+    ],
+    "handles": [
+      {
+        "activityId": "showcase-lora-fine-tuning-local-2accb78860-evaluate",
+        "artifacts": {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-evaluate",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:5dd705d10810d4f34fb229cb213ada791ce14cd51d6568458736536734969e73",
+              "modifiedUnixNano": 1792523430238219000,
+              "path": "evaluation.json",
+              "sizeBytes": 88
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:37ef242921941539d8a8405b372dca5dbfa26d6daf266770168f030bc03b2f16",
+              "modifiedUnixNano": 1792523430238219000,
+              "path": "stage-evaluate.json",
+              "sizeBytes": 693
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:5dd705d10810d4f34fb229cb213ada791ce14cd51d6568458736536734969e73",
+              "modifiedUnixNano": 1792523430238219000,
+              "path": "evaluation.json",
+              "sizeBytes": 88
+            },
+            {
+              "checksum": "sha256:37ef242921941539d8a8405b372dca5dbfa26d6daf266770168f030bc03b2f16",
+              "modifiedUnixNano": 1792523430238219000,
+              "path": "stage-evaluate.json",
+              "sizeBytes": 693
+            },
+            {
+              "checksum": "sha256:827e40f5f3519ca16b8cd70ffb5923ec5622eef4b4d4959840b94d1b63b55bc7",
+              "modifiedUnixNano": 1792523429957219000,
+              "path": "stage-fetch-base-model.json",
+              "sizeBytes": 494
+            },
+            {
+              "checksum": "sha256:45339cd9523cd499d9530e9472b9962e63f074cd9372ba973fa692b55cb93af7",
+              "modifiedUnixNano": 1792523429957219000,
+              "path": "stage-fine-tune-adapters.json",
+              "sizeBytes": 701
+            },
+            {
+              "checksum": "sha256:0aac28002308a60f608c7792fa3710ad8b97170948b9cf2d5d03c4931d366413",
+              "modifiedUnixNano": 1792523429957219000,
+              "path": "stage-prepare-examples.json",
+              "sizeBytes": 1109
+            }
+          ],
+          "finishedAt": 1792523430.2441833,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:827e40f5f3519ca16b8cd70ffb5923ec5622eef4b4d4959840b94d1b63b55bc7",
+              "modifiedUnixNano": 1792523429957219000,
+              "path": "stage-fetch-base-model.json",
+              "sizeBytes": 494
+            },
+            {
+              "checksum": "sha256:45339cd9523cd499d9530e9472b9962e63f074cd9372ba973fa692b55cb93af7",
+              "modifiedUnixNano": 1792523429957219000,
+              "path": "stage-fine-tune-adapters.json",
+              "sizeBytes": 701
+            },
+            {
+              "checksum": "sha256:0aac28002308a60f608c7792fa3710ad8b97170948b9cf2d5d03c4931d366413",
+              "modifiedUnixNano": 1792523429957219000,
+              "path": "stage-prepare-examples.json",
+              "sizeBytes": 1109
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11399984359741211,
+              "finishedAt": 1792523430.2441833,
+              "phase": "execution",
+              "startedAt": 1792523430.1301835,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-evaluate",
+          "runId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+          "runtime": "showcase-lora-fine-tuning-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523430.1301835,
+          "summary": {
+            "createdFiles": 2,
+            "deletedFiles": 0,
+            "finalFiles": 5,
+            "initialFiles": 3,
+            "modifiedFiles": 0,
+            "outputBytes": 781
+          }
+        },
+        "exitCode": 0,
+        "externalId": "46cacb6e57ea03e17a96d75c9a23fa3493f1f74bff244e69294c3bd0e4db4939",
+        "finishedAt": 1792523430.2441833,
+        "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-evaluate",
+        "log": "{\"activity\": \"evaluate\", \"status\": \"success\", \"resultKeys\": [\"baseWeights\", \"adapterA\", \"adapterB\", \"initialMse\", \"finalMse\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-lora-fine-tuning-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-evaluate",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523430.1301908,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-evaluate",
+          "submittedAt": 1792523430.1301835
+        },
+        "resourceId": "showcase-lora-fine-tuning-local-docker",
+        "runId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "runtimeId": "showcase-lora-fine-tuning-local",
+        "startedAt": 1792523430.1301835,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-lora-fine-tuning-local-2accb78860-fetch-base-model",
+        "artifacts": {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-fetch-base-model",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:827e40f5f3519ca16b8cd70ffb5923ec5622eef4b4d4959840b94d1b63b55bc7",
+              "modifiedUnixNano": 1792523424855219000,
+              "path": "stage-fetch-base-model.json",
+              "sizeBytes": 494
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:827e40f5f3519ca16b8cd70ffb5923ec5622eef4b4d4959840b94d1b63b55bc7",
+              "modifiedUnixNano": 1792523424855219000,
+              "path": "stage-fetch-base-model.json",
+              "sizeBytes": 494
+            }
+          ],
+          "finishedAt": 1792523424.8626783,
+          "phases": [
+            {
+              "durationSeconds": 0.11178874969482422,
+              "finishedAt": 1792523424.8626783,
+              "phase": "execution",
+              "startedAt": 1792523424.7508895,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-fetch-base-model",
+          "runId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+          "runtime": "showcase-lora-fine-tuning-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523424.7508895,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 1,
+            "initialFiles": 0,
+            "modifiedFiles": 0,
+            "outputBytes": 494
+          }
+        },
+        "exitCode": 0,
+        "externalId": "398cbbcfa9c7ce6c828528f7e719c8bb4900e5c264a93c3dde6d8e041c7c6532",
+        "finishedAt": 1792523424.8626783,
+        "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-fetch-base-model",
+        "log": "{\"activity\": \"fetch-base-model\", \"status\": \"success\", \"resultKeys\": [\"weights\", \"rank\", \"source\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-lora-fine-tuning-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-fetch-base-model",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523424.7508972,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-fetch-base-model",
+          "submittedAt": 1792523424.7508895
+        },
+        "resourceId": "showcase-lora-fine-tuning-local-docker",
+        "runId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "runtimeId": "showcase-lora-fine-tuning-local",
+        "startedAt": 1792523424.7508895,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+        "artifacts": {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:45339cd9523cd499d9530e9472b9962e63f074cd9372ba973fa692b55cb93af7",
+              "modifiedUnixNano": 1792523428277219000,
+              "path": "stage-fine-tune-adapters.json",
+              "sizeBytes": 701
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:827e40f5f3519ca16b8cd70ffb5923ec5622eef4b4d4959840b94d1b63b55bc7",
+              "modifiedUnixNano": 1792523427987219000,
+              "path": "stage-fetch-base-model.json",
+              "sizeBytes": 494
+            },
+            {
+              "checksum": "sha256:45339cd9523cd499d9530e9472b9962e63f074cd9372ba973fa692b55cb93af7",
+              "modifiedUnixNano": 1792523428277219000,
+              "path": "stage-fine-tune-adapters.json",
+              "sizeBytes": 701
+            },
+            {
+              "checksum": "sha256:0aac28002308a60f608c7792fa3710ad8b97170948b9cf2d5d03c4931d366413",
+              "modifiedUnixNano": 1792523427987219000,
+              "path": "stage-prepare-examples.json",
+              "sizeBytes": 1109
+            }
+          ],
+          "finishedAt": 1792523428.2829728,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:827e40f5f3519ca16b8cd70ffb5923ec5622eef4b4d4959840b94d1b63b55bc7",
+              "modifiedUnixNano": 1792523427987219000,
+              "path": "stage-fetch-base-model.json",
+              "sizeBytes": 494
+            },
+            {
+              "checksum": "sha256:0aac28002308a60f608c7792fa3710ad8b97170948b9cf2d5d03c4931d366413",
+              "modifiedUnixNano": 1792523427987219000,
+              "path": "stage-prepare-examples.json",
+              "sizeBytes": 1109
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11967730522155762,
+              "finishedAt": 1792523428.2829728,
+              "phase": "execution",
+              "startedAt": 1792523428.1632955,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+          "runId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+          "runtime": "showcase-lora-fine-tuning-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523428.1632955,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 3,
+            "initialFiles": 2,
+            "modifiedFiles": 0,
+            "outputBytes": 701
+          }
+        },
+        "exitCode": 0,
+        "externalId": "ceb9b95c5c38d1ce2dd91caf8d8fe3ed599a22801e0a0980268bcdf110ed7115",
+        "finishedAt": 1792523428.2829728,
+        "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+        "log": "{\"activity\": \"fine-tune-adapters\", \"status\": \"success\", \"resultKeys\": [\"baseWeights\", \"adapterA\", \"adapterB\", \"initialMse\", \"finalMse\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-lora-fine-tuning-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523428.1633031,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+          "submittedAt": 1792523428.1632955
+        },
+        "resourceId": "showcase-lora-fine-tuning-local-docker",
+        "runId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "runtimeId": "showcase-lora-fine-tuning-local",
+        "startedAt": 1792523428.1632955,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+        "artifacts": {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:0aac28002308a60f608c7792fa3710ad8b97170948b9cf2d5d03c4931d366413",
+              "modifiedUnixNano": 1792523426252219100,
+              "path": "stage-prepare-examples.json",
+              "sizeBytes": 1109
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:827e40f5f3519ca16b8cd70ffb5923ec5622eef4b4d4959840b94d1b63b55bc7",
+              "modifiedUnixNano": 1792523425986219000,
+              "path": "stage-fetch-base-model.json",
+              "sizeBytes": 494
+            },
+            {
+              "checksum": "sha256:0aac28002308a60f608c7792fa3710ad8b97170948b9cf2d5d03c4931d366413",
+              "modifiedUnixNano": 1792523426252219100,
+              "path": "stage-prepare-examples.json",
+              "sizeBytes": 1109
+            }
+          ],
+          "finishedAt": 1792523426.2581162,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:827e40f5f3519ca16b8cd70ffb5923ec5622eef4b4d4959840b94d1b63b55bc7",
+              "modifiedUnixNano": 1792523425986219000,
+              "path": "stage-fetch-base-model.json",
+              "sizeBytes": 494
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.10895419120788574,
+              "finishedAt": 1792523426.2581162,
+              "phase": "execution",
+              "startedAt": 1792523426.149162,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+          "runId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+          "runtime": "showcase-lora-fine-tuning-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523426.149162,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 1109
+          }
+        },
+        "exitCode": 0,
+        "externalId": "dc85660a5feefe37752bdf7d3a76611179837aa57aff81b975823ea016b23866",
+        "finishedAt": 1792523426.2581162,
+        "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+        "log": "{\"activity\": \"prepare-examples\", \"status\": \"success\", \"resultKeys\": [\"weights\", \"rank\", \"source\", \"examples\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-lora-fine-tuning-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523426.1491687,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+          "submittedAt": 1792523426.149162
+        },
+        "resourceId": "showcase-lora-fine-tuning-local-docker",
+        "runId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "runtimeId": "showcase-lora-fine-tuning-local",
+        "startedAt": 1792523426.149162,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+        "artifacts": {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:5f072908cf4aecfdeb968d36f3f7ea23e05341a21eb47e9ca03de560bab93df6",
+              "modifiedUnixNano": 1792523432271219000,
+              "path": "adapter.bin",
+              "sizeBytes": 77
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:f86b0244d7a7cb1000a8c3a78d800bf528fca1a276b23b0212a1944f1f88b92d",
+              "modifiedUnixNano": 1792523432271219000,
+              "path": "stage-publish-adapter.json",
+              "sizeBytes": 425
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:5f072908cf4aecfdeb968d36f3f7ea23e05341a21eb47e9ca03de560bab93df6",
+              "modifiedUnixNano": 1792523432271219000,
+              "path": "adapter.bin",
+              "sizeBytes": 77
+            },
+            {
+              "checksum": "sha256:5dd705d10810d4f34fb229cb213ada791ce14cd51d6568458736536734969e73",
+              "modifiedUnixNano": 1792523432008219100,
+              "path": "evaluation.json",
+              "sizeBytes": 88
+            },
+            {
+              "checksum": "sha256:37ef242921941539d8a8405b372dca5dbfa26d6daf266770168f030bc03b2f16",
+              "modifiedUnixNano": 1792523432008219100,
+              "path": "stage-evaluate.json",
+              "sizeBytes": 693
+            },
+            {
+              "checksum": "sha256:827e40f5f3519ca16b8cd70ffb5923ec5622eef4b4d4959840b94d1b63b55bc7",
+              "modifiedUnixNano": 1792523432008219100,
+              "path": "stage-fetch-base-model.json",
+              "sizeBytes": 494
+            },
+            {
+              "checksum": "sha256:45339cd9523cd499d9530e9472b9962e63f074cd9372ba973fa692b55cb93af7",
+              "modifiedUnixNano": 1792523432009219000,
+              "path": "stage-fine-tune-adapters.json",
+              "sizeBytes": 701
+            },
+            {
+              "checksum": "sha256:0aac28002308a60f608c7792fa3710ad8b97170948b9cf2d5d03c4931d366413",
+              "modifiedUnixNano": 1792523432009219000,
+              "path": "stage-prepare-examples.json",
+              "sizeBytes": 1109
+            },
+            {
+              "checksum": "sha256:f86b0244d7a7cb1000a8c3a78d800bf528fca1a276b23b0212a1944f1f88b92d",
+              "modifiedUnixNano": 1792523432271219000,
+              "path": "stage-publish-adapter.json",
+              "sizeBytes": 425
+            }
+          ],
+          "finishedAt": 1792523432.2769926,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:5dd705d10810d4f34fb229cb213ada791ce14cd51d6568458736536734969e73",
+              "modifiedUnixNano": 1792523432008219100,
+              "path": "evaluation.json",
+              "sizeBytes": 88
+            },
+            {
+              "checksum": "sha256:37ef242921941539d8a8405b372dca5dbfa26d6daf266770168f030bc03b2f16",
+              "modifiedUnixNano": 1792523432008219100,
+              "path": "stage-evaluate.json",
+              "sizeBytes": 693
+            },
+            {
+              "checksum": "sha256:827e40f5f3519ca16b8cd70ffb5923ec5622eef4b4d4959840b94d1b63b55bc7",
+              "modifiedUnixNano": 1792523432008219100,
+              "path": "stage-fetch-base-model.json",
+              "sizeBytes": 494
+            },
+            {
+              "checksum": "sha256:45339cd9523cd499d9530e9472b9962e63f074cd9372ba973fa692b55cb93af7",
+              "modifiedUnixNano": 1792523432009219000,
+              "path": "stage-fine-tune-adapters.json",
+              "sizeBytes": 701
+            },
+            {
+              "checksum": "sha256:0aac28002308a60f608c7792fa3710ad8b97170948b9cf2d5d03c4931d366413",
+              "modifiedUnixNano": 1792523432009219000,
+              "path": "stage-prepare-examples.json",
+              "sizeBytes": 1109
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11087632179260254,
+              "finishedAt": 1792523432.2769926,
+              "phase": "execution",
+              "startedAt": 1792523432.1661162,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+          "runId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+          "runtime": "showcase-lora-fine-tuning-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523432.1661162,
+          "summary": {
+            "createdFiles": 2,
+            "deletedFiles": 0,
+            "finalFiles": 7,
+            "initialFiles": 5,
+            "modifiedFiles": 0,
+            "outputBytes": 502
+          }
+        },
+        "exitCode": 0,
+        "externalId": "7b83ea3861c2789c74eca43a5e2eead5f8f4bd4daa30aed8cd9a0aac4c930778",
+        "finishedAt": 1792523432.2769926,
+        "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+        "log": "{\"activity\": \"publish-adapter\", \"status\": \"success\", \"resultKeys\": [\"rank\", \"parameters\", \"mse\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-lora-fine-tuning-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523432.1661215,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+          "submittedAt": 1792523432.1661162
+        },
+        "resourceId": "showcase-lora-fine-tuning-local-docker",
+        "runId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "runtimeId": "showcase-lora-fine-tuning-local",
+        "startedAt": 1792523432.1661162,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+        "artifacts": {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:69205180b7a4d43b576a31ed2d0b0602f68afec251e2620bed268ad7f4cd7f0b",
+              "modifiedUnixNano": 1792523432309219000,
+              "path": "lineage.json",
+              "sizeBytes": 237
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:d6781f459acfa5b9b12f6d785fbb9dfc78db3a80ce77f5fa861297849bf02609",
+              "modifiedUnixNano": 1792523432309219000,
+              "path": "stage-record-lineage.json",
+              "sizeBytes": 595
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:5dd705d10810d4f34fb229cb213ada791ce14cd51d6568458736536734969e73",
+              "modifiedUnixNano": 1792523432008219100,
+              "path": "evaluation.json",
+              "sizeBytes": 88
+            },
+            {
+              "checksum": "sha256:69205180b7a4d43b576a31ed2d0b0602f68afec251e2620bed268ad7f4cd7f0b",
+              "modifiedUnixNano": 1792523432309219000,
+              "path": "lineage.json",
+              "sizeBytes": 237
+            },
+            {
+              "checksum": "sha256:37ef242921941539d8a8405b372dca5dbfa26d6daf266770168f030bc03b2f16",
+              "modifiedUnixNano": 1792523432008219100,
+              "path": "stage-evaluate.json",
+              "sizeBytes": 693
+            },
+            {
+              "checksum": "sha256:827e40f5f3519ca16b8cd70ffb5923ec5622eef4b4d4959840b94d1b63b55bc7",
+              "modifiedUnixNano": 1792523432008219100,
+              "path": "stage-fetch-base-model.json",
+              "sizeBytes": 494
+            },
+            {
+              "checksum": "sha256:45339cd9523cd499d9530e9472b9962e63f074cd9372ba973fa692b55cb93af7",
+              "modifiedUnixNano": 1792523432009219000,
+              "path": "stage-fine-tune-adapters.json",
+              "sizeBytes": 701
+            },
+            {
+              "checksum": "sha256:0aac28002308a60f608c7792fa3710ad8b97170948b9cf2d5d03c4931d366413",
+              "modifiedUnixNano": 1792523432009219000,
+              "path": "stage-prepare-examples.json",
+              "sizeBytes": 1109
+            },
+            {
+              "checksum": "sha256:d6781f459acfa5b9b12f6d785fbb9dfc78db3a80ce77f5fa861297849bf02609",
+              "modifiedUnixNano": 1792523432309219000,
+              "path": "stage-record-lineage.json",
+              "sizeBytes": 595
+            }
+          ],
+          "finishedAt": 1792523432.318797,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:5dd705d10810d4f34fb229cb213ada791ce14cd51d6568458736536734969e73",
+              "modifiedUnixNano": 1792523432008219100,
+              "path": "evaluation.json",
+              "sizeBytes": 88
+            },
+            {
+              "checksum": "sha256:37ef242921941539d8a8405b372dca5dbfa26d6daf266770168f030bc03b2f16",
+              "modifiedUnixNano": 1792523432008219100,
+              "path": "stage-evaluate.json",
+              "sizeBytes": 693
+            },
+            {
+              "checksum": "sha256:827e40f5f3519ca16b8cd70ffb5923ec5622eef4b4d4959840b94d1b63b55bc7",
+              "modifiedUnixNano": 1792523432008219100,
+              "path": "stage-fetch-base-model.json",
+              "sizeBytes": 494
+            },
+            {
+              "checksum": "sha256:45339cd9523cd499d9530e9472b9962e63f074cd9372ba973fa692b55cb93af7",
+              "modifiedUnixNano": 1792523432009219000,
+              "path": "stage-fine-tune-adapters.json",
+              "sizeBytes": 701
+            },
+            {
+              "checksum": "sha256:0aac28002308a60f608c7792fa3710ad8b97170948b9cf2d5d03c4931d366413",
+              "modifiedUnixNano": 1792523432009219000,
+              "path": "stage-prepare-examples.json",
+              "sizeBytes": 1109
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.12160015106201172,
+              "finishedAt": 1792523432.318797,
+              "phase": "execution",
+              "startedAt": 1792523432.197197,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+          "runId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+          "runtime": "showcase-lora-fine-tuning-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523432.197197,
+          "summary": {
+            "createdFiles": 2,
+            "deletedFiles": 0,
+            "finalFiles": 7,
+            "initialFiles": 5,
+            "modifiedFiles": 0,
+            "outputBytes": 832
+          }
+        },
+        "exitCode": 0,
+        "externalId": "d0fffd64f428b97890acd91bbda2b55958703396674c26d9c91a5bc7fc077ea1",
+        "finishedAt": 1792523432.318797,
+        "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+        "log": "{\"activity\": \"record-lineage\", \"status\": \"success\", \"resultKeys\": [\"baseDigest\", \"datasetDigest\", \"method\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-lora-fine-tuning-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523432.1972022,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+          "submittedAt": 1792523432.197197
+        },
+        "resourceId": "showcase-lora-fine-tuning-local-docker",
+        "runId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "runtimeId": "showcase-lora-fine-tuning-local",
+        "startedAt": 1792523432.197197,
+        "status": "completed"
+      }
+    ],
+    "infrastructureRuns": [],
+    "operationEvents": [],
+    "run": {
+      "activityCount": 6,
+      "breakdown": {
+        "computeSeconds": 0.686896562576294,
+        "interferenceSeconds": 0,
+        "overheadSeconds": 0,
+        "queueSeconds": 0,
+        "transferSeconds": 0.816155195236206
+      },
+      "completedActivityCount": 6,
+      "cost": 0,
+      "finishedAt": "2026-10-20T19:10:33Z",
+      "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+      "kind": "workflow",
+      "makespanSeconds": 7.5679075717926025,
+      "mode": "real",
+      "schedulePlanId": "showcase-lora-fine-tuning-local-2accb78860-manual-plan-20261020t191024.389646000",
+      "seed": 0,
+      "startedAt": "2026-10-20T19:10:24Z",
+      "status": "completed",
+      "title": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+      "transferredBytes": 10571
+    },
+    "timeline": {
+      "computeMakespanSeconds": 7.5679075717926025,
+      "coveredWallSeconds": 1.8863308429718018,
+      "finishedAt": 1792523433,
+      "phases": [
+        {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-fetch-base-model",
+          "category": "resource-queue",
+          "durationSeconds": 0.12116360664367676,
+          "finishedAt": 1792523424.7508895,
+          "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-fetch-base-model:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523424.629726,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-fetch-base-model",
+          "category": "runtime",
+          "durationSeconds": 0.11178874969482422,
+          "finishedAt": 1792523424.8626783,
+          "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-fetch-base-model:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523424.7508895,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+          "category": "resource-queue",
+          "durationSeconds": 0.005536556243896484,
+          "finishedAt": 1792523425.8690622,
+          "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-prepare-examples:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523425.8635256,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.16088390350341797,
+          "finishedAt": 1792523426.029946,
+          "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-prepare-examples:transfer-workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-prepare-examples-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523425.8690622,
+          "status": "completed",
+          "transferId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-prepare-examples:transfer-workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-prepare-examples-0"
+        },
+        {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+          "category": "launch",
+          "durationSeconds": 0.1192159652709961,
+          "finishedAt": 1792523426.149162,
+          "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-prepare-examples:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523426.029946,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+          "category": "runtime",
+          "durationSeconds": 0.10895419120788574,
+          "finishedAt": 1792523426.2581162,
+          "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-prepare-examples:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523426.149162,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+          "category": "resource-queue",
+          "durationSeconds": 0.003962516784667969,
+          "finishedAt": 1792523427.870216,
+          "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523427.8662534,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.16510486602783203,
+          "finishedAt": 1792523428.0353208,
+          "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters:transfer-workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523427.870216,
+          "status": "completed",
+          "transferId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters:transfer-workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters-0"
+        },
+        {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+          "category": "launch",
+          "durationSeconds": 0.1279747486114502,
+          "finishedAt": 1792523428.1632955,
+          "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523428.0353208,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+          "category": "runtime",
+          "durationSeconds": 0.11967730522155762,
+          "finishedAt": 1792523428.2829728,
+          "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523428.1632955,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-evaluate",
+          "category": "resource-queue",
+          "durationSeconds": 0.0037648677825927734,
+          "finishedAt": 1792523429.862709,
+          "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-evaluate:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523429.8589442,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-evaluate",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.14192748069763184,
+          "finishedAt": 1792523430.0046365,
+          "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-evaluate:transfer-workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-evaluate-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523429.862709,
+          "status": "completed",
+          "transferId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-evaluate:transfer-workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-evaluate-0"
+        },
+        {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-evaluate",
+          "category": "launch",
+          "durationSeconds": 0.12554693222045898,
+          "finishedAt": 1792523430.1301835,
+          "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-evaluate:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523430.0046365,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-evaluate",
+          "category": "runtime",
+          "durationSeconds": 0.11399984359741211,
+          "finishedAt": 1792523430.2441833,
+          "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-evaluate:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523430.1301835,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+          "category": "resource-queue",
+          "durationSeconds": 0.007079601287841797,
+          "finishedAt": 1792523431.8690474,
+          "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-publish-adapter:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523431.8619678,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+          "category": "resource-queue",
+          "durationSeconds": 0.00815129280090332,
+          "finishedAt": 1792523431.8715472,
+          "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-record-lineage:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523431.863396,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.16308093070983887,
+          "finishedAt": 1792523432.0321283,
+          "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-publish-adapter:transfer-workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-publish-adapter-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523431.8690474,
+          "status": "completed",
+          "transferId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-publish-adapter:transfer-workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-publish-adapter-0"
+        },
+        {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.18515801429748535,
+          "finishedAt": 1792523432.0567052,
+          "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-record-lineage:transfer-workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-record-lineage-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523431.8715472,
+          "status": "completed",
+          "transferId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-record-lineage:transfer-workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-record-lineage-0"
+        },
+        {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+          "category": "launch",
+          "durationSeconds": 0.1339879035949707,
+          "finishedAt": 1792523432.1661162,
+          "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-publish-adapter:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523432.0321283,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+          "category": "launch",
+          "durationSeconds": 0.14049172401428223,
+          "finishedAt": 1792523432.197197,
+          "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-record-lineage:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523432.0567052,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+          "category": "runtime",
+          "durationSeconds": 0.11087632179260254,
+          "finishedAt": 1792523432.2769926,
+          "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-publish-adapter:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523432.1661162,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+          "category": "runtime",
+          "durationSeconds": 0.12160015106201172,
+          "finishedAt": 1792523432.318797,
+          "id": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000:showcase-lora-fine-tuning-local-2accb78860-record-lineage:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523432.197197,
+          "status": "completed"
+        }
+      ],
+      "startedAt": 1792523424,
+      "totals": {
+        "destroySeconds": 0,
+        "executablePreparationSeconds": 0,
+        "launchSeconds": 0.6472172737121582,
+        "provisionSeconds": 0,
+        "resourceQueueSeconds": 0.1496584415435791,
+        "runtimeSeconds": 0.686896562576294,
+        "startSeconds": 0,
+        "stopSeconds": 0,
+        "validationSeconds": 0,
+        "workspaceTransferSeconds": 0.816155195236206
+      },
+      "unclassifiedWallSeconds": 7.113669157028198,
+      "wallSeconds": 9
+    },
+    "workspaceLeases": [
+      {
+        "consumerActivityId": "showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+        "id": "workspace-lease-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-evaluate-showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+        "producerActivityId": "showcase-lora-fine-tuning-local-2accb78860-evaluate",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:10:32.033792554Z",
+        "runId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "workspaceId": "workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-evaluate"
+      },
+      {
+        "consumerActivityId": "showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+        "id": "workspace-lease-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-evaluate-showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+        "producerActivityId": "showcase-lora-fine-tuning-local-2accb78860-evaluate",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:10:32.058397513Z",
+        "runId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "workspaceId": "workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-evaluate"
+      },
+      {
+        "consumerActivityId": "showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+        "id": "workspace-lease-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-fetch-base-model-showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+        "producerActivityId": "showcase-lora-fine-tuning-local-2accb78860-fetch-base-model",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:10:26.031353552Z",
+        "runId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "workspaceId": "workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-fetch-base-model"
+      },
+      {
+        "consumerActivityId": "showcase-lora-fine-tuning-local-2accb78860-evaluate",
+        "id": "workspace-lease-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters-showcase-lora-fine-tuning-local-2accb78860-evaluate",
+        "producerActivityId": "showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:10:30.006358012Z",
+        "runId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "workspaceId": "workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters"
+      },
+      {
+        "consumerActivityId": "showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+        "id": "workspace-lease-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-prepare-examples-showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+        "producerActivityId": "showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:10:28.037290136Z",
+        "runId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "workspaceId": "workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-prepare-examples"
+      }
+    ],
+    "workspaces": [
+      {
+        "activityId": "showcase-lora-fine-tuning-local-2accb78860-evaluate",
+        "createdAt": "2026-10-20T19:10:24.611202551Z",
+        "driver": "local",
+        "environmentId": "showcase-lora-fine-tuning-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-evaluate",
+        "fileCount": 5,
+        "id": "workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-evaluate",
+        "inputBytes": 2304,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:5dd705d10810d4f34fb229cb213ada791ce14cd51d6568458736536734969e73",
+              "path": "evaluation.json",
+              "sizeBytes": 88
+            },
+            {
+              "digest": "sha256:37ef242921941539d8a8405b372dca5dbfa26d6daf266770168f030bc03b2f16",
+              "path": "stage-evaluate.json",
+              "sizeBytes": 693
+            },
+            {
+              "digest": "sha256:827e40f5f3519ca16b8cd70ffb5923ec5622eef4b4d4959840b94d1b63b55bc7",
+              "path": "stage-fetch-base-model.json",
+              "sizeBytes": 494
+            },
+            {
+              "digest": "sha256:45339cd9523cd499d9530e9472b9962e63f074cd9372ba973fa692b55cb93af7",
+              "path": "stage-fine-tune-adapters.json",
+              "sizeBytes": 701
+            },
+            {
+              "digest": "sha256:0aac28002308a60f608c7792fa3710ad8b97170948b9cf2d5d03c4931d366413",
+              "path": "stage-prepare-examples.json",
+              "sizeBytes": 1109
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:827e40f5f3519ca16b8cd70ffb5923ec5622eef4b4d4959840b94d1b63b55bc7",
+              "path": "stage-fetch-base-model.json",
+              "sizeBytes": 494
+            },
+            {
+              "digest": "sha256:45339cd9523cd499d9530e9472b9962e63f074cd9372ba973fa692b55cb93af7",
+              "path": "stage-fine-tune-adapters.json",
+              "sizeBytes": 701
+            },
+            {
+              "digest": "sha256:0aac28002308a60f608c7792fa3710ad8b97170948b9cf2d5d03c4931d366413",
+              "path": "stage-prepare-examples.json",
+              "sizeBytes": 1109
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:827e40f5f3519ca16b8cd70ffb5923ec5622eef4b4d4959840b94d1b63b55bc7",
+              "path": "stage-fetch-base-model.json",
+              "sizeBytes": 494
+            },
+            {
+              "digest": "sha256:45339cd9523cd499d9530e9472b9962e63f074cd9372ba973fa692b55cb93af7",
+              "path": "stage-fine-tune-adapters.json",
+              "sizeBytes": 701
+            },
+            {
+              "digest": "sha256:0aac28002308a60f608c7792fa3710ad8b97170948b9cf2d5d03c4931d366413",
+              "path": "stage-prepare-examples.json",
+              "sizeBytes": 1109
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:5dd705d10810d4f34fb229cb213ada791ce14cd51d6568458736536734969e73",
+              "path": "evaluation.json",
+              "sizeBytes": 88
+            },
+            {
+              "digest": "sha256:37ef242921941539d8a8405b372dca5dbfa26d6daf266770168f030bc03b2f16",
+              "path": "stage-evaluate.json",
+              "sizeBytes": 693
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-evaluate",
+        "outputBytes": 781,
+        "pinned": false,
+        "reclaimedBytes": 3085,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:10:32.06347318Z",
+        "resourceId": "showcase-lora-fine-tuning-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "runtimeId": "showcase-lora-fine-tuning-local",
+        "sealedAt": "2026-10-20T19:10:31.855501763Z",
+        "sizeBytes": 3085,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-evaluate"
+      },
+      {
+        "activityId": "showcase-lora-fine-tuning-local-2accb78860-fetch-base-model",
+        "createdAt": "2026-10-20T19:10:24.611202551Z",
+        "driver": "local",
+        "environmentId": "showcase-lora-fine-tuning-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-fetch-base-model",
+        "fileCount": 1,
+        "id": "workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-fetch-base-model",
+        "inputBytes": 0,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:827e40f5f3519ca16b8cd70ffb5923ec5622eef4b4d4959840b94d1b63b55bc7",
+              "path": "stage-fetch-base-model.json",
+              "sizeBytes": 494
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:827e40f5f3519ca16b8cd70ffb5923ec5622eef4b4d4959840b94d1b63b55bc7",
+              "path": "stage-fetch-base-model.json",
+              "sizeBytes": 494
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-fetch-base-model",
+        "outputBytes": 494,
+        "pinned": false,
+        "reclaimedBytes": 494,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:10:26.034616468Z",
+        "resourceId": "showcase-lora-fine-tuning-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "runtimeId": "showcase-lora-fine-tuning-local",
+        "sealedAt": "2026-10-20T19:10:25.857167885Z",
+        "sizeBytes": 494,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-fetch-base-model"
+      },
+      {
+        "activityId": "showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+        "createdAt": "2026-10-20T19:10:24.611202551Z",
+        "driver": "local",
+        "environmentId": "showcase-lora-fine-tuning-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+        "fileCount": 3,
+        "id": "workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+        "inputBytes": 1603,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:827e40f5f3519ca16b8cd70ffb5923ec5622eef4b4d4959840b94d1b63b55bc7",
+              "path": "stage-fetch-base-model.json",
+              "sizeBytes": 494
+            },
+            {
+              "digest": "sha256:45339cd9523cd499d9530e9472b9962e63f074cd9372ba973fa692b55cb93af7",
+              "path": "stage-fine-tune-adapters.json",
+              "sizeBytes": 701
+            },
+            {
+              "digest": "sha256:0aac28002308a60f608c7792fa3710ad8b97170948b9cf2d5d03c4931d366413",
+              "path": "stage-prepare-examples.json",
+              "sizeBytes": 1109
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:827e40f5f3519ca16b8cd70ffb5923ec5622eef4b4d4959840b94d1b63b55bc7",
+              "path": "stage-fetch-base-model.json",
+              "sizeBytes": 494
+            },
+            {
+              "digest": "sha256:0aac28002308a60f608c7792fa3710ad8b97170948b9cf2d5d03c4931d366413",
+              "path": "stage-prepare-examples.json",
+              "sizeBytes": 1109
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:827e40f5f3519ca16b8cd70ffb5923ec5622eef4b4d4959840b94d1b63b55bc7",
+              "path": "stage-fetch-base-model.json",
+              "sizeBytes": 494
+            },
+            {
+              "digest": "sha256:0aac28002308a60f608c7792fa3710ad8b97170948b9cf2d5d03c4931d366413",
+              "path": "stage-prepare-examples.json",
+              "sizeBytes": 1109
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:45339cd9523cd499d9530e9472b9962e63f074cd9372ba973fa692b55cb93af7",
+              "path": "stage-fine-tune-adapters.json",
+              "sizeBytes": 701
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters",
+        "outputBytes": 701,
+        "pinned": false,
+        "reclaimedBytes": 2304,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:10:30.010073262Z",
+        "resourceId": "showcase-lora-fine-tuning-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "runtimeId": "showcase-lora-fine-tuning-local",
+        "sealedAt": "2026-10-20T19:10:29.855395637Z",
+        "sizeBytes": 2304,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-fine-tune-adapters"
+      },
+      {
+        "activityId": "showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+        "createdAt": "2026-10-20T19:10:24.611202551Z",
+        "driver": "local",
+        "environmentId": "showcase-lora-fine-tuning-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+        "fileCount": 2,
+        "id": "workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+        "inputBytes": 494,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:827e40f5f3519ca16b8cd70ffb5923ec5622eef4b4d4959840b94d1b63b55bc7",
+              "path": "stage-fetch-base-model.json",
+              "sizeBytes": 494
+            },
+            {
+              "digest": "sha256:0aac28002308a60f608c7792fa3710ad8b97170948b9cf2d5d03c4931d366413",
+              "path": "stage-prepare-examples.json",
+              "sizeBytes": 1109
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:827e40f5f3519ca16b8cd70ffb5923ec5622eef4b4d4959840b94d1b63b55bc7",
+              "path": "stage-fetch-base-model.json",
+              "sizeBytes": 494
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:827e40f5f3519ca16b8cd70ffb5923ec5622eef4b4d4959840b94d1b63b55bc7",
+              "path": "stage-fetch-base-model.json",
+              "sizeBytes": 494
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:0aac28002308a60f608c7792fa3710ad8b97170948b9cf2d5d03c4931d366413",
+              "path": "stage-prepare-examples.json",
+              "sizeBytes": 1109
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-prepare-examples",
+        "outputBytes": 1109,
+        "pinned": false,
+        "reclaimedBytes": 1603,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:10:28.040594761Z",
+        "resourceId": "showcase-lora-fine-tuning-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "runtimeId": "showcase-lora-fine-tuning-local",
+        "sealedAt": "2026-10-20T19:10:27.861935803Z",
+        "sizeBytes": 1603,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-prepare-examples"
+      },
+      {
+        "activityId": "showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+        "createdAt": "2026-10-20T19:10:24.611202551Z",
+        "driver": "local",
+        "environmentId": "showcase-lora-fine-tuning-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+        "fileCount": 2,
+        "id": "workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+        "inputBytes": 3085,
+        "isFinal": true,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:5f072908cf4aecfdeb968d36f3f7ea23e05341a21eb47e9ca03de560bab93df6",
+              "path": "adapter.bin",
+              "sizeBytes": 77
+            },
+            {
+              "digest": "sha256:5dd705d10810d4f34fb229cb213ada791ce14cd51d6568458736536734969e73",
+              "path": "evaluation.json",
+              "sizeBytes": 88
+            },
+            {
+              "digest": "sha256:37ef242921941539d8a8405b372dca5dbfa26d6daf266770168f030bc03b2f16",
+              "path": "stage-evaluate.json",
+              "sizeBytes": 693
+            },
+            {
+              "digest": "sha256:827e40f5f3519ca16b8cd70ffb5923ec5622eef4b4d4959840b94d1b63b55bc7",
+              "path": "stage-fetch-base-model.json",
+              "sizeBytes": 494
+            },
+            {
+              "digest": "sha256:45339cd9523cd499d9530e9472b9962e63f074cd9372ba973fa692b55cb93af7",
+              "path": "stage-fine-tune-adapters.json",
+              "sizeBytes": 701
+            },
+            {
+              "digest": "sha256:0aac28002308a60f608c7792fa3710ad8b97170948b9cf2d5d03c4931d366413",
+              "path": "stage-prepare-examples.json",
+              "sizeBytes": 1109
+            },
+            {
+              "digest": "sha256:f86b0244d7a7cb1000a8c3a78d800bf528fca1a276b23b0212a1944f1f88b92d",
+              "path": "stage-publish-adapter.json",
+              "sizeBytes": 425
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:5dd705d10810d4f34fb229cb213ada791ce14cd51d6568458736536734969e73",
+              "path": "evaluation.json",
+              "sizeBytes": 88
+            },
+            {
+              "digest": "sha256:37ef242921941539d8a8405b372dca5dbfa26d6daf266770168f030bc03b2f16",
+              "path": "stage-evaluate.json",
+              "sizeBytes": 693
+            },
+            {
+              "digest": "sha256:827e40f5f3519ca16b8cd70ffb5923ec5622eef4b4d4959840b94d1b63b55bc7",
+              "path": "stage-fetch-base-model.json",
+              "sizeBytes": 494
+            },
+            {
+              "digest": "sha256:45339cd9523cd499d9530e9472b9962e63f074cd9372ba973fa692b55cb93af7",
+              "path": "stage-fine-tune-adapters.json",
+              "sizeBytes": 701
+            },
+            {
+              "digest": "sha256:0aac28002308a60f608c7792fa3710ad8b97170948b9cf2d5d03c4931d366413",
+              "path": "stage-prepare-examples.json",
+              "sizeBytes": 1109
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:5dd705d10810d4f34fb229cb213ada791ce14cd51d6568458736536734969e73",
+              "path": "evaluation.json",
+              "sizeBytes": 88
+            },
+            {
+              "digest": "sha256:37ef242921941539d8a8405b372dca5dbfa26d6daf266770168f030bc03b2f16",
+              "path": "stage-evaluate.json",
+              "sizeBytes": 693
+            },
+            {
+              "digest": "sha256:827e40f5f3519ca16b8cd70ffb5923ec5622eef4b4d4959840b94d1b63b55bc7",
+              "path": "stage-fetch-base-model.json",
+              "sizeBytes": 494
+            },
+            {
+              "digest": "sha256:45339cd9523cd499d9530e9472b9962e63f074cd9372ba973fa692b55cb93af7",
+              "path": "stage-fine-tune-adapters.json",
+              "sizeBytes": 701
+            },
+            {
+              "digest": "sha256:0aac28002308a60f608c7792fa3710ad8b97170948b9cf2d5d03c4931d366413",
+              "path": "stage-prepare-examples.json",
+              "sizeBytes": 1109
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:5f072908cf4aecfdeb968d36f3f7ea23e05341a21eb47e9ca03de560bab93df6",
+              "path": "adapter.bin",
+              "sizeBytes": 77
+            },
+            {
+              "digest": "sha256:f86b0244d7a7cb1000a8c3a78d800bf528fca1a276b23b0212a1944f1f88b92d",
+              "path": "stage-publish-adapter.json",
+              "sizeBytes": 425
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-publish-adapter",
+        "outputBytes": 502,
+        "pinned": false,
+        "reclaimedBytes": 3085,
+        "releaseReason": "inherited inputs pruned",
+        "resourceId": "showcase-lora-fine-tuning-local-docker",
+        "retention": "final",
+        "runId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "runtimeId": "showcase-lora-fine-tuning-local",
+        "sealedAt": "2026-10-20T19:10:33.881733805Z",
+        "sizeBytes": 502,
+        "state": "sealed",
+        "uri": "file:///akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-publish-adapter"
+      },
+      {
+        "activityId": "showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+        "createdAt": "2026-10-20T19:10:24.611202551Z",
+        "driver": "local",
+        "environmentId": "showcase-lora-fine-tuning-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+        "fileCount": 2,
+        "id": "workspace-showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000-showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+        "inputBytes": 3085,
+        "isFinal": true,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:5dd705d10810d4f34fb229cb213ada791ce14cd51d6568458736536734969e73",
+              "path": "evaluation.json",
+              "sizeBytes": 88
+            },
+            {
+              "digest": "sha256:69205180b7a4d43b576a31ed2d0b0602f68afec251e2620bed268ad7f4cd7f0b",
+              "path": "lineage.json",
+              "sizeBytes": 237
+            },
+            {
+              "digest": "sha256:37ef242921941539d8a8405b372dca5dbfa26d6daf266770168f030bc03b2f16",
+              "path": "stage-evaluate.json",
+              "sizeBytes": 693
+            },
+            {
+              "digest": "sha256:827e40f5f3519ca16b8cd70ffb5923ec5622eef4b4d4959840b94d1b63b55bc7",
+              "path": "stage-fetch-base-model.json",
+              "sizeBytes": 494
+            },
+            {
+              "digest": "sha256:45339cd9523cd499d9530e9472b9962e63f074cd9372ba973fa692b55cb93af7",
+              "path": "stage-fine-tune-adapters.json",
+              "sizeBytes": 701
+            },
+            {
+              "digest": "sha256:0aac28002308a60f608c7792fa3710ad8b97170948b9cf2d5d03c4931d366413",
+              "path": "stage-prepare-examples.json",
+              "sizeBytes": 1109
+            },
+            {
+              "digest": "sha256:d6781f459acfa5b9b12f6d785fbb9dfc78db3a80ce77f5fa861297849bf02609",
+              "path": "stage-record-lineage.json",
+              "sizeBytes": 595
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:5dd705d10810d4f34fb229cb213ada791ce14cd51d6568458736536734969e73",
+              "path": "evaluation.json",
+              "sizeBytes": 88
+            },
+            {
+              "digest": "sha256:37ef242921941539d8a8405b372dca5dbfa26d6daf266770168f030bc03b2f16",
+              "path": "stage-evaluate.json",
+              "sizeBytes": 693
+            },
+            {
+              "digest": "sha256:827e40f5f3519ca16b8cd70ffb5923ec5622eef4b4d4959840b94d1b63b55bc7",
+              "path": "stage-fetch-base-model.json",
+              "sizeBytes": 494
+            },
+            {
+              "digest": "sha256:45339cd9523cd499d9530e9472b9962e63f074cd9372ba973fa692b55cb93af7",
+              "path": "stage-fine-tune-adapters.json",
+              "sizeBytes": 701
+            },
+            {
+              "digest": "sha256:0aac28002308a60f608c7792fa3710ad8b97170948b9cf2d5d03c4931d366413",
+              "path": "stage-prepare-examples.json",
+              "sizeBytes": 1109
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:5dd705d10810d4f34fb229cb213ada791ce14cd51d6568458736536734969e73",
+              "path": "evaluation.json",
+              "sizeBytes": 88
+            },
+            {
+              "digest": "sha256:37ef242921941539d8a8405b372dca5dbfa26d6daf266770168f030bc03b2f16",
+              "path": "stage-evaluate.json",
+              "sizeBytes": 693
+            },
+            {
+              "digest": "sha256:827e40f5f3519ca16b8cd70ffb5923ec5622eef4b4d4959840b94d1b63b55bc7",
+              "path": "stage-fetch-base-model.json",
+              "sizeBytes": 494
+            },
+            {
+              "digest": "sha256:45339cd9523cd499d9530e9472b9962e63f074cd9372ba973fa692b55cb93af7",
+              "path": "stage-fine-tune-adapters.json",
+              "sizeBytes": 701
+            },
+            {
+              "digest": "sha256:0aac28002308a60f608c7792fa3710ad8b97170948b9cf2d5d03c4931d366413",
+              "path": "stage-prepare-examples.json",
+              "sizeBytes": 1109
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:69205180b7a4d43b576a31ed2d0b0602f68afec251e2620bed268ad7f4cd7f0b",
+              "path": "lineage.json",
+              "sizeBytes": 237
+            },
+            {
+              "digest": "sha256:d6781f459acfa5b9b12f6d785fbb9dfc78db3a80ce77f5fa861297849bf02609",
+              "path": "stage-record-lineage.json",
+              "sizeBytes": 595
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-record-lineage",
+        "outputBytes": 832,
+        "pinned": false,
+        "reclaimedBytes": 3085,
+        "releaseReason": "inherited inputs pruned",
+        "resourceId": "showcase-lora-fine-tuning-local-docker",
+        "retention": "final",
+        "runId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+        "runtimeId": "showcase-lora-fine-tuning-local",
+        "sealedAt": "2026-10-20T19:10:33.888659347Z",
+        "sizeBytes": 832,
+        "state": "sealed",
+        "uri": "file:///akoflow/workspace/runs/showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000/showcase-lora-fine-tuning-local-2accb78860-record-lineage"
+      }
+    ]
+  },
+  "runId": "showcase-lora-fine-tuning-local-2accb78860-run-20261020t191024.394965000",
+  "status": "completed",
+  "workflowId": "showcase-lora-fine-tuning-local-2accb78860"
+}

@@ -1,0 +1,19 @@
+{
+  "dependencies": [
+    "evaluate"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:43.74378Z",
+  "finishedAtUnixNs": 1792523563739053000,
+  "inputDigest": "016f3c6d6a67162389ea58397f22ac1ef026f65bf12d01dc745afb4b74d438ec",
+  "result": {
+    "models": 3,
+    "rmse": 0.02111393436014912
+  },
+  "showcase": "model-ensemble",
+  "stage": "publish",
+  "startedAt": "2026-10-20T19:12:43.698344Z",
+  "startedAtUnixNs": 1792523563738676000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

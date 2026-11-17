@@ -1,0 +1,2555 @@
+{
+  "activityCount": 6,
+  "completedActivityCount": 6,
+  "image": "ghcr.io/uffescience/akoflow-examples/showcase-experiment-feedback-loop:local-7870585bb0d877eb",
+  "imageId": "sha256:7870585bb0d877eb8a1530949f774112264cf9a40015fa989c64ee81a8136cd9",
+  "observedAt": "2026-10-20T19:09:04Z",
+  "planId": "showcase-experiment-feedback-loop-local-4ea0522b9c-manual-plan-20261020t190852.238831000",
+  "projection": {
+    "activities": [
+      {
+        "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-observations",
+        "allocatedResourceId": "showcase-experiment-feedback-loop-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "finishedAt": 1792523332.8679008,
+        "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-observations",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-experiment-feedback-loop-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-experiment-feedback-loop-local-4ea0522b9c-manual-plan-20261020t190852.238831000-showcase-experiment-feedback-loop-local-4ea0522b9c-observations",
+        "plannedResourceId": "showcase-experiment-feedback-loop-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523332.6381721,
+        "readyAt": 1792523332.6381721,
+        "runtimeId": "showcase-experiment-feedback-loop-local",
+        "runtimeSeconds": 0.10807561874389648,
+        "startedAt": 1792523332.7598252,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+        "allocatedResourceId": "showcase-experiment-feedback-loop-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "finishedAt": 1792523334.282684,
+        "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13286972045898438,
+          "preparationFinishedAt": 1792523334.0404184,
+          "preparationStartedAt": 1792523333.8749552,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0013110637664794922,
+          "runtimeId": "showcase-experiment-feedback-loop-local",
+          "transferElapsedSeconds": 0.16546320915222168,
+          "transferWorkSeconds": 0.16546320915222168
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-experiment-feedback-loop-local-4ea0522b9c-manual-plan-20261020t190852.238831000-showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+        "plannedResourceId": "showcase-experiment-feedback-loop-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523333.8709142,
+        "readyAt": 1792523333.8709142,
+        "runtimeId": "showcase-experiment-feedback-loop-local",
+        "runtimeSeconds": 0.10939598083496094,
+        "startedAt": 1792523334.173288,
+        "status": "completed",
+        "transferBytes": 630,
+        "transferSeconds": 0.16546320915222168
+      },
+      {
+        "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+        "allocatedResourceId": "showcase-experiment-feedback-loop-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "finishedAt": 1792523336.3367178,
+        "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1389467716217041,
+          "preparationFinishedAt": 1792523336.0805836,
+          "preparationStartedAt": 1792523335.89336,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0017285346984863281,
+          "runtimeId": "showcase-experiment-feedback-loop-local",
+          "transferElapsedSeconds": 0.1872236728668213,
+          "transferWorkSeconds": 0.1872236728668213
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-experiment-feedback-loop-local-4ea0522b9c-manual-plan-20261020t190852.238831000-showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+        "plannedResourceId": "showcase-experiment-feedback-loop-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523335.8885012,
+        "readyAt": 1792523335.8885012,
+        "runtimeId": "showcase-experiment-feedback-loop-local",
+        "runtimeSeconds": 0.1171875,
+        "startedAt": 1792523336.2195303,
+        "status": "completed",
+        "transferBytes": 1387,
+        "transferSeconds": 0.1872236728668213
+      },
+      {
+        "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+        "allocatedResourceId": "showcase-experiment-feedback-loop-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "finishedAt": 1792523338.3047366,
+        "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.12777018547058105,
+          "preparationFinishedAt": 1792523338.0682957,
+          "preparationStartedAt": 1792523337.8878915,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0011413097381591797,
+          "runtimeId": "showcase-experiment-feedback-loop-local",
+          "transferElapsedSeconds": 0.1804041862487793,
+          "transferWorkSeconds": 0.1804041862487793
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-experiment-feedback-loop-local-4ea0522b9c-manual-plan-20261020t190852.238831000-showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+        "plannedResourceId": "showcase-experiment-feedback-loop-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523337.885018,
+        "readyAt": 1792523337.885018,
+        "runtimeId": "showcase-experiment-feedback-loop-local",
+        "runtimeSeconds": 0.10867071151733398,
+        "startedAt": 1792523338.196066,
+        "status": "completed",
+        "transferBytes": 2329,
+        "transferSeconds": 0.1804041862487793
+      },
+      {
+        "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+        "allocatedResourceId": "showcase-experiment-feedback-loop-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "finishedAt": 1792523340.3089278,
+        "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.12218761444091797,
+          "preparationFinishedAt": 1792523340.0770564,
+          "preparationStartedAt": 1792523339.89284,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0013613700866699219,
+          "runtimeId": "showcase-experiment-feedback-loop-local",
+          "transferElapsedSeconds": 0.18421649932861328,
+          "transferWorkSeconds": 0.18421649932861328
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-experiment-feedback-loop-local-4ea0522b9c-manual-plan-20261020t190852.238831000-showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+        "plannedResourceId": "showcase-experiment-feedback-loop-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523339.8893213,
+        "readyAt": 1792523339.8893213,
+        "runtimeId": "showcase-experiment-feedback-loop-local",
+        "runtimeSeconds": 0.10968375205993652,
+        "startedAt": 1792523340.199244,
+        "status": "completed",
+        "transferBytes": 3271,
+        "transferSeconds": 0.18421649932861328
+      },
+      {
+        "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+        "allocatedResourceId": "showcase-experiment-feedback-loop-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "finishedAt": 1792523342.3173442,
+        "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.11536526679992676,
+          "preparationFinishedAt": 1792523342.08977,
+          "preparationStartedAt": 1792523341.9044096,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0012500286102294922,
+          "runtimeId": "showcase-experiment-feedback-loop-local",
+          "transferElapsedSeconds": 0.18536043167114258,
+          "transferWorkSeconds": 0.18536043167114258
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-experiment-feedback-loop-local-4ea0522b9c-manual-plan-20261020t190852.238831000-showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+        "plannedResourceId": "showcase-experiment-feedback-loop-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523341.901262,
+        "readyAt": 1792523341.901262,
+        "runtimeId": "showcase-experiment-feedback-loop-local",
+        "runtimeSeconds": 0.11220884323120117,
+        "startedAt": 1792523342.2051353,
+        "status": "completed",
+        "transferBytes": 4219,
+        "transferSeconds": 0.18536043167114258
+      }
+    ],
+    "activityAttempts": [
+      {
+        "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-observations",
+        "allocatedResourceId": "showcase-experiment-feedback-loop-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "finishedAt": 1792523332.8679008,
+        "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-observations",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-experiment-feedback-loop-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-experiment-feedback-loop-local-4ea0522b9c-manual-plan-20261020t190852.238831000-showcase-experiment-feedback-loop-local-4ea0522b9c-observations",
+        "plannedResourceId": "showcase-experiment-feedback-loop-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523332.6381721,
+        "readyAt": 1792523332.6381721,
+        "runtimeId": "showcase-experiment-feedback-loop-local",
+        "runtimeSeconds": 0.10807561874389648,
+        "startedAt": 1792523332.7598252,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+        "allocatedResourceId": "showcase-experiment-feedback-loop-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "finishedAt": 1792523334.282684,
+        "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.13286972045898438,
+          "preparationFinishedAt": 1792523334.0404184,
+          "preparationStartedAt": 1792523333.8749552,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0013110637664794922,
+          "runtimeId": "showcase-experiment-feedback-loop-local",
+          "transferElapsedSeconds": 0.16546320915222168,
+          "transferWorkSeconds": 0.16546320915222168
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-experiment-feedback-loop-local-4ea0522b9c-manual-plan-20261020t190852.238831000-showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+        "plannedResourceId": "showcase-experiment-feedback-loop-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523333.8709142,
+        "readyAt": 1792523333.8709142,
+        "runtimeId": "showcase-experiment-feedback-loop-local",
+        "runtimeSeconds": 0.10939598083496094,
+        "startedAt": 1792523334.173288,
+        "status": "completed",
+        "transferBytes": 630,
+        "transferSeconds": 0.16546320915222168
+      },
+      {
+        "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+        "allocatedResourceId": "showcase-experiment-feedback-loop-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "finishedAt": 1792523336.3367178,
+        "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1389467716217041,
+          "preparationFinishedAt": 1792523336.0805836,
+          "preparationStartedAt": 1792523335.89336,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0017285346984863281,
+          "runtimeId": "showcase-experiment-feedback-loop-local",
+          "transferElapsedSeconds": 0.1872236728668213,
+          "transferWorkSeconds": 0.1872236728668213
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-experiment-feedback-loop-local-4ea0522b9c-manual-plan-20261020t190852.238831000-showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+        "plannedResourceId": "showcase-experiment-feedback-loop-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523335.8885012,
+        "readyAt": 1792523335.8885012,
+        "runtimeId": "showcase-experiment-feedback-loop-local",
+        "runtimeSeconds": 0.1171875,
+        "startedAt": 1792523336.2195303,
+        "status": "completed",
+        "transferBytes": 1387,
+        "transferSeconds": 0.1872236728668213
+      },
+      {
+        "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+        "allocatedResourceId": "showcase-experiment-feedback-loop-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "finishedAt": 1792523338.3047366,
+        "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.12777018547058105,
+          "preparationFinishedAt": 1792523338.0682957,
+          "preparationStartedAt": 1792523337.8878915,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0011413097381591797,
+          "runtimeId": "showcase-experiment-feedback-loop-local",
+          "transferElapsedSeconds": 0.1804041862487793,
+          "transferWorkSeconds": 0.1804041862487793
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-experiment-feedback-loop-local-4ea0522b9c-manual-plan-20261020t190852.238831000-showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+        "plannedResourceId": "showcase-experiment-feedback-loop-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523337.885018,
+        "readyAt": 1792523337.885018,
+        "runtimeId": "showcase-experiment-feedback-loop-local",
+        "runtimeSeconds": 0.10867071151733398,
+        "startedAt": 1792523338.196066,
+        "status": "completed",
+        "transferBytes": 2329,
+        "transferSeconds": 0.1804041862487793
+      },
+      {
+        "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+        "allocatedResourceId": "showcase-experiment-feedback-loop-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "finishedAt": 1792523340.3089278,
+        "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.12218761444091797,
+          "preparationFinishedAt": 1792523340.0770564,
+          "preparationStartedAt": 1792523339.89284,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0013613700866699219,
+          "runtimeId": "showcase-experiment-feedback-loop-local",
+          "transferElapsedSeconds": 0.18421649932861328,
+          "transferWorkSeconds": 0.18421649932861328
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-experiment-feedback-loop-local-4ea0522b9c-manual-plan-20261020t190852.238831000-showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+        "plannedResourceId": "showcase-experiment-feedback-loop-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523339.8893213,
+        "readyAt": 1792523339.8893213,
+        "runtimeId": "showcase-experiment-feedback-loop-local",
+        "runtimeSeconds": 0.10968375205993652,
+        "startedAt": 1792523340.199244,
+        "status": "completed",
+        "transferBytes": 3271,
+        "transferSeconds": 0.18421649932861328
+      },
+      {
+        "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+        "allocatedResourceId": "showcase-experiment-feedback-loop-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "finishedAt": 1792523342.3173442,
+        "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.11536526679992676,
+          "preparationFinishedAt": 1792523342.08977,
+          "preparationStartedAt": 1792523341.9044096,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0012500286102294922,
+          "runtimeId": "showcase-experiment-feedback-loop-local",
+          "transferElapsedSeconds": 0.18536043167114258,
+          "transferWorkSeconds": 0.18536043167114258
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-experiment-feedback-loop-local-4ea0522b9c-manual-plan-20261020t190852.238831000-showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+        "plannedResourceId": "showcase-experiment-feedback-loop-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523341.901262,
+        "readyAt": 1792523341.901262,
+        "runtimeId": "showcase-experiment-feedback-loop-local",
+        "runtimeSeconds": 0.11220884323120117,
+        "startedAt": 1792523342.2051353,
+        "status": "completed",
+        "transferBytes": 4219,
+        "transferSeconds": 0.18536043167114258
+      }
+    ],
+    "artifactMaterializations": null,
+    "artifactTransferRuns": [
+      {
+        "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+        "durationSeconds": 0.1872236728668213,
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "filesTransferred": 2,
+        "finishedAt": 1792523336.0805836,
+        "id": "transfer-workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments-0",
+        "logicalBytes": 1387,
+        "planId": "transfer-workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments-0",
+        "route": {
+          "consumerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.093514917,
+          "sourceEnvironmentId": "showcase-experiment-feedback-loop-v1",
+          "sourceResourceId": "showcase-experiment-feedback-loop-local-docker",
+          "sshChannelWaitSeconds": 4.58e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-experiment-feedback-loop-v1",
+          "targetResourceId": "showcase-experiment-feedback-loop-local-docker"
+        },
+        "startedAt": 1792523335.89336,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 1387
+      },
+      {
+        "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+        "durationSeconds": 0.18536043167114258,
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "filesTransferred": 5,
+        "finishedAt": 1792523342.08977,
+        "id": "transfer-workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations-0",
+        "logicalBytes": 4219,
+        "planId": "transfer-workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations-0",
+        "route": {
+          "consumerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+          "filesTransferred": 5,
+          "producerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.095933833,
+          "sourceEnvironmentId": "showcase-experiment-feedback-loop-v1",
+          "sourceResourceId": "showcase-experiment-feedback-loop-local-docker",
+          "sshChannelWaitSeconds": 2.51e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-experiment-feedback-loop-v1",
+          "targetResourceId": "showcase-experiment-feedback-loop-local-docker"
+        },
+        "startedAt": 1792523341.9044096,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 4219
+      },
+      {
+        "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+        "durationSeconds": 0.18421649932861328,
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "filesTransferred": 4,
+        "finishedAt": 1792523340.0770564,
+        "id": "transfer-workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments-0",
+        "logicalBytes": 3271,
+        "planId": "transfer-workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments-0",
+        "route": {
+          "consumerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+          "filesTransferred": 4,
+          "producerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09123916700000001,
+          "sourceEnvironmentId": "showcase-experiment-feedback-loop-v1",
+          "sourceResourceId": "showcase-experiment-feedback-loop-local-docker",
+          "sshChannelWaitSeconds": 5.83e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-experiment-feedback-loop-v1",
+          "targetResourceId": "showcase-experiment-feedback-loop-local-docker"
+        },
+        "startedAt": 1792523339.89284,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 3271
+      },
+      {
+        "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+        "durationSeconds": 0.1804041862487793,
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "filesTransferred": 3,
+        "finishedAt": 1792523338.0682957,
+        "id": "transfer-workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check-0",
+        "logicalBytes": 2329,
+        "planId": "transfer-workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check-0",
+        "route": {
+          "consumerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+          "filesTransferred": 3,
+          "producerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.091011041,
+          "sourceEnvironmentId": "showcase-experiment-feedback-loop-v1",
+          "sourceResourceId": "showcase-experiment-feedback-loop-local-docker",
+          "sshChannelWaitSeconds": 4.16e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-experiment-feedback-loop-v1",
+          "targetResourceId": "showcase-experiment-feedback-loop-local-docker"
+        },
+        "startedAt": 1792523337.8878915,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 2329
+      },
+      {
+        "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+        "durationSeconds": 0.16546320915222168,
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523334.0404184,
+        "id": "transfer-workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-update-model-0",
+        "logicalBytes": 630,
+        "planId": "transfer-workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-update-model-0",
+        "route": {
+          "consumerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-observations",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.092377,
+          "sourceEnvironmentId": "showcase-experiment-feedback-loop-v1",
+          "sourceResourceId": "showcase-experiment-feedback-loop-local-docker",
+          "sshChannelWaitSeconds": 5.83e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-experiment-feedback-loop-v1",
+          "targetResourceId": "showcase-experiment-feedback-loop-local-docker"
+        },
+        "startedAt": 1792523333.8749552,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 630
+      }
+    ],
+    "cloudBilling": {
+      "asOf": "2026-10-20T19:09:04.612520916Z",
+      "costBasis": "VM compute and boot-disk lifecycle at on-demand marginal rates; not a provider invoice",
+      "estimatedCost": 0,
+      "excludedCosts": [
+        "network-egress",
+        "public-ipv4",
+        "image-storage",
+        "discounts-and-tax"
+      ],
+      "instances": [],
+      "knownCost": 0,
+      "status": "estimated"
+    },
+    "dataLocations": [
+      {
+        "dataObjectInstanceId": "786ae4f485efd3431d47e78779d3f6fa",
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "id": "53d40e897e74c3784ff1614695e8188a",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-experiment-feedback-loop-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "47e5321628a235759894e754a555a6c9",
+        "uri": "file:///akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-observations/stage-observations.json"
+      },
+      {
+        "dataObjectInstanceId": "64d572f411c121876e4324d8d83dac45",
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "id": "5ace594fd334d632813c05bff635ba95",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-experiment-feedback-loop-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "47e5321628a235759894e754a555a6c9",
+        "uri": "file:///akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments/stage-propose-experiments.json"
+      },
+      {
+        "dataObjectInstanceId": "1dd3e3144b612532c18a66142f53fcd6",
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "id": "f74baeb006f780008cf5cd1e3f061e14",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-experiment-feedback-loop-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "47e5321628a235759894e754a555a6c9",
+        "uri": "file:///akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations/feedback-report.json"
+      },
+      {
+        "dataObjectInstanceId": "b02d0062bb6dbe25a37e2a5e4b90b055",
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "id": "4497285a85d7df4e41a99ed1236c1e0d",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-experiment-feedback-loop-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "47e5321628a235759894e754a555a6c9",
+        "uri": "file:///akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations/next-batch.json"
+      },
+      {
+        "dataObjectInstanceId": "8d3d8fec75781dd90af7aa60abdf376d",
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "id": "891665794eb6393f518861dc6d1ef017",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-experiment-feedback-loop-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "47e5321628a235759894e754a555a6c9",
+        "uri": "file:///akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations/stage-record-observations.json"
+      },
+      {
+        "dataObjectInstanceId": "1256166106f9454ab3b7b36e4f5b48d0",
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "id": "70d61f7bcc49b454104faacddab4a971",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-experiment-feedback-loop-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "47e5321628a235759894e754a555a6c9",
+        "uri": "file:///akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments/stage-run-experiments.json"
+      },
+      {
+        "dataObjectInstanceId": "87f56bb65eb4ff1aca0892c2d9e091e0",
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "id": "9473243ed9369ea6a4aa3086e007b2a0",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-experiment-feedback-loop-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "47e5321628a235759894e754a555a6c9",
+        "uri": "file:///akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check/stage-safety-check.json"
+      },
+      {
+        "dataObjectInstanceId": "7dea20ac1c27b76a6ee8d63f0e1b677a",
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "id": "ef4bccf6f7ab609d80cb917c0efa6bbb",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-experiment-feedback-loop-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "47e5321628a235759894e754a555a6c9",
+        "uri": "file:///akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-update-model/stage-update-model.json"
+      }
+    ],
+    "dataObjects": [
+      {
+        "attempt": 1,
+        "checksum": "sha256:f9c2b1b5e40261953ee6c48ae2d98d036a9f818caadad4f802328e7c65b942f7",
+        "dataObjectId": "0160aba7132936a26c2d7f4d58edbab2",
+        "discovered": true,
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "id": "786ae4f485efd3431d47e78779d3f6fa",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-observations",
+        "relativePath": "stage-observations.json",
+        "sizeBytes": 630
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:be8d0a30e606dc6a05e853a3db9de43809b2ecdf64c800f84379a8a0a5e74c42",
+        "dataObjectId": "be6b726d4bf2e6179ba733bf3b05bfb9",
+        "discovered": true,
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "id": "64d572f411c121876e4324d8d83dac45",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+        "relativePath": "stage-propose-experiments.json",
+        "sizeBytes": 942
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:e18c781dee902d63e350ab56275201adbe6edb29e8f0911f9064736522da9889",
+        "dataObjectId": "88efb37a8045102702e32c63cedbf30d",
+        "discovered": true,
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "id": "1dd3e3144b612532c18a66142f53fcd6",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+        "relativePath": "feedback-report.json",
+        "sizeBytes": 494
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:e4047c0acffa389df22ed3046073951298c473d9c08ea44fcf93b1ab62d38610",
+        "dataObjectId": "9fcc12fa989dc35b1444e3745e968f0c",
+        "discovered": true,
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "id": "b02d0062bb6dbe25a37e2a5e4b90b055",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+        "relativePath": "next-batch.json",
+        "sizeBytes": 98
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:70134e91f385f5215169d3a7bf8730e18fe0a2d53a930d3938db2a1c49cd4a02",
+        "dataObjectId": "1bae4b148b12458412180e7535fee108",
+        "discovered": true,
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "id": "8d3d8fec75781dd90af7aa60abdf376d",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+        "relativePath": "stage-record-observations.json",
+        "sizeBytes": 948
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:e51d21f53c0650434ba1d33dfdaa0bd70e4557fd0336485f4ba42b50224a27b7",
+        "dataObjectId": "765a5866ae101d790d492cf0ba5888b8",
+        "discovered": true,
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "id": "1256166106f9454ab3b7b36e4f5b48d0",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+        "relativePath": "stage-run-experiments.json",
+        "sizeBytes": 948
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:d946aa6a84542aeb9c85e8334aa55fe1a2d3f5cd1f09400a38302c91d88867ac",
+        "dataObjectId": "f711128ffefd2d98ac468399d95564ab",
+        "discovered": true,
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "id": "87f56bb65eb4ff1aca0892c2d9e091e0",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+        "relativePath": "stage-safety-check.json",
+        "sizeBytes": 942
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:cc51d7a00da0984537a3867cd2a19085ffc759c5da097f65b098b9ce9598668f",
+        "dataObjectId": "c010a44150d0fc589d35e2b24ca59e55",
+        "discovered": true,
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "id": "7dea20ac1c27b76a6ee8d63f0e1b677a",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+        "relativePath": "stage-update-model.json",
+        "sizeBytes": 757
+      }
+    ],
+    "dataTransfers": [
+      {
+        "bytes": 630,
+        "consumerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+        "cost": 0,
+        "durationSeconds": 0.16546320915222168,
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "finishedAt": 1792523334.0404184,
+        "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-update-model:transfer-workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-update-model-0",
+        "logicalBytes": 630,
+        "producerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-observations",
+        "route": {
+          "consumerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-observations",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.092377,
+          "sourceEnvironmentId": "showcase-experiment-feedback-loop-v1",
+          "sourceResourceId": "showcase-experiment-feedback-loop-local-docker",
+          "sshChannelWaitSeconds": 5.83e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-experiment-feedback-loop-v1",
+          "targetResourceId": "showcase-experiment-feedback-loop-local-docker"
+        },
+        "sourceResourceId": "showcase-experiment-feedback-loop-local-docker",
+        "startedAt": 1792523333.8749552,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-experiment-feedback-loop-local-docker"
+      },
+      {
+        "bytes": 1387,
+        "consumerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+        "cost": 0,
+        "durationSeconds": 0.1872236728668213,
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "finishedAt": 1792523336.0805836,
+        "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments:transfer-workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments-0",
+        "logicalBytes": 1387,
+        "producerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+        "route": {
+          "consumerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.093514917,
+          "sourceEnvironmentId": "showcase-experiment-feedback-loop-v1",
+          "sourceResourceId": "showcase-experiment-feedback-loop-local-docker",
+          "sshChannelWaitSeconds": 4.58e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-experiment-feedback-loop-v1",
+          "targetResourceId": "showcase-experiment-feedback-loop-local-docker"
+        },
+        "sourceResourceId": "showcase-experiment-feedback-loop-local-docker",
+        "startedAt": 1792523335.89336,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-experiment-feedback-loop-local-docker"
+      },
+      {
+        "bytes": 2329,
+        "consumerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+        "cost": 0,
+        "durationSeconds": 0.1804041862487793,
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "finishedAt": 1792523338.0682957,
+        "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check:transfer-workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check-0",
+        "logicalBytes": 2329,
+        "producerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+        "route": {
+          "consumerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+          "filesTransferred": 3,
+          "producerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.091011041,
+          "sourceEnvironmentId": "showcase-experiment-feedback-loop-v1",
+          "sourceResourceId": "showcase-experiment-feedback-loop-local-docker",
+          "sshChannelWaitSeconds": 4.16e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-experiment-feedback-loop-v1",
+          "targetResourceId": "showcase-experiment-feedback-loop-local-docker"
+        },
+        "sourceResourceId": "showcase-experiment-feedback-loop-local-docker",
+        "startedAt": 1792523337.8878915,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-experiment-feedback-loop-local-docker"
+      },
+      {
+        "bytes": 3271,
+        "consumerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+        "cost": 0,
+        "durationSeconds": 0.18421649932861328,
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "finishedAt": 1792523340.0770564,
+        "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments:transfer-workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments-0",
+        "logicalBytes": 3271,
+        "producerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+        "route": {
+          "consumerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+          "filesTransferred": 4,
+          "producerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09123916700000001,
+          "sourceEnvironmentId": "showcase-experiment-feedback-loop-v1",
+          "sourceResourceId": "showcase-experiment-feedback-loop-local-docker",
+          "sshChannelWaitSeconds": 5.83e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-experiment-feedback-loop-v1",
+          "targetResourceId": "showcase-experiment-feedback-loop-local-docker"
+        },
+        "sourceResourceId": "showcase-experiment-feedback-loop-local-docker",
+        "startedAt": 1792523339.89284,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-experiment-feedback-loop-local-docker"
+      },
+      {
+        "bytes": 4219,
+        "consumerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+        "cost": 0,
+        "durationSeconds": 0.18536043167114258,
+        "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "finishedAt": 1792523342.08977,
+        "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations:transfer-workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations-0",
+        "logicalBytes": 4219,
+        "producerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+        "route": {
+          "consumerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+          "filesTransferred": 5,
+          "producerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.095933833,
+          "sourceEnvironmentId": "showcase-experiment-feedback-loop-v1",
+          "sourceResourceId": "showcase-experiment-feedback-loop-local-docker",
+          "sshChannelWaitSeconds": 2.51e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-experiment-feedback-loop-v1",
+          "targetResourceId": "showcase-experiment-feedback-loop-local-docker"
+        },
+        "sourceResourceId": "showcase-experiment-feedback-loop-local-docker",
+        "startedAt": 1792523341.9044096,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-experiment-feedback-loop-local-docker"
+      }
+    ],
+    "events": [
+      {
+        "aggregateId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.started",
+        "id": "ef1a38e5a3e90a158694d7ade25d1554",
+        "occurredAt": "2026-10-20T19:08:52.615431133Z",
+        "payload": {
+          "mode": "real",
+          "schedulePlanId": "showcase-experiment-feedback-loop-local-4ea0522b9c-manual-plan-20261020t190852.238831000"
+        }
+      },
+      {
+        "aggregateId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-observations",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "dc60426fbe3a78546af5c57446213a20",
+        "occurredAt": "2026-10-20T19:08:53.788543217Z",
+        "payload": {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-observations",
+          "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-observations",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "6f2a27e706561401d9307a6b45153a88",
+        "occurredAt": "2026-10-20T19:08:53.868470426Z",
+        "payload": {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-observations",
+          "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+          "failureReason": "",
+          "runtimeSeconds": 0.10807561874389648,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "4d4511aae3ee3728cf45308ec42377df",
+        "occurredAt": "2026-10-20T19:08:55.804422385Z",
+        "payload": {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+          "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "f1a2ead22dbcf0ab3154681b9adbf0db",
+        "occurredAt": "2026-10-20T19:08:55.885710385Z",
+        "payload": {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+          "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+          "failureReason": "",
+          "runtimeSeconds": 0.10939598083496094,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "d7bb812af8d2ca3b87f849e346f46edd",
+        "occurredAt": "2026-10-20T19:08:57.807359511Z",
+        "payload": {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+          "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "0c6bfc7941be1d8b69d1e785481f0cd3",
+        "occurredAt": "2026-10-20T19:08:57.882853219Z",
+        "payload": {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+          "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+          "failureReason": "",
+          "runtimeSeconds": 0.1171875,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "037822db2fdf59a45ed613ef96e3d268",
+        "occurredAt": "2026-10-20T19:08:59.811935762Z",
+        "payload": {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+          "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "549d43b5fa1db856250e5441f538fe63",
+        "occurredAt": "2026-10-20T19:08:59.887229053Z",
+        "payload": {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+          "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+          "failureReason": "",
+          "runtimeSeconds": 0.10867071151733398,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "48fd793f15321e8848da9b46ca3a041a",
+        "occurredAt": "2026-10-20T19:09:01.817097721Z",
+        "payload": {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+          "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "9ebbcb3db1b5ecf76dec62482ba647e0",
+        "occurredAt": "2026-10-20T19:09:01.899590263Z",
+        "payload": {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+          "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+          "failureReason": "",
+          "runtimeSeconds": 0.10968375205993652,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "5b6fcabb861c9840a1a868333111d430",
+        "occurredAt": "2026-10-20T19:09:03.826002347Z",
+        "payload": {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+          "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "a5f26f102cbb6a2c7db7d67a3a99cc61",
+        "occurredAt": "2026-10-20T19:09:03.910763139Z",
+        "payload": {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+          "executionRunId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11220884323120117,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.completed",
+        "id": "4e90a438f75e1aee029e5f73d302b51d",
+        "occurredAt": "2026-10-20T19:09:03.913096472Z",
+        "payload": {
+          "cost": 0,
+          "makespanSeconds": 9.55751895904541
+        }
+      }
+    ],
+    "handles": [
+      {
+        "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-observations",
+        "artifacts": {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-observations",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:f9c2b1b5e40261953ee6c48ae2d98d036a9f818caadad4f802328e7c65b942f7",
+              "modifiedUnixNano": 1792523332860733000,
+              "path": "stage-observations.json",
+              "sizeBytes": 630
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:f9c2b1b5e40261953ee6c48ae2d98d036a9f818caadad4f802328e7c65b942f7",
+              "modifiedUnixNano": 1792523332860733000,
+              "path": "stage-observations.json",
+              "sizeBytes": 630
+            }
+          ],
+          "finishedAt": 1792523332.8679008,
+          "phases": [
+            {
+              "durationSeconds": 0.10807561874389648,
+              "finishedAt": 1792523332.8679008,
+              "phase": "execution",
+              "startedAt": 1792523332.7598252,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-observations",
+          "runId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+          "runtime": "showcase-experiment-feedback-loop-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523332.7598252,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 1,
+            "initialFiles": 0,
+            "modifiedFiles": 0,
+            "outputBytes": 630
+          }
+        },
+        "exitCode": 0,
+        "externalId": "6e14e73583b95b9fe99386e4922f93067964b9366374dba6f5f5990d5ab6b247",
+        "finishedAt": 1792523332.8679008,
+        "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-observations",
+        "log": "{\"activity\": \"observations\", \"status\": \"success\", \"resultKeys\": [\"observations\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-experiment-feedback-loop-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-observations",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523332.7598305,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-observations",
+          "submittedAt": 1792523332.7598252
+        },
+        "resourceId": "showcase-experiment-feedback-loop-local-docker",
+        "runId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "runtimeId": "showcase-experiment-feedback-loop-local",
+        "startedAt": 1792523332.7598252,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+        "artifacts": {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:be8d0a30e606dc6a05e853a3db9de43809b2ecdf64c800f84379a8a0a5e74c42",
+              "modifiedUnixNano": 1792523336330733000,
+              "path": "stage-propose-experiments.json",
+              "sizeBytes": 942
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:f9c2b1b5e40261953ee6c48ae2d98d036a9f818caadad4f802328e7c65b942f7",
+              "modifiedUnixNano": 1792523336033733000,
+              "path": "stage-observations.json",
+              "sizeBytes": 630
+            },
+            {
+              "checksum": "sha256:be8d0a30e606dc6a05e853a3db9de43809b2ecdf64c800f84379a8a0a5e74c42",
+              "modifiedUnixNano": 1792523336330733000,
+              "path": "stage-propose-experiments.json",
+              "sizeBytes": 942
+            },
+            {
+              "checksum": "sha256:cc51d7a00da0984537a3867cd2a19085ffc759c5da097f65b098b9ce9598668f",
+              "modifiedUnixNano": 1792523336034733000,
+              "path": "stage-update-model.json",
+              "sizeBytes": 757
+            }
+          ],
+          "finishedAt": 1792523336.3367178,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:f9c2b1b5e40261953ee6c48ae2d98d036a9f818caadad4f802328e7c65b942f7",
+              "modifiedUnixNano": 1792523336033733000,
+              "path": "stage-observations.json",
+              "sizeBytes": 630
+            },
+            {
+              "checksum": "sha256:cc51d7a00da0984537a3867cd2a19085ffc759c5da097f65b098b9ce9598668f",
+              "modifiedUnixNano": 1792523336034733000,
+              "path": "stage-update-model.json",
+              "sizeBytes": 757
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.1171875,
+              "finishedAt": 1792523336.3367178,
+              "phase": "execution",
+              "startedAt": 1792523336.2195303,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+          "runId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+          "runtime": "showcase-experiment-feedback-loop-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523336.2195303,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 3,
+            "initialFiles": 2,
+            "modifiedFiles": 0,
+            "outputBytes": 942
+          }
+        },
+        "exitCode": 0,
+        "externalId": "f1b16339eadaf68f504e9f5f44e02816f7a5966060b4ab277d35f42e0ff74f1e",
+        "finishedAt": 1792523336.3367178,
+        "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+        "log": "{\"activity\": \"propose-experiments\", \"status\": \"success\", \"resultKeys\": [\"proposals\", \"model\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-experiment-feedback-loop-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523336.2195356,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+          "submittedAt": 1792523336.2195303
+        },
+        "resourceId": "showcase-experiment-feedback-loop-local-docker",
+        "runId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "runtimeId": "showcase-experiment-feedback-loop-local",
+        "startedAt": 1792523336.2195303,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+        "artifacts": {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:e18c781dee902d63e350ab56275201adbe6edb29e8f0911f9064736522da9889",
+              "modifiedUnixNano": 1792523342308733000,
+              "path": "feedback-report.json",
+              "sizeBytes": 494
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:e4047c0acffa389df22ed3046073951298c473d9c08ea44fcf93b1ab62d38610",
+              "modifiedUnixNano": 1792523342308733000,
+              "path": "next-batch.json",
+              "sizeBytes": 98
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:70134e91f385f5215169d3a7bf8730e18fe0a2d53a930d3938db2a1c49cd4a02",
+              "modifiedUnixNano": 1792523342308733000,
+              "path": "stage-record-observations.json",
+              "sizeBytes": 948
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:e18c781dee902d63e350ab56275201adbe6edb29e8f0911f9064736522da9889",
+              "modifiedUnixNano": 1792523342308733000,
+              "path": "feedback-report.json",
+              "sizeBytes": 494
+            },
+            {
+              "checksum": "sha256:e4047c0acffa389df22ed3046073951298c473d9c08ea44fcf93b1ab62d38610",
+              "modifiedUnixNano": 1792523342308733000,
+              "path": "next-batch.json",
+              "sizeBytes": 98
+            },
+            {
+              "checksum": "sha256:f9c2b1b5e40261953ee6c48ae2d98d036a9f818caadad4f802328e7c65b942f7",
+              "modifiedUnixNano": 1792523342045733000,
+              "path": "stage-observations.json",
+              "sizeBytes": 630
+            },
+            {
+              "checksum": "sha256:be8d0a30e606dc6a05e853a3db9de43809b2ecdf64c800f84379a8a0a5e74c42",
+              "modifiedUnixNano": 1792523342045733000,
+              "path": "stage-propose-experiments.json",
+              "sizeBytes": 942
+            },
+            {
+              "checksum": "sha256:70134e91f385f5215169d3a7bf8730e18fe0a2d53a930d3938db2a1c49cd4a02",
+              "modifiedUnixNano": 1792523342308733000,
+              "path": "stage-record-observations.json",
+              "sizeBytes": 948
+            },
+            {
+              "checksum": "sha256:e51d21f53c0650434ba1d33dfdaa0bd70e4557fd0336485f4ba42b50224a27b7",
+              "modifiedUnixNano": 1792523342045733000,
+              "path": "stage-run-experiments.json",
+              "sizeBytes": 948
+            },
+            {
+              "checksum": "sha256:d946aa6a84542aeb9c85e8334aa55fe1a2d3f5cd1f09400a38302c91d88867ac",
+              "modifiedUnixNano": 1792523342045733000,
+              "path": "stage-safety-check.json",
+              "sizeBytes": 942
+            },
+            {
+              "checksum": "sha256:cc51d7a00da0984537a3867cd2a19085ffc759c5da097f65b098b9ce9598668f",
+              "modifiedUnixNano": 1792523342045733000,
+              "path": "stage-update-model.json",
+              "sizeBytes": 757
+            }
+          ],
+          "finishedAt": 1792523342.3173442,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:f9c2b1b5e40261953ee6c48ae2d98d036a9f818caadad4f802328e7c65b942f7",
+              "modifiedUnixNano": 1792523342045733000,
+              "path": "stage-observations.json",
+              "sizeBytes": 630
+            },
+            {
+              "checksum": "sha256:be8d0a30e606dc6a05e853a3db9de43809b2ecdf64c800f84379a8a0a5e74c42",
+              "modifiedUnixNano": 1792523342045733000,
+              "path": "stage-propose-experiments.json",
+              "sizeBytes": 942
+            },
+            {
+              "checksum": "sha256:e51d21f53c0650434ba1d33dfdaa0bd70e4557fd0336485f4ba42b50224a27b7",
+              "modifiedUnixNano": 1792523342045733000,
+              "path": "stage-run-experiments.json",
+              "sizeBytes": 948
+            },
+            {
+              "checksum": "sha256:d946aa6a84542aeb9c85e8334aa55fe1a2d3f5cd1f09400a38302c91d88867ac",
+              "modifiedUnixNano": 1792523342045733000,
+              "path": "stage-safety-check.json",
+              "sizeBytes": 942
+            },
+            {
+              "checksum": "sha256:cc51d7a00da0984537a3867cd2a19085ffc759c5da097f65b098b9ce9598668f",
+              "modifiedUnixNano": 1792523342045733000,
+              "path": "stage-update-model.json",
+              "sizeBytes": 757
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11220884323120117,
+              "finishedAt": 1792523342.3173442,
+              "phase": "execution",
+              "startedAt": 1792523342.2051353,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+          "runId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+          "runtime": "showcase-experiment-feedback-loop-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523342.2051353,
+          "summary": {
+            "createdFiles": 3,
+            "deletedFiles": 0,
+            "finalFiles": 8,
+            "initialFiles": 5,
+            "modifiedFiles": 0,
+            "outputBytes": 1540
+          }
+        },
+        "exitCode": 0,
+        "externalId": "a6526067197d851188ca064c42488ab2180c4279550fce947ce3bbff18e9eb05",
+        "finishedAt": 1792523342.3173442,
+        "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+        "log": "{\"activity\": \"record-observations\", \"status\": \"success\", \"resultKeys\": [\"before\", \"after\", \"best\", \"improvement\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-experiment-feedback-loop-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523342.2051406,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+          "submittedAt": 1792523342.2051353
+        },
+        "resourceId": "showcase-experiment-feedback-loop-local-docker",
+        "runId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "runtimeId": "showcase-experiment-feedback-loop-local",
+        "startedAt": 1792523342.2051353,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+        "artifacts": {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:e51d21f53c0650434ba1d33dfdaa0bd70e4557fd0336485f4ba42b50224a27b7",
+              "modifiedUnixNano": 1792523340302733000,
+              "path": "stage-run-experiments.json",
+              "sizeBytes": 948
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:f9c2b1b5e40261953ee6c48ae2d98d036a9f818caadad4f802328e7c65b942f7",
+              "modifiedUnixNano": 1792523340031733000,
+              "path": "stage-observations.json",
+              "sizeBytes": 630
+            },
+            {
+              "checksum": "sha256:be8d0a30e606dc6a05e853a3db9de43809b2ecdf64c800f84379a8a0a5e74c42",
+              "modifiedUnixNano": 1792523340031733000,
+              "path": "stage-propose-experiments.json",
+              "sizeBytes": 942
+            },
+            {
+              "checksum": "sha256:e51d21f53c0650434ba1d33dfdaa0bd70e4557fd0336485f4ba42b50224a27b7",
+              "modifiedUnixNano": 1792523340302733000,
+              "path": "stage-run-experiments.json",
+              "sizeBytes": 948
+            },
+            {
+              "checksum": "sha256:d946aa6a84542aeb9c85e8334aa55fe1a2d3f5cd1f09400a38302c91d88867ac",
+              "modifiedUnixNano": 1792523340031733000,
+              "path": "stage-safety-check.json",
+              "sizeBytes": 942
+            },
+            {
+              "checksum": "sha256:cc51d7a00da0984537a3867cd2a19085ffc759c5da097f65b098b9ce9598668f",
+              "modifiedUnixNano": 1792523340031733000,
+              "path": "stage-update-model.json",
+              "sizeBytes": 757
+            }
+          ],
+          "finishedAt": 1792523340.3089278,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:f9c2b1b5e40261953ee6c48ae2d98d036a9f818caadad4f802328e7c65b942f7",
+              "modifiedUnixNano": 1792523340031733000,
+              "path": "stage-observations.json",
+              "sizeBytes": 630
+            },
+            {
+              "checksum": "sha256:be8d0a30e606dc6a05e853a3db9de43809b2ecdf64c800f84379a8a0a5e74c42",
+              "modifiedUnixNano": 1792523340031733000,
+              "path": "stage-propose-experiments.json",
+              "sizeBytes": 942
+            },
+            {
+              "checksum": "sha256:d946aa6a84542aeb9c85e8334aa55fe1a2d3f5cd1f09400a38302c91d88867ac",
+              "modifiedUnixNano": 1792523340031733000,
+              "path": "stage-safety-check.json",
+              "sizeBytes": 942
+            },
+            {
+              "checksum": "sha256:cc51d7a00da0984537a3867cd2a19085ffc759c5da097f65b098b9ce9598668f",
+              "modifiedUnixNano": 1792523340031733000,
+              "path": "stage-update-model.json",
+              "sizeBytes": 757
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.10968375205993652,
+              "finishedAt": 1792523340.3089278,
+              "phase": "execution",
+              "startedAt": 1792523340.199244,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+          "runId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+          "runtime": "showcase-experiment-feedback-loop-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523340.199244,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 5,
+            "initialFiles": 4,
+            "modifiedFiles": 0,
+            "outputBytes": 948
+          }
+        },
+        "exitCode": 0,
+        "externalId": "88426ea6deec4966d4e2f6a6c04d21906686a13d576655b294c10f15243787ff",
+        "finishedAt": 1792523340.3089278,
+        "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+        "log": "{\"activity\": \"run-experiments\", \"status\": \"success\", \"resultKeys\": [\"proposals\", \"results\", \"prior\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-experiment-feedback-loop-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523340.1992583,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+          "submittedAt": 1792523340.199244
+        },
+        "resourceId": "showcase-experiment-feedback-loop-local-docker",
+        "runId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "runtimeId": "showcase-experiment-feedback-loop-local",
+        "startedAt": 1792523340.199244,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+        "artifacts": {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:d946aa6a84542aeb9c85e8334aa55fe1a2d3f5cd1f09400a38302c91d88867ac",
+              "modifiedUnixNano": 1792523338299733000,
+              "path": "stage-safety-check.json",
+              "sizeBytes": 942
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:f9c2b1b5e40261953ee6c48ae2d98d036a9f818caadad4f802328e7c65b942f7",
+              "modifiedUnixNano": 1792523338024733000,
+              "path": "stage-observations.json",
+              "sizeBytes": 630
+            },
+            {
+              "checksum": "sha256:be8d0a30e606dc6a05e853a3db9de43809b2ecdf64c800f84379a8a0a5e74c42",
+              "modifiedUnixNano": 1792523338024733000,
+              "path": "stage-propose-experiments.json",
+              "sizeBytes": 942
+            },
+            {
+              "checksum": "sha256:d946aa6a84542aeb9c85e8334aa55fe1a2d3f5cd1f09400a38302c91d88867ac",
+              "modifiedUnixNano": 1792523338299733000,
+              "path": "stage-safety-check.json",
+              "sizeBytes": 942
+            },
+            {
+              "checksum": "sha256:cc51d7a00da0984537a3867cd2a19085ffc759c5da097f65b098b9ce9598668f",
+              "modifiedUnixNano": 1792523338024733000,
+              "path": "stage-update-model.json",
+              "sizeBytes": 757
+            }
+          ],
+          "finishedAt": 1792523338.3047366,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:f9c2b1b5e40261953ee6c48ae2d98d036a9f818caadad4f802328e7c65b942f7",
+              "modifiedUnixNano": 1792523338024733000,
+              "path": "stage-observations.json",
+              "sizeBytes": 630
+            },
+            {
+              "checksum": "sha256:be8d0a30e606dc6a05e853a3db9de43809b2ecdf64c800f84379a8a0a5e74c42",
+              "modifiedUnixNano": 1792523338024733000,
+              "path": "stage-propose-experiments.json",
+              "sizeBytes": 942
+            },
+            {
+              "checksum": "sha256:cc51d7a00da0984537a3867cd2a19085ffc759c5da097f65b098b9ce9598668f",
+              "modifiedUnixNano": 1792523338024733000,
+              "path": "stage-update-model.json",
+              "sizeBytes": 757
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.10867071151733398,
+              "finishedAt": 1792523338.3047366,
+              "phase": "execution",
+              "startedAt": 1792523338.196066,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+          "runId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+          "runtime": "showcase-experiment-feedback-loop-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523338.196066,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 4,
+            "initialFiles": 3,
+            "modifiedFiles": 0,
+            "outputBytes": 942
+          }
+        },
+        "exitCode": 0,
+        "externalId": "35deac09d82f711a68ec859ef34bf5e355e0720b5acd2b6fe5ad3039b4b27d4f",
+        "finishedAt": 1792523338.3047366,
+        "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+        "log": "{\"activity\": \"safety-check\", \"status\": \"success\", \"resultKeys\": [\"proposals\", \"model\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-experiment-feedback-loop-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523338.1960742,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+          "submittedAt": 1792523338.196066
+        },
+        "resourceId": "showcase-experiment-feedback-loop-local-docker",
+        "runId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "runtimeId": "showcase-experiment-feedback-loop-local",
+        "startedAt": 1792523338.196066,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+        "artifacts": {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:cc51d7a00da0984537a3867cd2a19085ffc759c5da097f65b098b9ce9598668f",
+              "modifiedUnixNano": 1792523334276733000,
+              "path": "stage-update-model.json",
+              "sizeBytes": 757
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:f9c2b1b5e40261953ee6c48ae2d98d036a9f818caadad4f802328e7c65b942f7",
+              "modifiedUnixNano": 1792523333992733000,
+              "path": "stage-observations.json",
+              "sizeBytes": 630
+            },
+            {
+              "checksum": "sha256:cc51d7a00da0984537a3867cd2a19085ffc759c5da097f65b098b9ce9598668f",
+              "modifiedUnixNano": 1792523334276733000,
+              "path": "stage-update-model.json",
+              "sizeBytes": 757
+            }
+          ],
+          "finishedAt": 1792523334.282684,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:f9c2b1b5e40261953ee6c48ae2d98d036a9f818caadad4f802328e7c65b942f7",
+              "modifiedUnixNano": 1792523333992733000,
+              "path": "stage-observations.json",
+              "sizeBytes": 630
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.10939598083496094,
+              "finishedAt": 1792523334.282684,
+              "phase": "execution",
+              "startedAt": 1792523334.173288,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+          "runId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+          "runtime": "showcase-experiment-feedback-loop-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523334.173288,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 757
+          }
+        },
+        "exitCode": 0,
+        "externalId": "30ccaa98fd3193fa7083b2c999d492f2c64176807a41779448e3c274bc93c88d",
+        "finishedAt": 1792523334.282684,
+        "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+        "log": "{\"activity\": \"update-model\", \"status\": \"success\", \"resultKeys\": [\"coefficients\", \"observations\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-experiment-feedback-loop-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523334.1732938,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+          "submittedAt": 1792523334.173288
+        },
+        "resourceId": "showcase-experiment-feedback-loop-local-docker",
+        "runId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "runtimeId": "showcase-experiment-feedback-loop-local",
+        "startedAt": 1792523334.173288,
+        "status": "completed"
+      }
+    ],
+    "infrastructureRuns": [],
+    "operationEvents": [],
+    "run": {
+      "activityCount": 6,
+      "breakdown": {
+        "computeSeconds": 0.6652224063873291,
+        "interferenceSeconds": 0,
+        "overheadSeconds": 0,
+        "queueSeconds": 0,
+        "transferSeconds": 0.9026679992675781
+      },
+      "completedActivityCount": 6,
+      "cost": 0,
+      "finishedAt": "2026-10-20T19:09:03Z",
+      "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+      "kind": "workflow",
+      "makespanSeconds": 9.55751895904541,
+      "mode": "real",
+      "schedulePlanId": "showcase-experiment-feedback-loop-local-4ea0522b9c-manual-plan-20261020t190852.238831000",
+      "seed": 0,
+      "startedAt": "2026-10-20T19:08:52Z",
+      "status": "completed",
+      "title": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+      "transferredBytes": 11836
+    },
+    "timeline": {
+      "computeMakespanSeconds": 9.55751895904541,
+      "coveredWallSeconds": 2.3451223373413086,
+      "finishedAt": 1792523343,
+      "phases": [
+        {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-observations",
+          "category": "resource-queue",
+          "durationSeconds": 0.12165307998657227,
+          "finishedAt": 1792523332.7598252,
+          "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-observations:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523332.6381721,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-observations",
+          "category": "runtime",
+          "durationSeconds": 0.10807561874389648,
+          "finishedAt": 1792523332.8679008,
+          "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-observations:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523332.7598252,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+          "category": "resource-queue",
+          "durationSeconds": 0.004040956497192383,
+          "finishedAt": 1792523333.8749552,
+          "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-update-model:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523333.8709142,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.16546320915222168,
+          "finishedAt": 1792523334.0404184,
+          "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-update-model:transfer-workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-update-model-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523333.8749552,
+          "status": "completed",
+          "transferId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-update-model:transfer-workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-update-model-0"
+        },
+        {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+          "category": "launch",
+          "durationSeconds": 0.13286972045898438,
+          "finishedAt": 1792523334.173288,
+          "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-update-model:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523334.0404184,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+          "category": "runtime",
+          "durationSeconds": 0.10939598083496094,
+          "finishedAt": 1792523334.282684,
+          "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-update-model:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523334.173288,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+          "category": "resource-queue",
+          "durationSeconds": 0.004858732223510742,
+          "finishedAt": 1792523335.89336,
+          "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523335.8885012,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.1872236728668213,
+          "finishedAt": 1792523336.0805836,
+          "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments:transfer-workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523335.89336,
+          "status": "completed",
+          "transferId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments:transfer-workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments-0"
+        },
+        {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+          "category": "launch",
+          "durationSeconds": 0.1389467716217041,
+          "finishedAt": 1792523336.2195303,
+          "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523336.0805836,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+          "category": "runtime",
+          "durationSeconds": 0.1171875,
+          "finishedAt": 1792523336.3367178,
+          "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523336.2195303,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+          "category": "resource-queue",
+          "durationSeconds": 0.0028734207153320312,
+          "finishedAt": 1792523337.8878915,
+          "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523337.885018,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.1804041862487793,
+          "finishedAt": 1792523338.0682957,
+          "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check:transfer-workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523337.8878915,
+          "status": "completed",
+          "transferId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check:transfer-workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check-0"
+        },
+        {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+          "category": "launch",
+          "durationSeconds": 0.12777018547058105,
+          "finishedAt": 1792523338.196066,
+          "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523338.0682957,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+          "category": "runtime",
+          "durationSeconds": 0.10867071151733398,
+          "finishedAt": 1792523338.3047366,
+          "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523338.196066,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+          "category": "resource-queue",
+          "durationSeconds": 0.0035185813903808594,
+          "finishedAt": 1792523339.89284,
+          "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523339.8893213,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.18421649932861328,
+          "finishedAt": 1792523340.0770564,
+          "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments:transfer-workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523339.89284,
+          "status": "completed",
+          "transferId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments:transfer-workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments-0"
+        },
+        {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+          "category": "launch",
+          "durationSeconds": 0.12218761444091797,
+          "finishedAt": 1792523340.199244,
+          "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523340.0770564,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+          "category": "runtime",
+          "durationSeconds": 0.10968375205993652,
+          "finishedAt": 1792523340.3089278,
+          "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523340.199244,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+          "category": "resource-queue",
+          "durationSeconds": 0.003147602081298828,
+          "finishedAt": 1792523341.9044096,
+          "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523341.901262,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.18536043167114258,
+          "finishedAt": 1792523342.08977,
+          "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations:transfer-workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523341.9044096,
+          "status": "completed",
+          "transferId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations:transfer-workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations-0"
+        },
+        {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+          "category": "launch",
+          "durationSeconds": 0.11536526679992676,
+          "finishedAt": 1792523342.2051353,
+          "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523342.08977,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+          "category": "runtime",
+          "durationSeconds": 0.11220884323120117,
+          "finishedAt": 1792523342.3173442,
+          "id": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000:showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523342.2051353,
+          "status": "completed"
+        }
+      ],
+      "startedAt": 1792523332,
+      "totals": {
+        "destroySeconds": 0,
+        "executablePreparationSeconds": 0,
+        "launchSeconds": 0.6371395587921143,
+        "provisionSeconds": 0,
+        "resourceQueueSeconds": 0.1400923728942871,
+        "runtimeSeconds": 0.6652224063873291,
+        "startSeconds": 0,
+        "stopSeconds": 0,
+        "validationSeconds": 0,
+        "workspaceTransferSeconds": 0.9026679992675781
+      },
+      "unclassifiedWallSeconds": 8.654877662658691,
+      "wallSeconds": 11
+    },
+    "workspaceLeases": [
+      {
+        "consumerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+        "id": "workspace-lease-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-observations-showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+        "producerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-observations",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:08:54.043121051Z",
+        "runId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "workspaceId": "workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-observations"
+      },
+      {
+        "consumerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+        "id": "workspace-lease-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments-showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+        "producerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:08:58.070387719Z",
+        "runId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "workspaceId": "workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments"
+      },
+      {
+        "consumerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+        "id": "workspace-lease-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments-showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+        "producerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:09:02.091529596Z",
+        "runId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "workspaceId": "workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments"
+      },
+      {
+        "consumerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+        "id": "workspace-lease-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check-showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+        "producerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:09:00.078379345Z",
+        "runId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "workspaceId": "workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check"
+      },
+      {
+        "consumerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+        "id": "workspace-lease-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-update-model-showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+        "producerActivityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:08:56.083776635Z",
+        "runId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "workspaceId": "workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-update-model"
+      }
+    ],
+    "workspaces": [
+      {
+        "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-observations",
+        "createdAt": "2026-10-20T19:08:52.617828675Z",
+        "driver": "local",
+        "environmentId": "showcase-experiment-feedback-loop-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-observations",
+        "fileCount": 1,
+        "id": "workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-observations",
+        "inputBytes": 0,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:f9c2b1b5e40261953ee6c48ae2d98d036a9f818caadad4f802328e7c65b942f7",
+              "path": "stage-observations.json",
+              "sizeBytes": 630
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:f9c2b1b5e40261953ee6c48ae2d98d036a9f818caadad4f802328e7c65b942f7",
+              "path": "stage-observations.json",
+              "sizeBytes": 630
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-observations",
+        "outputBytes": 630,
+        "pinned": false,
+        "reclaimedBytes": 630,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:08:54.048356384Z",
+        "resourceId": "showcase-experiment-feedback-loop-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "runtimeId": "showcase-experiment-feedback-loop-local",
+        "sealedAt": "2026-10-20T19:08:53.865577509Z",
+        "sizeBytes": 630,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-observations"
+      },
+      {
+        "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+        "createdAt": "2026-10-20T19:08:52.617828675Z",
+        "driver": "local",
+        "environmentId": "showcase-experiment-feedback-loop-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+        "fileCount": 3,
+        "id": "workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+        "inputBytes": 1387,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:f9c2b1b5e40261953ee6c48ae2d98d036a9f818caadad4f802328e7c65b942f7",
+              "path": "stage-observations.json",
+              "sizeBytes": 630
+            },
+            {
+              "digest": "sha256:be8d0a30e606dc6a05e853a3db9de43809b2ecdf64c800f84379a8a0a5e74c42",
+              "path": "stage-propose-experiments.json",
+              "sizeBytes": 942
+            },
+            {
+              "digest": "sha256:cc51d7a00da0984537a3867cd2a19085ffc759c5da097f65b098b9ce9598668f",
+              "path": "stage-update-model.json",
+              "sizeBytes": 757
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:f9c2b1b5e40261953ee6c48ae2d98d036a9f818caadad4f802328e7c65b942f7",
+              "path": "stage-observations.json",
+              "sizeBytes": 630
+            },
+            {
+              "digest": "sha256:cc51d7a00da0984537a3867cd2a19085ffc759c5da097f65b098b9ce9598668f",
+              "path": "stage-update-model.json",
+              "sizeBytes": 757
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:f9c2b1b5e40261953ee6c48ae2d98d036a9f818caadad4f802328e7c65b942f7",
+              "path": "stage-observations.json",
+              "sizeBytes": 630
+            },
+            {
+              "digest": "sha256:cc51d7a00da0984537a3867cd2a19085ffc759c5da097f65b098b9ce9598668f",
+              "path": "stage-update-model.json",
+              "sizeBytes": 757
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:be8d0a30e606dc6a05e853a3db9de43809b2ecdf64c800f84379a8a0a5e74c42",
+              "path": "stage-propose-experiments.json",
+              "sizeBytes": 942
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments",
+        "outputBytes": 942,
+        "pinned": false,
+        "reclaimedBytes": 2329,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:08:58.075415636Z",
+        "resourceId": "showcase-experiment-feedback-loop-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "runtimeId": "showcase-experiment-feedback-loop-local",
+        "sealedAt": "2026-10-20T19:08:57.879600469Z",
+        "sizeBytes": 2329,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-propose-experiments"
+      },
+      {
+        "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+        "createdAt": "2026-10-20T19:08:52.617828675Z",
+        "driver": "local",
+        "environmentId": "showcase-experiment-feedback-loop-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+        "fileCount": 3,
+        "id": "workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+        "inputBytes": 4219,
+        "isFinal": true,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:e18c781dee902d63e350ab56275201adbe6edb29e8f0911f9064736522da9889",
+              "path": "feedback-report.json",
+              "sizeBytes": 494
+            },
+            {
+              "digest": "sha256:e4047c0acffa389df22ed3046073951298c473d9c08ea44fcf93b1ab62d38610",
+              "path": "next-batch.json",
+              "sizeBytes": 98
+            },
+            {
+              "digest": "sha256:f9c2b1b5e40261953ee6c48ae2d98d036a9f818caadad4f802328e7c65b942f7",
+              "path": "stage-observations.json",
+              "sizeBytes": 630
+            },
+            {
+              "digest": "sha256:be8d0a30e606dc6a05e853a3db9de43809b2ecdf64c800f84379a8a0a5e74c42",
+              "path": "stage-propose-experiments.json",
+              "sizeBytes": 942
+            },
+            {
+              "digest": "sha256:70134e91f385f5215169d3a7bf8730e18fe0a2d53a930d3938db2a1c49cd4a02",
+              "path": "stage-record-observations.json",
+              "sizeBytes": 948
+            },
+            {
+              "digest": "sha256:e51d21f53c0650434ba1d33dfdaa0bd70e4557fd0336485f4ba42b50224a27b7",
+              "path": "stage-run-experiments.json",
+              "sizeBytes": 948
+            },
+            {
+              "digest": "sha256:d946aa6a84542aeb9c85e8334aa55fe1a2d3f5cd1f09400a38302c91d88867ac",
+              "path": "stage-safety-check.json",
+              "sizeBytes": 942
+            },
+            {
+              "digest": "sha256:cc51d7a00da0984537a3867cd2a19085ffc759c5da097f65b098b9ce9598668f",
+              "path": "stage-update-model.json",
+              "sizeBytes": 757
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:f9c2b1b5e40261953ee6c48ae2d98d036a9f818caadad4f802328e7c65b942f7",
+              "path": "stage-observations.json",
+              "sizeBytes": 630
+            },
+            {
+              "digest": "sha256:be8d0a30e606dc6a05e853a3db9de43809b2ecdf64c800f84379a8a0a5e74c42",
+              "path": "stage-propose-experiments.json",
+              "sizeBytes": 942
+            },
+            {
+              "digest": "sha256:e51d21f53c0650434ba1d33dfdaa0bd70e4557fd0336485f4ba42b50224a27b7",
+              "path": "stage-run-experiments.json",
+              "sizeBytes": 948
+            },
+            {
+              "digest": "sha256:d946aa6a84542aeb9c85e8334aa55fe1a2d3f5cd1f09400a38302c91d88867ac",
+              "path": "stage-safety-check.json",
+              "sizeBytes": 942
+            },
+            {
+              "digest": "sha256:cc51d7a00da0984537a3867cd2a19085ffc759c5da097f65b098b9ce9598668f",
+              "path": "stage-update-model.json",
+              "sizeBytes": 757
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:f9c2b1b5e40261953ee6c48ae2d98d036a9f818caadad4f802328e7c65b942f7",
+              "path": "stage-observations.json",
+              "sizeBytes": 630
+            },
+            {
+              "digest": "sha256:be8d0a30e606dc6a05e853a3db9de43809b2ecdf64c800f84379a8a0a5e74c42",
+              "path": "stage-propose-experiments.json",
+              "sizeBytes": 942
+            },
+            {
+              "digest": "sha256:e51d21f53c0650434ba1d33dfdaa0bd70e4557fd0336485f4ba42b50224a27b7",
+              "path": "stage-run-experiments.json",
+              "sizeBytes": 948
+            },
+            {
+              "digest": "sha256:d946aa6a84542aeb9c85e8334aa55fe1a2d3f5cd1f09400a38302c91d88867ac",
+              "path": "stage-safety-check.json",
+              "sizeBytes": 942
+            },
+            {
+              "digest": "sha256:cc51d7a00da0984537a3867cd2a19085ffc759c5da097f65b098b9ce9598668f",
+              "path": "stage-update-model.json",
+              "sizeBytes": 757
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:e18c781dee902d63e350ab56275201adbe6edb29e8f0911f9064736522da9889",
+              "path": "feedback-report.json",
+              "sizeBytes": 494
+            },
+            {
+              "digest": "sha256:e4047c0acffa389df22ed3046073951298c473d9c08ea44fcf93b1ab62d38610",
+              "path": "next-batch.json",
+              "sizeBytes": 98
+            },
+            {
+              "digest": "sha256:70134e91f385f5215169d3a7bf8730e18fe0a2d53a930d3938db2a1c49cd4a02",
+              "path": "stage-record-observations.json",
+              "sizeBytes": 948
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations",
+        "outputBytes": 1540,
+        "pinned": false,
+        "reclaimedBytes": 4219,
+        "releaseReason": "inherited inputs pruned",
+        "resourceId": "showcase-experiment-feedback-loop-local-docker",
+        "retention": "final",
+        "runId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "runtimeId": "showcase-experiment-feedback-loop-local",
+        "sealedAt": "2026-10-20T19:09:03.906703514Z",
+        "sizeBytes": 1540,
+        "state": "sealed",
+        "uri": "file:///akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-record-observations"
+      },
+      {
+        "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+        "createdAt": "2026-10-20T19:08:52.617828675Z",
+        "driver": "local",
+        "environmentId": "showcase-experiment-feedback-loop-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+        "fileCount": 5,
+        "id": "workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+        "inputBytes": 3271,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:f9c2b1b5e40261953ee6c48ae2d98d036a9f818caadad4f802328e7c65b942f7",
+              "path": "stage-observations.json",
+              "sizeBytes": 630
+            },
+            {
+              "digest": "sha256:be8d0a30e606dc6a05e853a3db9de43809b2ecdf64c800f84379a8a0a5e74c42",
+              "path": "stage-propose-experiments.json",
+              "sizeBytes": 942
+            },
+            {
+              "digest": "sha256:e51d21f53c0650434ba1d33dfdaa0bd70e4557fd0336485f4ba42b50224a27b7",
+              "path": "stage-run-experiments.json",
+              "sizeBytes": 948
+            },
+            {
+              "digest": "sha256:d946aa6a84542aeb9c85e8334aa55fe1a2d3f5cd1f09400a38302c91d88867ac",
+              "path": "stage-safety-check.json",
+              "sizeBytes": 942
+            },
+            {
+              "digest": "sha256:cc51d7a00da0984537a3867cd2a19085ffc759c5da097f65b098b9ce9598668f",
+              "path": "stage-update-model.json",
+              "sizeBytes": 757
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:f9c2b1b5e40261953ee6c48ae2d98d036a9f818caadad4f802328e7c65b942f7",
+              "path": "stage-observations.json",
+              "sizeBytes": 630
+            },
+            {
+              "digest": "sha256:be8d0a30e606dc6a05e853a3db9de43809b2ecdf64c800f84379a8a0a5e74c42",
+              "path": "stage-propose-experiments.json",
+              "sizeBytes": 942
+            },
+            {
+              "digest": "sha256:d946aa6a84542aeb9c85e8334aa55fe1a2d3f5cd1f09400a38302c91d88867ac",
+              "path": "stage-safety-check.json",
+              "sizeBytes": 942
+            },
+            {
+              "digest": "sha256:cc51d7a00da0984537a3867cd2a19085ffc759c5da097f65b098b9ce9598668f",
+              "path": "stage-update-model.json",
+              "sizeBytes": 757
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:f9c2b1b5e40261953ee6c48ae2d98d036a9f818caadad4f802328e7c65b942f7",
+              "path": "stage-observations.json",
+              "sizeBytes": 630
+            },
+            {
+              "digest": "sha256:be8d0a30e606dc6a05e853a3db9de43809b2ecdf64c800f84379a8a0a5e74c42",
+              "path": "stage-propose-experiments.json",
+              "sizeBytes": 942
+            },
+            {
+              "digest": "sha256:d946aa6a84542aeb9c85e8334aa55fe1a2d3f5cd1f09400a38302c91d88867ac",
+              "path": "stage-safety-check.json",
+              "sizeBytes": 942
+            },
+            {
+              "digest": "sha256:cc51d7a00da0984537a3867cd2a19085ffc759c5da097f65b098b9ce9598668f",
+              "path": "stage-update-model.json",
+              "sizeBytes": 757
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:e51d21f53c0650434ba1d33dfdaa0bd70e4557fd0336485f4ba42b50224a27b7",
+              "path": "stage-run-experiments.json",
+              "sizeBytes": 948
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments",
+        "outputBytes": 948,
+        "pinned": false,
+        "reclaimedBytes": 4219,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:09:02.095390263Z",
+        "resourceId": "showcase-experiment-feedback-loop-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "runtimeId": "showcase-experiment-feedback-loop-local",
+        "sealedAt": "2026-10-20T19:09:01.896883429Z",
+        "sizeBytes": 4219,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-run-experiments"
+      },
+      {
+        "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+        "createdAt": "2026-10-20T19:08:52.617828675Z",
+        "driver": "local",
+        "environmentId": "showcase-experiment-feedback-loop-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+        "fileCount": 4,
+        "id": "workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+        "inputBytes": 2329,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:f9c2b1b5e40261953ee6c48ae2d98d036a9f818caadad4f802328e7c65b942f7",
+              "path": "stage-observations.json",
+              "sizeBytes": 630
+            },
+            {
+              "digest": "sha256:be8d0a30e606dc6a05e853a3db9de43809b2ecdf64c800f84379a8a0a5e74c42",
+              "path": "stage-propose-experiments.json",
+              "sizeBytes": 942
+            },
+            {
+              "digest": "sha256:d946aa6a84542aeb9c85e8334aa55fe1a2d3f5cd1f09400a38302c91d88867ac",
+              "path": "stage-safety-check.json",
+              "sizeBytes": 942
+            },
+            {
+              "digest": "sha256:cc51d7a00da0984537a3867cd2a19085ffc759c5da097f65b098b9ce9598668f",
+              "path": "stage-update-model.json",
+              "sizeBytes": 757
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:f9c2b1b5e40261953ee6c48ae2d98d036a9f818caadad4f802328e7c65b942f7",
+              "path": "stage-observations.json",
+              "sizeBytes": 630
+            },
+            {
+              "digest": "sha256:be8d0a30e606dc6a05e853a3db9de43809b2ecdf64c800f84379a8a0a5e74c42",
+              "path": "stage-propose-experiments.json",
+              "sizeBytes": 942
+            },
+            {
+              "digest": "sha256:cc51d7a00da0984537a3867cd2a19085ffc759c5da097f65b098b9ce9598668f",
+              "path": "stage-update-model.json",
+              "sizeBytes": 757
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:f9c2b1b5e40261953ee6c48ae2d98d036a9f818caadad4f802328e7c65b942f7",
+              "path": "stage-observations.json",
+              "sizeBytes": 630
+            },
+            {
+              "digest": "sha256:be8d0a30e606dc6a05e853a3db9de43809b2ecdf64c800f84379a8a0a5e74c42",
+              "path": "stage-propose-experiments.json",
+              "sizeBytes": 942
+            },
+            {
+              "digest": "sha256:cc51d7a00da0984537a3867cd2a19085ffc759c5da097f65b098b9ce9598668f",
+              "path": "stage-update-model.json",
+              "sizeBytes": 757
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:d946aa6a84542aeb9c85e8334aa55fe1a2d3f5cd1f09400a38302c91d88867ac",
+              "path": "stage-safety-check.json",
+              "sizeBytes": 942
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check",
+        "outputBytes": 942,
+        "pinned": false,
+        "reclaimedBytes": 3271,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:09:00.081862554Z",
+        "resourceId": "showcase-experiment-feedback-loop-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "runtimeId": "showcase-experiment-feedback-loop-local",
+        "sealedAt": "2026-10-20T19:08:59.884708303Z",
+        "sizeBytes": 3271,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-safety-check"
+      },
+      {
+        "activityId": "showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+        "createdAt": "2026-10-20T19:08:52.617828675Z",
+        "driver": "local",
+        "environmentId": "showcase-experiment-feedback-loop-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+        "fileCount": 2,
+        "id": "workspace-showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000-showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+        "inputBytes": 630,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:f9c2b1b5e40261953ee6c48ae2d98d036a9f818caadad4f802328e7c65b942f7",
+              "path": "stage-observations.json",
+              "sizeBytes": 630
+            },
+            {
+              "digest": "sha256:cc51d7a00da0984537a3867cd2a19085ffc759c5da097f65b098b9ce9598668f",
+              "path": "stage-update-model.json",
+              "sizeBytes": 757
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:f9c2b1b5e40261953ee6c48ae2d98d036a9f818caadad4f802328e7c65b942f7",
+              "path": "stage-observations.json",
+              "sizeBytes": 630
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:f9c2b1b5e40261953ee6c48ae2d98d036a9f818caadad4f802328e7c65b942f7",
+              "path": "stage-observations.json",
+              "sizeBytes": 630
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:cc51d7a00da0984537a3867cd2a19085ffc759c5da097f65b098b9ce9598668f",
+              "path": "stage-update-model.json",
+              "sizeBytes": 757
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-update-model",
+        "outputBytes": 757,
+        "pinned": false,
+        "reclaimedBytes": 1387,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:08:56.089153093Z",
+        "resourceId": "showcase-experiment-feedback-loop-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+        "runtimeId": "showcase-experiment-feedback-loop-local",
+        "sealedAt": "2026-10-20T19:08:55.882836718Z",
+        "sizeBytes": 1387,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000/showcase-experiment-feedback-loop-local-4ea0522b9c-update-model"
+      }
+    ]
+  },
+  "runId": "showcase-experiment-feedback-loop-local-4ea0522b9c-run-20261020t190852.243916000",
+  "status": "completed",
+  "workflowId": "showcase-experiment-feedback-loop-local-4ea0522b9c"
+}

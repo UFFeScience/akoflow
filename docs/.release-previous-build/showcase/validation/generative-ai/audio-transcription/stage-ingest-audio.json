@@ -1,0 +1,20 @@
+{
+  "dependencies": [],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:45.793167Z",
+  "finishedAtUnixNs": 1792523565788785000,
+  "inputDigest": "9951b56e42169a516ac779ddc3c7c60da5f6ede6732bb1ea93bd1011b1366067",
+  "result": {
+    "audio": "input.wav",
+    "rate": 8000,
+    "recognizer": "bundled synthetic tone vocabulary; not natural speech",
+    "samples": 3840,
+    "samplesPerToken": 640
+  },
+  "showcase": "audio-transcription",
+  "stage": "ingest-audio",
+  "startedAt": "2026-10-20T19:12:45.746388Z",
+  "startedAtUnixNs": 1792523565788124000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

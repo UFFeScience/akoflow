@@ -1,0 +1,2658 @@
+{
+  "activityCount": 6,
+  "completedActivityCount": 6,
+  "image": "ghcr.io/uffescience/akoflow-examples/showcase-supervised-tool-loop:local-faa1a1363139f086",
+  "imageId": "sha256:faa1a1363139f086370f8c8dd82ff92a2cceaae180e7979c8549e0210351ee79",
+  "observedAt": "2026-10-20T19:14:45Z",
+  "planId": "showcase-supervised-tool-loop-local-1fb7664e1c-manual-plan-20261020t191433.215428000",
+  "projection": {
+    "activities": [
+      {
+        "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-build-context",
+        "allocatedResourceId": "showcase-supervised-tool-loop-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "finishedAt": 1792523673.9231668,
+        "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-build-context",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-supervised-tool-loop-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-supervised-tool-loop-local-1fb7664e1c-manual-plan-20261020t191433.215428000-showcase-supervised-tool-loop-local-1fb7664e1c-build-context",
+        "plannedResourceId": "showcase-supervised-tool-loop-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523673.6512988,
+        "readyAt": 1792523673.6512988,
+        "runtimeId": "showcase-supervised-tool-loop-local",
+        "runtimeSeconds": 0.1167757511138916,
+        "startedAt": 1792523673.806391,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+        "allocatedResourceId": "showcase-supervised-tool-loop-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "finishedAt": 1792523675.3438475,
+        "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14357566833496094,
+          "preparationFinishedAt": 1792523675.0870838,
+          "preparationStartedAt": 1792523674.9204013,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0015714168548583984,
+          "runtimeId": "showcase-supervised-tool-loop-local",
+          "transferElapsedSeconds": 0.16668248176574707,
+          "transferWorkSeconds": 0.16668248176574707
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-supervised-tool-loop-local-1fb7664e1c-manual-plan-20261020t191433.215428000-showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+        "plannedResourceId": "showcase-supervised-tool-loop-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523674.9172566,
+        "readyAt": 1792523674.9172566,
+        "runtimeId": "showcase-supervised-tool-loop-local",
+        "runtimeSeconds": 0.11318802833557129,
+        "startedAt": 1792523675.2306595,
+        "status": "completed",
+        "transferBytes": 457,
+        "transferSeconds": 0.16668248176574707
+      },
+      {
+        "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+        "allocatedResourceId": "showcase-supervised-tool-loop-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "finishedAt": 1792523677.4629638,
+        "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1816861629486084,
+          "preparationFinishedAt": 1792523677.1570537,
+          "preparationStartedAt": 1792523676.9893606,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0013840198516845703,
+          "runtimeId": "showcase-supervised-tool-loop-local",
+          "transferElapsedSeconds": 0.1676931381225586,
+          "transferWorkSeconds": 0.1676931381225586
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-supervised-tool-loop-local-1fb7664e1c-manual-plan-20261020t191433.215428000-showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+        "plannedResourceId": "showcase-supervised-tool-loop-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523676.9857352,
+        "readyAt": 1792523676.9857352,
+        "runtimeId": "showcase-supervised-tool-loop-local",
+        "runtimeSeconds": 0.12422394752502441,
+        "startedAt": 1792523677.3387399,
+        "status": "completed",
+        "transferBytes": 970,
+        "transferSeconds": 0.1676931381225586
+      },
+      {
+        "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+        "allocatedResourceId": "showcase-supervised-tool-loop-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "finishedAt": 1792523679.4696825,
+        "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.18757081031799316,
+          "preparationFinishedAt": 1792523679.1632564,
+          "preparationStartedAt": 1792523678.9943857,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0012731552124023438,
+          "runtimeId": "showcase-supervised-tool-loop-local",
+          "transferElapsedSeconds": 0.1688706874847412,
+          "transferWorkSeconds": 0.1688706874847412
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-supervised-tool-loop-local-1fb7664e1c-manual-plan-20261020t191433.215428000-showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+        "plannedResourceId": "showcase-supervised-tool-loop-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523678.990556,
+        "readyAt": 1792523678.990556,
+        "runtimeId": "showcase-supervised-tool-loop-local",
+        "runtimeSeconds": 0.11885523796081543,
+        "startedAt": 1792523679.3508272,
+        "status": "completed",
+        "transferBytes": 1546,
+        "transferSeconds": 0.1688706874847412
+      },
+      {
+        "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+        "allocatedResourceId": "showcase-supervised-tool-loop-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "finishedAt": 1792523681.4728847,
+        "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1756880283355713,
+          "preparationFinishedAt": 1792523681.160828,
+          "preparationStartedAt": 1792523680.973474,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0024847984313964844,
+          "runtimeId": "showcase-supervised-tool-loop-local",
+          "transferElapsedSeconds": 0.18735408782958984,
+          "transferWorkSeconds": 0.18735408782958984
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-supervised-tool-loop-local-1fb7664e1c-manual-plan-20261020t191433.215428000-showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+        "plannedResourceId": "showcase-supervised-tool-loop-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523680.968426,
+        "readyAt": 1792523680.968426,
+        "runtimeId": "showcase-supervised-tool-loop-local",
+        "runtimeSeconds": 0.1363685131072998,
+        "startedAt": 1792523681.3365161,
+        "status": "completed",
+        "transferBytes": 2438,
+        "transferSeconds": 0.18735408782958984
+      },
+      {
+        "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+        "allocatedResourceId": "showcase-supervised-tool-loop-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "finishedAt": 1792523683.4125392,
+        "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14514946937561035,
+          "preparationFinishedAt": 1792523683.13449,
+          "preparationStartedAt": 1792523682.9695256,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.001581430435180664,
+          "runtimeId": "showcase-supervised-tool-loop-local",
+          "transferElapsedSeconds": 0.1649644374847412,
+          "transferWorkSeconds": 0.1649644374847412
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-supervised-tool-loop-local-1fb7664e1c-manual-plan-20261020t191433.215428000-showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+        "plannedResourceId": "showcase-supervised-tool-loop-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523682.9582324,
+        "readyAt": 1792523682.9582324,
+        "runtimeId": "showcase-supervised-tool-loop-local",
+        "runtimeSeconds": 0.13289976119995117,
+        "startedAt": 1792523683.2796395,
+        "status": "completed",
+        "transferBytes": 3541,
+        "transferSeconds": 0.1649644374847412
+      }
+    ],
+    "activityAttempts": [
+      {
+        "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-build-context",
+        "allocatedResourceId": "showcase-supervised-tool-loop-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "finishedAt": 1792523673.9231668,
+        "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-build-context",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "pricePerSecond": 0,
+          "runtimeId": "showcase-supervised-tool-loop-local"
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-supervised-tool-loop-local-1fb7664e1c-manual-plan-20261020t191433.215428000-showcase-supervised-tool-loop-local-1fb7664e1c-build-context",
+        "plannedResourceId": "showcase-supervised-tool-loop-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523673.6512988,
+        "readyAt": 1792523673.6512988,
+        "runtimeId": "showcase-supervised-tool-loop-local",
+        "runtimeSeconds": 0.1167757511138916,
+        "startedAt": 1792523673.806391,
+        "status": "completed",
+        "transferBytes": 0,
+        "transferSeconds": 0
+      },
+      {
+        "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+        "allocatedResourceId": "showcase-supervised-tool-loop-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "finishedAt": 1792523675.3438475,
+        "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14357566833496094,
+          "preparationFinishedAt": 1792523675.0870838,
+          "preparationStartedAt": 1792523674.9204013,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0015714168548583984,
+          "runtimeId": "showcase-supervised-tool-loop-local",
+          "transferElapsedSeconds": 0.16668248176574707,
+          "transferWorkSeconds": 0.16668248176574707
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-supervised-tool-loop-local-1fb7664e1c-manual-plan-20261020t191433.215428000-showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+        "plannedResourceId": "showcase-supervised-tool-loop-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523674.9172566,
+        "readyAt": 1792523674.9172566,
+        "runtimeId": "showcase-supervised-tool-loop-local",
+        "runtimeSeconds": 0.11318802833557129,
+        "startedAt": 1792523675.2306595,
+        "status": "completed",
+        "transferBytes": 457,
+        "transferSeconds": 0.16668248176574707
+      },
+      {
+        "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+        "allocatedResourceId": "showcase-supervised-tool-loop-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "finishedAt": 1792523677.4629638,
+        "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1816861629486084,
+          "preparationFinishedAt": 1792523677.1570537,
+          "preparationStartedAt": 1792523676.9893606,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0013840198516845703,
+          "runtimeId": "showcase-supervised-tool-loop-local",
+          "transferElapsedSeconds": 0.1676931381225586,
+          "transferWorkSeconds": 0.1676931381225586
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-supervised-tool-loop-local-1fb7664e1c-manual-plan-20261020t191433.215428000-showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+        "plannedResourceId": "showcase-supervised-tool-loop-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523676.9857352,
+        "readyAt": 1792523676.9857352,
+        "runtimeId": "showcase-supervised-tool-loop-local",
+        "runtimeSeconds": 0.12422394752502441,
+        "startedAt": 1792523677.3387399,
+        "status": "completed",
+        "transferBytes": 970,
+        "transferSeconds": 0.1676931381225586
+      },
+      {
+        "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+        "allocatedResourceId": "showcase-supervised-tool-loop-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "finishedAt": 1792523679.4696825,
+        "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.18757081031799316,
+          "preparationFinishedAt": 1792523679.1632564,
+          "preparationStartedAt": 1792523678.9943857,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0012731552124023438,
+          "runtimeId": "showcase-supervised-tool-loop-local",
+          "transferElapsedSeconds": 0.1688706874847412,
+          "transferWorkSeconds": 0.1688706874847412
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-supervised-tool-loop-local-1fb7664e1c-manual-plan-20261020t191433.215428000-showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+        "plannedResourceId": "showcase-supervised-tool-loop-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523678.990556,
+        "readyAt": 1792523678.990556,
+        "runtimeId": "showcase-supervised-tool-loop-local",
+        "runtimeSeconds": 0.11885523796081543,
+        "startedAt": 1792523679.3508272,
+        "status": "completed",
+        "transferBytes": 1546,
+        "transferSeconds": 0.1688706874847412
+      },
+      {
+        "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+        "allocatedResourceId": "showcase-supervised-tool-loop-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "finishedAt": 1792523681.4728847,
+        "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.1756880283355713,
+          "preparationFinishedAt": 1792523681.160828,
+          "preparationStartedAt": 1792523680.973474,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.0024847984313964844,
+          "runtimeId": "showcase-supervised-tool-loop-local",
+          "transferElapsedSeconds": 0.18735408782958984,
+          "transferWorkSeconds": 0.18735408782958984
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-supervised-tool-loop-local-1fb7664e1c-manual-plan-20261020t191433.215428000-showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+        "plannedResourceId": "showcase-supervised-tool-loop-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523680.968426,
+        "readyAt": 1792523680.968426,
+        "runtimeId": "showcase-supervised-tool-loop-local",
+        "runtimeSeconds": 0.1363685131072998,
+        "startedAt": 1792523681.3365161,
+        "status": "completed",
+        "transferBytes": 2438,
+        "transferSeconds": 0.18735408782958984
+      },
+      {
+        "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+        "allocatedResourceId": "showcase-supervised-tool-loop-local-docker",
+        "attempt": 1,
+        "cost": 0,
+        "dataReadyAt": 0,
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "finishedAt": 1792523683.4125392,
+        "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+        "interferenceSeconds": 0,
+        "metadata": {
+          "launchWaitSeconds": 0.14514946937561035,
+          "preparationFinishedAt": 1792523683.13449,
+          "preparationStartedAt": 1792523682.9695256,
+          "pricePerSecond": 0,
+          "readyWaitSeconds": 0.001581430435180664,
+          "runtimeId": "showcase-supervised-tool-loop-local",
+          "transferElapsedSeconds": 0.1649644374847412,
+          "transferWorkSeconds": 0.1649644374847412
+        },
+        "overheadSeconds": 0,
+        "planAssignmentId": "showcase-supervised-tool-loop-local-1fb7664e1c-manual-plan-20261020t191433.215428000-showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+        "plannedResourceId": "showcase-supervised-tool-loop-local-docker",
+        "queueSeconds": 0,
+        "queuedAt": 1792523682.9582324,
+        "readyAt": 1792523682.9582324,
+        "runtimeId": "showcase-supervised-tool-loop-local",
+        "runtimeSeconds": 0.13289976119995117,
+        "startedAt": 1792523683.2796395,
+        "status": "completed",
+        "transferBytes": 3541,
+        "transferSeconds": 0.1649644374847412
+      }
+    ],
+    "artifactMaterializations": null,
+    "artifactTransferRuns": [
+      {
+        "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+        "durationSeconds": 0.18735408782958984,
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "filesTransferred": 4,
+        "finishedAt": 1792523681.160828,
+        "id": "transfer-workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool-0",
+        "logicalBytes": 2438,
+        "planId": "transfer-workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool-0",
+        "route": {
+          "consumerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+          "filesTransferred": 4,
+          "producerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09464033399999999,
+          "sourceEnvironmentId": "showcase-supervised-tool-loop-v1",
+          "sourceResourceId": "showcase-supervised-tool-loop-local-docker",
+          "sshChannelWaitSeconds": 4.17e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-supervised-tool-loop-v1",
+          "targetResourceId": "showcase-supervised-tool-loop-local-docker"
+        },
+        "startedAt": 1792523680.973474,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 2438
+      },
+      {
+        "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+        "durationSeconds": 0.1688706874847412,
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "filesTransferred": 3,
+        "finishedAt": 1792523679.1632564,
+        "id": "transfer-workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-human-approval-0",
+        "logicalBytes": 1546,
+        "planId": "transfer-workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-human-approval-0",
+        "route": {
+          "consumerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+          "filesTransferred": 3,
+          "producerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09656375,
+          "sourceEnvironmentId": "showcase-supervised-tool-loop-v1",
+          "sourceResourceId": "showcase-supervised-tool-loop-local-docker",
+          "sshChannelWaitSeconds": 4.5899999999999997e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-supervised-tool-loop-v1",
+          "targetResourceId": "showcase-supervised-tool-loop-local-docker"
+        },
+        "startedAt": 1792523678.9943857,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 1546
+      },
+      {
+        "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+        "durationSeconds": 0.1676931381225586,
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "filesTransferred": 2,
+        "finishedAt": 1792523677.1570537,
+        "id": "transfer-workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-policy-check-0",
+        "logicalBytes": 970,
+        "planId": "transfer-workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-policy-check-0",
+        "route": {
+          "consumerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.072992834,
+          "sourceEnvironmentId": "showcase-supervised-tool-loop-v1",
+          "sourceResourceId": "showcase-supervised-tool-loop-local-docker",
+          "sshChannelWaitSeconds": 4.17e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-supervised-tool-loop-v1",
+          "targetResourceId": "showcase-supervised-tool-loop-local-docker"
+        },
+        "startedAt": 1792523676.9893606,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 970
+      },
+      {
+        "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+        "durationSeconds": 0.16668248176574707,
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "filesTransferred": 1,
+        "finishedAt": 1792523675.0870838,
+        "id": "transfer-workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-propose-action-0",
+        "logicalBytes": 457,
+        "planId": "transfer-workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-propose-action-0",
+        "route": {
+          "consumerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-build-context",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.073708334,
+          "sourceEnvironmentId": "showcase-supervised-tool-loop-v1",
+          "sourceResourceId": "showcase-supervised-tool-loop-local-docker",
+          "sshChannelWaitSeconds": 2.91e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-supervised-tool-loop-v1",
+          "targetResourceId": "showcase-supervised-tool-loop-local-docker"
+        },
+        "startedAt": 1792523674.9204013,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 457
+      },
+      {
+        "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+        "durationSeconds": 0.1649644374847412,
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "filesTransferred": 7,
+        "finishedAt": 1792523683.13449,
+        "id": "transfer-workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-verify-0",
+        "logicalBytes": 3541,
+        "planId": "transfer-workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-verify-0",
+        "route": {
+          "consumerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+          "filesTransferred": 7,
+          "producerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09011683300000001,
+          "sourceEnvironmentId": "showcase-supervised-tool-loop-v1",
+          "sourceResourceId": "showcase-supervised-tool-loop-local-docker",
+          "sshChannelWaitSeconds": 2.51e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-supervised-tool-loop-v1",
+          "targetResourceId": "showcase-supervised-tool-loop-local-docker"
+        },
+        "startedAt": 1792523682.9695256,
+        "status": "completed",
+        "strategy": "gateway",
+        "transferredBytes": 3541
+      }
+    ],
+    "cloudBilling": {
+      "asOf": "2026-10-20T19:14:45.540058463Z",
+      "costBasis": "VM compute and boot-disk lifecycle at on-demand marginal rates; not a provider invoice",
+      "estimatedCost": 0,
+      "excludedCosts": [
+        "network-egress",
+        "public-ipv4",
+        "image-storage",
+        "discounts-and-tax"
+      ],
+      "instances": [],
+      "knownCost": 0,
+      "status": "estimated"
+    },
+    "dataLocations": [
+      {
+        "dataObjectInstanceId": "b8f2ba29921d9451c7ae42c2fffb870d",
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "id": "227ca6301d9cb9e94b858a096dcd7c5f",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-supervised-tool-loop-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "a764dadb29b0c1a91e9d6dfbde3693dc",
+        "uri": "file:///akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-build-context/stage-build-context.json"
+      },
+      {
+        "dataObjectInstanceId": "155df4aa7e4a28e8c8f12047c5261fbe",
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "id": "19497d420cd6a8250ba5bd5513e45470",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-supervised-tool-loop-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "a764dadb29b0c1a91e9d6dfbde3693dc",
+        "uri": "file:///akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool/execution.json"
+      },
+      {
+        "dataObjectInstanceId": "1d74ce02469bcaa2a4587ba79922a182",
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "id": "181a330a2f5e1f30ac1abb8f90948b7a",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-supervised-tool-loop-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "a764dadb29b0c1a91e9d6dfbde3693dc",
+        "uri": "file:///akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool/stage-execute-tool.json"
+      },
+      {
+        "dataObjectInstanceId": "f09ba99a999c11592cb85f30252e364d",
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "id": "8a26e021164123111afafb91a6a1b7dc",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-supervised-tool-loop-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "a764dadb29b0c1a91e9d6dfbde3693dc",
+        "uri": "file:///akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool/tool-result.json"
+      },
+      {
+        "dataObjectInstanceId": "155eaef4b998cca12c423d448a8729eb",
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "id": "b41eb80ff645e4240792dd71ba0f811b",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-supervised-tool-loop-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "a764dadb29b0c1a91e9d6dfbde3693dc",
+        "uri": "file:///akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-human-approval/stage-human-approval.json"
+      },
+      {
+        "dataObjectInstanceId": "9095361003f052c78c7f40e2eb077d34",
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "id": "630e40a75661e4154ca09915466f06f4",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-supervised-tool-loop-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "a764dadb29b0c1a91e9d6dfbde3693dc",
+        "uri": "file:///akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-policy-check/stage-policy-check.json"
+      },
+      {
+        "dataObjectInstanceId": "f65cbaa81af6becbe06ac357a5766989",
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "id": "db1f04ae665c8a9613a606f6179ac5b6",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-supervised-tool-loop-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "a764dadb29b0c1a91e9d6dfbde3693dc",
+        "uri": "file:///akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-propose-action/stage-propose-action.json"
+      },
+      {
+        "dataObjectInstanceId": "5d88f0511bb03938e1b16bb598ef4011",
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "id": "f29881f6524564b770dca110d0b30285",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-supervised-tool-loop-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "a764dadb29b0c1a91e9d6dfbde3693dc",
+        "uri": "file:///akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-verify/stage-verify.json"
+      },
+      {
+        "dataObjectInstanceId": "91ed657056ac18e6129fb4aa65f28bcb",
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "id": "4f37f73929bf61cd231a57b11b20cc82",
+        "metadata": {
+          "lifetime": "pod"
+        },
+        "resourceId": "showcase-supervised-tool-loop-local-docker",
+        "status": "ephemeral",
+        "storageResourceId": "a764dadb29b0c1a91e9d6dfbde3693dc",
+        "uri": "file:///akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-verify/verification.json"
+      }
+    ],
+    "dataObjects": [
+      {
+        "attempt": 1,
+        "checksum": "sha256:0daf3c67421d1acd2a94217a3526ca4b3521c073fbc87b52b503aeb5fa7d5246",
+        "dataObjectId": "fb70e602f01a87bf07f4b15197aa9f85",
+        "discovered": true,
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "id": "b8f2ba29921d9451c7ae42c2fffb870d",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-build-context",
+        "relativePath": "stage-build-context.json",
+        "sizeBytes": 457
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:7b649ab634b2c229193c3fb16a098bca9727938b8f51e822ce3582c005e08f8a",
+        "dataObjectId": "2bd1f7ae924c5137c076726753dc0077",
+        "discovered": true,
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "id": "155df4aa7e4a28e8c8f12047c5261fbe",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+        "relativePath": "execution.json",
+        "sizeBytes": 341
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:e055c3c86f9bbeb9ab7770c224f1eabb1fb044f4257e11ba79336e84bb384d1c",
+        "dataObjectId": "fd594182d6c05643b6e8d735c292f41e",
+        "discovered": true,
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "id": "1d74ce02469bcaa2a4587ba79922a182",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+        "relativePath": "stage-execute-tool.json",
+        "sizeBytes": 719
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:8bf517f4dd33e4b0281c76e673745576375dfb25386a2536cf38f4aac8ff775e",
+        "dataObjectId": "2200c805bee42f4e673f7506882a4182",
+        "discovered": true,
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "id": "f09ba99a999c11592cb85f30252e364d",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+        "relativePath": "tool-result.json",
+        "sizeBytes": 43
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:0fb66f3ff5cdf920f22d6427fce89487cbf6a60ec196b9d28da8c8ec206dc91c",
+        "dataObjectId": "c2733b92463568fc57d6ec50a0a84ba9",
+        "discovered": true,
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "id": "155eaef4b998cca12c423d448a8729eb",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+        "relativePath": "stage-human-approval.json",
+        "sizeBytes": 892
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:2ab1d841ada20eda4185f3c75143b560b59d52206e849924dd17f3e85aeedb0a",
+        "dataObjectId": "885f34bf15b4bc8102a516e1cb952e78",
+        "discovered": true,
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "id": "9095361003f052c78c7f40e2eb077d34",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+        "relativePath": "stage-policy-check.json",
+        "sizeBytes": 576
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:371927e06b5fc5cb2b9251b28349c7af02c138a3d0160192231e1c7267c2cc19",
+        "dataObjectId": "5ff1ef5b0dd1cd3e9e88fceb90076809",
+        "discovered": true,
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "id": "f65cbaa81af6becbe06ac357a5766989",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+        "relativePath": "stage-propose-action.json",
+        "sizeBytes": 513
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:616804f1fa190b8845a1053b3040fd0402375b809dfe8a19a6847844d5f99af5",
+        "dataObjectId": "d83ea8f5e7411372aaa07ef736416e81",
+        "discovered": true,
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "id": "5d88f0511bb03938e1b16bb598ef4011",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+        "relativePath": "stage-verify.json",
+        "sizeBytes": 516
+      },
+      {
+        "attempt": 1,
+        "checksum": "sha256:304b211656e6f25a7b78ab58bfe35a4c69f86fc10174cf5f28f36e5c03940c99",
+        "dataObjectId": "bf731f4a4f54cd3197f84acbf0ed78b8",
+        "discovered": true,
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "id": "91ed657056ac18e6129fb4aa65f28bcb",
+        "metadata": {
+          "change": "created"
+        },
+        "producerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+        "relativePath": "verification.json",
+        "sizeBytes": 150
+      }
+    ],
+    "dataTransfers": [
+      {
+        "bytes": 457,
+        "consumerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+        "cost": 0,
+        "durationSeconds": 0.16668248176574707,
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "finishedAt": 1792523675.0870838,
+        "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-propose-action:transfer-workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-propose-action-0",
+        "logicalBytes": 457,
+        "producerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-build-context",
+        "route": {
+          "consumerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+          "filesTransferred": 1,
+          "producerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-build-context",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.073708334,
+          "sourceEnvironmentId": "showcase-supervised-tool-loop-v1",
+          "sourceResourceId": "showcase-supervised-tool-loop-local-docker",
+          "sshChannelWaitSeconds": 2.91e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-supervised-tool-loop-v1",
+          "targetResourceId": "showcase-supervised-tool-loop-local-docker"
+        },
+        "sourceResourceId": "showcase-supervised-tool-loop-local-docker",
+        "startedAt": 1792523674.9204013,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-supervised-tool-loop-local-docker"
+      },
+      {
+        "bytes": 970,
+        "consumerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+        "cost": 0,
+        "durationSeconds": 0.1676931381225586,
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "finishedAt": 1792523677.1570537,
+        "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-policy-check:transfer-workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-policy-check-0",
+        "logicalBytes": 970,
+        "producerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+        "route": {
+          "consumerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+          "filesTransferred": 2,
+          "producerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.072992834,
+          "sourceEnvironmentId": "showcase-supervised-tool-loop-v1",
+          "sourceResourceId": "showcase-supervised-tool-loop-local-docker",
+          "sshChannelWaitSeconds": 4.17e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-supervised-tool-loop-v1",
+          "targetResourceId": "showcase-supervised-tool-loop-local-docker"
+        },
+        "sourceResourceId": "showcase-supervised-tool-loop-local-docker",
+        "startedAt": 1792523676.9893606,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-supervised-tool-loop-local-docker"
+      },
+      {
+        "bytes": 1546,
+        "consumerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+        "cost": 0,
+        "durationSeconds": 0.1688706874847412,
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "finishedAt": 1792523679.1632564,
+        "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-human-approval:transfer-workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-human-approval-0",
+        "logicalBytes": 1546,
+        "producerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+        "route": {
+          "consumerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+          "filesTransferred": 3,
+          "producerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09656375,
+          "sourceEnvironmentId": "showcase-supervised-tool-loop-v1",
+          "sourceResourceId": "showcase-supervised-tool-loop-local-docker",
+          "sshChannelWaitSeconds": 4.5899999999999997e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-supervised-tool-loop-v1",
+          "targetResourceId": "showcase-supervised-tool-loop-local-docker"
+        },
+        "sourceResourceId": "showcase-supervised-tool-loop-local-docker",
+        "startedAt": 1792523678.9943857,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-supervised-tool-loop-local-docker"
+      },
+      {
+        "bytes": 2438,
+        "consumerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+        "cost": 0,
+        "durationSeconds": 0.18735408782958984,
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "finishedAt": 1792523681.160828,
+        "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool:transfer-workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool-0",
+        "logicalBytes": 2438,
+        "producerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+        "route": {
+          "consumerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+          "filesTransferred": 4,
+          "producerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09464033399999999,
+          "sourceEnvironmentId": "showcase-supervised-tool-loop-v1",
+          "sourceResourceId": "showcase-supervised-tool-loop-local-docker",
+          "sshChannelWaitSeconds": 4.17e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-supervised-tool-loop-v1",
+          "targetResourceId": "showcase-supervised-tool-loop-local-docker"
+        },
+        "sourceResourceId": "showcase-supervised-tool-loop-local-docker",
+        "startedAt": 1792523680.973474,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-supervised-tool-loop-local-docker"
+      },
+      {
+        "bytes": 3541,
+        "consumerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+        "cost": 0,
+        "durationSeconds": 0.1649644374847412,
+        "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "finishedAt": 1792523683.13449,
+        "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-verify:transfer-workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-verify-0",
+        "logicalBytes": 3541,
+        "producerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+        "route": {
+          "consumerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+          "filesTransferred": 7,
+          "producerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+          "reason": "incremental rsync of predecessor workspace through verified staging",
+          "rsyncExecutionSeconds": 0.09011683300000001,
+          "sourceEnvironmentId": "showcase-supervised-tool-loop-v1",
+          "sourceResourceId": "showcase-supervised-tool-loop-local-docker",
+          "sshChannelWaitSeconds": 2.51e-7,
+          "strategy": "gateway",
+          "targetEnvironmentId": "showcase-supervised-tool-loop-v1",
+          "targetResourceId": "showcase-supervised-tool-loop-local-docker"
+        },
+        "sourceResourceId": "showcase-supervised-tool-loop-local-docker",
+        "startedAt": 1792523682.9695256,
+        "strategy": "gateway",
+        "targetResourceId": "showcase-supervised-tool-loop-local-docker"
+      }
+    ],
+    "events": [
+      {
+        "aggregateId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.started",
+        "id": "0a129b9e096d554ee0115cc50ccef1af",
+        "occurredAt": "2026-10-20T19:14:33.616589514Z",
+        "payload": {
+          "mode": "real",
+          "schedulePlanId": "showcase-supervised-tool-loop-local-1fb7664e1c-manual-plan-20261020t191433.215428000"
+        }
+      },
+      {
+        "aggregateId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-build-context",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "6f55a02d0c3b020c51e88f79fe514afc",
+        "occurredAt": "2026-10-20T19:14:34.834899833Z",
+        "payload": {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-build-context",
+          "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-build-context",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "d3e7cd2c68b5a27896fa141e10932ffb",
+        "occurredAt": "2026-10-20T19:14:34.915715792Z",
+        "payload": {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-build-context",
+          "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+          "failureReason": "",
+          "runtimeSeconds": 0.1167757511138916,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "28f512069497edfce741081b4bcc9975",
+        "occurredAt": "2026-10-20T19:14:36.829515626Z",
+        "payload": {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+          "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "9c0e638b0eb74fcdc8023cddd086bc49",
+        "occurredAt": "2026-10-20T19:14:36.983614418Z",
+        "payload": {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+          "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11318802833557129,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "1dec66c6ae34f049f48846ae19da8aee",
+        "occurredAt": "2026-10-20T19:14:38.833730835Z",
+        "payload": {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+          "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "f9c4aad315b24b1604e1d0467663111e",
+        "occurredAt": "2026-10-20T19:14:38.988360627Z",
+        "payload": {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+          "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+          "failureReason": "",
+          "runtimeSeconds": 0.12422394752502441,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "b80b4b6b013dd2dd995645ffcb1093ca",
+        "occurredAt": "2026-10-20T19:14:40.848930919Z",
+        "payload": {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+          "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "e1a7caed7f383f582fea5060b3fb605b",
+        "occurredAt": "2026-10-20T19:14:40.966144961Z",
+        "payload": {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+          "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+          "failureReason": "",
+          "runtimeSeconds": 0.11885523796081543,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "2ad99b70cd82d17c4233773d746bd6df",
+        "occurredAt": "2026-10-20T19:14:42.843893087Z",
+        "payload": {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+          "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "fa12e8a31801e5c9a6b5ab3f821417cb",
+        "occurredAt": "2026-10-20T19:14:42.955394129Z",
+        "payload": {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+          "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+          "failureReason": "",
+          "runtimeSeconds": 0.1363685131072998,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.started",
+        "id": "22c49770e0c180bc6174636787c35aac",
+        "occurredAt": "2026-10-20T19:14:44.859388838Z",
+        "payload": {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+          "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+          "failureReason": "",
+          "runtimeSeconds": 0,
+          "status": "running"
+        }
+      },
+      {
+        "aggregateId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+        "aggregateType": "activity_execution",
+        "eventType": "activity.completed",
+        "id": "530a5f94bf46d25ded6dae0c4efb2529",
+        "occurredAt": "2026-10-20T19:14:44.937646338Z",
+        "payload": {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+          "executionRunId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+          "failureReason": "",
+          "runtimeSeconds": 0.13289976119995117,
+          "status": "completed"
+        }
+      },
+      {
+        "aggregateId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "aggregateType": "execution_run",
+        "eventType": "execution.run.completed",
+        "id": "0d2bdfa9bb612b638881b13503cbfcc1",
+        "occurredAt": "2026-10-20T19:14:44.941332213Z",
+        "payload": {
+          "cost": 0,
+          "makespanSeconds": 9.60614824295044
+        }
+      }
+    ],
+    "handles": [
+      {
+        "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-build-context",
+        "artifacts": {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-build-context",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:0daf3c67421d1acd2a94217a3526ca4b3521c073fbc87b52b503aeb5fa7d5246",
+              "modifiedUnixNano": 1792523673916521000,
+              "path": "stage-build-context.json",
+              "sizeBytes": 457
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:0daf3c67421d1acd2a94217a3526ca4b3521c073fbc87b52b503aeb5fa7d5246",
+              "modifiedUnixNano": 1792523673916521000,
+              "path": "stage-build-context.json",
+              "sizeBytes": 457
+            }
+          ],
+          "finishedAt": 1792523673.9231668,
+          "phases": [
+            {
+              "durationSeconds": 0.1167757511138916,
+              "finishedAt": 1792523673.9231668,
+              "phase": "execution",
+              "startedAt": 1792523673.806391,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-build-context",
+          "runId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+          "runtime": "showcase-supervised-tool-loop-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523673.806391,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 1,
+            "initialFiles": 0,
+            "modifiedFiles": 0,
+            "outputBytes": 457
+          }
+        },
+        "exitCode": 0,
+        "externalId": "e3c4359f09ca0279446dc645dbe06120935745ce128f89b8f10d8d3c5a23a285",
+        "finishedAt": 1792523673.9231668,
+        "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-build-context",
+        "log": "{\"activity\": \"build-context\", \"status\": \"success\", \"resultKeys\": [\"values\", \"allowedAction\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-supervised-tool-loop-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-build-context",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523673.8063967,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-build-context",
+          "submittedAt": 1792523673.806391
+        },
+        "resourceId": "showcase-supervised-tool-loop-local-docker",
+        "runId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "runtimeId": "showcase-supervised-tool-loop-local",
+        "startedAt": 1792523673.806391,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+        "artifacts": {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:7b649ab634b2c229193c3fb16a098bca9727938b8f51e822ce3582c005e08f8a",
+              "modifiedUnixNano": 1792523681466553000,
+              "path": "execution.json",
+              "sizeBytes": 341
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:e055c3c86f9bbeb9ab7770c224f1eabb1fb044f4257e11ba79336e84bb384d1c",
+              "modifiedUnixNano": 1792523681466553000,
+              "path": "stage-execute-tool.json",
+              "sizeBytes": 719
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:8bf517f4dd33e4b0281c76e673745576375dfb25386a2536cf38f4aac8ff775e",
+              "modifiedUnixNano": 1792523681466553000,
+              "path": "tool-result.json",
+              "sizeBytes": 43
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:7b649ab634b2c229193c3fb16a098bca9727938b8f51e822ce3582c005e08f8a",
+              "modifiedUnixNano": 1792523681466553000,
+              "path": "execution.json",
+              "sizeBytes": 341
+            },
+            {
+              "checksum": "sha256:0daf3c67421d1acd2a94217a3526ca4b3521c073fbc87b52b503aeb5fa7d5246",
+              "modifiedUnixNano": 1792523681114553000,
+              "path": "stage-build-context.json",
+              "sizeBytes": 457
+            },
+            {
+              "checksum": "sha256:e055c3c86f9bbeb9ab7770c224f1eabb1fb044f4257e11ba79336e84bb384d1c",
+              "modifiedUnixNano": 1792523681466553000,
+              "path": "stage-execute-tool.json",
+              "sizeBytes": 719
+            },
+            {
+              "checksum": "sha256:0fb66f3ff5cdf920f22d6427fce89487cbf6a60ec196b9d28da8c8ec206dc91c",
+              "modifiedUnixNano": 1792523681114553000,
+              "path": "stage-human-approval.json",
+              "sizeBytes": 892
+            },
+            {
+              "checksum": "sha256:2ab1d841ada20eda4185f3c75143b560b59d52206e849924dd17f3e85aeedb0a",
+              "modifiedUnixNano": 1792523681114553000,
+              "path": "stage-policy-check.json",
+              "sizeBytes": 576
+            },
+            {
+              "checksum": "sha256:371927e06b5fc5cb2b9251b28349c7af02c138a3d0160192231e1c7267c2cc19",
+              "modifiedUnixNano": 1792523681114553000,
+              "path": "stage-propose-action.json",
+              "sizeBytes": 513
+            },
+            {
+              "checksum": "sha256:8bf517f4dd33e4b0281c76e673745576375dfb25386a2536cf38f4aac8ff775e",
+              "modifiedUnixNano": 1792523681466553000,
+              "path": "tool-result.json",
+              "sizeBytes": 43
+            }
+          ],
+          "finishedAt": 1792523681.4728847,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:0daf3c67421d1acd2a94217a3526ca4b3521c073fbc87b52b503aeb5fa7d5246",
+              "modifiedUnixNano": 1792523681114553000,
+              "path": "stage-build-context.json",
+              "sizeBytes": 457
+            },
+            {
+              "checksum": "sha256:0fb66f3ff5cdf920f22d6427fce89487cbf6a60ec196b9d28da8c8ec206dc91c",
+              "modifiedUnixNano": 1792523681114553000,
+              "path": "stage-human-approval.json",
+              "sizeBytes": 892
+            },
+            {
+              "checksum": "sha256:2ab1d841ada20eda4185f3c75143b560b59d52206e849924dd17f3e85aeedb0a",
+              "modifiedUnixNano": 1792523681114553000,
+              "path": "stage-policy-check.json",
+              "sizeBytes": 576
+            },
+            {
+              "checksum": "sha256:371927e06b5fc5cb2b9251b28349c7af02c138a3d0160192231e1c7267c2cc19",
+              "modifiedUnixNano": 1792523681114553000,
+              "path": "stage-propose-action.json",
+              "sizeBytes": 513
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.1363685131072998,
+              "finishedAt": 1792523681.4728847,
+              "phase": "execution",
+              "startedAt": 1792523681.3365161,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+          "runId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+          "runtime": "showcase-supervised-tool-loop-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523681.3365161,
+          "summary": {
+            "createdFiles": 3,
+            "deletedFiles": 0,
+            "finalFiles": 7,
+            "initialFiles": 4,
+            "modifiedFiles": 0,
+            "outputBytes": 1103
+          }
+        },
+        "exitCode": 0,
+        "externalId": "df68ac59badd511df6f9b2e7b294415624a0673d4298d2586f4b2b3651c2e67f",
+        "finishedAt": 1792523681.4728847,
+        "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+        "log": "{\"activity\": \"execute-tool\", \"status\": \"success\", \"resultKeys\": [\"action\", \"approval\", \"output\", \"sha256\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-supervised-tool-loop-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523681.336521,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+          "submittedAt": 1792523681.3365161
+        },
+        "resourceId": "showcase-supervised-tool-loop-local-docker",
+        "runId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "runtimeId": "showcase-supervised-tool-loop-local",
+        "startedAt": 1792523681.3365161,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+        "artifacts": {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:0fb66f3ff5cdf920f22d6427fce89487cbf6a60ec196b9d28da8c8ec206dc91c",
+              "modifiedUnixNano": 1792523679463553000,
+              "path": "stage-human-approval.json",
+              "sizeBytes": 892
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:0daf3c67421d1acd2a94217a3526ca4b3521c073fbc87b52b503aeb5fa7d5246",
+              "modifiedUnixNano": 1792523679118553000,
+              "path": "stage-build-context.json",
+              "sizeBytes": 457
+            },
+            {
+              "checksum": "sha256:0fb66f3ff5cdf920f22d6427fce89487cbf6a60ec196b9d28da8c8ec206dc91c",
+              "modifiedUnixNano": 1792523679463553000,
+              "path": "stage-human-approval.json",
+              "sizeBytes": 892
+            },
+            {
+              "checksum": "sha256:2ab1d841ada20eda4185f3c75143b560b59d52206e849924dd17f3e85aeedb0a",
+              "modifiedUnixNano": 1792523679118553000,
+              "path": "stage-policy-check.json",
+              "sizeBytes": 576
+            },
+            {
+              "checksum": "sha256:371927e06b5fc5cb2b9251b28349c7af02c138a3d0160192231e1c7267c2cc19",
+              "modifiedUnixNano": 1792523679118553000,
+              "path": "stage-propose-action.json",
+              "sizeBytes": 513
+            }
+          ],
+          "finishedAt": 1792523679.4696825,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:0daf3c67421d1acd2a94217a3526ca4b3521c073fbc87b52b503aeb5fa7d5246",
+              "modifiedUnixNano": 1792523679118553000,
+              "path": "stage-build-context.json",
+              "sizeBytes": 457
+            },
+            {
+              "checksum": "sha256:2ab1d841ada20eda4185f3c75143b560b59d52206e849924dd17f3e85aeedb0a",
+              "modifiedUnixNano": 1792523679118553000,
+              "path": "stage-policy-check.json",
+              "sizeBytes": 576
+            },
+            {
+              "checksum": "sha256:371927e06b5fc5cb2b9251b28349c7af02c138a3d0160192231e1c7267c2cc19",
+              "modifiedUnixNano": 1792523679118553000,
+              "path": "stage-propose-action.json",
+              "sizeBytes": 513
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11885523796081543,
+              "finishedAt": 1792523679.4696825,
+              "phase": "execution",
+              "startedAt": 1792523679.3508272,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+          "runId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+          "runtime": "showcase-supervised-tool-loop-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523679.3508272,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 4,
+            "initialFiles": 3,
+            "modifiedFiles": 0,
+            "outputBytes": 892
+          }
+        },
+        "exitCode": 0,
+        "externalId": "644398b8022ba20a7424916faf9b20d53ff202de7a672199937d1e76e02dff04",
+        "finishedAt": 1792523679.4696825,
+        "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+        "log": "{\"activity\": \"human-approval\", \"status\": \"success\", \"resultKeys\": [\"proposal\", \"policyPassed\", \"approval\", \"note\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-supervised-tool-loop-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523679.350832,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+          "submittedAt": 1792523679.3508272
+        },
+        "resourceId": "showcase-supervised-tool-loop-local-docker",
+        "runId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "runtimeId": "showcase-supervised-tool-loop-local",
+        "startedAt": 1792523679.3508272,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+        "artifacts": {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:2ab1d841ada20eda4185f3c75143b560b59d52206e849924dd17f3e85aeedb0a",
+              "modifiedUnixNano": 1792523677457553000,
+              "path": "stage-policy-check.json",
+              "sizeBytes": 576
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:0daf3c67421d1acd2a94217a3526ca4b3521c073fbc87b52b503aeb5fa7d5246",
+              "modifiedUnixNano": 1792523677111553000,
+              "path": "stage-build-context.json",
+              "sizeBytes": 457
+            },
+            {
+              "checksum": "sha256:2ab1d841ada20eda4185f3c75143b560b59d52206e849924dd17f3e85aeedb0a",
+              "modifiedUnixNano": 1792523677457553000,
+              "path": "stage-policy-check.json",
+              "sizeBytes": 576
+            },
+            {
+              "checksum": "sha256:371927e06b5fc5cb2b9251b28349c7af02c138a3d0160192231e1c7267c2cc19",
+              "modifiedUnixNano": 1792523677111553000,
+              "path": "stage-propose-action.json",
+              "sizeBytes": 513
+            }
+          ],
+          "finishedAt": 1792523677.4629638,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:0daf3c67421d1acd2a94217a3526ca4b3521c073fbc87b52b503aeb5fa7d5246",
+              "modifiedUnixNano": 1792523677111553000,
+              "path": "stage-build-context.json",
+              "sizeBytes": 457
+            },
+            {
+              "checksum": "sha256:371927e06b5fc5cb2b9251b28349c7af02c138a3d0160192231e1c7267c2cc19",
+              "modifiedUnixNano": 1792523677111553000,
+              "path": "stage-propose-action.json",
+              "sizeBytes": 513
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.12422394752502441,
+              "finishedAt": 1792523677.4629638,
+              "phase": "execution",
+              "startedAt": 1792523677.3387399,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+          "runId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+          "runtime": "showcase-supervised-tool-loop-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523677.3387399,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 3,
+            "initialFiles": 2,
+            "modifiedFiles": 0,
+            "outputBytes": 576
+          }
+        },
+        "exitCode": 0,
+        "externalId": "402415e14ff3cbd3226d3acada8b617adeb30db62170e6291d7e2802067f1b72",
+        "finishedAt": 1792523677.4629638,
+        "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+        "log": "{\"activity\": \"policy-check\", \"status\": \"success\", \"resultKeys\": [\"proposal\", \"policyPassed\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-supervised-tool-loop-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523677.3387446,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+          "submittedAt": 1792523677.3387399
+        },
+        "resourceId": "showcase-supervised-tool-loop-local-docker",
+        "runId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "runtimeId": "showcase-supervised-tool-loop-local",
+        "startedAt": 1792523677.3387399,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+        "artifacts": {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:371927e06b5fc5cb2b9251b28349c7af02c138a3d0160192231e1c7267c2cc19",
+              "modifiedUnixNano": 1792523675337553000,
+              "path": "stage-propose-action.json",
+              "sizeBytes": 513
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:0daf3c67421d1acd2a94217a3526ca4b3521c073fbc87b52b503aeb5fa7d5246",
+              "modifiedUnixNano": 1792523675039553000,
+              "path": "stage-build-context.json",
+              "sizeBytes": 457
+            },
+            {
+              "checksum": "sha256:371927e06b5fc5cb2b9251b28349c7af02c138a3d0160192231e1c7267c2cc19",
+              "modifiedUnixNano": 1792523675337553000,
+              "path": "stage-propose-action.json",
+              "sizeBytes": 513
+            }
+          ],
+          "finishedAt": 1792523675.3438475,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:0daf3c67421d1acd2a94217a3526ca4b3521c073fbc87b52b503aeb5fa7d5246",
+              "modifiedUnixNano": 1792523675039553000,
+              "path": "stage-build-context.json",
+              "sizeBytes": 457
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.11318802833557129,
+              "finishedAt": 1792523675.3438475,
+              "phase": "execution",
+              "startedAt": 1792523675.2306595,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+          "runId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+          "runtime": "showcase-supervised-tool-loop-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523675.2306595,
+          "summary": {
+            "createdFiles": 1,
+            "deletedFiles": 0,
+            "finalFiles": 2,
+            "initialFiles": 1,
+            "modifiedFiles": 0,
+            "outputBytes": 513
+          }
+        },
+        "exitCode": 0,
+        "externalId": "f64ffd076c4f5d9e1d37df61683ad54dfa6240d2fd2a1b9cad9632f0a703f5f6",
+        "finishedAt": 1792523675.3438475,
+        "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+        "log": "{\"activity\": \"propose-action\", \"status\": \"success\", \"resultKeys\": [\"action\", \"file\", \"content\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-supervised-tool-loop-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523675.2306685,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+          "submittedAt": 1792523675.2306595
+        },
+        "resourceId": "showcase-supervised-tool-loop-local-docker",
+        "runId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "runtimeId": "showcase-supervised-tool-loop-local",
+        "startedAt": 1792523675.2306595,
+        "status": "completed"
+      },
+      {
+        "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+        "artifacts": {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+          "attempt": 1,
+          "exitCode": 0,
+          "files": [
+            {
+              "change": "created",
+              "checksum": "sha256:616804f1fa190b8845a1053b3040fd0402375b809dfe8a19a6847844d5f99af5",
+              "modifiedUnixNano": 1792523683405553000,
+              "path": "stage-verify.json",
+              "sizeBytes": 516
+            },
+            {
+              "change": "created",
+              "checksum": "sha256:304b211656e6f25a7b78ab58bfe35a4c69f86fc10174cf5f28f36e5c03940c99",
+              "modifiedUnixNano": 1792523683405553000,
+              "path": "verification.json",
+              "sizeBytes": 150
+            }
+          ],
+          "finalSnapshot": [
+            {
+              "checksum": "sha256:7b649ab634b2c229193c3fb16a098bca9727938b8f51e822ce3582c005e08f8a",
+              "modifiedUnixNano": 1792523683090553000,
+              "path": "execution.json",
+              "sizeBytes": 341
+            },
+            {
+              "checksum": "sha256:0daf3c67421d1acd2a94217a3526ca4b3521c073fbc87b52b503aeb5fa7d5246",
+              "modifiedUnixNano": 1792523683090553000,
+              "path": "stage-build-context.json",
+              "sizeBytes": 457
+            },
+            {
+              "checksum": "sha256:e055c3c86f9bbeb9ab7770c224f1eabb1fb044f4257e11ba79336e84bb384d1c",
+              "modifiedUnixNano": 1792523683090553000,
+              "path": "stage-execute-tool.json",
+              "sizeBytes": 719
+            },
+            {
+              "checksum": "sha256:0fb66f3ff5cdf920f22d6427fce89487cbf6a60ec196b9d28da8c8ec206dc91c",
+              "modifiedUnixNano": 1792523683090553000,
+              "path": "stage-human-approval.json",
+              "sizeBytes": 892
+            },
+            {
+              "checksum": "sha256:2ab1d841ada20eda4185f3c75143b560b59d52206e849924dd17f3e85aeedb0a",
+              "modifiedUnixNano": 1792523683090553000,
+              "path": "stage-policy-check.json",
+              "sizeBytes": 576
+            },
+            {
+              "checksum": "sha256:371927e06b5fc5cb2b9251b28349c7af02c138a3d0160192231e1c7267c2cc19",
+              "modifiedUnixNano": 1792523683090553000,
+              "path": "stage-propose-action.json",
+              "sizeBytes": 513
+            },
+            {
+              "checksum": "sha256:616804f1fa190b8845a1053b3040fd0402375b809dfe8a19a6847844d5f99af5",
+              "modifiedUnixNano": 1792523683405553000,
+              "path": "stage-verify.json",
+              "sizeBytes": 516
+            },
+            {
+              "checksum": "sha256:8bf517f4dd33e4b0281c76e673745576375dfb25386a2536cf38f4aac8ff775e",
+              "modifiedUnixNano": 1792523683090553000,
+              "path": "tool-result.json",
+              "sizeBytes": 43
+            },
+            {
+              "checksum": "sha256:304b211656e6f25a7b78ab58bfe35a4c69f86fc10174cf5f28f36e5c03940c99",
+              "modifiedUnixNano": 1792523683405553000,
+              "path": "verification.json",
+              "sizeBytes": 150
+            }
+          ],
+          "finishedAt": 1792523683.4125392,
+          "initialSnapshot": [
+            {
+              "checksum": "sha256:7b649ab634b2c229193c3fb16a098bca9727938b8f51e822ce3582c005e08f8a",
+              "modifiedUnixNano": 1792523683090553000,
+              "path": "execution.json",
+              "sizeBytes": 341
+            },
+            {
+              "checksum": "sha256:0daf3c67421d1acd2a94217a3526ca4b3521c073fbc87b52b503aeb5fa7d5246",
+              "modifiedUnixNano": 1792523683090553000,
+              "path": "stage-build-context.json",
+              "sizeBytes": 457
+            },
+            {
+              "checksum": "sha256:e055c3c86f9bbeb9ab7770c224f1eabb1fb044f4257e11ba79336e84bb384d1c",
+              "modifiedUnixNano": 1792523683090553000,
+              "path": "stage-execute-tool.json",
+              "sizeBytes": 719
+            },
+            {
+              "checksum": "sha256:0fb66f3ff5cdf920f22d6427fce89487cbf6a60ec196b9d28da8c8ec206dc91c",
+              "modifiedUnixNano": 1792523683090553000,
+              "path": "stage-human-approval.json",
+              "sizeBytes": 892
+            },
+            {
+              "checksum": "sha256:2ab1d841ada20eda4185f3c75143b560b59d52206e849924dd17f3e85aeedb0a",
+              "modifiedUnixNano": 1792523683090553000,
+              "path": "stage-policy-check.json",
+              "sizeBytes": 576
+            },
+            {
+              "checksum": "sha256:371927e06b5fc5cb2b9251b28349c7af02c138a3d0160192231e1c7267c2cc19",
+              "modifiedUnixNano": 1792523683090553000,
+              "path": "stage-propose-action.json",
+              "sizeBytes": 513
+            },
+            {
+              "checksum": "sha256:8bf517f4dd33e4b0281c76e673745576375dfb25386a2536cf38f4aac8ff775e",
+              "modifiedUnixNano": 1792523683090553000,
+              "path": "tool-result.json",
+              "sizeBytes": 43
+            }
+          ],
+          "phases": [
+            {
+              "durationSeconds": 0.13289976119995117,
+              "finishedAt": 1792523683.4125392,
+              "phase": "execution",
+              "startedAt": 1792523683.2796395,
+              "status": "completed"
+            }
+          ],
+          "root": "/akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+          "runId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+          "runtime": "showcase-supervised-tool-loop-local",
+          "schemaVersion": 1,
+          "startedAt": 1792523683.2796395,
+          "summary": {
+            "createdFiles": 2,
+            "deletedFiles": 0,
+            "finalFiles": 9,
+            "initialFiles": 7,
+            "modifiedFiles": 0,
+            "outputBytes": 666
+          }
+        },
+        "exitCode": 0,
+        "externalId": "e8e4550d7a1e71e92589272caf6fc60b0d31e349db5645b318a7a740eac071b4",
+        "finishedAt": 1792523683.4125392,
+        "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+        "log": "{\"activity\": \"verify\", \"status\": \"success\", \"resultKeys\": [\"passed\", \"output\", \"approvalSource\"]}\n[AKOFLOW INFO] Activity started on runtime showcase-supervised-tool-loop-local.\n[AKOFLOW SUCCESS] Activity completed successfully.\n",
+        "metadata": {
+          "artifactObservationDriver": "filesystem-diff",
+          "artifactObservationRoot": "/akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+          "dockerMetricCPUSeconds": 0,
+          "dockerMetricObservedAt": 1792523683.2796457,
+          "executionTarget": "local-docker",
+          "localContainerName": "akoflow-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+          "submittedAt": 1792523683.2796395
+        },
+        "resourceId": "showcase-supervised-tool-loop-local-docker",
+        "runId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "runtimeId": "showcase-supervised-tool-loop-local",
+        "startedAt": 1792523683.2796395,
+        "status": "completed"
+      }
+    ],
+    "infrastructureRuns": [],
+    "operationEvents": [],
+    "run": {
+      "activityCount": 6,
+      "breakdown": {
+        "computeSeconds": 0.7423112392425537,
+        "interferenceSeconds": 0,
+        "overheadSeconds": 0,
+        "queueSeconds": 0,
+        "transferSeconds": 0.8555648326873779
+      },
+      "completedActivityCount": 6,
+      "cost": 0,
+      "finishedAt": "2026-10-20T19:14:44Z",
+      "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+      "kind": "workflow",
+      "makespanSeconds": 9.60614824295044,
+      "mode": "real",
+      "schedulePlanId": "showcase-supervised-tool-loop-local-1fb7664e1c-manual-plan-20261020t191433.215428000",
+      "seed": 0,
+      "startedAt": "2026-10-20T19:14:33Z",
+      "status": "completed",
+      "title": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+      "transferredBytes": 8952
+    },
+    "timeline": {
+      "computeMakespanSeconds": 9.60614824295044,
+      "coveredWallSeconds": 2.613579511642456,
+      "finishedAt": 1792523684,
+      "phases": [
+        {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-build-context",
+          "category": "resource-queue",
+          "durationSeconds": 0.1550922393798828,
+          "finishedAt": 1792523673.806391,
+          "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-build-context:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523673.6512988,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-build-context",
+          "category": "runtime",
+          "durationSeconds": 0.1167757511138916,
+          "finishedAt": 1792523673.9231668,
+          "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-build-context:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523673.806391,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+          "category": "resource-queue",
+          "durationSeconds": 0.0031447410583496094,
+          "finishedAt": 1792523674.9204013,
+          "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-propose-action:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523674.9172566,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.16668248176574707,
+          "finishedAt": 1792523675.0870838,
+          "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-propose-action:transfer-workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-propose-action-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523674.9204013,
+          "status": "completed",
+          "transferId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-propose-action:transfer-workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-propose-action-0"
+        },
+        {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+          "category": "launch",
+          "durationSeconds": 0.14357566833496094,
+          "finishedAt": 1792523675.2306595,
+          "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-propose-action:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523675.0870838,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+          "category": "runtime",
+          "durationSeconds": 0.11318802833557129,
+          "finishedAt": 1792523675.3438475,
+          "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-propose-action:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523675.2306595,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+          "category": "resource-queue",
+          "durationSeconds": 0.0036253929138183594,
+          "finishedAt": 1792523676.9893606,
+          "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-policy-check:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523676.9857352,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.1676931381225586,
+          "finishedAt": 1792523677.1570537,
+          "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-policy-check:transfer-workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-policy-check-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523676.9893606,
+          "status": "completed",
+          "transferId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-policy-check:transfer-workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-policy-check-0"
+        },
+        {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+          "category": "launch",
+          "durationSeconds": 0.1816861629486084,
+          "finishedAt": 1792523677.3387399,
+          "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-policy-check:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523677.1570537,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+          "category": "runtime",
+          "durationSeconds": 0.12422394752502441,
+          "finishedAt": 1792523677.4629638,
+          "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-policy-check:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523677.3387399,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+          "category": "resource-queue",
+          "durationSeconds": 0.0038297176361083984,
+          "finishedAt": 1792523678.9943857,
+          "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-human-approval:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523678.990556,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.1688706874847412,
+          "finishedAt": 1792523679.1632564,
+          "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-human-approval:transfer-workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-human-approval-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523678.9943857,
+          "status": "completed",
+          "transferId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-human-approval:transfer-workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-human-approval-0"
+        },
+        {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+          "category": "launch",
+          "durationSeconds": 0.18757081031799316,
+          "finishedAt": 1792523679.3508272,
+          "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-human-approval:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523679.1632564,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+          "category": "runtime",
+          "durationSeconds": 0.11885523796081543,
+          "finishedAt": 1792523679.4696825,
+          "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-human-approval:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523679.3508272,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+          "category": "resource-queue",
+          "durationSeconds": 0.005048036575317383,
+          "finishedAt": 1792523680.973474,
+          "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523680.968426,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.18735408782958984,
+          "finishedAt": 1792523681.160828,
+          "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool:transfer-workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523680.973474,
+          "status": "completed",
+          "transferId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool:transfer-workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool-0"
+        },
+        {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+          "category": "launch",
+          "durationSeconds": 0.1756880283355713,
+          "finishedAt": 1792523681.3365161,
+          "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523681.160828,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+          "category": "runtime",
+          "durationSeconds": 0.1363685131072998,
+          "finishedAt": 1792523681.4728847,
+          "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523681.3365161,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+          "category": "resource-queue",
+          "durationSeconds": 0.011293172836303711,
+          "finishedAt": 1792523682.9695256,
+          "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-verify:queue:0",
+          "source": "derived-residual",
+          "startedAt": 1792523682.9582324,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+          "category": "workspace-transfer",
+          "durationSeconds": 0.1649644374847412,
+          "finishedAt": 1792523683.13449,
+          "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-verify:transfer-workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-verify-0",
+          "source": "transfer-observation",
+          "startedAt": 1792523682.9695256,
+          "status": "completed",
+          "transferId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-verify:transfer-workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-verify-0"
+        },
+        {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+          "category": "launch",
+          "durationSeconds": 0.14514946937561035,
+          "finishedAt": 1792523683.2796395,
+          "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-verify:launch",
+          "source": "task-metadata",
+          "startedAt": 1792523683.13449,
+          "status": "completed"
+        },
+        {
+          "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+          "category": "runtime",
+          "durationSeconds": 0.13289976119995117,
+          "finishedAt": 1792523683.4125392,
+          "id": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000:showcase-supervised-tool-loop-local-1fb7664e1c-verify:runtime",
+          "source": "activity-handle",
+          "startedAt": 1792523683.2796395,
+          "status": "completed"
+        }
+      ],
+      "startedAt": 1792523673,
+      "totals": {
+        "destroySeconds": 0,
+        "executablePreparationSeconds": 0,
+        "launchSeconds": 0.8336701393127441,
+        "provisionSeconds": 0,
+        "resourceQueueSeconds": 0.18203330039978027,
+        "runtimeSeconds": 0.7423112392425537,
+        "startSeconds": 0,
+        "stopSeconds": 0,
+        "validationSeconds": 0,
+        "workspaceTransferSeconds": 0.8555648326873779
+      },
+      "unclassifiedWallSeconds": 8.386420488357544,
+      "wallSeconds": 11
+    },
+    "workspaceLeases": [
+      {
+        "consumerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+        "id": "workspace-lease-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-build-context-showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+        "producerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-build-context",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:14:35.08961075Z",
+        "runId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "workspaceId": "workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-build-context"
+      },
+      {
+        "consumerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+        "id": "workspace-lease-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool-showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+        "producerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:14:43.136029337Z",
+        "runId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "workspaceId": "workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool"
+      },
+      {
+        "consumerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+        "id": "workspace-lease-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-human-approval-showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+        "producerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:14:41.162809795Z",
+        "runId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "workspaceId": "workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-human-approval"
+      },
+      {
+        "consumerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+        "id": "workspace-lease-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-policy-check-showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+        "producerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:14:39.165098919Z",
+        "runId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "workspaceId": "workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-policy-check"
+      },
+      {
+        "consumerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+        "id": "workspace-lease-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-propose-action-showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+        "producerActivityId": "showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+        "releaseReason": "consumer workspace materialized",
+        "released": true,
+        "releasedAt": "2026-10-20T19:14:37.158927376Z",
+        "runId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "workspaceId": "workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-propose-action"
+      }
+    ],
+    "workspaces": [
+      {
+        "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-build-context",
+        "createdAt": "2026-10-20T19:14:33.621095472Z",
+        "driver": "local",
+        "environmentId": "showcase-supervised-tool-loop-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-build-context",
+        "fileCount": 1,
+        "id": "workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-build-context",
+        "inputBytes": 0,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:0daf3c67421d1acd2a94217a3526ca4b3521c073fbc87b52b503aeb5fa7d5246",
+              "path": "stage-build-context.json",
+              "sizeBytes": 457
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:0daf3c67421d1acd2a94217a3526ca4b3521c073fbc87b52b503aeb5fa7d5246",
+              "path": "stage-build-context.json",
+              "sizeBytes": 457
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-build-context",
+        "outputBytes": 457,
+        "pinned": false,
+        "reclaimedBytes": 457,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:14:35.093693208Z",
+        "resourceId": "showcase-supervised-tool-loop-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "runtimeId": "showcase-supervised-tool-loop-local",
+        "sealedAt": "2026-10-20T19:14:34.913048708Z",
+        "sizeBytes": 457,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-build-context"
+      },
+      {
+        "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+        "createdAt": "2026-10-20T19:14:33.621095472Z",
+        "driver": "local",
+        "environmentId": "showcase-supervised-tool-loop-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+        "fileCount": 7,
+        "id": "workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+        "inputBytes": 2438,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:7b649ab634b2c229193c3fb16a098bca9727938b8f51e822ce3582c005e08f8a",
+              "path": "execution.json",
+              "sizeBytes": 341
+            },
+            {
+              "digest": "sha256:0daf3c67421d1acd2a94217a3526ca4b3521c073fbc87b52b503aeb5fa7d5246",
+              "path": "stage-build-context.json",
+              "sizeBytes": 457
+            },
+            {
+              "digest": "sha256:e055c3c86f9bbeb9ab7770c224f1eabb1fb044f4257e11ba79336e84bb384d1c",
+              "path": "stage-execute-tool.json",
+              "sizeBytes": 719
+            },
+            {
+              "digest": "sha256:0fb66f3ff5cdf920f22d6427fce89487cbf6a60ec196b9d28da8c8ec206dc91c",
+              "path": "stage-human-approval.json",
+              "sizeBytes": 892
+            },
+            {
+              "digest": "sha256:2ab1d841ada20eda4185f3c75143b560b59d52206e849924dd17f3e85aeedb0a",
+              "path": "stage-policy-check.json",
+              "sizeBytes": 576
+            },
+            {
+              "digest": "sha256:371927e06b5fc5cb2b9251b28349c7af02c138a3d0160192231e1c7267c2cc19",
+              "path": "stage-propose-action.json",
+              "sizeBytes": 513
+            },
+            {
+              "digest": "sha256:8bf517f4dd33e4b0281c76e673745576375dfb25386a2536cf38f4aac8ff775e",
+              "path": "tool-result.json",
+              "sizeBytes": 43
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:0daf3c67421d1acd2a94217a3526ca4b3521c073fbc87b52b503aeb5fa7d5246",
+              "path": "stage-build-context.json",
+              "sizeBytes": 457
+            },
+            {
+              "digest": "sha256:0fb66f3ff5cdf920f22d6427fce89487cbf6a60ec196b9d28da8c8ec206dc91c",
+              "path": "stage-human-approval.json",
+              "sizeBytes": 892
+            },
+            {
+              "digest": "sha256:2ab1d841ada20eda4185f3c75143b560b59d52206e849924dd17f3e85aeedb0a",
+              "path": "stage-policy-check.json",
+              "sizeBytes": 576
+            },
+            {
+              "digest": "sha256:371927e06b5fc5cb2b9251b28349c7af02c138a3d0160192231e1c7267c2cc19",
+              "path": "stage-propose-action.json",
+              "sizeBytes": 513
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:0daf3c67421d1acd2a94217a3526ca4b3521c073fbc87b52b503aeb5fa7d5246",
+              "path": "stage-build-context.json",
+              "sizeBytes": 457
+            },
+            {
+              "digest": "sha256:0fb66f3ff5cdf920f22d6427fce89487cbf6a60ec196b9d28da8c8ec206dc91c",
+              "path": "stage-human-approval.json",
+              "sizeBytes": 892
+            },
+            {
+              "digest": "sha256:2ab1d841ada20eda4185f3c75143b560b59d52206e849924dd17f3e85aeedb0a",
+              "path": "stage-policy-check.json",
+              "sizeBytes": 576
+            },
+            {
+              "digest": "sha256:371927e06b5fc5cb2b9251b28349c7af02c138a3d0160192231e1c7267c2cc19",
+              "path": "stage-propose-action.json",
+              "sizeBytes": 513
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:7b649ab634b2c229193c3fb16a098bca9727938b8f51e822ce3582c005e08f8a",
+              "path": "execution.json",
+              "sizeBytes": 341
+            },
+            {
+              "digest": "sha256:e055c3c86f9bbeb9ab7770c224f1eabb1fb044f4257e11ba79336e84bb384d1c",
+              "path": "stage-execute-tool.json",
+              "sizeBytes": 719
+            },
+            {
+              "digest": "sha256:8bf517f4dd33e4b0281c76e673745576375dfb25386a2536cf38f4aac8ff775e",
+              "path": "tool-result.json",
+              "sizeBytes": 43
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool",
+        "outputBytes": 1103,
+        "pinned": false,
+        "reclaimedBytes": 3541,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:14:43.140194379Z",
+        "resourceId": "showcase-supervised-tool-loop-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "runtimeId": "showcase-supervised-tool-loop-local",
+        "sealedAt": "2026-10-20T19:14:42.942646754Z",
+        "sizeBytes": 3541,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-execute-tool"
+      },
+      {
+        "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+        "createdAt": "2026-10-20T19:14:33.621095472Z",
+        "driver": "local",
+        "environmentId": "showcase-supervised-tool-loop-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+        "fileCount": 4,
+        "id": "workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+        "inputBytes": 1546,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:0daf3c67421d1acd2a94217a3526ca4b3521c073fbc87b52b503aeb5fa7d5246",
+              "path": "stage-build-context.json",
+              "sizeBytes": 457
+            },
+            {
+              "digest": "sha256:0fb66f3ff5cdf920f22d6427fce89487cbf6a60ec196b9d28da8c8ec206dc91c",
+              "path": "stage-human-approval.json",
+              "sizeBytes": 892
+            },
+            {
+              "digest": "sha256:2ab1d841ada20eda4185f3c75143b560b59d52206e849924dd17f3e85aeedb0a",
+              "path": "stage-policy-check.json",
+              "sizeBytes": 576
+            },
+            {
+              "digest": "sha256:371927e06b5fc5cb2b9251b28349c7af02c138a3d0160192231e1c7267c2cc19",
+              "path": "stage-propose-action.json",
+              "sizeBytes": 513
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:0daf3c67421d1acd2a94217a3526ca4b3521c073fbc87b52b503aeb5fa7d5246",
+              "path": "stage-build-context.json",
+              "sizeBytes": 457
+            },
+            {
+              "digest": "sha256:2ab1d841ada20eda4185f3c75143b560b59d52206e849924dd17f3e85aeedb0a",
+              "path": "stage-policy-check.json",
+              "sizeBytes": 576
+            },
+            {
+              "digest": "sha256:371927e06b5fc5cb2b9251b28349c7af02c138a3d0160192231e1c7267c2cc19",
+              "path": "stage-propose-action.json",
+              "sizeBytes": 513
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:0daf3c67421d1acd2a94217a3526ca4b3521c073fbc87b52b503aeb5fa7d5246",
+              "path": "stage-build-context.json",
+              "sizeBytes": 457
+            },
+            {
+              "digest": "sha256:2ab1d841ada20eda4185f3c75143b560b59d52206e849924dd17f3e85aeedb0a",
+              "path": "stage-policy-check.json",
+              "sizeBytes": 576
+            },
+            {
+              "digest": "sha256:371927e06b5fc5cb2b9251b28349c7af02c138a3d0160192231e1c7267c2cc19",
+              "path": "stage-propose-action.json",
+              "sizeBytes": 513
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:0fb66f3ff5cdf920f22d6427fce89487cbf6a60ec196b9d28da8c8ec206dc91c",
+              "path": "stage-human-approval.json",
+              "sizeBytes": 892
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-human-approval",
+        "outputBytes": 892,
+        "pinned": false,
+        "reclaimedBytes": 2438,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:14:41.166956295Z",
+        "resourceId": "showcase-supervised-tool-loop-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "runtimeId": "showcase-supervised-tool-loop-local",
+        "sealedAt": "2026-10-20T19:14:40.959681461Z",
+        "sizeBytes": 2438,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-human-approval"
+      },
+      {
+        "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+        "createdAt": "2026-10-20T19:14:33.621095472Z",
+        "driver": "local",
+        "environmentId": "showcase-supervised-tool-loop-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+        "fileCount": 3,
+        "id": "workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+        "inputBytes": 970,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:0daf3c67421d1acd2a94217a3526ca4b3521c073fbc87b52b503aeb5fa7d5246",
+              "path": "stage-build-context.json",
+              "sizeBytes": 457
+            },
+            {
+              "digest": "sha256:2ab1d841ada20eda4185f3c75143b560b59d52206e849924dd17f3e85aeedb0a",
+              "path": "stage-policy-check.json",
+              "sizeBytes": 576
+            },
+            {
+              "digest": "sha256:371927e06b5fc5cb2b9251b28349c7af02c138a3d0160192231e1c7267c2cc19",
+              "path": "stage-propose-action.json",
+              "sizeBytes": 513
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:0daf3c67421d1acd2a94217a3526ca4b3521c073fbc87b52b503aeb5fa7d5246",
+              "path": "stage-build-context.json",
+              "sizeBytes": 457
+            },
+            {
+              "digest": "sha256:371927e06b5fc5cb2b9251b28349c7af02c138a3d0160192231e1c7267c2cc19",
+              "path": "stage-propose-action.json",
+              "sizeBytes": 513
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:0daf3c67421d1acd2a94217a3526ca4b3521c073fbc87b52b503aeb5fa7d5246",
+              "path": "stage-build-context.json",
+              "sizeBytes": 457
+            },
+            {
+              "digest": "sha256:371927e06b5fc5cb2b9251b28349c7af02c138a3d0160192231e1c7267c2cc19",
+              "path": "stage-propose-action.json",
+              "sizeBytes": 513
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:2ab1d841ada20eda4185f3c75143b560b59d52206e849924dd17f3e85aeedb0a",
+              "path": "stage-policy-check.json",
+              "sizeBytes": 576
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-policy-check",
+        "outputBytes": 576,
+        "pinned": false,
+        "reclaimedBytes": 1546,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:14:39.171565544Z",
+        "resourceId": "showcase-supervised-tool-loop-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "runtimeId": "showcase-supervised-tool-loop-local",
+        "sealedAt": "2026-10-20T19:14:38.98395471Z",
+        "sizeBytes": 1546,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-policy-check"
+      },
+      {
+        "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+        "createdAt": "2026-10-20T19:14:33.621095472Z",
+        "driver": "local",
+        "environmentId": "showcase-supervised-tool-loop-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+        "fileCount": 2,
+        "id": "workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+        "inputBytes": 457,
+        "isFinal": false,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:0daf3c67421d1acd2a94217a3526ca4b3521c073fbc87b52b503aeb5fa7d5246",
+              "path": "stage-build-context.json",
+              "sizeBytes": 457
+            },
+            {
+              "digest": "sha256:371927e06b5fc5cb2b9251b28349c7af02c138a3d0160192231e1c7267c2cc19",
+              "path": "stage-propose-action.json",
+              "sizeBytes": 513
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:0daf3c67421d1acd2a94217a3526ca4b3521c073fbc87b52b503aeb5fa7d5246",
+              "path": "stage-build-context.json",
+              "sizeBytes": 457
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:0daf3c67421d1acd2a94217a3526ca4b3521c073fbc87b52b503aeb5fa7d5246",
+              "path": "stage-build-context.json",
+              "sizeBytes": 457
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:371927e06b5fc5cb2b9251b28349c7af02c138a3d0160192231e1c7267c2cc19",
+              "path": "stage-propose-action.json",
+              "sizeBytes": 513
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-propose-action",
+        "outputBytes": 513,
+        "pinned": false,
+        "reclaimedBytes": 970,
+        "releaseReason": "all downstream consumer workspaces were materialized",
+        "releasedAt": "2026-10-20T19:14:37.167489501Z",
+        "resourceId": "showcase-supervised-tool-loop-local-docker",
+        "retention": "intermediate",
+        "runId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "runtimeId": "showcase-supervised-tool-loop-local",
+        "sealedAt": "2026-10-20T19:14:36.979408334Z",
+        "sizeBytes": 970,
+        "state": "released",
+        "uri": "file:///akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-propose-action"
+      },
+      {
+        "activityId": "showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+        "createdAt": "2026-10-20T19:14:33.621095472Z",
+        "driver": "local",
+        "environmentId": "showcase-supervised-tool-loop-v1",
+        "executionPath": "/akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+        "fileCount": 2,
+        "id": "workspace-showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000-showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+        "inputBytes": 3541,
+        "isFinal": true,
+        "manifest": {
+          "final": [
+            {
+              "digest": "sha256:7b649ab634b2c229193c3fb16a098bca9727938b8f51e822ce3582c005e08f8a",
+              "path": "execution.json",
+              "sizeBytes": 341
+            },
+            {
+              "digest": "sha256:0daf3c67421d1acd2a94217a3526ca4b3521c073fbc87b52b503aeb5fa7d5246",
+              "path": "stage-build-context.json",
+              "sizeBytes": 457
+            },
+            {
+              "digest": "sha256:e055c3c86f9bbeb9ab7770c224f1eabb1fb044f4257e11ba79336e84bb384d1c",
+              "path": "stage-execute-tool.json",
+              "sizeBytes": 719
+            },
+            {
+              "digest": "sha256:0fb66f3ff5cdf920f22d6427fce89487cbf6a60ec196b9d28da8c8ec206dc91c",
+              "path": "stage-human-approval.json",
+              "sizeBytes": 892
+            },
+            {
+              "digest": "sha256:2ab1d841ada20eda4185f3c75143b560b59d52206e849924dd17f3e85aeedb0a",
+              "path": "stage-policy-check.json",
+              "sizeBytes": 576
+            },
+            {
+              "digest": "sha256:371927e06b5fc5cb2b9251b28349c7af02c138a3d0160192231e1c7267c2cc19",
+              "path": "stage-propose-action.json",
+              "sizeBytes": 513
+            },
+            {
+              "digest": "sha256:616804f1fa190b8845a1053b3040fd0402375b809dfe8a19a6847844d5f99af5",
+              "path": "stage-verify.json",
+              "sizeBytes": 516
+            },
+            {
+              "digest": "sha256:8bf517f4dd33e4b0281c76e673745576375dfb25386a2536cf38f4aac8ff775e",
+              "path": "tool-result.json",
+              "sizeBytes": 43
+            },
+            {
+              "digest": "sha256:304b211656e6f25a7b78ab58bfe35a4c69f86fc10174cf5f28f36e5c03940c99",
+              "path": "verification.json",
+              "sizeBytes": 150
+            }
+          ],
+          "initial": [
+            {
+              "digest": "sha256:7b649ab634b2c229193c3fb16a098bca9727938b8f51e822ce3582c005e08f8a",
+              "path": "execution.json",
+              "sizeBytes": 341
+            },
+            {
+              "digest": "sha256:0daf3c67421d1acd2a94217a3526ca4b3521c073fbc87b52b503aeb5fa7d5246",
+              "path": "stage-build-context.json",
+              "sizeBytes": 457
+            },
+            {
+              "digest": "sha256:e055c3c86f9bbeb9ab7770c224f1eabb1fb044f4257e11ba79336e84bb384d1c",
+              "path": "stage-execute-tool.json",
+              "sizeBytes": 719
+            },
+            {
+              "digest": "sha256:0fb66f3ff5cdf920f22d6427fce89487cbf6a60ec196b9d28da8c8ec206dc91c",
+              "path": "stage-human-approval.json",
+              "sizeBytes": 892
+            },
+            {
+              "digest": "sha256:2ab1d841ada20eda4185f3c75143b560b59d52206e849924dd17f3e85aeedb0a",
+              "path": "stage-policy-check.json",
+              "sizeBytes": 576
+            },
+            {
+              "digest": "sha256:371927e06b5fc5cb2b9251b28349c7af02c138a3d0160192231e1c7267c2cc19",
+              "path": "stage-propose-action.json",
+              "sizeBytes": 513
+            },
+            {
+              "digest": "sha256:8bf517f4dd33e4b0281c76e673745576375dfb25386a2536cf38f4aac8ff775e",
+              "path": "tool-result.json",
+              "sizeBytes": 43
+            }
+          ],
+          "inputs": [
+            {
+              "digest": "sha256:7b649ab634b2c229193c3fb16a098bca9727938b8f51e822ce3582c005e08f8a",
+              "path": "execution.json",
+              "sizeBytes": 341
+            },
+            {
+              "digest": "sha256:0daf3c67421d1acd2a94217a3526ca4b3521c073fbc87b52b503aeb5fa7d5246",
+              "path": "stage-build-context.json",
+              "sizeBytes": 457
+            },
+            {
+              "digest": "sha256:e055c3c86f9bbeb9ab7770c224f1eabb1fb044f4257e11ba79336e84bb384d1c",
+              "path": "stage-execute-tool.json",
+              "sizeBytes": 719
+            },
+            {
+              "digest": "sha256:0fb66f3ff5cdf920f22d6427fce89487cbf6a60ec196b9d28da8c8ec206dc91c",
+              "path": "stage-human-approval.json",
+              "sizeBytes": 892
+            },
+            {
+              "digest": "sha256:2ab1d841ada20eda4185f3c75143b560b59d52206e849924dd17f3e85aeedb0a",
+              "path": "stage-policy-check.json",
+              "sizeBytes": 576
+            },
+            {
+              "digest": "sha256:371927e06b5fc5cb2b9251b28349c7af02c138a3d0160192231e1c7267c2cc19",
+              "path": "stage-propose-action.json",
+              "sizeBytes": 513
+            },
+            {
+              "digest": "sha256:8bf517f4dd33e4b0281c76e673745576375dfb25386a2536cf38f4aac8ff775e",
+              "path": "tool-result.json",
+              "sizeBytes": 43
+            }
+          ],
+          "outputs": [
+            {
+              "digest": "sha256:616804f1fa190b8845a1053b3040fd0402375b809dfe8a19a6847844d5f99af5",
+              "path": "stage-verify.json",
+              "sizeBytes": 516
+            },
+            {
+              "digest": "sha256:304b211656e6f25a7b78ab58bfe35a4c69f86fc10174cf5f28f36e5c03940c99",
+              "path": "verification.json",
+              "sizeBytes": 150
+            }
+          ]
+        },
+        "observationPath": "/akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-verify",
+        "outputBytes": 666,
+        "pinned": false,
+        "reclaimedBytes": 3541,
+        "releaseReason": "inherited inputs pruned",
+        "resourceId": "showcase-supervised-tool-loop-local-docker",
+        "retention": "final",
+        "runId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+        "runtimeId": "showcase-supervised-tool-loop-local",
+        "sealedAt": "2026-10-20T19:14:44.932978505Z",
+        "sizeBytes": 666,
+        "state": "sealed",
+        "uri": "file:///akoflow/workspace/runs/showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000/showcase-supervised-tool-loop-local-1fb7664e1c-verify"
+      }
+    ]
+  },
+  "runId": "showcase-supervised-tool-loop-local-1fb7664e1c-run-20261020t191433.219869000",
+  "status": "completed",
+  "workflowId": "showcase-supervised-tool-loop-local-1fb7664e1c"
+}

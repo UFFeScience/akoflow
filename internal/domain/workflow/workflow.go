@@ -59,6 +59,7 @@ type ActivityPolicy struct {
 }
 
 type WorkflowVersion struct {
+	Archived         bool                     `json:"archived"`
 	ID               string                   `json:"id"`
 	WorkflowID       string                   `json:"workflowId"`
 	Version          int                      `json:"version"`
@@ -69,6 +70,7 @@ type WorkflowVersion struct {
 }
 
 type Definition struct {
+	Archived   bool            `json:"archived"`
 	ID         string          `json:"id"`
 	ExternalID string          `json:"externalId"`
 	Name       string          `json:"name"`

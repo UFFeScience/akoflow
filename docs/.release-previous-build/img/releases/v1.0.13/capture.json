@@ -1,0 +1,63 @@
+{
+  "version": "1.0.13",
+  "capturedAt": "2026-11-05T03:56:31.585Z",
+  "kind": "real-interface-release-candidate",
+  "data": "Existing completed Python file workflow; capture did not execute or mutate workflows.",
+  "runId": "run-1793666594904",
+  "desktopSource": "b6e158f47125f13f63a8d8a99a8296dcd83997d2",
+  "captures": [
+    {
+      "file": "01-workflow-overview.png",
+      "description": "Whole-workflow context, executable preparation, environment, output and plan relationships"
+    },
+    {
+      "file": "02-workspace-files.png",
+      "description": "Activity and file DAG, five largest files, searchable explorer, fullscreen and filter controls"
+    },
+    {
+      "file": "03-plan-comparison.png",
+      "description": "Planned versus observed duration and cost with absolute and relative differences and unset constraints"
+    },
+    {
+      "file": "04-log-navigation.png",
+      "description": "Searchable activity navigation and selectable DAG, independent of complete run log"
+    },
+    {
+      "file": "05-complete-logs.png",
+      "description": "Complete run output with search, line numbers, copy, download, wrapping and fullscreen"
+    },
+    {
+      "file": "06-activity-log-drawer.png",
+      "description": "Selected activity output in a side drawer with View activity action"
+    },
+    {
+      "file": "07-activity-details.png",
+      "description": "Activity details include placement, timing, preparation and the shared generated-file component"
+    },
+    {
+      "file": "08-activity-preparation.png",
+      "description": "Activity-local collapsible executable and workspace preparation"
+    },
+    {
+      "file": "09-generated-files.png",
+      "description": "Generated files for the selected producer, with size, checksum and recorded locations"
+    },
+    {
+      "file": "10-event-timeline.png",
+      "description": "Temporal activity lanes, type-specific markers, filters, full event export and reconstructed phase observations"
+    },
+    {
+      "file": "11-phase-event-details.png",
+      "description": "Phase duration, original source, recorded timestamps and activity ownership in a drawer"
+    },
+    {
+      "file": "12-time-decomposition.png",
+      "description": "Aggregate timing totals and definitions, without a duplicated per-phase activity table"
+    },
+    {
+      "file": "13-dark-comparison.png",
+      "description": "Dark-mode summary and contrasting foreground colors"
+    }
+  ],
+  "errors": []
+}

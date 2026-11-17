@@ -1,0 +1,15 @@
+{
+  "dependencies": [
+    "retrieve"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T18:30:54.219835Z",
+  "result": {
+    "commandCompleted": true,
+    "stdout": ""
+  },
+  "showcase": "local-rag-factory",
+  "stage": "answer",
+  "startedAt": "2026-10-20T18:30:54.182833Z",
+  "status": "success"
+}

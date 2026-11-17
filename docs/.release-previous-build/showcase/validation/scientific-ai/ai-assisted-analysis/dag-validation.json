@@ -1,0 +1,31 @@
+{
+  "artifactSha256": {
+    "analysis.json": "a3dface826a3bae6a3ac378059cde3d1c4177f50c47d887560f09bb42c8c6e84",
+    "interpretation.md": "7378f95d9021290343a6d43bdbfa973ae9bf4c60ce6ba41c2f2192e84c392223"
+  },
+  "completedActivities": 7,
+  "dependencyWaves": [
+    [
+      "prepare-experiment"
+    ],
+    [
+      "simulation"
+    ],
+    [
+      "measurements"
+    ],
+    [
+      "statistics",
+      "ai-interpretation"
+    ],
+    [
+      "validate"
+    ],
+    [
+      "report"
+    ]
+  ],
+  "executionMode": "local-process",
+  "mode": "local-workload",
+  "schedulingPolicy": "ready activities with bounded concurrency"
+}

@@ -1,0 +1,47 @@
+{
+  "dependencies": [
+    "normalize"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:39.338986Z",
+  "finishedAtUnixNs": 1792523559334177000,
+  "inputDigest": "58e626d314ac00b2f102e04c0553c59ee3a1dbc85dd759cab43b3d26e401726d",
+  "result": {
+    "measurements": [
+      {
+        "batchSize": 1,
+        "checksum": 126841.86857402271,
+        "elapsedNanoseconds": 2312500,
+        "hardware": "CPU portable profile",
+        "nanosecondsPerPrediction": 231.25,
+        "predictions": 10000,
+        "target": "cpu"
+      },
+      {
+        "batchSize": 32,
+        "checksum": 126841.86857402282,
+        "elapsedNanoseconds": 649250,
+        "hardware": "CPU portable profile",
+        "nanosecondsPerPrediction": 64.925,
+        "predictions": 10000,
+        "target": "gpu"
+      },
+      {
+        "batchSize": 4,
+        "checksum": 126841.86857402284,
+        "elapsedNanoseconds": 1072000,
+        "hardware": "CPU portable profile",
+        "nanosecondsPerPrediction": 107.2,
+        "predictions": 10000,
+        "target": "edge"
+      }
+    ],
+    "note": "No GPU or remote edge execution is claimed."
+  },
+  "showcase": "inference-benchmark",
+  "stage": "compare-cost-and-latency",
+  "startedAt": "2026-10-20T19:12:39.294841Z",
+  "startedAtUnixNs": 1792523559333811000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

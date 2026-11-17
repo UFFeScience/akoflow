@@ -1,0 +1,19 @@
+{
+  "dependencies": [
+    "load-model"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:40.611068Z",
+  "finishedAtUnixNs": 1792523560596347000,
+  "inputDigest": "faba78f3138d9a7d2d99f264e7adfaffde414a063a5db1dd31ada1d7c270b52c",
+  "result": {
+    "bytes": 130,
+    "format": "ONNX"
+  },
+  "showcase": "model-conversion",
+  "stage": "export-onnx",
+  "startedAt": "2026-10-20T19:12:40.415369Z",
+  "startedAtUnixNs": 1792523560455401000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

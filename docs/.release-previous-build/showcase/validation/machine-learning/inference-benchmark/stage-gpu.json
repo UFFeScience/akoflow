@@ -1,0 +1,23 @@
+{
+  "dependencies": [
+    "freeze-inputs"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:39.248996Z",
+  "finishedAtUnixNs": 1792523559243206000,
+  "inputDigest": "58e626d314ac00b2f102e04c0553c59ee3a1dbc85dd759cab43b3d26e401726d",
+  "result": {
+    "batchSize": 32,
+    "checksum": 126841.86857402282,
+    "elapsedNanoseconds": 649250,
+    "hardware": "CPU portable profile",
+    "predictions": 10000,
+    "target": "gpu"
+  },
+  "showcase": "inference-benchmark",
+  "stage": "gpu",
+  "startedAt": "2026-10-20T19:12:39.201157Z",
+  "startedAtUnixNs": 1792523559242373000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

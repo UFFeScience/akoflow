@@ -1,0 +1,146 @@
+{
+  "client": "Official MCP Go SDK v1.7.0",
+  "create": {
+    "data": {
+      "activityTypes": [
+        {
+          "cpuIntensity": 0,
+          "id": "created-through-desktop-mcp-activity",
+          "ioIntensity": 0,
+          "memoryIntensity": 0,
+          "name": "Created through desktop MCP activity",
+          "networkIntensity": 0
+        }
+      ],
+      "externalId": "created-through-desktop-mcp",
+      "id": "created-through-desktop-mcp",
+      "name": "Created through desktop MCP",
+      "namespace": "mcp-demo",
+      "version": {
+        "activities": [
+          {
+            "activityTypeId": "created-through-desktop-mcp-activity",
+            "capabilities": ["real"],
+            "command": {
+              "arguments": ["-c", "echo Hello from MCP"],
+              "entrypoint": "sh",
+              "executable": {
+                "delivery": {
+                  "strategy": "auto"
+                },
+                "source": {
+                  "reference": "alpine:3.22",
+                  "type": "oci"
+                }
+              }
+            },
+            "externalId": "hello-mcp",
+            "id": "created-through-desktop-mcp-hello-mcp",
+            "kind": "task",
+            "metadata": {
+              "expectedOutputs": null,
+              "keepDisk": false,
+              "mountPath": "",
+              "resourceSelector": "",
+              "runtime": "",
+              "workspaceSeedPath": ""
+            },
+            "name": "Hello MCP",
+            "policy": {
+              "maxAttempts": 1,
+              "timeoutSeconds": 3600
+            },
+            "priority": 0,
+            "resources": {
+              "cpu": 1,
+              "memoryBytes": 67108864,
+              "storageBytes": 0
+            },
+            "workflowVersionId": "created-through-desktop-mcp-v1"
+          }
+        ],
+        "definitionHash": "created-through-desktop-mcp-v1",
+        "dependencies": null,
+        "id": "created-through-desktop-mcp-v1",
+        "version": 1,
+        "workflowId": "created-through-desktop-mcp"
+      }
+    },
+    "status": 201,
+    "truncated": false
+  },
+  "list": {
+    "data": [
+      {
+        "activityTypes": [
+          {
+            "cpuIntensity": 0,
+            "id": "created-through-desktop-mcp-activity",
+            "ioIntensity": 0,
+            "memoryIntensity": 0,
+            "name": "Created through desktop MCP activity",
+            "networkIntensity": 0
+          }
+        ],
+        "externalId": "created-through-desktop-mcp",
+        "id": "created-through-desktop-mcp",
+        "name": "Created through desktop MCP",
+        "namespace": "mcp-demo",
+        "version": {
+          "activities": [
+            {
+              "activityTypeId": "created-through-desktop-mcp-activity",
+              "capabilities": ["real"],
+              "command": {
+                "arguments": ["-c", "echo Hello from MCP"],
+                "entrypoint": "sh",
+                "executable": {
+                  "delivery": {
+                    "strategy": "auto"
+                  },
+                  "source": {
+                    "reference": "alpine:3.22",
+                    "type": "oci"
+                  }
+                }
+              },
+              "externalId": "hello-mcp",
+              "id": "created-through-desktop-mcp-hello-mcp",
+              "kind": "task",
+              "metadata": {
+                "expectedOutputs": null,
+                "keepDisk": false,
+                "mountPath": "",
+                "resourceSelector": "",
+                "runtime": "",
+                "workspaceSeedPath": ""
+              },
+              "name": "Hello MCP",
+              "policy": {
+                "maxAttempts": 1,
+                "timeoutSeconds": 3600
+              },
+              "priority": 0,
+              "resources": {
+                "cpu": 1,
+                "memoryBytes": 67108864,
+                "storageBytes": 0
+              },
+              "workflowVersionId": "created-through-desktop-mcp-v1"
+            }
+          ],
+          "definitionHash": "created-through-desktop-mcp-v1",
+          "dependencies": null,
+          "id": "created-through-desktop-mcp-v1",
+          "version": 1,
+          "workflowId": "created-through-desktop-mcp"
+        }
+      }
+    ],
+    "status": 200,
+    "truncated": false
+  },
+  "protocolVersion": "2025-11-25",
+  "toolCount": 142,
+  "transport": "Installed desktop stdio connector"
+}

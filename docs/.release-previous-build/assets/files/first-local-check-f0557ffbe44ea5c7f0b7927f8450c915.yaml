@@ -1,0 +1,22 @@
+name: first-local-check
+spec:
+  namespace: learning
+  activities:
+    - name: write-report
+      cpuLimit: "0.1"
+      memoryLimit: 32Mi
+      command:
+        executable:
+          source:
+            type: oci
+            reference: docker.io/library/busybox:1.36
+          delivery:
+            strategy: auto
+            targetFormat: oci
+        entrypoint: sh
+        arguments:
+          - -c
+          - |
+            printf 'Akoflow local check\n' > result.txt
+            cat result.txt
+      expectedOutputs: [result.txt]

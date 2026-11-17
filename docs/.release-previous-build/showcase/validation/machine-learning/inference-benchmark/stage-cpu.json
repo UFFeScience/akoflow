@@ -1,0 +1,23 @@
+{
+  "dependencies": [
+    "freeze-inputs"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:39.249685Z",
+  "finishedAtUnixNs": 1792523559244269000,
+  "inputDigest": "58e626d314ac00b2f102e04c0553c59ee3a1dbc85dd759cab43b3d26e401726d",
+  "result": {
+    "batchSize": 1,
+    "checksum": 126841.86857402271,
+    "elapsedNanoseconds": 2312500,
+    "hardware": "CPU portable profile",
+    "predictions": 10000,
+    "target": "cpu"
+  },
+  "showcase": "inference-benchmark",
+  "stage": "cpu",
+  "startedAt": "2026-10-20T19:12:39.201155Z",
+  "startedAtUnixNs": 1792523559241761000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

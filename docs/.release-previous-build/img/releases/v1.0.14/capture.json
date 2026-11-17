@@ -1,0 +1,88 @@
+{
+  "version": "1.0.14",
+  "capturedAt": "2026-11-09T01:17:42.956Z",
+  "kind": "real-interface-release-candidate",
+  "desktopSource": "8c53eeda1a68a1b11062a6723e6e4cb974b8c7b3",
+  "data": "Current local installation for audit/settings; archived completed experiments opened by a separate read-only daemon for search and infrastructure. No execution, connection test or provisioning was started.",
+  "captures": [
+    {
+      "file": "01-audit-explorer.png",
+      "description": "Recorded API access with time range, volume timeline and server-side filters",
+      "source": "local-installation",
+      "route": "/audit"
+    },
+    {
+      "file": "02-audit-filter.png",
+      "description": "Searchable filter choices with recorded counts",
+      "source": "local-installation",
+      "route": "/audit"
+    },
+    {
+      "file": "03-audit-event-details.png",
+      "description": "Full-height audit drawer with request, identity and correlation evidence",
+      "source": "local-installation",
+      "route": "/audit"
+    },
+    {
+      "file": "04-api-request-history.png",
+      "description": "Paginated completed HTTP requests and caller context",
+      "source": "local-installation",
+      "route": "/audit?view=requests"
+    },
+    {
+      "file": "05-request-retention.png",
+      "description": "Request retention alongside instance data management",
+      "source": "local-installation",
+      "route": "/settings?section=data"
+    },
+    {
+      "file": "06-keyboard-shortcuts.png",
+      "description": "Keyboard reference for macOS and Windows/Linux with matching controls",
+      "source": "local-installation",
+      "route": "/settings?section=shortcuts"
+    },
+    {
+      "file": "07-global-search.png",
+      "description": "Metadata search with type, version and independently linked owners",
+      "source": "read-only-archive",
+      "route": "/workflows"
+    },
+    {
+      "file": "08-environment-map.png",
+      "description": "Simulation infrastructure tree with resource and network entry points",
+      "source": "read-only-archive",
+      "route": "/environments/scheduler-hybrid_hetero"
+    },
+    {
+      "file": "09-resource-inspector.png",
+      "description": "Shared resource drawer with metadata and resource-owned navigation",
+      "source": "read-only-archive",
+      "route": "/environments/scheduler-hybrid_hetero"
+    },
+    {
+      "file": "10-network-inspector.png",
+      "description": "Configured network links available from the environment map",
+      "source": "read-only-archive",
+      "route": "/environments/scheduler-hybrid_hetero"
+    },
+    {
+      "file": "11-audit-dark.png",
+      "description": "Audit timeline, facets and recorded access in dark mode",
+      "source": "local-installation",
+      "route": "/audit"
+    },
+    {
+      "file": "12-resource-list.png",
+      "description": "Searchable resource list in the shared drawer",
+      "source": "read-only-archive",
+      "route": "/environments/scheduler-hybrid_hetero"
+    },
+    {
+      "file": "13-hpc-overview.png",
+      "description": "Archived HPC environment with 132 resources and incremental branch expansion",
+      "source": "read-only-archive",
+      "route": "/environments/fig8-hpc"
+    }
+  ],
+  "browserErrors": []
+}

@@ -1,0 +1,22 @@
+{
+  "dependencies": [
+    "quantize-cpu",
+    "quantize-gpu"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:43.057478Z",
+  "finishedAtUnixNs": 1792523562919407000,
+  "inputDigest": "faba78f3138d9a7d2d99f264e7adfaffde414a063a5db1dd31ada1d7c270b52c",
+  "result": {
+    "float16": 0.00029687500000008527,
+    "int8": 1.5401840247619702e-7,
+    "onnx": 0,
+    "torchscript": 0
+  },
+  "showcase": "model-conversion",
+  "stage": "validate-outputs",
+  "startedAt": "2026-10-20T19:12:42.344659Z",
+  "startedAtUnixNs": 1792523562384562000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

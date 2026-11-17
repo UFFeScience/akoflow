@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkakoflow_docs||=[]).push([[1903],{1912(o){o.exports=JSON.parse('{"blogBasePath":"/akoflow/blog","blogTitle":"Ak\xf4Flow Blog","authorsListPath":"/akoflow/blog/authors"}')}}]);

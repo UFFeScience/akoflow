@@ -1,0 +1,21 @@
+{
+  "dependencies": [],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:39.475418Z",
+  "finishedAtUnixNs": 1792523559470411000,
+  "inputDigest": "3b6c90c515d07dd702b174871b89a1cbb33fec6f216fcd854ae98bcff90589e0",
+  "result": {
+    "measuredCpuNanoseconds": 89542,
+    "model": {
+      "bias": 0.7000263214113253,
+      "weight": 2.399231338536728
+    },
+    "trainingRows": 48
+  },
+  "showcase": "infrastructure-selection",
+  "stage": "profile-workload",
+  "startedAt": "2026-10-20T19:12:39.431421Z",
+  "startedAtUnixNs": 1792523559470319000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

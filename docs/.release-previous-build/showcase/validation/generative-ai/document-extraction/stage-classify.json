@@ -1,0 +1,21 @@
+{
+  "dependencies": [
+    "ocr",
+    "native-text"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:46.263342Z",
+  "finishedAtUnixNs": 1792523566258310000,
+  "inputDigest": "523128ebbdc73d926815d3ba4204fd1d7608cf694a252317c065a1749f173143",
+  "result": {
+    "digits": "123042",
+    "kind": "invoice",
+    "native": "Invoice; Customer: Ada Lovelace; Currency: BRL"
+  },
+  "showcase": "document-extraction",
+  "stage": "classify",
+  "startedAt": "2026-10-20T19:12:46.217422Z",
+  "startedAtUnixNs": 1792523566258164000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

@@ -2439,6 +2439,9 @@ func (h *Handler) CreatePlan(w http.ResponseWriter, r *http.Request) {
 	if !decode(w, r, &request) {
 		return
 	}
+	if h.rejectArchivedWorkflow(w, r, request.Plan.WorkflowVersionID) {
+		return
+	}
 	if request.Plan.NetworkTopologyID == "" {
 		request.Plan.NetworkTopologyID = request.NetworkTopology.ID
 	}
@@ -2459,6 +2462,9 @@ func (h *Handler) ImportPlan(w http.ResponseWriter, r *http.Request) {
 		Plan domain.SchedulePlan `json:"plan"`
 	}
 	if !decode(w, r, &request) {
+		return
+	}
+	if h.rejectArchivedWorkflow(w, r, request.Plan.WorkflowVersionID) {
 		return
 	}
 	plan := request.Plan
@@ -2670,6 +2676,9 @@ func (h *Handler) GetPlan(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) CreateExecution(w http.ResponseWriter, r *http.Request) {
 	var request ports.ExecutionRequest
 	if !decode(w, r, &request) {
+		return
+	}
+	if h.rejectArchivedWorkflow(w, r, firstNonEmpty(request.Plan.WorkflowVersionID, request.Workflow.ID)) {
 		return
 	}
 	if err := h.resolveLocalExecutionAllocation(r.Context(), &request); err != nil {

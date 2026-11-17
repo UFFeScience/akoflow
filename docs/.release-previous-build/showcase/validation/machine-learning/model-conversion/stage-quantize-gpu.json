@@ -1,0 +1,24 @@
+{
+  "dependencies": [
+    "export-onnx",
+    "export-torchscript"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:42.344389Z",
+  "finishedAtUnixNs": 1792523562219074000,
+  "inputDigest": "faba78f3138d9a7d2d99f264e7adfaffde414a063a5db1dd31ada1d7c270b52c",
+  "result": {
+    "dtype": "float16",
+    "hardware": "CPU conversion; GPU-compatible coefficient storage, no TensorRT engine",
+    "values": [
+      2.37109375,
+      0.712890625
+    ]
+  },
+  "showcase": "model-conversion",
+  "stage": "quantize-gpu",
+  "startedAt": "2026-10-20T19:12:41.740717Z",
+  "startedAtUnixNs": 1792523561788543000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

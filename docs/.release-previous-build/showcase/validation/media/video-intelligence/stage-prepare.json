@@ -1,0 +1,13 @@
+{
+  "dependencies": [],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T18:31:00.838656Z",
+  "result": {
+    "commandCompleted": true,
+    "stdout": ""
+  },
+  "showcase": "video-intelligence",
+  "stage": "prepare",
+  "startedAt": "2026-10-20T18:31:00.501681Z",
+  "status": "success"
+}

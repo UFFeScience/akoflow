@@ -1,0 +1,430 @@
+{
+  "dependencies": [
+    "simulation"
+  ],
+  "executionMode": "local-process",
+  "finishedAt": "2026-10-20T19:12:36.823719Z",
+  "finishedAtUnixNs": 1792523556818301000,
+  "inputDigest": "256171cdcd8b1c0f8453428c02766cf87da844ff176e3f2b717502d0fd4d4072",
+  "result": {
+    "samples": [
+      {
+        "analytic": 10,
+        "concentration": 10,
+        "time": 0
+      },
+      {
+        "analytic": 9.851119396030626,
+        "concentration": 9.85,
+        "time": 0.05
+      },
+      {
+        "analytic": 9.70445533548508,
+        "concentration": 9.70225,
+        "time": 0.1
+      },
+      {
+        "analytic": 9.559974818330998,
+        "concentration": 9.55671625,
+        "time": 0.15000000000000002
+      },
+      {
+        "analytic": 9.417645335842487,
+        "concentration": 9.413365506249999,
+        "time": 0.2
+      },
+      {
+        "analytic": 9.277434863285528,
+        "concentration": 9.27216502365625,
+        "time": 0.25
+      },
+      {
+        "analytic": 9.139311852712282,
+        "concentration": 9.133082548301406,
+        "time": 0.30000000000000004
+      },
+      {
+        "analytic": 9.003245225862656,
+        "concentration": 8.996086310076885,
+        "time": 0.35000000000000003
+      },
+      {
+        "analytic": 8.869204367171575,
+        "concentration": 8.861145015425732,
+        "time": 0.4
+      },
+      {
+        "analytic": 8.737159116880344,
+        "concentration": 8.728227840194346,
+        "time": 0.45
+      },
+      {
+        "analytic": 8.607079764250578,
+        "concentration": 8.597304422591431,
+        "time": 0.5
+      },
+      {
+        "analytic": 8.478937040879158,
+        "concentration": 8.46834485625256,
+        "time": 0.55
+      },
+      {
+        "analytic": 8.35270211411272,
+        "concentration": 8.341319683408772,
+        "time": 0.6000000000000001
+      },
+      {
+        "analytic": 8.228346580560185,
+        "concentration": 8.21619988815764,
+        "time": 0.65
+      },
+      {
+        "analytic": 8.10584245970187,
+        "concentration": 8.092956889835275,
+        "time": 0.7000000000000001
+      },
+      {
+        "analytic": 7.985162187593771,
+        "concentration": 7.971562536487745,
+        "time": 0.75
+      },
+      {
+        "analytic": 7.8662786106655345,
+        "concentration": 7.851989098440429,
+        "time": 0.8
+      },
+      {
+        "analytic": 7.74916497961081,
+        "concentration": 7.734209261963822,
+        "time": 0.8500000000000001
+      },
+      {
+        "analytic": 7.633794943368532,
+        "concentration": 7.618196123034365,
+        "time": 0.9
+      },
+      {
+        "analytic": 7.520142543193826,
+        "concentration": 7.50392318118885,
+        "time": 0.9500000000000001
+      },
+      {
+        "analytic": 7.4081822068171785,
+        "concentration": 7.391364333471017,
+        "time": 1
+      },
+      {
+        "analytic": 7.297888742690568,
+        "concentration": 7.280493868468952,
+        "time": 1.05
+      },
+      {
+        "analytic": 7.1892373343192615,
+        "concentration": 7.171286460441918,
+        "time": 1.1
+      },
+      {
+        "analytic": 7.0822035346779995,
+        "concentration": 7.063717163535289,
+        "time": 1.1500000000000001
+      },
+      {
+        "analytic": 6.97676326071031,
+        "concentration": 6.95776140608226,
+        "time": 1.2000000000000002
+      },
+      {
+        "analytic": 6.872892787909723,
+        "concentration": 6.853394984991026,
+        "time": 1.25
+      },
+      {
+        "analytic": 6.770568744981647,
+        "concentration": 6.7505940602161605,
+        "time": 1.3
+      },
+      {
+        "analytic": 6.669768108584744,
+        "concentration": 6.649335149312918,
+        "time": 1.35
+      },
+      {
+        "analytic": 6.570468198150568,
+        "concentration": 6.5495951220732245,
+        "time": 1.4000000000000001
+      },
+      {
+        "analytic": 6.472646670780345,
+        "concentration": 6.451351195242126,
+        "time": 1.4500000000000002
+      },
+      {
+        "analytic": 6.376281516217733,
+        "concentration": 6.354580927313495,
+        "time": 1.5
+      },
+      {
+        "analytic": 6.281351051896409,
+        "concentration": 6.259262213403792,
+        "time": 1.55
+      },
+      {
+        "analytic": 6.187833918061409,
+        "concentration": 6.1653732802027355,
+        "time": 1.6
+      },
+      {
+        "analytic": 6.095709072963093,
+        "concentration": 6.072892680999694,
+        "time": 1.6500000000000001
+      },
+      {
+        "analytic": 6.004955788122659,
+        "concentration": 5.981799290784699,
+        "time": 1.7000000000000002
+      },
+      {
+        "analytic": 5.915553643668151,
+        "concentration": 5.892072301422928,
+        "time": 1.75
+      },
+      {
+        "analytic": 5.827482523739897,
+        "concentration": 5.803691216901584,
+        "time": 1.8
+      },
+      {
+        "analytic": 5.74072261196436,
+        "concentration": 5.71663584864806,
+        "time": 1.85
+      },
+      {
+        "analytic": 5.655254386995371,
+        "concentration": 5.630886310918339,
+        "time": 1.9000000000000001
+      },
+      {
+        "analytic": 5.571058618121738,
+        "concentration": 5.546423016254565,
+        "time": 1.9500000000000002
+      },
+      {
+        "analytic": 5.488116360940264,
+        "concentration": 5.463226671010746,
+        "time": 2
+      },
+      {
+        "analytic": 5.406408953093164,
+        "concentration": 5.381278270945585,
+        "time": 2.0500000000000003
+      },
+      {
+        "analytic": 5.325918010068972,
+        "concentration": 5.300559096881401,
+        "time": 2.1
+      },
+      {
+        "analytic": 5.246625421065929,
+        "concentration": 5.22105071042818,
+        "time": 2.15
+      },
+      {
+        "analytic": 5.168513344916992,
+        "concentration": 5.142734949771757,
+        "time": 2.2
+      },
+      {
+        "analytic": 5.091564206075492,
+        "concentration": 5.065593925525181,
+        "time": 2.25
+      },
+      {
+        "analytic": 5.015760690660555,
+        "concentration": 4.989610016642303,
+        "time": 2.3000000000000003
+      },
+      {
+        "analytic": 4.941085742561417,
+        "concentration": 4.914765866392669,
+        "time": 2.35
+      },
+      {
+        "analytic": 4.867522559599716,
+        "concentration": 4.841044378396779,
+        "time": 2.4000000000000004
+      },
+      {
+        "analytic": 4.795054589748941,
+        "concentration": 4.768428712720827,
+        "time": 2.45
+      },
+      {
+        "analytic": 4.723665527410147,
+        "concentration": 4.696902282030015,
+        "time": 2.5
+      },
+      {
+        "analytic": 4.653339309743134,
+        "concentration": 4.626448747799564,
+        "time": 2.5500000000000003
+      },
+      {
+        "analytic": 4.584060113052235,
+        "concentration": 4.5570520165825705,
+        "time": 2.6
+      },
+      {
+        "analytic": 4.515812349225922,
+        "concentration": 4.488696236333832,
+        "time": 2.6500000000000004
+      },
+      {
+        "analytic": 4.448580662229411,
+        "concentration": 4.421365792788825,
+        "time": 2.7
+      },
+      {
+        "analytic": 4.382349924649493,
+        "concentration": 4.355045305896992,
+        "time": 2.75
+      },
+      {
+        "analytic": 4.317105234290796,
+        "concentration": 4.289719626308537,
+        "time": 2.8000000000000003
+      },
+      {
+        "analytic": 4.252831910822741,
+        "concentration": 4.22537383191391,
+        "time": 2.85
+      },
+      {
+        "analytic": 4.1895154924763895,
+        "concentration": 4.161993224435201,
+        "time": 2.9000000000000004
+      },
+      {
+        "analytic": 4.127141732790497,
+        "concentration": 4.099563326068673,
+        "time": 2.95
+      },
+      {
+        "analytic": 4.065696597405991,
+        "concentration": 4.0380698761776435,
+        "time": 3
+      },
+      {
+        "analytic": 4.0051662609081875,
+        "concentration": 3.977498828034979,
+        "time": 3.0500000000000003
+      },
+      {
+        "analytic": 3.9455371037160116,
+        "concentration": 3.9178363456144543,
+        "time": 3.1
+      },
+      {
+        "analytic": 3.88679570901753,
+        "concentration": 3.8590688004302374,
+        "time": 3.1500000000000004
+      },
+      {
+        "analytic": 3.8289288597511204,
+        "concentration": 3.801182768423784,
+        "time": 3.2
+      },
+      {
+        "analytic": 3.7719235356315695,
+        "concentration": 3.744165026897427,
+        "time": 3.25
+      },
+      {
+        "analytic": 3.715766910220457,
+        "concentration": 3.6880025514939656,
+        "time": 3.3000000000000003
+      },
+      {
+        "analytic": 3.660446348040154,
+        "concentration": 3.6326825132215563,
+        "time": 3.35
+      },
+      {
+        "analytic": 3.605949401730783,
+        "concentration": 3.578192275523233,
+        "time": 3.4000000000000004
+      },
+      {
+        "analytic": 3.5522638092495153,
+        "concentration": 3.5245193913903847,
+        "time": 3.45
+      },
+      {
+        "analytic": 3.499377491111553,
+        "concentration": 3.471651600519529,
+        "time": 3.5
+      },
+      {
+        "analytic": 3.4472785476722017,
+        "concentration": 3.4195768265117357,
+        "time": 3.5500000000000003
+      },
+      {
+        "analytic": 3.3959552564493913,
+        "concentration": 3.3682831741140595,
+        "time": 3.6
+      },
+      {
+        "analytic": 3.3453960694860765,
+        "concentration": 3.3177589265023486,
+        "time": 3.6500000000000004
+      },
+      {
+        "analytic": 3.2955896107518905,
+        "concentration": 3.2679925426048135,
+        "time": 3.7
+      },
+      {
+        "analytic": 3.2465246735834974,
+        "concentration": 3.2189726544657415,
+        "time": 3.75
+      },
+      {
+        "analytic": 3.198190218163038,
+        "concentration": 3.1706880646487554,
+        "time": 3.8000000000000003
+      },
+      {
+        "analytic": 3.150575369034133,
+        "concentration": 3.123127743679024,
+        "time": 3.85
+      },
+      {
+        "analytic": 3.10366941265485,
+        "concentration": 3.0762808275238385,
+        "time": 3.9000000000000004
+      },
+      {
+        "analytic": 3.0574617949871175,
+        "concentration": 3.030136615110981,
+        "time": 3.95
+      },
+      {
+        "analytic": 3.0119421191220215,
+        "concentration": 2.9846845658843164,
+        "time": 4
+      }
+    ],
+    "setup": {
+      "decay": 0.3,
+      "initial": 10,
+      "step": 0.05,
+      "steps": 80
+    }
+  },
+  "showcase": "ai-assisted-analysis",
+  "stage": "measurements",
+  "startedAt": "2026-10-20T19:12:36.77732Z",
+  "startedAtUnixNs": 1792523556818029000,
+  "status": "success",
+  "validationMode": "local-workload"
+}

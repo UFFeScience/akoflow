@@ -17,7 +17,13 @@ func (m Manager) inspectRegistryPlatforms(ctx context.Context, image string, res
 	if ctx.Value(localInspectionKey{}) == true {
 		return
 	}
-	if platforms := provider.RegistryPlatforms(ctx, m.Executor.Runner, image); len(platforms) > 0 {
+	platforms, reference := provider.ResolveOCIPlatforms(ctx, image)
+	if len(platforms) > 0 {
+		result["platforms"] = platforms
+		result["platformsRegistryReference"] = reference
+		return
+	}
+	if platforms = provider.RegistryPlatforms(ctx, m.Executor.Runner, image); len(platforms) > 0 {
 		result["platforms"] = platforms
 		if !strings.Contains(image, "@sha256:") {
 			result["platformsObservedFromTag"] = true

@@ -14,6 +14,13 @@ func pinInspectedOCI(source *domain.ExecutableSource) error {
 		return nil
 	}
 	data := source.Inspection.Data
+	if source.Type == domain.ExecutableSourceOCI && source.ExpectedDigest == "" {
+		if ref, ok := data["platformsRegistryReference"].(string); ok && validInspectionRegistryReference(source.Reference, ref) {
+			source.Reference = ref
+			data["reference"] = ref
+			return nil
+		}
+	}
 	if source.Type == domain.ExecutableSourceOCI && source.ExpectedDigest == "" && data["platformsObservedFromTag"] == true {
 		return nil
 	}
@@ -70,4 +77,11 @@ func inspectionRepository(reference string) string {
 		reference = "library/" + reference
 	}
 	return reference
+}
+
+func validInspectionRegistryReference(original, resolved string) bool {
+	parts := strings.Split(resolved, "@")
+	return len(parts) == 2 && strings.HasPrefix(parts[1], "sha256:") && len(parts[1]) == 71 &&
+		inspectionRepository(original) == inspectionRepository(resolved) &&
+		(!strings.Contains(original, "@") || original == resolved)
 }

@@ -119,7 +119,9 @@ func (s *Supervisor) Execute(ctx context.Context, request ports.ExecutionRequest
 			}
 		}
 		if err != nil {
-			_ = s.executions.FailRun(context.WithoutCancel(ctx), request.Run.ID, err.Error())
+			if saveErr := s.executions.FailRun(context.WithoutCancel(ctx), request.Run.ID, err.Error()); saveErr != nil {
+				err = errors.Join(err, fmt.Errorf("persist failed execution run: %w", saveErr))
+			}
 		}
 	}()
 	if request.Run.Mode == domain.ExecutionModeSimulation {
@@ -319,7 +321,7 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 			}
 		}
 		if executionErr != nil {
-			s.cancelRunningActivities(cleanupCtx, request.Run.Mode, running, tasks, executionErr)
+			executionErr = errors.Join(executionErr, s.cancelRunningActivities(cleanupCtx, request.Run.Mode, running, tasks, executionErr))
 		}
 	}()
 	consumeAllocation := func(result allocationResult) error {
@@ -328,8 +330,8 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 			failure := fmt.Errorf("allocate runtime for activity %q: %w", result.activityID, result.err)
 			assignment := assignments[result.activityID]
 			resource := resources[assignment.ResourceID]
-			_ = s.recordStartFailure(ctx, request.Run.ID, result.activityID, assignment, resource, selectRuntime(request, assignment), tasks[result.activityID].Attempt, failure)
-			return failure
+			saveErr := s.recordStartFailure(ctx, request.Run.ID, result.activityID, assignment, resource, selectRuntime(request, assignment), tasks[result.activityID].Attempt, failure)
+			return errors.Join(failure, saveErr)
 		}
 		readyAllocations[result.activityID] = result.allocation
 		return nil
@@ -536,7 +538,7 @@ func (s *Supervisor) inspectRunning(
 		firstErr = s.applyInspectionResult(ctx, workflow, runID, result, running, completed, tasks, firstErr)
 	}
 	if firstErr != nil {
-		s.cancelRunningActivities(ctx, mode, running, tasks, firstErr)
+		firstErr = errors.Join(firstErr, s.cancelRunningActivities(ctx, mode, running, tasks, firstErr))
 	}
 	return firstErr
 }
@@ -596,10 +598,8 @@ func (s *Supervisor) applyInspectionResult(
 	case domain.HandleCompleted:
 		if err := s.validateExpectedOutputs(ctx, workflow, runID, activityID); err != nil {
 			task.Status, task.FailureReason = domain.TaskFailed, err.Error()
-			_ = s.executions.SaveTask(ctx, task)
-			if firstErr == nil {
-				firstErr = fmt.Errorf("activity %q outputs: %w", activityID, err)
-			}
+			saveErr := s.executions.SaveTask(ctx, task)
+			firstErr = errors.Join(firstErr, fmt.Errorf("activity %q outputs: %w", activityID, err), saveErr)
 			return firstErr
 		}
 		completeTask(&task, *observed)
@@ -622,7 +622,9 @@ func (s *Supervisor) applyInspectionResult(
 		task.FinishedAt = observed.FinishedAt
 		applyHandleTiming(&task, *observed)
 		task.RuntimeSeconds = maxFloat(0, observed.FinishedAt-executionStartedAt(*observed))
-		_ = s.executions.SaveTask(ctx, task)
+		if saveErr := s.executions.SaveTask(ctx, task); saveErr != nil {
+			return errors.Join(firstErr, fmt.Errorf("activity %q failed: %s; persist terminal task: %w", activityID, observed.Failure, saveErr))
+		}
 		tasks[activityID] = task
 		delete(running, activityID)
 		if firstErr == nil {
@@ -638,7 +640,7 @@ func (s *Supervisor) cancelRunningActivities(
 	running map[string]domain.ActivityHandle,
 	tasks map[string]domain.TaskExecution,
 	cause error,
-) {
+) error {
 	cleanupCtx, cancel := context.WithTimeout(context.WithoutCancel(ctx), 60*time.Second)
 	defer cancel()
 	type stopResult struct {
@@ -659,20 +661,30 @@ func (s *Supervisor) cancelRunningActivities(
 	}
 	group.Wait()
 	close(results)
+	var cleanupErr error
 	for result := range results {
 		task := tasks[result.activityID]
 		task.FinishedAt = unixNow()
 		if result.err == nil {
 			task.Status = domain.TaskCancelled
 			task.FailureReason = "cancelled after execution failure: " + cause.Error()
-			delete(running, result.activityID)
 		} else {
 			task.Status = domain.TaskFailed
 			task.FailureReason = "failed to cancel after execution failure: " + result.err.Error()
 		}
-		tasks[result.activityID] = task
-		_ = s.executions.SaveTask(context.WithoutCancel(ctx), task)
+		if saveErr := s.executions.SaveTask(cleanupCtx, task); saveErr != nil {
+			cleanupErr = errors.Join(cleanupErr, fmt.Errorf("persist cancellation of activity %q: %w", result.activityID, saveErr))
+		} else {
+			tasks[result.activityID] = task
+			if result.err == nil {
+				delete(running, result.activityID)
+			}
+		}
+		if result.err != nil {
+			cleanupErr = errors.Join(cleanupErr, fmt.Errorf("cancel activity %q: %w", result.activityID, result.err))
+		}
 	}
+	return cleanupErr
 }
 
 func (s *Supervisor) validateExpectedOutputs(ctx context.Context, workflow domain.WorkflowVersion, runID, activityID string) error {

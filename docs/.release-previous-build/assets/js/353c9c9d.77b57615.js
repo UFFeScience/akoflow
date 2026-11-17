@@ -1,1 +1,0 @@
-"use strict";(globalThis.webpackChunkakoflow_docs||=[]).push([[7886],{65019(o){o.exports=JSON.parse('{"metadata":{"permalink":"/akoflow/blog","page":1,"postsPerPage":6,"totalPages":1,"totalCount":6,"blogDescription":"Tutorials, experiments, and results from the Ak\xf4Flow project.","blogTitle":"Ak\xf4Flow Blog"}}')}}]);

@@ -1,1 +1,0 @@
-"use strict";(globalThis.webpackChunkakoflow_docs||=[]).push([[5340],{75428(e){e.exports=JSON.parse('{"authors":[{"name":"Wesley Ferreira","title":"@ovvesley","url":"https://github.com/ovvesley","imageURL":"https://avatars.githubusercontent.com/u/12123871?v=4&size=96","key":"ovvesley","page":null,"count":6},{"name":"Boosted with LLMs","key":"llms","page":null,"count":6}]}')}}]);

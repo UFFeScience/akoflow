@@ -3328,6 +3328,9 @@
               },
               "type": "array"
             },
+            "archived": {
+              "type": "boolean"
+            },
             "dataDependencies": {
               "items": {
                 "properties": {
@@ -4319,6 +4322,9 @@
                 "type": "object"
               },
               "type": "array"
+            },
+            "archived": {
+              "type": "boolean"
             },
             "dataDependencies": {
               "items": {
@@ -7281,6 +7287,28 @@
     "path": "/akoflow-api/planning-sessions/{sessionId}/candidates/{candidateId}/select/",
     "handler": "SelectPlanningCandidate",
     "description": "select planning candidate. POST /akoflow-api/planning-sessions/{sessionId}/candidates/{candidateId}/select/. Uses the daemon API and its domain validation."
+  },
+  {
+    "name": "set_workflow_archived",
+    "method": "PUT",
+    "path": "/akoflow-api/workflow-definitions/{workflowId}/archive/",
+    "handler": "SetWorkflowArchived",
+    "description": "set workflow archived. PUT /akoflow-api/workflow-definitions/{workflowId}/archive/. Uses the daemon API and its domain validation.",
+    "body": {
+      "properties": {
+        "archived": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "type": "object"
+    }
   },
   {
     "name": "start_artifact_build_run",

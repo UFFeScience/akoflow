@@ -8,7 +8,7 @@ import (
 	"github.com/UFFeScience/akoflow/internal/domain"
 )
 
-const latestVersions = `SELECT v.id, v.workflow_id, v.version, v.definition_hash
+const latestVersions = `SELECT v.id, v.workflow_id, v.version, v.definition_hash, v.status
 	FROM workflow_versions v WHERE v.version=(
 		SELECT MAX(v2.version) FROM workflow_versions v2 WHERE v2.workflow_id=v.workflow_id)`
 
@@ -35,7 +35,7 @@ func (r *Repository) listCatalogHeaders(ctx context.Context) ([]domain.WorkflowC
 	)
 	SELECT w.id, w.external_id, w.name, w.namespace, v.id, v.version, v.definition_hash,
 		COALESCE(a.count,0), COALESCE(p.count,0), COALESCE(e.count,0),
-		COALESCE(e.completed,0), COALESCE(e.cost,0)
+		COALESCE(e.completed,0), COALESCE(e.cost,0), v.status='archived'
 	FROM workflow_definitions w JOIN latest v ON v.workflow_id=w.id
 	LEFT JOIN activity_counts a ON a.workflow_version_id=v.id
 	LEFT JOIN plan_counts p ON p.workflow_version_id=v.id
@@ -50,10 +50,11 @@ func (r *Repository) listCatalogHeaders(ctx context.Context) ([]domain.WorkflowC
 		if err := rows.Scan(&entry.ID, &entry.ExternalID, &entry.Name, &entry.Namespace,
 			&entry.Version.ID, &entry.Version.Version, &entry.Version.DefinitionHash,
 			&entry.ActivityCount, &entry.PlanCount, &entry.RunCount,
-			&entry.CompletedRunCount, &entry.ObservedCost); err != nil {
+			&entry.CompletedRunCount, &entry.ObservedCost, &entry.Archived); err != nil {
 			rows.Close()
 			return nil, err
 		}
+		entry.Version.Archived = entry.Archived
 		entry.Version.WorkflowID = entry.ID
 		entry.RecentRuns = make([]domain.WorkflowCatalogRun, 0)
 		entries = append(entries, entry)

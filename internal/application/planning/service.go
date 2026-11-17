@@ -64,6 +64,9 @@ func (s *Coordinator) Create(
 		}
 		return nil, err
 	}
+	if workflow.Archived {
+		return nil, fmt.Errorf("this workflow is archived; restore it before creating a planning session")
+	}
 	if err := normalizeInterferenceConfiguration(&session, *workflow); err != nil {
 		return nil, err
 	}

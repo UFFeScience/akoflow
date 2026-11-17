@@ -73,7 +73,8 @@ func (m *Manager) requestLocked(ctx context.Context, method, path string, input 
 }
 func hubResponseError(status int, data []byte) error {
 	var result struct {
-		Error string `json:"error"`
+		Error       string            `json:"error"`
+		FieldErrors map[string]string `json:"fieldErrors"`
 	}
 	_ = json.Unmarshal(data, &result)
 	switch result.Error {
@@ -88,7 +89,7 @@ func hubResponseError(status int, data []byte) error {
 	case 409:
 		return failure(409, "hub_conflict", "The destination changed. Review the result again before publishing.")
 	case 422:
-		return failure(422, "hub_validation", "Hub rejected these details. Check the publication fields or exported workflow and review again.")
+		return hubValidationError(result.FieldErrors)
 	case 429:
 		return failure(429, "hub_rate_limit", "Too many Hub requests. Wait a minute and try again.")
 	}

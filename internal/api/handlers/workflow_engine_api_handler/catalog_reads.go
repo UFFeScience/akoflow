@@ -22,7 +22,13 @@ func (h *Handler) listWorkflowOptions(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	items, err := query.ListHeaders(r.Context())
-	writeList(w, items, err)
+	active := make([]domain.WorkflowDefinition, 0, len(items))
+	for _, item := range items {
+		if !item.Archived {
+			active = append(active, item)
+		}
+	}
+	writeList(w, active, err)
 }
 
 func (h *Handler) countEnvironments(w http.ResponseWriter, r *http.Request) {

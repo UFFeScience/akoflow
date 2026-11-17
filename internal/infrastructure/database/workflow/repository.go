@@ -69,6 +69,7 @@ func (r *Repository) Find(ctx context.Context, id string) (*domain.WorkflowDefin
 	}
 	if version != nil {
 		definition.Version = *version
+		definition.Archived = version.Archived
 	}
 	types, err := r.listTypes(ctx, versionID)
 	if err != nil {
@@ -178,10 +179,7 @@ func (r *Repository) Create(ctx context.Context, definition Definition) error {
 }
 
 func (r *Repository) FindVersion(ctx context.Context, id string) (*domain.WorkflowVersion, error) {
-	var workflow domain.WorkflowVersion
-	err := r.db.QueryRowContext(ctx, `SELECT id, workflow_id, version, definition_hash
-		FROM workflow_versions WHERE id=?`, id).Scan(&workflow.ID, &workflow.WorkflowID,
-		&workflow.Version, &workflow.DefinitionHash)
+	workflow, err := r.versionHeader(ctx, id)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	}

@@ -1,0 +1,14 @@
+{
+  "release": "v1.0.22",
+  "capturedOn": "2026-11-17",
+  "source": "Actual local Desktop web interface with persisted daemon records",
+  "workflowId": "opendronemap-caliterra-split-merge-local-1e96697664",
+  "screenshots": [
+    "01-plans.png",
+    "02-plan-gantt.png",
+    "03-artifact-picker.png"
+  ],
+  "browserPageErrors": [],
+  "executionStartedForCapture": false,
+  "notes": "Plan and execution values are previously recorded observations. The artifact picker shows the Docker Hub search results for Python. Capturing these pages did not create a workflow, execute activities or publish results."
+}

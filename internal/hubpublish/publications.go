@@ -16,6 +16,9 @@ func (m *Manager) Publications(ctx context.Context) ([]Publication, error) {
 	return items, err
 }
 func (m *Manager) CreatePublication(ctx context.Context, input Publication) (Publication, error) {
+	if err := validatePublicationInput(input); err != nil {
+		return Publication{}, err
+	}
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	if _, err := m.identityLocked(ctx); err != nil {

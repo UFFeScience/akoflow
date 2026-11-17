@@ -912,6 +912,9 @@
     "description": "create execution. POST /akoflow-api/execution-runs/. Uses the daemon API and its domain validation.",
     "body": {
       "properties": {
+        "acknowledgeWarnings": {
+          "type": "boolean"
+        },
         "activityProfiles": {
           "items": {
             "properties": {
@@ -1198,6 +1201,2498 @@
             }
           },
           "type": "object"
+        },
+        "preflightId": {
+          "type": "string"
+        },
+        "preparationRequirementsByActivity": {
+          "additionalProperties": {
+            "properties": {
+              "artifact": {
+                "anyOf": [
+                  {
+                    "properties": {
+                      "activityId": {
+                        "type": "string"
+                      },
+                      "destinationPath": {
+                        "type": "string"
+                      },
+                      "digest": {
+                        "type": "string"
+                      },
+                      "environmentId": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "ociReference": {
+                        "type": "string"
+                      },
+                      "resourceId": {
+                        "type": "string"
+                      },
+                      "runId": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "variantId": {
+                        "type": "string"
+                      },
+                      "verifiedDigest": {
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "artifactTransfer": {
+                "anyOf": [
+                  {
+                    "properties": {
+                      "blobs": {
+                        "items": {
+                          "properties": {
+                            "digest": {
+                              "type": "string"
+                            },
+                            "path": {
+                              "type": "string"
+                            },
+                            "sizeBytes": {
+                              "type": "integer"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "chunks": {
+                        "items": {
+                          "properties": {
+                            "digest": {
+                              "type": "string"
+                            },
+                            "index": {
+                              "type": "integer"
+                            },
+                            "offset": {
+                              "type": "integer"
+                            },
+                            "received": {
+                              "type": "boolean"
+                            },
+                            "sizeBytes": {
+                              "type": "integer"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "consumerActivityId": {
+                        "type": "string"
+                      },
+                      "destination": {
+                        "properties": {
+                          "cloudInstanceId": {
+                            "type": "string"
+                          },
+                          "connectionId": {
+                            "type": "string"
+                          },
+                          "environmentId": {
+                            "type": "string"
+                          },
+                          "networkDomain": {
+                            "type": "string"
+                          },
+                          "path": {
+                            "type": "string"
+                          },
+                          "resourceId": {
+                            "type": "string"
+                          },
+                          "runtimeId": {
+                            "type": "string"
+                          },
+                          "uri": {
+                            "type": "string"
+                          },
+                          "workspaceSnapshotEntries": {
+                            "items": {
+                              "properties": {
+                                "digest": {
+                                  "type": "string"
+                                },
+                                "path": {
+                                  "type": "string"
+                                },
+                                "sizeBytes": {
+                                  "type": "integer"
+                                }
+                              },
+                              "type": "object"
+                            },
+                            "type": "array"
+                          },
+                          "workspaceSnapshotId": {
+                            "description": "Snapshot identity is issued only for a fully checksummed, sealed producer\nworkspace. Missing identity disables archive reuse, not synchronization.",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "executionRunId": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "producerActivityId": {
+                        "type": "string"
+                      },
+                      "resumeFrom": {
+                        "items": {
+                          "type": "integer"
+                        },
+                        "type": "array"
+                      },
+                      "route": {
+                        "properties": {
+                          "archiveBytes": {
+                            "type": "integer"
+                          },
+                          "consumerActivityId": {
+                            "type": "string"
+                          },
+                          "fallback": {
+                            "type": "string"
+                          },
+                          "filesTransferred": {
+                            "type": "integer"
+                          },
+                          "lastRetryError": {
+                            "type": "string"
+                          },
+                          "mergeCheckSeconds": {
+                            "type": "number"
+                          },
+                          "mergeCommandOverheadSeconds": {
+                            "type": "number"
+                          },
+                          "mergeCopySeconds": {
+                            "type": "number"
+                          },
+                          "mergeExecutionSeconds": {
+                            "type": "number"
+                          },
+                          "mergeSshChannelWaitSeconds": {
+                            "type": "number"
+                          },
+                          "mergeVerifySeconds": {
+                            "type": "number"
+                          },
+                          "networkBytesIncomplete": {
+                            "type": "boolean"
+                          },
+                          "networkDomain": {
+                            "type": "string"
+                          },
+                          "packaging": {
+                            "type": "string"
+                          },
+                          "peerProbeFailure": {
+                            "type": "string"
+                          },
+                          "peerReceiverCpuSeconds": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "peerReceiverServiceSeconds": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "phases": {
+                            "items": {
+                              "properties": {
+                                "durationSeconds": {
+                                  "type": "number"
+                                },
+                                "executionSeconds": {
+                                  "anyOf": [
+                                    {
+                                      "type": "number"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "failed": {
+                                  "type": "boolean"
+                                },
+                                "finishedAt": {
+                                  "type": "number"
+                                },
+                                "name": {
+                                  "type": "string"
+                                },
+                                "sshChannelWaitSeconds": {
+                                  "anyOf": [
+                                    {
+                                      "type": "number"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "startedAt": {
+                                  "type": "number"
+                                }
+                              },
+                              "type": "object"
+                            },
+                            "type": "array"
+                          },
+                          "preparationFinishedAt": {
+                            "type": "number"
+                          },
+                          "preparationSeconds": {
+                            "type": "number"
+                          },
+                          "preparationStartedAt": {
+                            "type": "number"
+                          },
+                          "producerActivityId": {
+                            "type": "string"
+                          },
+                          "reason": {
+                            "type": "string"
+                          },
+                          "retryCount": {
+                            "type": "integer"
+                          },
+                          "rsyncExecutionSeconds": {
+                            "type": "number"
+                          },
+                          "serverNetworkBytes": {
+                            "anyOf": [
+                              {
+                                "type": "integer"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "sharedFilesystem": {
+                            "type": "string"
+                          },
+                          "sharedFilesystemId": {
+                            "type": "string"
+                          },
+                          "sharedStorageProofFailure": {
+                            "type": "string"
+                          },
+                          "snapshotAcquireWaitSeconds": {
+                            "type": "number"
+                          },
+                          "snapshotBuildCommandSeconds": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "snapshotBuildCpuSeconds": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "snapshotBuildServiceSeconds": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "snapshotBuildSshWaitSeconds": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "snapshotBuildWallSeconds": {
+                            "description": "Diagnostics, not additive phases. Build wall time includes SSH admission;\na reused caller's acquisition wait may overlap that same shared build.",
+                            "type": "number"
+                          },
+                          "snapshotReused": {
+                            "type": "boolean"
+                          },
+                          "sourceAddress": {
+                            "type": "string"
+                          },
+                          "sourceCloudInstanceId": {
+                            "type": "string"
+                          },
+                          "sourceEnvironmentId": {
+                            "type": "string"
+                          },
+                          "sourcePackExecutionSeconds": {
+                            "type": "number"
+                          },
+                          "sourcePackPreflightSeconds": {
+                            "type": "number"
+                          },
+                          "sourcePackPreflightServiceSeconds": {
+                            "type": "number"
+                          },
+                          "sourcePackPreflightSshChannelWaitSeconds": {
+                            "type": "number"
+                          },
+                          "sourcePackSshChannelWaitSeconds": {
+                            "type": "number"
+                          },
+                          "sourceResourceId": {
+                            "type": "string"
+                          },
+                          "sshChannelWaitSeconds": {
+                            "type": "number"
+                          },
+                          "strategy": {
+                            "type": "string"
+                          },
+                          "targetAddress": {
+                            "type": "string"
+                          },
+                          "targetCloudInstanceId": {
+                            "type": "string"
+                          },
+                          "targetEnvironmentId": {
+                            "type": "string"
+                          },
+                          "targetResourceId": {
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "source": {
+                        "properties": {
+                          "cloudInstanceId": {
+                            "type": "string"
+                          },
+                          "connectionId": {
+                            "type": "string"
+                          },
+                          "environmentId": {
+                            "type": "string"
+                          },
+                          "networkDomain": {
+                            "type": "string"
+                          },
+                          "path": {
+                            "type": "string"
+                          },
+                          "resourceId": {
+                            "type": "string"
+                          },
+                          "runtimeId": {
+                            "type": "string"
+                          },
+                          "uri": {
+                            "type": "string"
+                          },
+                          "workspaceSnapshotEntries": {
+                            "items": {
+                              "properties": {
+                                "digest": {
+                                  "type": "string"
+                                },
+                                "path": {
+                                  "type": "string"
+                                },
+                                "sizeBytes": {
+                                  "type": "integer"
+                                }
+                              },
+                              "type": "object"
+                            },
+                            "type": "array"
+                          },
+                          "workspaceSnapshotId": {
+                            "description": "Snapshot identity is issued only for a fully checksummed, sealed producer\nworkspace. Missing identity disables archive reuse, not synchronization.",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "strategy": {
+                        "type": "string"
+                      },
+                      "syncWorkspace": {
+                        "type": "boolean"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "reproduction": {
+                "anyOf": [
+                  {
+                    "properties": {
+                      "build": {
+                        "anyOf": [
+                          {
+                            "properties": {
+                              "arguments": {
+                                "additionalProperties": {
+                                  "type": "string"
+                                },
+                                "type": "object"
+                              },
+                              "contextArchive": {
+                                "contentEncoding": "base64",
+                                "type": "string"
+                              },
+                              "contextDigest": {
+                                "type": "string"
+                              },
+                              "recipeDigest": {
+                                "type": "string"
+                              },
+                              "recipePath": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "expectedDigest": {
+                        "type": "string"
+                      },
+                      "image": {
+                        "type": "string"
+                      },
+                      "platform": {
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "workspace": {
+                "anyOf": [
+                  {
+                    "properties": {
+                      "destination": {
+                        "properties": {
+                          "cloudInstanceId": {
+                            "type": "string"
+                          },
+                          "connectionId": {
+                            "type": "string"
+                          },
+                          "environmentId": {
+                            "type": "string"
+                          },
+                          "networkDomain": {
+                            "type": "string"
+                          },
+                          "path": {
+                            "type": "string"
+                          },
+                          "resourceId": {
+                            "type": "string"
+                          },
+                          "runtimeId": {
+                            "type": "string"
+                          },
+                          "uri": {
+                            "type": "string"
+                          },
+                          "workspaceSnapshotEntries": {
+                            "items": {
+                              "properties": {
+                                "digest": {
+                                  "type": "string"
+                                },
+                                "path": {
+                                  "type": "string"
+                                },
+                                "sizeBytes": {
+                                  "type": "integer"
+                                }
+                              },
+                              "type": "object"
+                            },
+                            "type": "array"
+                          },
+                          "workspaceSnapshotId": {
+                            "description": "Snapshot identity is issued only for a fully checksummed, sealed producer\nworkspace. Missing identity disables archive reuse, not synchronization.",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "missing": {
+                        "items": {
+                          "properties": {
+                            "digest": {
+                              "type": "string"
+                            },
+                            "path": {
+                              "type": "string"
+                            },
+                            "sizeBytes": {
+                              "type": "integer"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "revisionId": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "verified": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "workspaceTransfer": {
+                "anyOf": [
+                  {
+                    "properties": {
+                      "blobs": {
+                        "items": {
+                          "properties": {
+                            "digest": {
+                              "type": "string"
+                            },
+                            "path": {
+                              "type": "string"
+                            },
+                            "sizeBytes": {
+                              "type": "integer"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "chunks": {
+                        "items": {
+                          "properties": {
+                            "digest": {
+                              "type": "string"
+                            },
+                            "index": {
+                              "type": "integer"
+                            },
+                            "offset": {
+                              "type": "integer"
+                            },
+                            "received": {
+                              "type": "boolean"
+                            },
+                            "sizeBytes": {
+                              "type": "integer"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "consumerActivityId": {
+                        "type": "string"
+                      },
+                      "destination": {
+                        "properties": {
+                          "cloudInstanceId": {
+                            "type": "string"
+                          },
+                          "connectionId": {
+                            "type": "string"
+                          },
+                          "environmentId": {
+                            "type": "string"
+                          },
+                          "networkDomain": {
+                            "type": "string"
+                          },
+                          "path": {
+                            "type": "string"
+                          },
+                          "resourceId": {
+                            "type": "string"
+                          },
+                          "runtimeId": {
+                            "type": "string"
+                          },
+                          "uri": {
+                            "type": "string"
+                          },
+                          "workspaceSnapshotEntries": {
+                            "items": {
+                              "properties": {
+                                "digest": {
+                                  "type": "string"
+                                },
+                                "path": {
+                                  "type": "string"
+                                },
+                                "sizeBytes": {
+                                  "type": "integer"
+                                }
+                              },
+                              "type": "object"
+                            },
+                            "type": "array"
+                          },
+                          "workspaceSnapshotId": {
+                            "description": "Snapshot identity is issued only for a fully checksummed, sealed producer\nworkspace. Missing identity disables archive reuse, not synchronization.",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "executionRunId": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "producerActivityId": {
+                        "type": "string"
+                      },
+                      "resumeFrom": {
+                        "items": {
+                          "type": "integer"
+                        },
+                        "type": "array"
+                      },
+                      "route": {
+                        "properties": {
+                          "archiveBytes": {
+                            "type": "integer"
+                          },
+                          "consumerActivityId": {
+                            "type": "string"
+                          },
+                          "fallback": {
+                            "type": "string"
+                          },
+                          "filesTransferred": {
+                            "type": "integer"
+                          },
+                          "lastRetryError": {
+                            "type": "string"
+                          },
+                          "mergeCheckSeconds": {
+                            "type": "number"
+                          },
+                          "mergeCommandOverheadSeconds": {
+                            "type": "number"
+                          },
+                          "mergeCopySeconds": {
+                            "type": "number"
+                          },
+                          "mergeExecutionSeconds": {
+                            "type": "number"
+                          },
+                          "mergeSshChannelWaitSeconds": {
+                            "type": "number"
+                          },
+                          "mergeVerifySeconds": {
+                            "type": "number"
+                          },
+                          "networkBytesIncomplete": {
+                            "type": "boolean"
+                          },
+                          "networkDomain": {
+                            "type": "string"
+                          },
+                          "packaging": {
+                            "type": "string"
+                          },
+                          "peerProbeFailure": {
+                            "type": "string"
+                          },
+                          "peerReceiverCpuSeconds": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "peerReceiverServiceSeconds": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "phases": {
+                            "items": {
+                              "properties": {
+                                "durationSeconds": {
+                                  "type": "number"
+                                },
+                                "executionSeconds": {
+                                  "anyOf": [
+                                    {
+                                      "type": "number"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "failed": {
+                                  "type": "boolean"
+                                },
+                                "finishedAt": {
+                                  "type": "number"
+                                },
+                                "name": {
+                                  "type": "string"
+                                },
+                                "sshChannelWaitSeconds": {
+                                  "anyOf": [
+                                    {
+                                      "type": "number"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "startedAt": {
+                                  "type": "number"
+                                }
+                              },
+                              "type": "object"
+                            },
+                            "type": "array"
+                          },
+                          "preparationFinishedAt": {
+                            "type": "number"
+                          },
+                          "preparationSeconds": {
+                            "type": "number"
+                          },
+                          "preparationStartedAt": {
+                            "type": "number"
+                          },
+                          "producerActivityId": {
+                            "type": "string"
+                          },
+                          "reason": {
+                            "type": "string"
+                          },
+                          "retryCount": {
+                            "type": "integer"
+                          },
+                          "rsyncExecutionSeconds": {
+                            "type": "number"
+                          },
+                          "serverNetworkBytes": {
+                            "anyOf": [
+                              {
+                                "type": "integer"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "sharedFilesystem": {
+                            "type": "string"
+                          },
+                          "sharedFilesystemId": {
+                            "type": "string"
+                          },
+                          "sharedStorageProofFailure": {
+                            "type": "string"
+                          },
+                          "snapshotAcquireWaitSeconds": {
+                            "type": "number"
+                          },
+                          "snapshotBuildCommandSeconds": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "snapshotBuildCpuSeconds": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "snapshotBuildServiceSeconds": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "snapshotBuildSshWaitSeconds": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "snapshotBuildWallSeconds": {
+                            "description": "Diagnostics, not additive phases. Build wall time includes SSH admission;\na reused caller's acquisition wait may overlap that same shared build.",
+                            "type": "number"
+                          },
+                          "snapshotReused": {
+                            "type": "boolean"
+                          },
+                          "sourceAddress": {
+                            "type": "string"
+                          },
+                          "sourceCloudInstanceId": {
+                            "type": "string"
+                          },
+                          "sourceEnvironmentId": {
+                            "type": "string"
+                          },
+                          "sourcePackExecutionSeconds": {
+                            "type": "number"
+                          },
+                          "sourcePackPreflightSeconds": {
+                            "type": "number"
+                          },
+                          "sourcePackPreflightServiceSeconds": {
+                            "type": "number"
+                          },
+                          "sourcePackPreflightSshChannelWaitSeconds": {
+                            "type": "number"
+                          },
+                          "sourcePackSshChannelWaitSeconds": {
+                            "type": "number"
+                          },
+                          "sourceResourceId": {
+                            "type": "string"
+                          },
+                          "sshChannelWaitSeconds": {
+                            "type": "number"
+                          },
+                          "strategy": {
+                            "type": "string"
+                          },
+                          "targetAddress": {
+                            "type": "string"
+                          },
+                          "targetCloudInstanceId": {
+                            "type": "string"
+                          },
+                          "targetEnvironmentId": {
+                            "type": "string"
+                          },
+                          "targetResourceId": {
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "source": {
+                        "properties": {
+                          "cloudInstanceId": {
+                            "type": "string"
+                          },
+                          "connectionId": {
+                            "type": "string"
+                          },
+                          "environmentId": {
+                            "type": "string"
+                          },
+                          "networkDomain": {
+                            "type": "string"
+                          },
+                          "path": {
+                            "type": "string"
+                          },
+                          "resourceId": {
+                            "type": "string"
+                          },
+                          "runtimeId": {
+                            "type": "string"
+                          },
+                          "uri": {
+                            "type": "string"
+                          },
+                          "workspaceSnapshotEntries": {
+                            "items": {
+                              "properties": {
+                                "digest": {
+                                  "type": "string"
+                                },
+                                "path": {
+                                  "type": "string"
+                                },
+                                "sizeBytes": {
+                                  "type": "integer"
+                                }
+                              },
+                              "type": "object"
+                            },
+                            "type": "array"
+                          },
+                          "workspaceSnapshotId": {
+                            "description": "Snapshot identity is issued only for a fully checksummed, sealed producer\nworkspace. Missing identity disables archive reuse, not synchronization.",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "strategy": {
+                        "type": "string"
+                      },
+                      "syncWorkspace": {
+                        "type": "boolean"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "workspaceTransfers": {
+                "items": {
+                  "properties": {
+                    "blobs": {
+                      "items": {
+                        "properties": {
+                          "digest": {
+                            "type": "string"
+                          },
+                          "path": {
+                            "type": "string"
+                          },
+                          "sizeBytes": {
+                            "type": "integer"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "chunks": {
+                      "items": {
+                        "properties": {
+                          "digest": {
+                            "type": "string"
+                          },
+                          "index": {
+                            "type": "integer"
+                          },
+                          "offset": {
+                            "type": "integer"
+                          },
+                          "received": {
+                            "type": "boolean"
+                          },
+                          "sizeBytes": {
+                            "type": "integer"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "consumerActivityId": {
+                      "type": "string"
+                    },
+                    "destination": {
+                      "properties": {
+                        "cloudInstanceId": {
+                          "type": "string"
+                        },
+                        "connectionId": {
+                          "type": "string"
+                        },
+                        "environmentId": {
+                          "type": "string"
+                        },
+                        "networkDomain": {
+                          "type": "string"
+                        },
+                        "path": {
+                          "type": "string"
+                        },
+                        "resourceId": {
+                          "type": "string"
+                        },
+                        "runtimeId": {
+                          "type": "string"
+                        },
+                        "uri": {
+                          "type": "string"
+                        },
+                        "workspaceSnapshotEntries": {
+                          "items": {
+                            "properties": {
+                              "digest": {
+                                "type": "string"
+                              },
+                              "path": {
+                                "type": "string"
+                              },
+                              "sizeBytes": {
+                                "type": "integer"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "workspaceSnapshotId": {
+                          "description": "Snapshot identity is issued only for a fully checksummed, sealed producer\nworkspace. Missing identity disables archive reuse, not synchronization.",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "executionRunId": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "producerActivityId": {
+                      "type": "string"
+                    },
+                    "resumeFrom": {
+                      "items": {
+                        "type": "integer"
+                      },
+                      "type": "array"
+                    },
+                    "route": {
+                      "properties": {
+                        "archiveBytes": {
+                          "type": "integer"
+                        },
+                        "consumerActivityId": {
+                          "type": "string"
+                        },
+                        "fallback": {
+                          "type": "string"
+                        },
+                        "filesTransferred": {
+                          "type": "integer"
+                        },
+                        "lastRetryError": {
+                          "type": "string"
+                        },
+                        "mergeCheckSeconds": {
+                          "type": "number"
+                        },
+                        "mergeCommandOverheadSeconds": {
+                          "type": "number"
+                        },
+                        "mergeCopySeconds": {
+                          "type": "number"
+                        },
+                        "mergeExecutionSeconds": {
+                          "type": "number"
+                        },
+                        "mergeSshChannelWaitSeconds": {
+                          "type": "number"
+                        },
+                        "mergeVerifySeconds": {
+                          "type": "number"
+                        },
+                        "networkBytesIncomplete": {
+                          "type": "boolean"
+                        },
+                        "networkDomain": {
+                          "type": "string"
+                        },
+                        "packaging": {
+                          "type": "string"
+                        },
+                        "peerProbeFailure": {
+                          "type": "string"
+                        },
+                        "peerReceiverCpuSeconds": {
+                          "anyOf": [
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "peerReceiverServiceSeconds": {
+                          "anyOf": [
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "phases": {
+                          "items": {
+                            "properties": {
+                              "durationSeconds": {
+                                "type": "number"
+                              },
+                              "executionSeconds": {
+                                "anyOf": [
+                                  {
+                                    "type": "number"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "failed": {
+                                "type": "boolean"
+                              },
+                              "finishedAt": {
+                                "type": "number"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "sshChannelWaitSeconds": {
+                                "anyOf": [
+                                  {
+                                    "type": "number"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "startedAt": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "preparationFinishedAt": {
+                          "type": "number"
+                        },
+                        "preparationSeconds": {
+                          "type": "number"
+                        },
+                        "preparationStartedAt": {
+                          "type": "number"
+                        },
+                        "producerActivityId": {
+                          "type": "string"
+                        },
+                        "reason": {
+                          "type": "string"
+                        },
+                        "retryCount": {
+                          "type": "integer"
+                        },
+                        "rsyncExecutionSeconds": {
+                          "type": "number"
+                        },
+                        "serverNetworkBytes": {
+                          "anyOf": [
+                            {
+                              "type": "integer"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "sharedFilesystem": {
+                          "type": "string"
+                        },
+                        "sharedFilesystemId": {
+                          "type": "string"
+                        },
+                        "sharedStorageProofFailure": {
+                          "type": "string"
+                        },
+                        "snapshotAcquireWaitSeconds": {
+                          "type": "number"
+                        },
+                        "snapshotBuildCommandSeconds": {
+                          "anyOf": [
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "snapshotBuildCpuSeconds": {
+                          "anyOf": [
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "snapshotBuildServiceSeconds": {
+                          "anyOf": [
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "snapshotBuildSshWaitSeconds": {
+                          "anyOf": [
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "snapshotBuildWallSeconds": {
+                          "description": "Diagnostics, not additive phases. Build wall time includes SSH admission;\na reused caller's acquisition wait may overlap that same shared build.",
+                          "type": "number"
+                        },
+                        "snapshotReused": {
+                          "type": "boolean"
+                        },
+                        "sourceAddress": {
+                          "type": "string"
+                        },
+                        "sourceCloudInstanceId": {
+                          "type": "string"
+                        },
+                        "sourceEnvironmentId": {
+                          "type": "string"
+                        },
+                        "sourcePackExecutionSeconds": {
+                          "type": "number"
+                        },
+                        "sourcePackPreflightSeconds": {
+                          "type": "number"
+                        },
+                        "sourcePackPreflightServiceSeconds": {
+                          "type": "number"
+                        },
+                        "sourcePackPreflightSshChannelWaitSeconds": {
+                          "type": "number"
+                        },
+                        "sourcePackSshChannelWaitSeconds": {
+                          "type": "number"
+                        },
+                        "sourceResourceId": {
+                          "type": "string"
+                        },
+                        "sshChannelWaitSeconds": {
+                          "type": "number"
+                        },
+                        "strategy": {
+                          "type": "string"
+                        },
+                        "targetAddress": {
+                          "type": "string"
+                        },
+                        "targetCloudInstanceId": {
+                          "type": "string"
+                        },
+                        "targetEnvironmentId": {
+                          "type": "string"
+                        },
+                        "targetResourceId": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "source": {
+                      "properties": {
+                        "cloudInstanceId": {
+                          "type": "string"
+                        },
+                        "connectionId": {
+                          "type": "string"
+                        },
+                        "environmentId": {
+                          "type": "string"
+                        },
+                        "networkDomain": {
+                          "type": "string"
+                        },
+                        "path": {
+                          "type": "string"
+                        },
+                        "resourceId": {
+                          "type": "string"
+                        },
+                        "runtimeId": {
+                          "type": "string"
+                        },
+                        "uri": {
+                          "type": "string"
+                        },
+                        "workspaceSnapshotEntries": {
+                          "items": {
+                            "properties": {
+                              "digest": {
+                                "type": "string"
+                              },
+                              "path": {
+                                "type": "string"
+                              },
+                              "sizeBytes": {
+                                "type": "integer"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "workspaceSnapshotId": {
+                          "description": "Snapshot identity is issued only for a fully checksummed, sealed producer\nworkspace. Missing identity disables archive reuse, not synchronization.",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "strategy": {
+                      "type": "string"
+                    },
+                    "syncWorkspace": {
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          },
+          "type": "object"
+        },
+        "recovery": {
+          "anyOf": [
+            {
+              "properties": {
+                "mode": {
+                  "type": "string"
+                },
+                "retryActivityIds": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "reuseActivityIds": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "resources": {
+          "items": {
+            "properties": {
+              "architecture": {
+                "type": "string"
+              },
+              "bootOverheadSeconds": {
+                "type": "number"
+              },
+              "computeSpeedup": {
+                "type": "number"
+              },
+              "containerOverheadSeconds": {
+                "type": "number"
+              },
+              "cpuCapacity": {
+                "type": "number"
+              },
+              "cpuCores": {
+                "type": "integer"
+              },
+              "environmentVersionId": {
+                "type": "string"
+              },
+              "executionTarget": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string"
+              },
+              "memoryBytes": {
+                "type": "integer"
+              },
+              "metadata": {
+                "additionalProperties": {},
+                "type": "object"
+              },
+              "name": {
+                "type": "string"
+              },
+              "parentResourceId": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "pricePerSecond": {
+                "type": "number"
+              },
+              "providerId": {
+                "type": "string"
+              },
+              "region": {
+                "type": "string"
+              },
+              "schedulable": {
+                "type": "boolean"
+              },
+              "storageBytes": {
+                "type": "integer"
+              },
+              "tier": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "zone": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "run": {
+          "properties": {
+            "activityCount": {
+              "type": "integer"
+            },
+            "actorId": {
+              "type": "string"
+            },
+            "breakdown": {
+              "properties": {
+                "computeSeconds": {
+                  "type": "number"
+                },
+                "interferenceSeconds": {
+                  "type": "number"
+                },
+                "overheadSeconds": {
+                  "type": "number"
+                },
+                "queueSeconds": {
+                  "type": "number"
+                },
+                "transferSeconds": {
+                  "type": "number"
+                }
+              },
+              "type": "object"
+            },
+            "command": {
+              "type": "string"
+            },
+            "completedActivityCount": {
+              "type": "integer"
+            },
+            "connectionId": {
+              "type": "string"
+            },
+            "cost": {
+              "type": "number"
+            },
+            "environmentNames": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "environmentSnapshotId": {
+              "type": "string"
+            },
+            "failureReason": {
+              "type": "string"
+            },
+            "finishedAt": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "id": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string"
+            },
+            "makespanSeconds": {
+              "type": "number"
+            },
+            "mode": {
+              "type": "string"
+            },
+            "resourceId": {
+              "type": "string"
+            },
+            "resourceName": {
+              "type": "string"
+            },
+            "runtimeId": {
+              "type": "string"
+            },
+            "schedulePlanId": {
+              "type": "string"
+            },
+            "seed": {
+              "type": "integer"
+            },
+            "startedAt": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "status": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "transferredBytes": {
+              "type": "integer"
+            },
+            "workflowId": {
+              "type": "string"
+            },
+            "workflowName": {
+              "type": "string"
+            },
+            "workflowVersionId": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "runtimeAllocations": {
+          "additionalProperties": {
+            "properties": {
+              "cloudInstanceId": {
+                "type": "string"
+              },
+              "connectionId": {
+                "type": "string"
+              },
+              "resourceId": {
+                "type": "string"
+              },
+              "runtimeId": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "object"
+        },
+        "runtimeBindings": {
+          "items": {
+            "properties": {
+              "configuration": {
+                "additionalProperties": {},
+                "type": "object"
+              },
+              "enabled": {
+                "type": "boolean"
+              },
+              "resourceId": {
+                "type": "string"
+              },
+              "runtimeId": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "runtimes": {
+          "items": {
+            "properties": {
+              "capabilities": {
+                "properties": {
+                  "batch": {
+                    "type": "boolean"
+                  },
+                  "cancellation": {
+                    "type": "boolean"
+                  },
+                  "container": {
+                    "type": "boolean"
+                  },
+                  "dataStaging": {
+                    "type": "boolean"
+                  },
+                  "gpu": {
+                    "type": "boolean"
+                  },
+                  "interactive": {
+                    "type": "boolean"
+                  },
+                  "logStreaming": {
+                    "type": "boolean"
+                  },
+                  "mpi": {
+                    "type": "boolean"
+                  },
+                  "serverless": {
+                    "type": "boolean"
+                  },
+                  "sharedStorage": {
+                    "type": "boolean"
+                  },
+                  "simulation": {
+                    "type": "boolean"
+                  }
+                },
+                "type": "object"
+              },
+              "configuration": {
+                "additionalProperties": {},
+                "type": "object"
+              },
+              "driver": {
+                "type": "string"
+              },
+              "environmentVersionId": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string"
+              },
+              "mode": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "role": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "workflow": {
+          "properties": {
+            "activities": {
+              "items": {
+                "properties": {
+                  "activityTypeId": {
+                    "type": "string"
+                  },
+                  "capabilities": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "command": {
+                    "properties": {
+                      "arguments": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      },
+                      "entrypoint": {
+                        "type": "string"
+                      },
+                      "environment": {
+                        "additionalProperties": {
+                          "type": "string"
+                        },
+                        "type": "object"
+                      },
+                      "executable": {
+                        "anyOf": [
+                          {
+                            "properties": {
+                              "delivery": {
+                                "properties": {
+                                  "strategy": {
+                                    "type": "string"
+                                  },
+                                  "targetFormat": {
+                                    "type": "string"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "source": {
+                                "properties": {
+                                  "artifactBuildRef": {
+                                    "description": "ArtifactBuildRef identifies an immutable, server-created build\nspecification. Authored workflows never contain browser/host paths.",
+                                    "type": "string"
+                                  },
+                                  "artifactRef": {
+                                    "anyOf": [
+                                      {
+                                        "properties": {
+                                          "id": {
+                                            "type": "string"
+                                          },
+                                          "version": {
+                                            "type": "string"
+                                          }
+                                        },
+                                        "type": "object"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "credentialRef": {
+                                    "type": "string"
+                                  },
+                                  "environmentRef": {
+                                    "type": "string"
+                                  },
+                                  "expectedDigest": {
+                                    "type": "string"
+                                  },
+                                  "format": {
+                                    "type": "string"
+                                  },
+                                  "origin": {
+                                    "anyOf": [
+                                      {
+                                        "properties": {
+                                          "build": {
+                                            "anyOf": [
+                                              {
+                                                "properties": {
+                                                  "arguments": {
+                                                    "additionalProperties": {
+                                                      "type": "string"
+                                                    },
+                                                    "type": "object"
+                                                  },
+                                                  "contextArchive": {
+                                                    "contentEncoding": "base64",
+                                                    "type": "string"
+                                                  },
+                                                  "contextDigest": {
+                                                    "type": "string"
+                                                  },
+                                                  "recipeDigest": {
+                                                    "type": "string"
+                                                  },
+                                                  "recipePath": {
+                                                    "type": "string"
+                                                  }
+                                                },
+                                                "type": "object"
+                                              },
+                                              {
+                                                "type": "null"
+                                              }
+                                            ]
+                                          },
+                                          "expectedDigest": {
+                                            "type": "string"
+                                          },
+                                          "image": {
+                                            "type": "string"
+                                          },
+                                          "platform": {
+                                            "type": "string"
+                                          }
+                                        },
+                                        "type": "object"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "path": {
+                                    "type": "string"
+                                  },
+                                  "reference": {
+                                    "type": "string"
+                                  },
+                                  "resourceRef": {
+                                    "type": "string"
+                                  },
+                                  "type": {
+                                    "type": "string"
+                                  },
+                                  "uri": {
+                                    "type": "string"
+                                  }
+                                },
+                                "type": "object"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "image": {
+                        "description": "Image is the legacy shorthand for an OCI reference or a destination path.\nNew definitions should use Executable. It is kept so existing workflow\ndefinitions remain valid while the planner resolves them.",
+                        "type": "string"
+                      },
+                      "resolvedExecutable": {
+                        "anyOf": [
+                          {
+                            "properties": {
+                              "delivery": {
+                                "type": "string"
+                              },
+                              "digest": {
+                                "type": "string"
+                              },
+                              "environmentId": {
+                                "type": "string"
+                              },
+                              "format": {
+                                "type": "string"
+                              },
+                              "localPath": {
+                                "type": "string"
+                              },
+                              "materializationDone": {
+                                "type": "boolean"
+                              },
+                              "materializationId": {
+                                "type": "string"
+                              },
+                              "remotePath": {
+                                "type": "string"
+                              },
+                              "resourceId": {
+                                "type": "string"
+                              },
+                              "variantId": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "workingDirectory": {
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "externalId": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "kind": {
+                    "type": "string"
+                  },
+                  "metadata": {
+                    "additionalProperties": {},
+                    "type": "object"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "policy": {
+                    "properties": {
+                      "maxAttempts": {
+                        "type": "integer"
+                      },
+                      "retryDelaySeconds": {
+                        "type": "number"
+                      },
+                      "timeoutSeconds": {
+                        "type": "number"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "priority": {
+                    "type": "integer"
+                  },
+                  "resources": {
+                    "properties": {
+                      "cpu": {
+                        "type": "number"
+                      },
+                      "gpu": {
+                        "type": "integer"
+                      },
+                      "memoryBytes": {
+                        "type": "integer"
+                      },
+                      "storageBytes": {
+                        "type": "integer"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "service": {
+                    "anyOf": [
+                      {
+                        "properties": {
+                          "healthCheck": {
+                            "type": "string"
+                          },
+                          "idleTimeoutSeconds": {
+                            "type": "number"
+                          },
+                          "keepAlive": {
+                            "type": "boolean"
+                          },
+                          "ports": {
+                            "items": {
+                              "type": "integer"
+                            },
+                            "type": "array"
+                          },
+                          "startupTimeoutSeconds": {
+                            "type": "number"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "simulation": {
+                    "anyOf": [
+                      {
+                        "properties": {
+                          "durationSeconds": {
+                            "type": "number"
+                          },
+                          "flops": {
+                            "type": "number"
+                          },
+                          "model": {
+                            "type": "string"
+                          },
+                          "parameters": {
+                            "additionalProperties": {},
+                            "type": "object"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "workflowVersionId": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "archived": {
+              "type": "boolean"
+            },
+            "dataDependencies": {
+              "items": {
+                "properties": {
+                  "consumerActivityId": {
+                    "type": "string"
+                  },
+                  "logicalName": {
+                    "type": "string"
+                  },
+                  "producerActivityId": {
+                    "type": "string"
+                  },
+                  "sizeBytes": {
+                    "type": "integer"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "definitionHash": {
+              "type": "string"
+            },
+            "dependencies": {
+              "items": {
+                "properties": {
+                  "activityId": {
+                    "type": "string"
+                  },
+                  "dependsOnActivityId": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "id": {
+              "type": "string"
+            },
+            "version": {
+              "type": "integer"
+            },
+            "workflowId": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
+    "name": "create_execution_preflight",
+    "method": "POST",
+    "path": "/akoflow-api/execution-preflights/",
+    "handler": "CreateExecutionPreflight",
+    "description": "create execution preflight. POST /akoflow-api/execution-preflights/. Uses the daemon API and its domain validation.",
+    "body": {
+      "properties": {
+        "acknowledgeWarnings": {
+          "type": "boolean"
+        },
+        "activityProfiles": {
+          "items": {
+            "properties": {
+              "activityTypeId": {
+                "type": "string"
+              },
+              "cpuUtilization": {
+                "type": "number"
+              },
+              "diskReadBytes": {
+                "type": "integer"
+              },
+              "diskWriteBytes": {
+                "type": "integer"
+              },
+              "energyJoules": {
+                "type": "number"
+              },
+              "id": {
+                "type": "string"
+              },
+              "metadata": {
+                "additionalProperties": {},
+                "type": "object"
+              },
+              "modelVersion": {
+                "type": "string"
+              },
+              "peakMemoryBytes": {
+                "type": "integer"
+              },
+              "resourceId": {
+                "type": "string"
+              },
+              "runtimeSeconds": {
+                "type": "number"
+              },
+              "runtimeStdDevSeconds": {
+                "type": "number"
+              },
+              "sampleSize": {
+                "type": "integer"
+              },
+              "source": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "executionScope": {
+          "properties": {
+            "environmentVersionIds": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "id": {
+              "type": "string"
+            },
+            "metadata": {
+              "additionalProperties": {},
+              "type": "object"
+            },
+            "name": {
+              "type": "string"
+            },
+            "networkTopologyId": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "networkTopology": {
+          "properties": {
+            "executionScopeId": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            },
+            "links": {
+              "items": {
+                "properties": {
+                  "bandwidthBitsPerSecond": {
+                    "type": "number"
+                  },
+                  "bidirectional": {
+                    "type": "boolean"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "latencySeconds": {
+                    "type": "number"
+                  },
+                  "maxConcurrentTransfers": {
+                    "type": "integer"
+                  },
+                  "metadata": {
+                    "additionalProperties": {},
+                    "type": "object"
+                  },
+                  "pricePerByte": {
+                    "type": "number"
+                  },
+                  "sharingPolicy": {
+                    "type": "string"
+                  },
+                  "sourceResourceId": {
+                    "type": "string"
+                  },
+                  "targetResourceId": {
+                    "type": "string"
+                  },
+                  "topologyId": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "metadata": {
+              "additionalProperties": {},
+              "type": "object"
+            },
+            "name": {
+              "type": "string"
+            },
+            "version": {
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        },
+        "plan": {
+          "properties": {
+            "algorithm": {
+              "type": "string"
+            },
+            "algorithmVersion": {
+              "type": "string"
+            },
+            "assignmentCount": {
+              "type": "integer"
+            },
+            "assignments": {
+              "items": {
+                "properties": {
+                  "activityId": {
+                    "type": "string"
+                  },
+                  "coreId": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "metadata": {
+                    "additionalProperties": {},
+                    "type": "object"
+                  },
+                  "orderOnResource": {
+                    "type": "integer"
+                  },
+                  "planId": {
+                    "type": "string"
+                  },
+                  "predictedCost": {
+                    "type": "number"
+                  },
+                  "predictedFinishAt": {
+                    "type": "number"
+                  },
+                  "predictedReadyAt": {
+                    "type": "number"
+                  },
+                  "predictedRuntimeSeconds": {
+                    "type": "number"
+                  },
+                  "predictedStartAt": {
+                    "type": "number"
+                  },
+                  "predictedTransferSeconds": {
+                    "type": "number"
+                  },
+                  "priority": {
+                    "type": "integer"
+                  },
+                  "resourceId": {
+                    "type": "string"
+                  },
+                  "slotId": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "budget": {
+              "type": "number"
+            },
+            "deadlineSeconds": {
+              "type": "number"
+            },
+            "executionScopeId": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            },
+            "lifecycleActions": {
+              "items": {
+                "properties": {
+                  "action": {
+                    "type": "string"
+                  },
+                  "capacityTargetId": {
+                    "type": "string"
+                  },
+                  "cloudInstanceId": {
+                    "type": "string"
+                  },
+                  "dependsOn": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "earliestStart": {
+                    "type": "number"
+                  },
+                  "expectedDuration": {
+                    "type": "number"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "metadata": {
+                    "additionalProperties": {},
+                    "type": "object"
+                  },
+                  "schedulePlanId": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "metadata": {
+              "additionalProperties": {},
+              "type": "object"
+            },
+            "networkTopologyId": {
+              "type": "string"
+            },
+            "objective": {
+              "type": "string"
+            },
+            "predicted": {
+              "properties": {
+                "cost": {
+                  "type": "number"
+                },
+                "feasible": {
+                  "type": "boolean"
+                },
+                "makespanSeconds": {
+                  "type": "number"
+                }
+              },
+              "type": "object"
+            },
+            "source": {
+              "type": "string"
+            },
+            "workflowVersionId": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "preflightId": {
+          "type": "string"
         },
         "preparationRequirementsByActivity": {
           "additionalProperties": {
@@ -5512,6 +8007,13 @@
     "query": [
       "view"
     ]
+  },
+  {
+    "name": "get_execution_preflight",
+    "method": "GET",
+    "path": "/akoflow-api/execution-preflights/{preflightId}/",
+    "handler": "GetExecutionPreflight",
+    "description": "get execution preflight. GET /akoflow-api/execution-preflights/{preflightId}/. Uses the daemon API and its domain validation."
   },
   {
     "name": "get_execution_recovery",

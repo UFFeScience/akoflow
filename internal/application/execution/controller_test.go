@@ -172,15 +172,15 @@ func TestInspectAndStop(t *testing.T) {
 	}
 }
 
-func TestInspectPersistsFailureLogForAnyRuntimeError(t *testing.T) {
+func TestInspectPreservesLiveHandleDuringRuntimeOutage(t *testing.T) {
 	runtime := &runtimeFake{inspectErr: errors.New("runtime API unavailable")}
 	handle := domain.ActivityHandle{ID: "handle", RunID: "run", ActivityID: "activity", RuntimeID: "runtime", Status: domain.HandleRunning}
 	handles := &handlesFake{handle: &handle}
 	updated, err := New(resolverFake{adapter: runtime}, handles).Inspect(context.Background(), "handle", domain.ExecutionModeReal)
-	if err != nil || updated.Status != domain.HandleFailed {
+	if err != nil || updated.Status != domain.HandleRunning {
 		t.Fatalf("inspect failure was not persisted: handle=%+v err=%v", updated, err)
 	}
-	if !strings.Contains(updated.Log, "runtime API unavailable") || !strings.Contains(updated.Log, "[AKOFLOW ERROR]") {
+	if !strings.Contains(updated.Log, "Runtime observation unavailable") || !strings.Contains(updated.Log, "[AKOFLOW ERROR]") {
 		t.Fatalf("missing runtime failure log: %q", updated.Log)
 	}
 }
@@ -306,7 +306,7 @@ func TestInspectAndStopFailures(t *testing.T) {
 func TestInspectFailureReportsPersistenceError(t *testing.T) {
 	handle := domain.ActivityHandle{ID: "handle", RuntimeID: "runtime", Status: domain.HandleRunning}
 	_, err := New(resolverFake{err: errors.New("resolve")}, &handlesFake{handle: &handle, saveErr: errors.New("save")}).Inspect(context.Background(), "handle", domain.ExecutionModeReal)
-	if err == nil || !strings.Contains(err.Error(), "save failed handle") {
+	if err == nil || !strings.Contains(err.Error(), "save observation state") {
 		t.Fatalf("unexpected error: %v", err)
 	}
 }
@@ -348,5 +348,42 @@ func TestPreparedOCIImageOverridesAuthoredReferenceOnlyAfterVerification(t *test
 	}
 	if execution.Activity.Command.Image != "sha256:verified-image" {
 		t.Fatal("verified loaded image was not selected")
+	}
+}
+
+func TestObservationOutageBoundsRetriesAndKeepsRecoveryBlocked(t *testing.T) {
+	runtime := &runtimeFake{inspectErr: errors.New("runtime API unavailable")}
+	handle := domain.ActivityHandle{ID: "run:activity", RunID: "run", ActivityID: "activity", RuntimeID: "local", Status: domain.HandleRunning}
+	handles := &handlesFake{handle: &handle}
+	service := New(resolverFake{adapter: runtime}, handles)
+	for attempt := 1; attempt <= 3; attempt++ {
+		updated, err := service.Inspect(context.Background(), handle.ID, domain.ExecutionModeReal)
+		if updated.Status != domain.HandleRunning || updated.FinishedAt != 0 {
+			t.Fatalf("lost live process ownership: %+v", updated)
+		}
+		if (attempt == 3) != (err != nil) {
+			t.Fatalf("attempt %d: %v", attempt, err)
+		}
+	}
+	if _, err := service.Start(context.Background(), executionFixture()); err == nil || runtime.starts != 0 {
+		t.Fatal("uncertain activity was restarted")
+	}
+	runtime.handle = handle
+	runtime.inspectErr = nil
+	updated, err := service.Inspect(context.Background(), handle.ID, domain.ExecutionModeReal)
+	if err != nil || updated.Status != domain.HandleCompleted || updated.Metadata[ports.RuntimeReconciliationPending] == true {
+		t.Fatalf("observation did not recover: %+v %v", updated, err)
+	}
+}
+
+func TestObservationCancellationDoesNotChangeComputation(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	handle := domain.ActivityHandle{ID: "handle", RuntimeID: "local", Status: domain.HandleRunning}
+	handles := &handlesFake{handle: &handle}
+	service := New(resolverFake{adapter: &runtimeFake{inspectErr: ctx.Err()}}, handles)
+	_, err := service.Inspect(ctx, handle.ID, domain.ExecutionModeReal)
+	if !errors.Is(err, context.Canceled) || handles.handle.Status != domain.HandleRunning || len(handles.handle.Metadata) != 0 {
+		t.Fatalf("cancellation mutated computation: %+v %v", handles.handle, err)
 	}
 }

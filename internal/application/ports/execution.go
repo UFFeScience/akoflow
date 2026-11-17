@@ -7,6 +7,8 @@ import (
 )
 
 type ExecutionRequest struct {
+	PreflightID                       string `json:"preflightId,omitempty"`
+	AcknowledgeWarnings               bool   `json:"acknowledgeWarnings,omitempty"`
 	Run                               domain.ExecutionRun
 	Plan                              domain.SchedulePlan
 	Workflow                          domain.WorkflowVersion

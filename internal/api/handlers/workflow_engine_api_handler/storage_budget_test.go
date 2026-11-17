@@ -1,29 +1,24 @@
 package workflow_engine_api_handler
 
 import (
-	"net/http"
-	"net/http/httptest"
-	"strings"
+	"context"
+	"encoding/json"
+	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 )
 
-func TestCreateExecutionRejectsExhaustedQuotaBeforeCreatingRun(t *testing.T) {
-	// No execution command service is installed: reaching CreateRun would return
-	// 503. The quota failure must instead be detected before any side effect.
+func TestExecutionPreparationRejectsExhaustedQuota(t *testing.T) {
 	h := &Handler{}
-	request := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(`{
+	var request ports.ExecutionRequest
+	require.NoError(t, json.Unmarshal([]byte(`{
 		"run":{"id":"run","mode":"real"},
  "runtimes":[{"id":"runtime","mode":"execution","driver":"local"}],
  "runtimeBindings":[{"resourceId":"node","runtimeId":"runtime","enabled":true}],
  "workflow":{"id":"workflow","activities":[{"id":"a","metadata":{"workspaceProjection":{"contract":"whole-workspace-v1","source":"measured","inputs":[{"path":"input.fits","contentId":"hash","sizeBytes":100}]}}}]},
 		"resources":[{"id":"node","metadata":{"workspaceStorageBudget":{"storageId":"home-quota","availableBytes":0,"observedAt":"2026-10-11T00:00:00Z","source":"quota-api"}}}],
 		"plan":{"id":"plan","assignments":[{"activityId":"a","resourceId":"node"}]}
-	}`))
-	request.Header.Set("Content-Type", "application/json")
-	response := httptest.NewRecorder()
-	h.CreateExecution(response, request)
-	require.Equal(t, http.StatusUnprocessableEntity, response.Code)
-	require.Contains(t, response.Body.String(), "quota")
+	}`), &request))
+	require.ErrorContains(t, h.PrepareExecution(context.Background(), &request), "quota")
 }

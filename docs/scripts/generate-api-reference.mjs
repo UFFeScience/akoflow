@@ -381,6 +381,10 @@ const runnableSimulationRequests = {
 // These notes come from handler calls and the credential/operation services,
 // not from JSON tags alone. Keep them scoped to fields the service validates.
 const verifiedRequestNotes = {
+  "POST /akoflow-api/artifacts/inspect/":
+    "Provide an executable source to inspect OCI or SIF metadata.",
+  "POST /akoflow-api/artifacts/recipe/":
+    "Provide a Dockerfile or a bounded context archive plus its recipe path. The recipe is registered without starting a build.",
   "POST /akoflow-api/execution-preflights/":
     "Accepts the execution request and returns a persisted prerequisite report with 200 OK. Checks are read-only, individually bounded to five seconds and bounded to thirty seconds overall. Reports expire after two minutes and do not provision resources, pull images or start work. Review blocked and unverified checks before launching with preflightId and explicit acknowledgeWarnings.",
   "POST /akoflow-api/scheduling-algorithms/":
@@ -735,6 +739,11 @@ function extractSuccessStatuses(body, handler) {
   if (
     statuses.size === 0 &&
     [
+      "GetExecutionStatus",
+      "GetExecutionLogs",
+      "GetExecutionArtifacts",
+      "GetExecutionActivity",
+      "GetExecutionEvents",
       "ExportArchiveInstance",
       "ExportConsoleSessionLog",
       "Preflight",

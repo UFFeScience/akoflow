@@ -305,7 +305,7 @@ jobs:
           if-no-files-found: error
 
   release:
-    name: Create verified GitHub release draft
+    name: Publish verified GitHub release
     needs: [runtime-assets, desktop]
     runs-on: ubuntu-latest
     steps:
@@ -342,11 +342,25 @@ jobs:
           name: linux-x64
           path: release-assets
 
+      - name: Checkout release screenshots
+        uses: actions/checkout@v6
+        with:
+          ref: refs/tags/${{ env.AKOFLOW_RELEASE_TAG }}
+          path: release-source
+
+      - name: Collect release screenshots
+        run: |
+          shopt -s nullglob
+          for screenshot in "release-source/docs/static/img/releases/$AKOFLOW_RELEASE_TAG/"*.png; do
+            cp "$screenshot" release-assets/
+          done
+
       - name: Create AkôFlow release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.AKOFLOW_RELEASE_TAG }}
-          draft: true
+          draft: false
+          fail_on_unmatched_files: true
           generate_release_notes: true
           prerelease: ${{ contains(env.AKOFLOW_RELEASE_TAG, '-') }}
           files: release-assets/*
@@ -359,4 +373,4 @@ jobs:
             - **Windows:** run the x64 portable `.exe` asset without an installation wizard.
             - **Linux:** run the x64 `.AppImage` after `chmod +x`, or install the `.deb` with `sudo apt install ./Akoflow-Desktop-*.deb`.
 
-            The application source is the frozen Git tag `${{ env.AKOFLOW_RELEASE_TAG }}`. Windows packaging uses distinct `setup` and `portable` filenames and all updater SHA512 manifests are verified before upload. The runtime Docker archives in this release are loaded locally by Desktop; AkôFlow does not publish daemon or BuildKit packages to a container registry. This draft must be reviewed before publication.
+            The application source is the frozen Git tag `${{ env.AKOFLOW_RELEASE_TAG }}`. Windows packaging uses distinct `setup` and `portable` filenames and all updater SHA512 manifests are verified before upload. The runtime Docker archives in this release are loaded locally by Desktop; AkôFlow does not publish daemon or BuildKit packages to a container registry.

@@ -69,6 +69,10 @@ type ActivityMetricQuery interface {
 	GetActivityMetricSummary(context.Context, string, string, int) (*domain.ActivityMetricSummary, error)
 }
 
+type RecordedWorkspaceVerifier interface {
+	VerifyRecorded(context.Context, domain.ActivityWorkspace) error
+}
+
 type WorkspaceQuery interface {
 	ListWorkspaces(context.Context, string) ([]domain.ActivityWorkspace, error)
 	ListWorkspaceLeases(context.Context, string) ([]domain.WorkspaceLease, error)
@@ -161,6 +165,7 @@ type Dependencies struct {
 	ExecutionCommands   ExecutionCommandStore
 	Queue               QueueCancellationStore
 	ActivityInterrupter ActivityInterrupter
+	WorkspaceVerifier   RecordedWorkspaceVerifier
 	Topologies          ports.NetworkTopologyStore
 	Scopes              ports.ExecutionScopeStore
 	Data                ports.DataCatalog
@@ -207,6 +212,7 @@ type Handler struct {
 	executionCommands   ExecutionCommandStore
 	queue               QueueCancellationStore
 	activityInterrupter ActivityInterrupter
+	workspaceVerifier   RecordedWorkspaceVerifier
 	topologies          ports.NetworkTopologyStore
 	scopes              ports.ExecutionScopeStore
 	data                ports.DataCatalog
@@ -251,6 +257,7 @@ func New(dependencies Dependencies) (*Handler, error) {
 		validator: dependencies.Validator, executions: dependencies.Executions,
 		executionCommands: dependencies.ExecutionCommands, queue: dependencies.Queue,
 		activityInterrupter: dependencies.ActivityInterrupter,
+		workspaceVerifier:   dependencies.WorkspaceVerifier,
 		topologies:          dependencies.Topologies,
 		scopes:              dependencies.Scopes,
 		data:                dependencies.Data,
@@ -1311,6 +1318,7 @@ func (h *Handler) GetExecution(w http.ResponseWriter, r *http.Request) {
 		"run": run, "activities": tasks, "dataTransfers": transfers,
 		"activityAttempts": activityAttempts, "handles": handles, "events": events,
 	}
+	h.addActivityTestContext(r.Context(), run.ID, response)
 	if err := h.addMonitorWorkspaces(r.Context(), run.ID, response, monitor); err != nil {
 		writeError(w, http.StatusInternalServerError, err)
 		return
@@ -2743,6 +2751,10 @@ func (h *Handler) GetPlan(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) CreateExecution(w http.ResponseWriter, r *http.Request) {
 	var request ports.ExecutionRequest
 	if !decode(w, r, &request) {
+		return
+	}
+	if request.ActivityTest != nil {
+		writeError(w, http.StatusBadRequest, fmt.Errorf("activity tests require a reviewed source attempt"))
 		return
 	}
 	if h.rejectArchivedWorkflow(w, r, firstNonEmpty(request.Plan.WorkflowVersionID, request.Workflow.ID)) {

@@ -20,7 +20,20 @@ type ExecutionRequest struct {
 	ActivityProfiles                  []domain.ActivityResourceProfile
 	PreparationRequirementsByActivity map[string]domain.PreparationRequirement
 	RuntimeAllocations                map[string]domain.RuntimeAllocation
-	Recovery                          *ExecutionRecovery `json:"recovery,omitempty"`
+	Recovery                          *ExecutionRecovery  `json:"recovery,omitempty"`
+	ActivityTest                      *ActivityTestSource `json:"activityTest,omitempty"`
+}
+
+type ActivityTestSource struct {
+	RunID      string                              `json:"runId"`
+	ActivityID string                              `json:"activityId"`
+	Attempt    int                                 `json:"attempt"`
+	Inputs     map[string][]RecordedWorkspaceInput `json:"inputs,omitempty"`
+}
+
+type RecordedWorkspaceInput struct {
+	ProducerActivityID string                  `json:"producerActivityId"`
+	Entries            []domain.WorkspaceEntry `json:"entries"`
 }
 
 type ExecutionRecovery struct {

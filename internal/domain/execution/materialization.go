@@ -226,6 +226,8 @@ type DataTransferPlan struct {
 	ResumeFrom         []int            `json:"resumeFrom,omitempty"`
 	Route              TransferRoute    `json:"route,omitempty"`
 	SyncWorkspace      bool             `json:"syncWorkspace,omitempty"`
+
+	ExpectedWorkspaceEntries []WorkspaceEntry `json:"expectedWorkspaceEntries,omitempty"`
 }
 type DataTransferRun struct {
 	ID               string           `json:"id"`

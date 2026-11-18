@@ -980,8 +980,15 @@ func (s *Supervisor) addWorkspacePreparation(
 	resource domain.Resource,
 	producerIDs []string,
 ) error {
+	var recorded []ports.RecordedWorkspaceInput
+	if request.ActivityTest != nil {
+		recorded = request.ActivityTest.Inputs[activityID]
+	}
+	if len(recorded) > 0 && s.config.Data == nil {
+		return fmt.Errorf("recorded inputs require workspace transfer support")
+	}
 	driver := runtimeDriver(*request, activityID)
-	if s.config.Data == nil || (len(producerIDs) == 0 && driver != domain.RuntimeDriverKubernetes && driver != domain.RuntimeDriverCloud && driver != domain.RuntimeDriverLocal) {
+	if s.config.Data == nil || (len(producerIDs) == 0 && len(recorded) == 0 && driver != domain.RuntimeDriverKubernetes && driver != domain.RuntimeDriverCloud && driver != domain.RuntimeDriverLocal) {
 		return nil
 	}
 	destination, err := workspaceDestination(*request, activityID, resource, 0)
@@ -1016,6 +1023,20 @@ func (s *Supervisor) addWorkspacePreparation(
 			ProducerActivityID: producerID,
 			ConsumerActivityID: activityID,
 			Source:             source, Destination: destination, SyncWorkspace: true,
+		})
+	}
+	for index, input := range recorded {
+		source, err := s.recordedWorkspaceSource(ctx, request.ActivityTest.RunID, input.ProducerActivityID)
+		if err != nil {
+			return err
+		}
+		requirement.WorkspaceTransfers = append(requirement.WorkspaceTransfers, domain.DataTransferPlan{
+			ID:                 fmt.Sprintf("transfer-recorded-input-%s-%s-%d", request.Run.ID, activityID, index),
+			ExecutionRunID:     request.Run.ID,
+			ProducerActivityID: input.ProducerActivityID,
+			ConsumerActivityID: activityID,
+			Source:             source, Destination: destination, SyncWorkspace: true,
+			ExpectedWorkspaceEntries: input.Entries,
 		})
 	}
 	if request.PreparationRequirementsByActivity == nil {

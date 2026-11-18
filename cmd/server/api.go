@@ -27,6 +27,7 @@ import (
 	databasesearch "github.com/UFFeScience/akoflow/internal/infrastructure/database/search"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/instancearchive"
 	planningplugin "github.com/UFFeScience/akoflow/internal/infrastructure/plugins/planning"
+	infratransfer "github.com/UFFeScience/akoflow/internal/infrastructure/transfer"
 	"github.com/UFFeScience/akoflow/internal/mcpcontrol"
 	"github.com/UFFeScience/akoflow/internal/provider"
 	ansiblecloud "github.com/UFFeScience/akoflow/internal/provider/cloud/ansible"
@@ -105,6 +106,9 @@ func buildAPI(
 			os.Exit(0)
 		}
 	}
+	workspaceVerifier := infratransfer.ActivityWorkspaceManager{Resolver: infratransfer.EnvironmentEndpointResolver{
+		Connections: storage.environments, Cloud: storage.cloud, Provisioner: cloudProvisioner,
+	}}
 	return workflow_engine_api_handler.New(workflow_engine_api_handler.Dependencies{
 		Environments:        storage.environments,
 		Search:              databasesearch.New(storage.analytics),
@@ -116,6 +120,7 @@ func buildAPI(
 		ExecutionCommands:   storage.executions,
 		Queue:               storage.events,
 		ActivityInterrupter: applicationexecution.Interrupter{Store: storage.executions, Stopper: activities},
+		WorkspaceVerifier:   workspaceVerifier,
 		Topologies:          storage.topologies,
 		Scopes:              storage.topologies,
 		Data:                storage.data,

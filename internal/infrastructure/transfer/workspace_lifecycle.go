@@ -461,3 +461,26 @@ func pathError(path string) error {
 	_, err := os.Lstat(path)
 	return err
 }
+
+func (m ActivityWorkspaceManager) VerifyRecorded(ctx context.Context, workspace domain.ActivityWorkspace) error {
+	if len(workspace.Manifest.Final) == 0 {
+		return fmt.Errorf("recorded workspace manifest is empty")
+	}
+	endpoint, workspacePath, err := m.endpoint(ctx, workspace)
+	if err != nil {
+		return err
+	}
+	if strings.HasPrefix(endpoint.URI, "file://") {
+		return inspectStagedWorkspace(workspacePath, make(map[string][32]byte), workspace.Manifest.Final)
+	}
+	stage, err := os.MkdirTemp("", "akoflow-recorded-inputs-")
+	if err != nil {
+		return err
+	}
+	defer os.RemoveAll(stage)
+	destination := domain.TransferEndpoint{URI: (&url.URL{Scheme: "file", Path: stage}).String()}
+	if _, err := syncDirectory(ctx, endpoint, destination, false); err != nil {
+		return err
+	}
+	return inspectStagedWorkspace(stage, make(map[string][32]byte), workspace.Manifest.Final)
+}

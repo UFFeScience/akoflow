@@ -35,6 +35,11 @@ func (h *Handler) preflightInputs(request ports.ExecutionRequest) []apppreflight
 					for _, edge := range request.Workflow.DataDependencies {
 						dependency = dependency || edge.ConsumerActivityID == activity.ID && edge.ProducerActivityID == input.ProducerActivityID
 					}
+					if request.ActivityTest != nil {
+						for _, recorded := range request.ActivityTest.Inputs[activity.ID] {
+							dependency = dependency || recorded.ProducerActivityID == input.ProducerActivityID
+						}
+					}
 					if !dependency {
 						return "blocked", "Input producer is not a declared predecessor of this activity.", "Declare the producing activity dependency."
 					}

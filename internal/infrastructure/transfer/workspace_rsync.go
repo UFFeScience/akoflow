@@ -96,6 +96,11 @@ func (s WorkspaceRsync) directRemoteEndpoints(ctx context.Context, plans []domai
 	if err != nil {
 		return nil, domain.TransferEndpoint{}, false, fmt.Errorf("resolve successor workspace: %w", err)
 	}
+	for _, plan := range plans {
+		if len(plan.ExpectedWorkspaceEntries) > 0 {
+			return nil, destination, false, nil
+		}
+	}
 	if !strings.HasPrefix(destination.URI, "ssh://") || destination.ConnectionID == "" {
 		return nil, destination, false, nil
 	}
@@ -220,7 +225,7 @@ func (s WorkspaceRsync) stageProducers(ctx context.Context, plans []domain.DataT
 			return nil, nil, fmt.Errorf("stage producer %q: %w", plan.ProducerActivityID, err)
 		}
 		ingress[i] = stats
-		if err := inspectWorkspace(stage, seen); err != nil {
+		if err := inspectStagedWorkspace(stage, seen, plan.ExpectedWorkspaceEntries); err != nil {
 			return nil, nil, fmt.Errorf("producer %q: %w", plan.ProducerActivityID, err)
 		}
 	}
@@ -251,6 +256,35 @@ func publishWorkspace(ctx context.Context, plans []domain.DataTransferPlan, stag
 		runs[i].FinishedAt = float64(time.Now().UnixNano()) / 1e9
 		runs[i].DurationSeconds = max(0, runs[i].FinishedAt-runs[i].StartedAt)
 		runs[i].Status = domain.TransferCompleted
+	}
+	return nil
+}
+
+func inspectStagedWorkspace(root string, seen map[string][32]byte, expected []domain.WorkspaceEntry) error {
+	if len(expected) == 0 {
+		return inspectWorkspace(root, seen)
+	}
+	actual := make(map[string][32]byte, len(expected))
+	if err := inspectWorkspace(root, actual); err != nil {
+		return err
+	}
+	if len(actual) != len(expected) {
+		return fmt.Errorf("recorded workspace inventory changed")
+	}
+	verified := make(map[string]bool, len(expected))
+	for _, entry := range expected {
+		name := filepath.FromSlash(entry.Path)
+		digest, exists := actual[name]
+		if !exists || verified[name] || entry.Digest != fmt.Sprintf("sha256:%x", digest) {
+			return fmt.Errorf("recorded workspace file %q is missing or changed", entry.Path)
+		}
+		if previous, exists := seen[name]; exists && previous != digest {
+			return fmt.Errorf("conflicting contents for workspace path %q across predecessors", entry.Path)
+		}
+		verified[name] = true
+	}
+	for name, digest := range actual {
+		seen[name] = digest
 	}
 	return nil
 }

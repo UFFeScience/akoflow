@@ -113,6 +113,7 @@ const queryDescriptions = {
   mode: "Limit execution runs to this execution mode.",
   outcome: "Limit results to this audit outcome.",
   page: "One-based result page.",
+  localOnly: "Inspect locally available image metadata without querying the remote registry.",
   pageSize: "Number of results per page.",
   schedulePlanId: "Limit execution history to this schedule plan.",
   view: "Read model to return. Execution views include monitor, status, activity, logs, events, and data; catalog endpoints also expose options, summary, inventory, or count views.",

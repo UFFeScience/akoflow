@@ -20,7 +20,7 @@ func validatePortableRuntime(activity domain.Activity, resource domain.Resource,
 		return fail(err, "artifact_origin_invalid", "Export this workflow again with a valid immutable artifact origin.")
 	}
 	architecture := strings.Split(origin.Platform, "/")[1]
-	if resource.Architecture != "" && architecture != normalizedOriginArchitecture(resource.Architecture) {
+	if (driver != domain.RuntimeDriverLocal || origin.Build != nil) && resource.Architecture != "" && architecture != normalizedOriginArchitecture(resource.Architecture) {
 		return fail(
 			fmt.Errorf("artifact platform %q does not match resource architecture %q", origin.Platform, resource.Architecture),
 			"artifact_platform_mismatch",

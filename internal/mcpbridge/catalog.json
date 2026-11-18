@@ -8942,7 +8942,10 @@
         }
       },
       "type": "object"
-    }
+    },
+    "query": [
+      "localOnly"
+    ]
   },
   {
     "name": "interrupt_execution_activity",

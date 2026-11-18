@@ -49,6 +49,9 @@ func (m Manager) InspectSource(ctx context.Context, source domain.ExecutableSour
 	}
 	output, err := m.Executor.Runner.Run(ctx, "docker", []string{"image", "inspect", image}, nil)
 	if err != nil {
+		if source.Type == domain.ExecutableSourceOCI {
+			m.inspectRegistryPlatforms(ctx, image, result)
+		}
 		return result, nil
 	}
 	var images []map[string]any
@@ -60,6 +63,9 @@ func (m Manager) InspectSource(ctx context.Context, source domain.ExecutableSour
 	}
 	for _, key := range []string{"Id", "RepoTags", "RepoDigests", "Created", "Size", "Os", "Architecture", "RootFS", "Config"} {
 		result[key] = images[0][key]
+	}
+	if source.Type == domain.ExecutableSourceOCI {
+		m.inspectRegistryPlatforms(ctx, inspectedRegistryReference(image, images[0]), result)
 	}
 	result["available"] = true
 	result["platform"] = fmt.Sprintf("%v/%v", images[0]["Os"], images[0]["Architecture"])

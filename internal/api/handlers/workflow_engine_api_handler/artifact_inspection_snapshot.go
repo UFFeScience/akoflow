@@ -26,6 +26,9 @@ func (h *Handler) inspectArtifactSource(ctx context.Context, source domain.Execu
 		return live, err
 	}
 	if err == nil && live["available"] == true {
+		if live["platforms"] == nil && source.Inspection.Data["platforms"] != nil {
+			live["platforms"] = source.Inspection.Data["platforms"]
+		}
 		return live, nil
 	}
 	data, marshalErr := json.Marshal(source.Inspection.Data)
@@ -35,6 +38,13 @@ func (h *Handler) inspectArtifactSource(ctx context.Context, source domain.Execu
 	var snapshot map[string]any
 	if json.Unmarshal(data, &snapshot) != nil {
 		return nil, fmt.Errorf("invalid artifact inspection snapshot")
+	}
+	if live["platforms"] != nil {
+		snapshot["platforms"] = live["platforms"]
+		delete(snapshot, "platformsObservedFromTag")
+		if live["platformsObservedFromTag"] == true {
+			snapshot["platformsObservedFromTag"] = true
+		}
 	}
 	snapshot["available"] = false
 	snapshot["metadataProvenance"] = "published-snapshot"
@@ -65,7 +75,14 @@ func (h *Handler) captureArtifactInspection(ctx context.Context, source *domain.
 		return fmt.Errorf("capture image metadata: %w", err)
 	}
 	if source.Inspection != nil && inspection["metadataProvenance"] == "published-snapshot" {
-		return nil
+		if platforms := inspection["platforms"]; platforms != nil {
+			source.Inspection.Data["platforms"] = platforms
+			delete(source.Inspection.Data, "platformsObservedFromTag")
+			if inspection["platformsObservedFromTag"] == true {
+				source.Inspection.Data["platformsObservedFromTag"] = true
+			}
+		}
+		return source.Inspection.Validate()
 	}
 	if format, ok := inspection["format"].(string); !ok || format == "" {
 		format = string(source.Format)

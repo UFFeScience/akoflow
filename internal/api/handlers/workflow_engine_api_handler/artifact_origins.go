@@ -90,6 +90,7 @@ func (h *Handler) portableDefinition(ctx context.Context, definition domain.Work
 	if err := json.Unmarshal(payload, &portable); err != nil {
 		return definition, err
 	}
+	resolved := make(map[string]domain.ExecutableSource)
 	for i := range portable.Version.Activities {
 		activity := &portable.Version.Activities[i]
 		executable := activity.Command.EffectiveExecutable()
@@ -98,6 +99,12 @@ func (h *Handler) portableDefinition(ctx context.Context, definition domain.Work
 		}
 		activity.Command.Executable = executable
 		source := &executable.Source
+		signature, _ := json.Marshal(source)
+		key := string(signature)
+		if previous, found := resolved[key]; found {
+			*source = previous
+			continue
+		}
 		if err := h.captureArtifactInspection(ctx, source); err != nil {
 			return definition, fmt.Errorf("activity %q: %w", activity.Name, err)
 		}
@@ -107,6 +114,7 @@ func (h *Handler) portableDefinition(ctx context.Context, definition domain.Work
 		if err := h.makeArtifactSourcePortable(ctx, source); err != nil {
 			return definition, fmt.Errorf("activity %q artifact origin: %w", activity.Name, err)
 		}
+		resolved[key] = *source
 	}
 	return portable, nil
 }
@@ -135,7 +143,7 @@ func (h *Handler) preparePortableOrigin(ctx context.Context, request *ports.Exec
 		return false, nil
 	}
 	architecture := strings.Split(origin.Platform, "/")[1]
-	if resource.Architecture != "" && architecture != normalizedOriginArchitecture(resource.Architecture) {
+	if origin.Build != nil && resource.Architecture != "" && architecture != normalizedOriginArchitecture(resource.Architecture) {
 		return false, fmt.Errorf("activity %q artifact platform %q does not match resource architecture %q", activity.ID, origin.Platform, resource.Architecture)
 	}
 	if request.PreparationRequirementsByActivity == nil {

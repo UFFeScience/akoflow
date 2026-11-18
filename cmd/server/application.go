@@ -16,6 +16,7 @@ import (
 	applicationexecution "github.com/UFFeScience/akoflow/internal/application/execution"
 	applicationplanning "github.com/UFFeScience/akoflow/internal/application/planning"
 	"github.com/UFFeScience/akoflow/internal/application/ports"
+	"github.com/UFFeScience/akoflow/internal/application/recurring"
 	"github.com/UFFeScience/akoflow/internal/controlplane/eventloop"
 	"github.com/UFFeScience/akoflow/internal/domain"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/config"
@@ -32,16 +33,17 @@ import (
 )
 
 type application struct {
-	settings          config.Settings
-	log               *logger.Logger
-	auditDatabase     *sql.DB
-	audit             ports.AuditStore
-	database          *sql.DB
-	analytics         *sql.DB
-	api               *workflow_engine_api_handler.Handler
-	eventLoop         *eventloop.Loop
-	connectionMonitor *applicationenvironment.ConnectionMonitor
-	readOnly          bool
+	executionSchedules *recurring.Coordinator
+	settings           config.Settings
+	log                *logger.Logger
+	auditDatabase      *sql.DB
+	audit              ports.AuditStore
+	database           *sql.DB
+	analytics          *sql.DB
+	api                *workflow_engine_api_handler.Handler
+	eventLoop          *eventloop.Loop
+	connectionMonitor  *applicationenvironment.ConnectionMonitor
+	readOnly           bool
 }
 
 func newApplication(ctx context.Context, settings config.Settings, log *logger.Logger) (*application, error) {
@@ -127,14 +129,19 @@ func newApplication(ctx context.Context, settings config.Settings, log *logger.L
 	if err != nil {
 		return fail(err)
 	}
+	var schedules *recurring.Coordinator
+	if !storage.readOnly {
+		schedules = api.WithExecutionSchedules(storage.executions)
+	}
 	return &application{
-		auditDatabase: storage.auditDatabase,
-		audit:         storage.audit,
-		settings:      settings,
-		log:           log,
-		database:      storage.database,
-		analytics:     storage.analytics,
-		api:           api, eventLoop: loop,
+		executionSchedules: schedules,
+		auditDatabase:      storage.auditDatabase,
+		audit:              storage.audit,
+		settings:           settings,
+		log:                log,
+		database:           storage.database,
+		analytics:          storage.analytics,
+		api:                api, eventLoop: loop,
 		connectionMonitor: connectionMonitor,
 		readOnly:          storage.readOnly,
 	}, nil
@@ -144,6 +151,7 @@ func (a *application) Run(ctx context.Context) error {
 	a.log.Info("Starting Akoflow Server")
 	if !a.readOnly {
 		a.startEventLoop(ctx)
+		go a.dispatchExecutionSchedules(ctx)
 		go a.connectionMonitor.Run(ctx, a.settings.ConnectionCheckInterval)
 	}
 	if err := httpserver.Serve(ctx, a.settings.HTTPAddress, a.api, a.audit); err != nil {

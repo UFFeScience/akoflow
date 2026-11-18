@@ -17,6 +17,14 @@ func (r *Repository) SubmitRun(ctx context.Context, run domain.ExecutionRun, job
 		return domainqueue.Job{}, err
 	}
 	defer tx.Rollback()
+	stored, err := submitRunIn(ctx, tx, run, job)
+	if err != nil {
+		return domainqueue.Job{}, err
+	}
+	return stored, tx.Commit()
+}
+
+func submitRunIn(ctx context.Context, tx *sql.Tx, run domain.ExecutionRun, job domainqueue.Job) (domainqueue.Job, error) {
 	stored, inserted, err := dbqueue.PublishIn(ctx, tx, job)
 	if err != nil {
 		return domainqueue.Job{}, err
@@ -25,7 +33,7 @@ func (r *Repository) SubmitRun(ctx context.Context, run domain.ExecutionRun, job
 		if stored.AggregateID != run.ID || !bytes.Equal(stored.Payload, job.Payload) {
 			return domainqueue.Job{}, ports.ErrExecutionSubmissionConflict
 		}
-		return stored, tx.Commit()
+		return stored, nil
 	}
 	var id string
 	err = tx.QueryRowContext(ctx, "SELECT id FROM execution_runs WHERE id=?", run.ID).Scan(&id)
@@ -38,5 +46,5 @@ func (r *Repository) SubmitRun(ctx context.Context, run domain.ExecutionRun, job
 	if err := createRunIn(ctx, tx, run); err != nil {
 		return domainqueue.Job{}, err
 	}
-	return stored, tx.Commit()
+	return stored, nil
 }

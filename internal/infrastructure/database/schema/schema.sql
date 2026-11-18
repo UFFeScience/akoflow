@@ -976,3 +976,32 @@ CREATE TABLE scheduler_plugin_revisions (
     payload TEXT NOT NULL,
     PRIMARY KEY(id, revision)
 );
+
+-- Recurring execution schedules
+CREATE TABLE execution_schedules (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    workflow_version_id TEXT NOT NULL REFERENCES workflow_versions(id),
+    schedule_plan_id TEXT NOT NULL REFERENCES schedule_plans(id),
+    frequency TEXT NOT NULL CHECK(frequency IN ('daily','weekly')),
+    local_time TEXT NOT NULL,
+    weekday INTEGER NOT NULL CHECK(weekday BETWEEN 0 AND 6),
+    time_zone TEXT NOT NULL,
+    missed_policy TEXT NOT NULL CHECK(missed_policy IN ('skip','latest')),
+    overlap_policy TEXT NOT NULL CHECK(overlap_policy IN ('skip','allow')),
+    paused INTEGER NOT NULL DEFAULT 0 CHECK(paused IN (0,1)),
+    next_at INTEGER NOT NULL
+);
+CREATE INDEX execution_schedules_due_idx ON execution_schedules(next_at) WHERE paused=0;
+
+CREATE TABLE execution_schedule_occurrences (
+    schedule_id TEXT NOT NULL REFERENCES execution_schedules(id) ON DELETE CASCADE,
+    scheduled_at INTEGER NOT NULL,
+    handled_at INTEGER NOT NULL,
+    outcome TEXT NOT NULL CHECK(outcome IN ('launched','missed','overlap','blocked')),
+    run_id TEXT UNIQUE REFERENCES execution_runs(id),
+    detail TEXT NOT NULL DEFAULT '',
+    PRIMARY KEY(schedule_id, scheduled_at),
+    CHECK((outcome='launched') = (run_id IS NOT NULL))
+);
+CREATE INDEX execution_schedule_launches_idx ON execution_schedule_occurrences(schedule_id, scheduled_at DESC) WHERE run_id IS NOT NULL;

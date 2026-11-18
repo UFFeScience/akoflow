@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"time"
 )
 
 func (a *application) startEventLoop(ctx context.Context) {
@@ -10,4 +11,22 @@ func (a *application) startEventLoop(ctx context.Context) {
 			a.log.Error("Event loop stopped:", err)
 		}
 	}()
+}
+
+func (a *application) dispatchExecutionSchedules(ctx context.Context) {
+	if a.executionSchedules == nil {
+		return
+	}
+	ticker := time.NewTicker(5 * time.Second)
+	defer ticker.Stop()
+	for ctx.Err() == nil {
+		if err := a.executionSchedules.Dispatch(ctx, time.Now().UTC()); err != nil && ctx.Err() == nil {
+			a.log.Error("Dispatch execution schedules:", err)
+		}
+		select {
+		case <-ctx.Done():
+			return
+		case <-ticker.C:
+		}
+	}
 }

@@ -200,6 +200,9 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 }
 
 func registerExecutionRoutes(mux *http.ServeMux, workflowEngine *workflow_engine_api_handler.Handler) {
+	mux.HandleFunc("GET /akoflow-api/execution-schedules/", http_config.KernelHandler(workflowEngine.ListExecutionSchedules))
+	mux.HandleFunc("POST /akoflow-api/execution-schedules/", http_config.KernelHandler(workflowEngine.CreateExecutionSchedule))
+	mux.HandleFunc("PATCH /akoflow-api/execution-schedules/{scheduleId}/", http_config.KernelHandler(workflowEngine.UpdateExecutionSchedule))
 	mux.HandleFunc("POST /akoflow-api/execution-preflights/", http_config.KernelHandler(workflowEngine.CreateExecutionPreflight))
 	mux.HandleFunc("GET /akoflow-api/execution-preflights/{preflightId}/", http_config.KernelHandler(workflowEngine.GetExecutionPreflight))
 	mux.HandleFunc("POST /akoflow-api/execution-runs/", http_config.KernelHandler(workflowEngine.CreateExecution))

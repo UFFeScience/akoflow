@@ -58,7 +58,11 @@ func validateMetadata(ctx context.Context, db *sql.DB) error {
 	return nil
 }
 
-func requireTable(ctx context.Context, db *sql.DB, table string) error {
+type schemaQuery interface {
+	QueryRowContext(context.Context, string, ...any) *sql.Row
+}
+
+func requireTable(ctx context.Context, db schemaQuery, table string) error {
 	var count int
 	err := db.QueryRowContext(
 		ctx,

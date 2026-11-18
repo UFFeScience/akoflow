@@ -353,7 +353,7 @@ func (r *Repository) listProfiles(
 
 func (r *Repository) listRuntimes(ctx context.Context, versionID string) ([]domain.EnvironmentRuntime, error) {
 	rows, err := r.db.QueryContext(ctx, `SELECT r.environment_version_id, r.id, r.name,
-		r.driver, r.mode, r.role, r.configuration, c.capabilities FROM environment_runtimes r
+		r.driver, r.mode, r.role, r.configuration, COALESCE(c.capabilities, '') FROM environment_runtimes r
 		LEFT JOIN environment_runtime_capabilities c ON c.runtime_id=r.id
 		WHERE r.environment_version_id=? ORDER BY r.name`, versionID)
 	if err != nil {

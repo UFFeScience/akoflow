@@ -10,9 +10,7 @@ import (
 	"github.com/UFFeScience/akoflow/internal/infrastructure/database/schema"
 )
 
-// Bootstrap installs the complete canonical schema in a single transaction
-// when the database is empty. Existing databases are never patched in place:
-// they must already match the canonical schema or be recreated.
+// Bootstrap installs the canonical schema or upgrades the supported predecessor.
 func Bootstrap(ctx context.Context, db *sql.DB) error {
 	if db == nil {
 		return fmt.Errorf("bootstrap requires a database")
@@ -28,7 +26,13 @@ func Bootstrap(ctx context.Context, db *sql.DB) error {
 		return installSchema(ctx, db)
 	}
 	if err := Validate(ctx, db); err != nil {
-		return fmt.Errorf("%w; recreate the database from the canonical bootstrap: %v", ErrIncompatibleSchema, err)
+		migrated, migrateErr := addExecutionSchedules(ctx, db)
+		if migrateErr != nil {
+			return migrateErr
+		}
+		if !migrated {
+			return fmt.Errorf("%w; recreate the database from the canonical bootstrap: %v", ErrIncompatibleSchema, err)
+		}
 	}
 	return nil
 }

@@ -28,6 +28,7 @@ import (
 	applicationexecution "github.com/UFFeScience/akoflow/internal/application/execution"
 	applicationconfiguration "github.com/UFFeScience/akoflow/internal/application/machineconfiguration"
 	"github.com/UFFeScience/akoflow/internal/application/ports"
+	"github.com/UFFeScience/akoflow/internal/application/recurring"
 	"github.com/UFFeScience/akoflow/internal/controlplane/eventloop"
 	executioncontrol "github.com/UFFeScience/akoflow/internal/controlplane/execution"
 	"github.com/UFFeScience/akoflow/internal/domain"
@@ -178,6 +179,7 @@ type Dependencies struct {
 }
 
 type Handler struct {
+	executionSchedules  *recurring.Coordinator
 	search              ports.GlobalSearch
 	dockerHub           *dockerhub.Client
 	algorithmLibrary    *library.Catalog
@@ -2747,21 +2749,14 @@ func (h *Handler) CreateExecution(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	r.SetPathValue("runId", request.Run.ID)
-	payload, err := json.Marshal(request)
-	if err != nil {
-		writeError(w, http.StatusBadRequest, err)
-		return
-	}
-	job, err := domainqueue.New(domainqueue.CategoryExecution, eventloop.EventExecutionRunRequested, payload, time.Now().UTC())
-	if err != nil {
-		writeError(w, http.StatusBadRequest, err)
-		return
-	}
-	job.AggregateType, job.AggregateID = "execution_run", request.Run.ID
-	configureExecutionJobRetries(&job, request.Run.Mode)
-	job.IdempotencyKey = "execution-run:" + request.Run.ID
+	idempotency := "execution-run:" + request.Run.ID
 	if key != "" {
-		job.IdempotencyKey = "execution-submission:" + key
+		idempotency = "execution-submission:" + key
+	}
+	job, err := applicationexecution.NewExecutionJob(request, idempotency, time.Now().UTC())
+	if err != nil {
+		writeError(w, http.StatusBadRequest, err)
+		return
 	}
 	stored, err := store.SubmitRun(r.Context(), request.Run, job)
 	if err != nil {

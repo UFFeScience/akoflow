@@ -305,6 +305,9 @@ func (s *BrowserCoordinator) OpenDownload(ctx context.Context, id string) (io.Re
 	if e != nil || run == nil {
 		return nil, domain.FileEntry{}, notFound(e)
 	}
+	if run.Status != domain.DownloadReady && run.Status != domain.DownloadCompleted {
+		return nil, domain.FileEntry{}, fmt.Errorf("download is not ready")
+	}
 	v, e := s.catalog.FindStorage(ctx, run.StorageID)
 	if e != nil || v == nil {
 		return nil, domain.FileEntry{}, notFound(e)
@@ -432,14 +435,14 @@ func (s *BrowserCoordinator) QueueArchive(ctx context.Context, id, path, runID s
 		Status: domain.DownloadQueued, Strategy: "archive",
 		CreatedAt: now, UpdatedAt: now,
 	}
-	if e = s.catalog.SaveDownload(ctx, run); e != nil {
-		return run, e
-	}
 	v, e := s.catalog.FindStorage(ctx, id)
 	if e != nil || v == nil {
 		return run, notFound(e)
 	}
 	if _, e = s.usable(v, true); e != nil {
+		return run, e
+	}
+	if e = s.catalog.SaveDownload(ctx, run); e != nil {
 		return run, e
 	}
 	go s.archive(context.Background(), run, *v)
@@ -459,13 +462,17 @@ func (s *BrowserCoordinator) archive(ctx context.Context, run domain.DownloadRun
 	} else if err == nil {
 		reader, writer := io.Pipe()
 		done := make(chan error, 1)
-		go func() { done <- s.writeArchive(ctx, b, storage, run.Path, writer); _ = writer.Close() }()
+		go func() {
+			archiveErr := s.writeArchive(ctx, b, storage, run.Path, writer)
+			_ = writer.CloseWithError(archiveErr)
+			done <- archiveErr
+		}()
 		output := strings.TrimSuffix(run.Path, "/") + ".tar.gz"
 		err = b.Write(ctx, storage, output, reader, 0)
+		_ = reader.CloseWithError(err)
 		if archiveErr := <-done; err == nil {
 			err = archiveErr
 		}
-		_ = reader.Close()
 		if err == nil {
 			run.Path = output
 		}

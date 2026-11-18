@@ -162,7 +162,8 @@ func reconcileLocalReservations(ctx context.Context, store ports.LocalAdmissionS
 			name := localprovider.ExecutionContainerName(task.RunID, task.ActivityID, task.Attempt)
 			released = localprovider.ContainerReservationReleased(ctx, executor, name)
 		} else {
-			released = localprovider.NativeReservationReleased(task.ProcessID, task.ProcessIdentity)
+			released = (task.NativeGated && task.ProcessID == "" && task.ProcessIdentity == "") ||
+				localprovider.NativeReservationReleased(task.ProcessID, task.ProcessIdentity)
 		}
 		if released {
 			if err := store.ReleaseReconciledLocalActivity(ctx, task.TaskID); err != nil {

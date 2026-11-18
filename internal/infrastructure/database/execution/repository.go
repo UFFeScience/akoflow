@@ -901,7 +901,10 @@ func saveTask(ctx context.Context, tx *sql.Tx, task domain.TaskExecution) error 
 				'localReservedMemoryBytes', json_extract(task_executions.metadata, '$.localReservedMemoryBytes'),
 				'localLaunchMayExist', json_extract(task_executions.metadata, '$.localLaunchMayExist'),
 				'localDockerLaunch', json_extract(task_executions.metadata, '$.localDockerLaunch'),
-				'localNeedsReconciliation', json_extract(task_executions.metadata, '$.localNeedsReconciliation')
+				'localNeedsReconciliation', json_extract(task_executions.metadata, '$.localNeedsReconciliation'),
+				'localNativeGated', json_extract(task_executions.metadata, '$.localNativeGated'),
+				'localNativePid', json_extract(task_executions.metadata, '$.localNativePid'),
+				'localNativeIdentity', json_extract(task_executions.metadata, '$.localNativeIdentity')
 			), excluded.metadata) END`,
 		task.ID, task.ExecutionRunID, task.PlanAssignmentID, task.ActivityID,
 		task.PlannedResourceID, nullableString(task.AllocatedResourceID), task.Attempt,

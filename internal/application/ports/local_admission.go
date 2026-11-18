@@ -14,8 +14,12 @@ type LocalActivityCapacity struct {
 type LocalReconciliation struct {
 	TaskID, RunID, ActivityID  string
 	Attempt                    int
-	Docker                     bool
+	Docker, NativeGated        bool
 	ProcessID, ProcessIdentity string
+}
+
+type NativeLaunchRecorder interface {
+	RecordNativeLaunch(context.Context, string, string, int, string, string) error
 }
 
 type LocalAdmissionStore interface {

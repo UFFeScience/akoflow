@@ -48,6 +48,7 @@ type Adapter struct {
 	pullsMu      sync.Mutex
 	pulls        map[imagePullKey]*imagePull
 	preparation  ports.ImagePreparationRecorder
+	nativeLaunch ports.NativeLaunchRecorder
 	mu           sync.RWMutex
 	results      map[string]processResult
 	logs         map[string]*logBuffer
@@ -61,6 +62,10 @@ func New() *Adapter {
 func NewWithImagePreparation(recorder ports.ImagePreparationRecorder) *Adapter {
 	return &Adapter{preparation: recorder, results: make(map[string]processResult), logs: make(map[string]*logBuffer), observations: make(map[string]runtimecommon.ArtifactSnapshot)}
 }
+func (a *Adapter) WithNativeLaunchRecorder(recorder ports.NativeLaunchRecorder) {
+	a.nativeLaunch = recorder
+}
+
 func (*Adapter) Modes() []domain.ExecutionMode {
 	return []domain.ExecutionMode{domain.ExecutionModeReal, domain.ExecutionModeInteractive}
 }
@@ -81,7 +86,10 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 	if image := strings.TrimSpace(activity.Command.Image); image != "" {
 		return a.startContainer(ctx, execution, root, before, image)
 	}
-	command := exec.Command(activity.Command.Entrypoint, activity.Command.Arguments...)
+	command, gate, err := a.nativeCommand(execution)
+	if err != nil {
+		return domain.ActivityHandle{}, err
+	}
 	command.Dir = root
 	command.Env = os.Environ()
 	output := &logBuffer{}
@@ -89,7 +97,7 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 	for key, value := range activity.Command.Environment {
 		command.Env = append(command.Env, key+"="+value)
 	}
-	if err := command.Start(); err != nil {
+	if err := a.startNativeCommand(ctx, execution, command, gate); err != nil {
 		return domain.ActivityHandle{}, fmt.Errorf("start local activity: %w", err)
 	}
 	startedAt := runtimecommon.UnixSeconds(time.Now())

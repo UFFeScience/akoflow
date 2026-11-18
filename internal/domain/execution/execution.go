@@ -240,14 +240,15 @@ type DataTransfer struct {
 }
 
 type ActivityExecutionContext struct {
-	Attempt    int                      `json:"attempt,omitempty"`
-	Run        ExecutionRun             `json:"run"`
-	Workflow   workflow.WorkflowVersion `json:"workflow"`
-	Activity   workflow.Activity        `json:"activity"`
-	Assignment planning.PlanAssignment  `json:"assignment"`
-	Resource   resource.Resource        `json:"resource"`
-	RuntimeID  string                   `json:"runtimeId"`
-	Allocation RuntimeAllocation        `json:"allocation"`
+	SharedLocalReservation bool                     `json:"-"`
+	Attempt                int                      `json:"attempt,omitempty"`
+	Run                    ExecutionRun             `json:"run"`
+	Workflow               workflow.WorkflowVersion `json:"workflow"`
+	Activity               workflow.Activity        `json:"activity"`
+	Assignment             planning.PlanAssignment  `json:"assignment"`
+	Resource               resource.Resource        `json:"resource"`
+	RuntimeID              string                   `json:"runtimeId"`
+	Allocation             RuntimeAllocation        `json:"allocation"`
 	// Preparation is supplied by the orchestration/data plane when the
 	// activity has executable or workspace requirements. Providers must not
 	// start work until it is committed.

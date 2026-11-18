@@ -71,7 +71,7 @@ func capacityReadyActivities(
 	return localCapacityReady(ready, assignments, resources, activities, tasks, pending)
 }
 
-func (s *Supervisor) markPreparing(ctx context.Context, task *domain.TaskExecution, resource domain.Resource, activity domain.Activity) (bool, error) {
+func (s *Supervisor) markPreparing(ctx context.Context, task *domain.TaskExecution, resource domain.Resource, activity domain.Activity, driver domain.RuntimeDriver) (bool, error) {
 	previousReason, _ := task.Metadata["queueReason"].(string)
 	task.Metadata = maps.Clone(task.Metadata)
 	if task.Metadata == nil {
@@ -80,7 +80,7 @@ func (s *Supervisor) markPreparing(ctx context.Context, task *domain.TaskExecuti
 	task.Metadata["queueReason"] = "synchronizing predecessor workspaces and preparing runtime"
 	capacity := s.config.SharedLocalCapacity
 	store, ok := s.executions.(ports.LocalAdmissionStore)
-	if ok && capacity.CPU > 0 && capacity.MemoryBytes > 0 && resource.HasLocalAllocation() {
+	if ok && capacity.CPU > 0 && capacity.MemoryBytes > 0 && resource.HasLocalAllocation() && driver == domain.RuntimeDriverLocal {
 		cpu, memory := resource.LocalActivityBudget(activity.Resources.CPU, activity.Resources.MemoryBytes)
 		reserved, err := store.ReserveLocalActivity(ctx, task, ports.LocalActivityCapacity{CPU: cpu, MemoryBytes: memory}, capacity)
 		if err != nil || reserved {

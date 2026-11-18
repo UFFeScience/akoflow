@@ -39,9 +39,17 @@ func buildRuntimes(
 	imagePreparation ports.ImagePreparationRecorder,
 ) (ports.RuntimeResolver, error) {
 	runtimes := registry.New()
+	localAdapter := local.NewWithImagePreparation(imagePreparation)
+	capacity, err := sharedLocalCapacity()
+	if err != nil {
+		return nil, err
+	}
+	if recorder, ok := imagePreparation.(ports.NativeLaunchRecorder); ok && capacity.CPU > 0 {
+		localAdapter.WithNativeLaunchRecorder(recorder)
+	}
 	adapters := map[string]ports.RuntimeAdapter{
 		"*":     simgrid.NewActivityRuntime(),
-		"local": local.NewWithImagePreparation(imagePreparation),
+		"local": localAdapter,
 		"slurm": slurm.NewWithConfig(provider.OSCommandExecutor{}, slurm.Config{
 			ScriptDirectory: settings.SlurmScriptDirectory,
 		}),

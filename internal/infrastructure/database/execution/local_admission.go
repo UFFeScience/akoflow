@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"maps"
 	"math"
+	"runtime"
 
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
@@ -85,9 +86,9 @@ func localCapacityInUse(ctx context.Context, tx *sql.Tx, task domain.TaskExecuti
 
 func (r *Repository) MarkLocalActivityLaunching(ctx context.Context, runID, activityID string, attempt int, docker bool) error {
 	result, err := r.db.ExecContext(ctx, `UPDATE task_executions
-	SET metadata = json_set(json_remove(metadata, '$.localNeedsReconciliation'), '$.localLaunchMayExist', true, '$.localDockerLaunch', ?)
+	SET metadata = json_set(json_remove(metadata, '$.localNeedsReconciliation'), '$.localLaunchMayExist', true, '$.localDockerLaunch', ?, '$.localNativeGated', ?)
 	WHERE execution_run_id = ? AND activity_id = ? AND attempt = ? AND status = 'preparing'
-	AND json_extract(metadata, '$.localReservedCpu') > 0`, docker, runID, activityID, attempt)
+	AND json_extract(metadata, '$.localReservedCpu') > 0`, docker, !docker && runtime.GOOS == "linux", runID, activityID, attempt)
 	if err != nil {
 		return err
 	}
@@ -128,7 +129,9 @@ func (r *Repository) RecoverLocalPreparations(ctx context.Context) error {
 func (r *Repository) ListLocalReconciliations(ctx context.Context) ([]ports.LocalReconciliation, error) {
 	rows, err := r.db.QueryContext(ctx, `SELECT t.id,t.execution_run_id,t.activity_id,t.attempt,
 		COALESCE(json_extract(t.metadata, '$.localDockerLaunch'), 0),
-		COALESCE(h.external_id, ''), COALESCE(json_extract(h.metadata, '$.nativeProcessIdentity'), '')
+		COALESCE(json_extract(t.metadata, '$.localNativeGated'), 0),
+		COALESCE(json_extract(t.metadata, '$.localNativePid'), h.external_id, ''),
+		COALESCE(json_extract(t.metadata, '$.localNativeIdentity'), json_extract(h.metadata, '$.nativeProcessIdentity'), '')
 		FROM task_executions t
 		LEFT JOIN activity_handles h ON h.id = t.execution_run_id || ':' || t.activity_id ||
 			CASE WHEN t.attempt > 1 THEN ':attempt-' || t.attempt ELSE '' END
@@ -141,7 +144,7 @@ func (r *Repository) ListLocalReconciliations(ctx context.Context) ([]ports.Loca
 	for rows.Next() {
 		var task ports.LocalReconciliation
 		if err := rows.Scan(&task.TaskID, &task.RunID, &task.ActivityID, &task.Attempt,
-			&task.Docker, &task.ProcessID, &task.ProcessIdentity); err != nil {
+			&task.Docker, &task.NativeGated, &task.ProcessID, &task.ProcessIdentity); err != nil {
 			return nil, err
 		}
 		tasks = append(tasks, task)
@@ -151,7 +154,23 @@ func (r *Repository) ListLocalReconciliations(ctx context.Context) ([]ports.Loca
 
 func (r *Repository) ReleaseReconciledLocalActivity(ctx context.Context, taskID string) error {
 	_, err := r.db.ExecContext(ctx, `UPDATE task_executions SET metadata=json_remove(metadata,
-		'$.localReservedCpu', '$.localReservedMemoryBytes', '$.localLaunchMayExist', '$.localDockerLaunch', '$.localNeedsReconciliation')
+		'$.localReservedCpu', '$.localReservedMemoryBytes', '$.localLaunchMayExist', '$.localDockerLaunch', '$.localNeedsReconciliation',
+        '$.localNativeGated', '$.localNativePid', '$.localNativeIdentity')
 		WHERE id = ? AND json_extract(metadata, '$.localNeedsReconciliation') = 1`, taskID)
+	return err
+}
+
+func (r *Repository) RecordNativeLaunch(ctx context.Context, runID, activityID string, attempt int, pid, identity string) error {
+	result, err := r.db.ExecContext(ctx, `UPDATE task_executions
+		SET metadata=json_set(metadata, '$.localNativePid', ?, '$.localNativeIdentity', ?)
+		WHERE execution_run_id=? AND activity_id=? AND attempt=? AND status='preparing'
+		AND json_extract(metadata, '$.localNativeGated')=1`, pid, identity, runID, activityID, attempt)
+	if err != nil {
+		return err
+	}
+	count, err := result.RowsAffected()
+	if err == nil && count != 1 {
+		return fmt.Errorf("native process cannot start without a durable capacity reservation")
+	}
 	return err
 }

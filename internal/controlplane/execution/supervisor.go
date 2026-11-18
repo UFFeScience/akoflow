@@ -396,7 +396,7 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 				break
 			}
 			task := tasks[activityID]
-			reserved, err := s.markPreparing(ctx, &task, resources[assignments[activityID].ResourceID], activities[activityID])
+			reserved, err := s.markPreparing(ctx, &task, resources[assignments[activityID].ResourceID], activities[activityID], runtimeDriver(request, activityID))
 			if err != nil {
 				return domain.ExecutionTrace{}, fmt.Errorf("admit activity %q: %w", activityID, err)
 			}
@@ -841,13 +841,17 @@ func (s *Supervisor) startReadyActivity(
 		result.err = fmt.Errorf("activate workspace for activity %q: %w", activityID, err)
 		return result
 	}
-	if err := s.markLocalLaunching(ctx, request.Run.ID, activityID, attempt, resource, activity); err != nil {
-		result.err = err
-		return result
+	driver := runtimeDriver(request, activityID)
+	sharedLocal := s.config.SharedLocalCapacity.CPU > 0 && resource.HasLocalAllocation() && driver == domain.RuntimeDriverLocal
+	if sharedLocal {
+		if err := s.markLocalLaunching(ctx, request.Run.ID, activityID, attempt, resource, activity); err != nil {
+			result.err = err
+			return result
+		}
 	}
 	handle, err := s.activities.Start(ctx, domain.ActivityExecutionContext{
-		Attempt: attempt,
-		Run:     request.Run, Workflow: request.Workflow, Activity: activity, Assignment: assignment,
+		Attempt: attempt, SharedLocalReservation: sharedLocal,
+		Run: request.Run, Workflow: request.Workflow, Activity: activity, Assignment: assignment,
 		Resource: resource, RuntimeID: selectRuntime(request, assignment), Allocation: allocation, Preparation: result.preparation,
 	})
 	result.handle = handle

@@ -98,6 +98,7 @@ func (a *Adapter) recordImageObservation(ctx context.Context, handle *domain.Act
 			observation["platform"] = platform
 		}
 	}
+	delete(handle.Metadata, "executionImageArtifact")
 	handle.Metadata["imageObservation"] = observation
 }
 

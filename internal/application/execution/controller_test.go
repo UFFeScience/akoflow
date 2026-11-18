@@ -387,3 +387,41 @@ func TestObservationCancellationDoesNotChangeComputation(t *testing.T) {
 		t.Fatalf("cancellation mutated computation: %+v %v", handles.handle, err)
 	}
 }
+
+type executionImageCatalogFake struct {
+	ports.DataCatalog
+	attempts []string
+}
+
+func (f *executionImageCatalogFake) CatalogExecutionImage(_ context.Context, handle domain.ActivityHandle) (map[string]string, error) {
+	f.attempts = append(f.attempts, handle.ID)
+	return map[string]string{"variantId": "immutable"}, nil
+}
+
+func TestStartPersistsExecutionImageLinkPerAttempt(t *testing.T) {
+	ctx := context.Background()
+	catalog := &executionImageCatalogFake{}
+	runtime := &runtimeFake{handle: domain.ActivityHandle{RunID: "run", ActivityID: "activity", Status: domain.HandleRunning}}
+	execution := executionFixture()
+	for attempt := 1; attempt <= 2; attempt++ {
+		execution.Attempt = attempt
+		runtime.handle.Metadata = map[string]any{"imageObservation": map[string]any{"status": "observed"}}
+		handles := &handlesFake{}
+		controller := New(resolverFake{adapter: runtime}, handles, catalog)
+		if _, err := controller.Start(ctx, execution); err != nil {
+			t.Fatal(err)
+		}
+		link, _ := handles.handle.Metadata["executionImageArtifact"].(map[string]string)
+		if link["variantId"] != "immutable" || handles.handle.ID != execution.HandleID() {
+			t.Fatalf("wrong attempt link: %+v", handles.handle)
+		}
+	}
+	execution.Attempt = 3
+	runtime.startErr = errors.New("image preparation failed")
+	if _, err := New(resolverFake{adapter: runtime}, &handlesFake{}, catalog).Start(ctx, execution); err == nil {
+		t.Fatal("expected preparation failure")
+	}
+	if len(catalog.attempts) != 2 || catalog.attempts[0] == catalog.attempts[1] {
+		t.Fatalf("unexpected image usage attempts: %v", catalog.attempts)
+	}
+}

@@ -83,6 +83,7 @@ func (s *Controller) Start(ctx context.Context, execution domain.ActivityExecuti
 		return domain.ActivityHandle{}, fmt.Errorf("runtime returned an invalid activity handle")
 	}
 	handle.ID = handleID
+	s.catalogExecutionImage(ctx, &handle)
 	handle.Log = appendLog(handle.Log, "info", "Activity started on runtime "+handle.RuntimeID+".")
 	if handle.Status == domain.HandleCompleted {
 		handle.Log = appendLog(handle.Log, "success", "Activity completed successfully.")
@@ -136,6 +137,7 @@ func (s *Controller) Inspect(ctx context.Context, handleID string, mode domain.E
 	delete(updated.Metadata, ports.RuntimeReconciliationPending)
 	updated.Log = mergeLogs(handle.Log, updated.Log)
 	s.saveInspectionMetrics(ctx, handle, &updated)
+	s.catalogExecutionImage(ctx, &updated)
 	if updated.Status != handle.Status {
 		switch updated.Status {
 		case domain.HandleCompleted:
@@ -178,6 +180,28 @@ func (s *Controller) Inspect(ctx context.Context, handleID string, mode domain.E
 		}
 	}
 	return &updated, nil
+}
+
+func (s *Controller) catalogExecutionImage(ctx context.Context, handle *domain.ActivityHandle) {
+	catalog, ok := s.data.(interface {
+		CatalogExecutionImage(context.Context, domain.ActivityHandle) (map[string]string, error)
+	})
+	observation, _ := handle.Metadata["imageObservation"].(map[string]any)
+	if !ok || observation["status"] != "observed" {
+		return
+	}
+	if handle.Metadata["executionImageArtifact"] != nil {
+		return
+	}
+	link, err := catalog.CatalogExecutionImage(ctx, *handle)
+	if err != nil {
+		handle.Metadata["executionImageCatalogError"] = err.Error()
+		return
+	}
+	if link != nil {
+		delete(handle.Metadata, "executionImageCatalogError")
+		handle.Metadata["executionImageArtifact"] = link
+	}
 }
 
 func prepareActivityCommand(execution *domain.ActivityExecutionContext) error {

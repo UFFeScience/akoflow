@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	apirequests "github.com/UFFeScience/akoflow/internal/api/requests"
+	"github.com/UFFeScience/akoflow/internal/domain"
 	"net/http"
 	"net/url"
 )
@@ -26,6 +28,24 @@ func (m *Manager) ImportWorkflow(ctx context.Context, uri, name string) (json.Ra
 	}
 	if !json.Valid(data) {
 		return nil, failure(502, "source_invalid", "The daemon returned an invalid workflow import response.")
+	}
+	var imported domain.WorkflowDefinition
+	publicationID, version := definition.PublicationID, definition.Version
+	if publicationID != "" && version > 0 && json.Unmarshal(data, &imported) == nil && imported.Version.ID != "" {
+		localYAML, err := apirequests.FromDomain(imported).YAML()
+		if err != nil {
+			return nil, err
+		}
+		m.mu.Lock()
+		if m.state.WorkflowSources == nil {
+			m.state.WorkflowSources = make(map[string]WorkflowSource)
+		}
+		m.state.WorkflowSources[imported.Version.ID] = WorkflowSource{PublicationID: publicationID, Version: version, Hash: definition.Hash, LocalHash: digest(localYAML), HubOrigin: m.state.HubURL}
+		saveErr := m.persistLocked()
+		m.mu.Unlock()
+		if saveErr != nil {
+			return nil, saveErr
+		}
 	}
 	return json.RawMessage(data), nil
 }

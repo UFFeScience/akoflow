@@ -308,6 +308,19 @@ func applySentinelStatus(handle domain.ActivityHandle, payload string) (domain.A
 			handle.Metadata = make(map[string]any)
 		}
 		handle.Metadata["allocatedNode"] = node
+		if gpus, err := strconv.ParseUint(values["node_allocated_gpus"], 10, 16); err == nil {
+			handle.Metadata["slurmAllocatedGpus"] = gpus
+		}
+		architecture := values["node_arch"]
+		cpuModel := values["node_cpu_model"]
+		cpus, _ := strconv.ParseInt(values["node_cpus"], 10, 32)
+		memory, _ := strconv.ParseInt(values["node_memory_kib"], 10, 53)
+		if architecture != "" || cpuModel != "" || cpus > 0 || memory > 0 {
+			handle.Metadata["slurmEnvironment"] = map[string]any{
+				"architecture": architecture, "cpuModel": cpuModel,
+				"cpuCores": cpus, "memoryBytes": memory * 1024,
+			}
+		}
 	}
 	switch values["state"] {
 	case "running":
@@ -660,7 +673,22 @@ root=$1; destination=$2; shift 2
 for file do relative=${file#"$root"/}; size=$(wc -c < "$file") || exit 1; checksum=$(sha256sum "$file" | awk "{print \$1}") || exit 1; encoded=$(printf "%s" "$relative" | base64 | tr -d "\\n"); printf "%s|%s|%s\\n" "$encoded" "$size" "$checksum" >> "$destination"; done
 ' snapshot "$artifact_root" "$destination" {} +; sort -o "$destination" "$destination"; }
 `)
-	script.WriteString("started_at=$(date +%s.%N)\nallocated_node=$(hostname -s)\ncontainer_epoch_anchor=$(date +%s.%N)\ncontainer_uptime_anchor=$(awk '{print $1}' /proc/uptime)\nprintf 'state=running\\nstarted_at=%s\\nallocated_node=%s\\nartifact_root=%s\\n' \"$started_at\" \"$allocated_node\" \"$artifact_root\" > \"$sentinel\"\n")
+	script.WriteString(`node_arch=$(uname -m 2>/dev/null || true)
+node_cpus=$(getconf _NPROCESSORS_ONLN 2>/dev/null || true)
+node_memory_kib=$(awk '/^MemTotal:/ { print $2; exit }' /proc/meminfo 2>/dev/null || true)
+node_allocated_gpus=${SLURM_GPUS_ON_NODE:-}
+node_cpu_model=$(awk -F: '/^model name[[:space:]]*:/ { sub(/^[[:space:]]+/, "", $2); print $2; exit }' /proc/cpuinfo 2>/dev/null || true)
+write_node_facts() {
+  printf 'node_arch=%s\nnode_cpus=%s\nnode_memory_kib=%s\nnode_cpu_model=%s\nnode_allocated_gpus=%s\n' "$node_arch" "$node_cpus" "$node_memory_kib" "$node_cpu_model" "$node_allocated_gpus"
+}
+`)
+	script.WriteString(`started_at=$(date +%s.%N)
+allocated_node=$(hostname -s)
+container_epoch_anchor=$(date +%s.%N)
+container_uptime_anchor=$(awk '{print $1}' /proc/uptime)
+printf 'state=running\nstarted_at=%s\nallocated_node=%s\nartifact_root=%s\n' "$started_at" "$allocated_node" "$artifact_root" > "$sentinel"
+write_node_facts >> "$sentinel"
+`)
 	if interval := activity.Command.Environment["AKOFLOW_METRIC_INTERVAL_SECONDS"]; interval != "" {
 		script.WriteString("AKOFLOW_METRIC_INTERVAL_SECONDS=")
 		script.WriteString(shellQuote(interval))
@@ -677,6 +705,7 @@ for file do relative=${file#"$root"/}; size=$(wc -c < "$file") || exit 1; checks
 	script.WriteString("while IFS= read -r seed_link; do [ -L \"$seed_link\" ] && rm -f -- \"$seed_link\"; done < \"$seed_links\"; ")
 	script.WriteString("snapshot_artifacts \"$artifact_after\" || true; ")
 	script.WriteString("finished_at=$(date +%s.%N); { printf 'state=%s\\nexit_code=%s\\nstarted_at=%s\\nfinished_at=%s\\nallocated_node=%s\\ncontainer_started_at=%s\\nartifact_root=%s\\n' \"$state\" \"$code\" \"$started_at\" \"$finished_at\" \"$allocated_node\" \"$container_started_at\" \"$artifact_root\"; ")
+	script.WriteString("write_node_facts; ")
 	script.WriteString("while IFS= read -r entry; do printf 'initial=%s\\n' \"$entry\"; done < \"$artifact_before\"; ")
 	script.WriteString("while IFS= read -r entry; do printf 'final=%s\\n' \"$entry\"; done < \"$artifact_after\"; ")
 	// Publish the complete manifest atomically before readers skip accounting.

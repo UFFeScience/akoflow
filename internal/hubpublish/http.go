@@ -24,6 +24,7 @@ func (m *Manager) Handler() http.Handler {
 	mux.HandleFunc("GET /akoflow-api/hub/publications/{publicationId}/versions/", m.serveListVersions)
 	mux.HandleFunc("GET /akoflow-api/hub/publications/{publicationId}/results/", m.serveListResults)
 	mux.HandleFunc("GET /akoflow-api/hub/publications/{publicationId}/compare/", m.serveCompareVersions)
+	mux.HandleFunc("GET /akoflow-api/hub/publications/{publicationId}/contribution-destination/", m.serveContributionDestination)
 	mux.HandleFunc("POST /akoflow-api/hub/publications/", m.serveCreate)
 	mux.HandleFunc("POST /akoflow-api/hub/publications/preview/", m.servePreview)
 	mux.HandleFunc("POST /akoflow-api/hub/publications/confirm/", m.serveConfirm)
@@ -54,6 +55,14 @@ func decodeRequest(w http.ResponseWriter, r *http.Request, value any) error {
 }
 func (m *Manager) serveStatus(w http.ResponseWriter, r *http.Request) {
 	value, err := m.Status(r.Context())
+	if err == nil {
+		m.mu.Lock()
+		source, ok := m.state.WorkflowSources[r.URL.Query().Get("workflowVersionId")]
+		m.mu.Unlock()
+		if ok && source.HubOrigin == value.HubURL {
+			value.WorkflowSource = &WorkflowSource{PublicationID: source.PublicationID, Version: source.Version, Hash: source.Hash}
+		}
+	}
 	respond(w, value, err)
 }
 func (m *Manager) serveSettings(w http.ResponseWriter, r *http.Request) {
@@ -93,8 +102,21 @@ func (m *Manager) serveCreate(w http.ResponseWriter, r *http.Request) {
 	value, err := m.CreatePublication(r.Context(), input)
 	respond(w, value, err)
 }
+func (m *Manager) serveContributionDestination(w http.ResponseWriter, r *http.Request) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	if _, err := m.identityLocked(r.Context()); err != nil {
+		respond(w, nil, err)
+		return
+	}
+	value, err := m.contributionDestinationLocked(r.Context(), r.PathValue("publicationId"))
+	respond(w, value, err)
+}
+
 func (m *Manager) servePreview(w http.ResponseWriter, r *http.Request) {
 	var input struct {
+		Contribution  bool              `json:"contribution"`
+		TargetVersion int               `json:"targetVersion"`
 		RunID         string            `json:"runId"`
 		PublicationID string            `json:"publicationId"`
 		Message       string            `json:"message"`
@@ -104,7 +126,7 @@ func (m *Manager) servePreview(w http.ResponseWriter, r *http.Request) {
 		respond(w, nil, err)
 		return
 	}
-	value, err := m.Preview(r.Context(), input.RunID, input.PublicationID, input.Message, input.Content)
+	value, err := m.previewExecution(r.Context(), input.RunID, input.PublicationID, input.Message, input.TargetVersion, input.Contribution, input.Content)
 	respond(w, value, err)
 }
 func (m *Manager) serveConfirm(w http.ResponseWriter, r *http.Request) {

@@ -10,6 +10,7 @@ import (
 
 func TestNamedReferencesResolveLatestOnEachLoadAndPinSpecificVersions(t *testing.T) {
 	latest := 1
+	const publicationID = "3f6f378d-dcb8-4a28-883e-2b26697c0393"
 	manager := testManager(t, func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/api/v1/workflow-definitions/resolve" {
 			t.Fatal("unexpected fetch", r.URL.Path)
@@ -20,10 +21,11 @@ func TestNamedReferencesResolveLatestOnEachLoadAndPinSpecificVersions(t *testing
 			version = 1
 		}
 		w.Header().Set("X-Akoflow-Workflow-Version", fmt.Sprint(version))
+		w.Header().Set("X-Akoflow-Publication-ID", publicationID)
 		fmt.Fprintf(w, "name: study-version-%d\n", version)
 	})
 	first, err := manager.WorkflowDefinition(context.Background(), "akoflow::ovvesley/story-signal-study:latest")
-	if err != nil || first.Version != 1 {
+	if err != nil || first.Version != 1 || first.PublicationID != publicationID {
 		t.Fatal(err, first)
 	}
 	latest = 2

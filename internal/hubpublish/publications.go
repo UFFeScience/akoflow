@@ -49,3 +49,20 @@ func (m *Manager) publicationLocked(ctx context.Context, id string) (publication
 	err := m.requestLocked(ctx, "GET", "/desktop/publications/"+url.PathEscape(id), nil, nil, true, &item)
 	return item, err
 }
+
+func (m *Manager) contributionDestinationLocked(ctx context.Context, id string) (publicationInfo, error) {
+	var item publicationInfo
+	if id == "" {
+		return item, failure(422, "publication_required", "Choose a destination publication.")
+	}
+	path := "/desktop/publications/" + url.PathEscape(id) + "/contribution-destination"
+	err := m.requestLocked(ctx, "GET", path, nil, nil, true, &item)
+	return item, err
+}
+
+func (m *Manager) executionDestinationLocked(ctx context.Context, id string, contribution bool) (publicationInfo, error) {
+	if contribution {
+		return m.contributionDestinationLocked(ctx, id)
+	}
+	return m.publicationLocked(ctx, id)
+}

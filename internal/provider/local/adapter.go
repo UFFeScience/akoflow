@@ -103,6 +103,7 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 			"artifactObservationDriver": "filesystem-diff",
 			"artifactObservationRoot":   root,
 			"localContainerName":        "",
+			"nativeEnvironment":         nativeEnvironment(),
 		}}
 	a.mu.Lock()
 	a.logs[handle.ID] = output
@@ -143,11 +144,14 @@ func (a *Adapter) startContainer(ctx context.Context, execution domain.ActivityE
 	} else {
 		args = append(args, "--mount", "type=bind,source="+root+",target="+root)
 	}
+	var allocatedCPU float64
+	var allocatedMemory int64
 	if execution.Resource.HasLocalAllocation() {
 		cpu, memory := execution.Resource.LocalActivityBudget(activity.Resources.CPU, activity.Resources.MemoryBytes)
 		if cpu > execution.Resource.CPUCapacity || memory > execution.Resource.MemoryBytes {
 			return domain.ActivityHandle{}, fmt.Errorf("activity requirements exceed the local environment allocation")
 		}
+		allocatedCPU, allocatedMemory = cpu, memory
 		args = append(args, "--cpus", strconv.FormatFloat(cpu, 'f', -1, 64), "--memory", strconv.FormatInt(memory, 10), "--memory-swap", strconv.FormatInt(memory, 10))
 	}
 	args = append(args, "--workdir", root)
@@ -183,6 +187,10 @@ func (a *Adapter) startContainer(ctx context.Context, execution domain.ActivityE
 			domain.TimingSubmittedAt: startedAt, "artifactObservationDriver": "filesystem-diff",
 			"artifactObservationRoot": root, "localContainerName": name, "executionTarget": "local-docker",
 		}}
+	handle.Metadata["dockerEnvironment"] = dockerEnvironment(ctx, warning != "")
+	if allocatedCPU > 0 && allocatedMemory > 0 {
+		handle.Metadata["dockerLimits"] = map[string]any{"cpu": allocatedCPU, "memoryBytes": allocatedMemory}
+	}
 	if warning != "" {
 		handle.Metadata[compatibilityWarning] = warning
 		handle.Log = "[AKOFLOW WARN] " + warning + "\n"

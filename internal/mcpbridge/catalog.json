@@ -8357,6 +8357,13 @@
     "description": "hub disconnect. DELETE /akoflow-api/hub/connection/. Uses the daemon API and its domain validation."
   },
   {
+    "name": "hub_get_contribution_destination",
+    "method": "GET",
+    "path": "/akoflow-api/hub/publications/{publicationId}/contribution-destination/",
+    "handler": "serveContributionDestination",
+    "description": "hub get contribution destination. GET /akoflow-api/hub/publications/{publicationId}/contribution-destination/. Uses the daemon API and its domain validation."
+  },
+  {
     "name": "hub_get_publication",
     "method": "GET",
     "path": "/akoflow-api/hub/publications/{publicationId}/",
@@ -8445,6 +8452,9 @@
                 "logs": {
                   "type": "boolean"
                 },
+                "machineLabel": {
+                  "type": "string"
+                },
                 "metrics": {
                   "type": "boolean"
                 }
@@ -8456,6 +8466,9 @@
             }
           ]
         },
+        "contribution": {
+          "type": "boolean"
+        },
         "message": {
           "type": "string"
         },
@@ -8464,6 +8477,9 @@
         },
         "runId": {
           "type": "string"
+        },
+        "targetVersion": {
+          "type": "integer"
         }
       },
       "type": "object"
@@ -8502,7 +8518,10 @@
     "method": "GET",
     "path": "/akoflow-api/hub/status/",
     "handler": "serveStatus",
-    "description": "hub status. GET /akoflow-api/hub/status/. Uses the daemon API and its domain validation."
+    "description": "hub status. GET /akoflow-api/hub/status/. Uses the daemon API and its domain validation.",
+    "query": [
+      "workflowVersionId"
+    ]
   },
   {
     "name": "hub_update_publication",

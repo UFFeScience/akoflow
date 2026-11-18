@@ -3,6 +3,7 @@ package hubpublish
 import (
 	"context"
 	"net/url"
+	"strconv"
 	"time"
 )
 
@@ -17,7 +18,7 @@ func (m *Manager) Confirm(ctx context.Context, id string, acknowledgePublic bool
 	if !ok || time.Now().After(prepared.ExpiresAt) || prepared.TokenHash != digest([]byte(m.state.AccessToken)) {
 		return result, failure(409, "review_expired", "This review expired or the connected account changed. Review the result again.")
 	}
-	current, err := m.publicationLocked(ctx, prepared.Publication.ID)
+	current, err := m.executionDestinationLocked(ctx, prepared.Publication.ID, prepared.Input.Contribution)
 	if err != nil {
 		return result, err
 	}
@@ -40,11 +41,20 @@ func (m *Manager) Confirm(ctx context.Context, id string, acknowledgePublic bool
 		ownerKind = "a"
 		owner = current.Publication.AnonymousOwner
 	}
+	publicationURL := m.options.BrowserURL + "/" + ownerKind + "/" + url.PathEscape(owner) + "/" + url.PathEscape(current.Publication.Slug)
+	if prepared.Input.TargetVersion > 0 && receipt.ExperimentID != "" && prepared.RunID != "" {
+		publicationURL += "/results/" + strconv.Itoa(receipt.Version.Number) + "/executions/" +
+			url.PathEscape(receipt.ExperimentID) + "/runs/" + url.PathEscape(prepared.RunID) + "/workflow"
+	}
 	result = Receipt{
-		URL:          m.options.BrowserURL + "/" + ownerKind + "/" + url.PathEscape(owner) + "/" + url.PathEscape(current.Publication.Slug),
-		ExperimentID: receipt.ExperimentID,
-		ResultCount:  receipt.ResultCount,
-		Version:      receipt.Version.Number,
+		URL:                publicationURL,
+		ContributionStatus: receipt.ContributionStatus,
+		ExperimentID:       receipt.ExperimentID,
+		ResultCount:        receipt.ResultCount,
+		Version:            receipt.Version.Number,
+	}
+	if prepared.Input.Contribution {
+		return result, nil
 	}
 	m.state.DefaultPublicationID = prepared.Publication.ID
 	if err = m.persistLocked(); err != nil {
@@ -54,9 +64,10 @@ func (m *Manager) Confirm(ctx context.Context, id string, acknowledgePublic bool
 }
 
 type publicationReceipt struct {
-	ExperimentID string             `json:"experimentId"`
-	ResultCount  int                `json:"resultCount"`
-	Version      publicationVersion `json:"version"`
+	ContributionStatus string             `json:"contributionStatus"`
+	ExperimentID       string             `json:"experimentId"`
+	ResultCount        int                `json:"resultCount"`
+	Version            publicationVersion `json:"version"`
 }
 
 func (m *Manager) confirmPreparedLocked(ctx context.Context, prepared preparedPublication) (publicationReceipt, error) {

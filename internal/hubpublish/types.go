@@ -24,16 +24,17 @@ type Manager struct {
 	previews map[string]preparedPublication
 }
 type savedState struct {
-	Enabled              bool      `json:"enabled"`
-	HubURL               string    `json:"hubUrl"`
-	AccessToken          string    `json:"accessToken,omitempty"`
-	DeviceCode           string    `json:"deviceCode,omitempty"`
-	UserCode             string    `json:"userCode,omitempty"`
-	VerificationURL      string    `json:"verificationUrl,omitempty"`
-	DeviceExpiresAt      time.Time `json:"deviceExpiresAt,omitempty"`
-	NextPollAt           time.Time `json:"nextPollAt,omitempty"`
-	PollInterval         int       `json:"pollInterval,omitempty"`
-	DefaultPublicationID string    `json:"defaultPublicationId,omitempty"`
+	WorkflowSources      map[string]WorkflowSource `json:"workflowSources,omitempty"`
+	Enabled              bool                      `json:"enabled"`
+	HubURL               string                    `json:"hubUrl"`
+	AccessToken          string                    `json:"accessToken,omitempty"`
+	DeviceCode           string                    `json:"deviceCode,omitempty"`
+	UserCode             string                    `json:"userCode,omitempty"`
+	VerificationURL      string                    `json:"verificationUrl,omitempty"`
+	DeviceExpiresAt      time.Time                 `json:"deviceExpiresAt,omitempty"`
+	NextPollAt           time.Time                 `json:"nextPollAt,omitempty"`
+	PollInterval         int                       `json:"pollInterval,omitempty"`
+	DefaultPublicationID string                    `json:"defaultPublicationId,omitempty"`
 }
 type Identity struct {
 	ID              string    `json:"id"`
@@ -45,19 +46,28 @@ type Identity struct {
 	Owner           string    `json:"owner"`
 	ExpiresAt       time.Time `json:"expiresAt"`
 }
+type WorkflowSource struct {
+	LocalHash     string `json:"localHash,omitempty"`
+	HubOrigin     string `json:"hubOrigin,omitempty"`
+	PublicationID string `json:"publicationId"`
+	Version       int    `json:"version"`
+	Hash          string `json:"hash"`
+}
+
 type Status struct {
-	Configured           bool       `json:"configured"`
-	BrowserURL           string     `json:"browserUrl"`
-	Enabled              bool       `json:"enabled"`
-	Connected            bool       `json:"connected"`
-	HubURL               string     `json:"hubUrl"`
-	ReadOnly             bool       `json:"readOnly"`
-	Identity             *Identity  `json:"identity,omitempty"`
-	UserCode             string     `json:"userCode,omitempty"`
-	VerificationURL      string     `json:"verificationUrl,omitempty"`
-	ExpiresAt            *time.Time `json:"expiresAt,omitempty"`
-	DefaultPublicationID string     `json:"defaultPublicationId,omitempty"`
-	Message              string     `json:"message,omitempty"`
+	WorkflowSource       *WorkflowSource `json:"workflowSource,omitempty"`
+	Configured           bool            `json:"configured"`
+	BrowserURL           string          `json:"browserUrl"`
+	Enabled              bool            `json:"enabled"`
+	Connected            bool            `json:"connected"`
+	HubURL               string          `json:"hubUrl"`
+	ReadOnly             bool            `json:"readOnly"`
+	Identity             *Identity       `json:"identity,omitempty"`
+	UserCode             string          `json:"userCode,omitempty"`
+	VerificationURL      string          `json:"verificationUrl,omitempty"`
+	ExpiresAt            *time.Time      `json:"expiresAt,omitempty"`
+	DefaultPublicationID string          `json:"defaultPublicationId,omitempty"`
+	Message              string          `json:"message,omitempty"`
 }
 type Publication struct {
 	Authorship     string `json:"authorship"`
@@ -79,11 +89,14 @@ type publicationInfo struct {
 	Versions    []publicationVersion `json:"versions"`
 }
 type importInput struct {
-	BundleFile  string `json:"bundleFile"`
-	BaseVersion int    `json:"baseVersion"`
-	Message     string `json:"message"`
+	Contribution  bool   `json:"contribution,omitempty"`
+	TargetVersion int    `json:"targetVersion,omitempty"`
+	BundleFile    string `json:"bundleFile"`
+	BaseVersion   int    `json:"baseVersion"`
+	Message       string `json:"message"`
 }
 type preparedPublication struct {
+	RunID        string
 	VersionInput *publicationVersionInput
 	Input        importInput
 	Publication  Publication
@@ -91,21 +104,24 @@ type preparedPublication struct {
 	ExpiresAt    time.Time
 }
 type Preview struct {
-	ID           string           `json:"id"`
-	Publication  Publication      `json:"publication"`
-	RunID        string           `json:"runId"`
-	WorkflowName string           `json:"workflowName"`
-	YAML         string           `json:"yaml"`
-	Logs         []map[string]any `json:"logs"`
-	Files        []any            `json:"files"`
-	ExportedAt   time.Time        `json:"exportedAt"`
-	Review       json.RawMessage  `json:"review"`
+	EnvironmentSnapshot *publishedEnvironment `json:"environmentSnapshot,omitempty"`
+	TargetVersion       int                   `json:"targetVersion,omitempty"`
+	ID                  string                `json:"id"`
+	Publication         Publication           `json:"publication"`
+	RunID               string                `json:"runId"`
+	WorkflowName        string                `json:"workflowName"`
+	YAML                string                `json:"yaml"`
+	Logs                []map[string]any      `json:"logs"`
+	Files               []any                 `json:"files"`
+	ExportedAt          time.Time             `json:"exportedAt"`
+	Review              json.RawMessage       `json:"review"`
 }
 type Receipt struct {
-	URL          string `json:"url"`
-	ExperimentID string `json:"experimentId"`
-	Version      int    `json:"version"`
-	ResultCount  int    `json:"resultCount"`
+	ContributionStatus string `json:"contributionStatus,omitempty"`
+	URL                string `json:"url"`
+	ExperimentID       string `json:"experimentId"`
+	Version            int    `json:"version"`
+	ResultCount        int    `json:"resultCount"`
 }
 type apiError struct {
 	Status  int

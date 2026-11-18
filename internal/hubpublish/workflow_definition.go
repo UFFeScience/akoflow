@@ -13,10 +13,11 @@ import (
 )
 
 type WorkflowDefinition struct {
-	URI     string `json:"uri"`
-	Version int    `json:"version"`
-	YAML    string `json:"yaml"`
-	Hash    string `json:"hash"`
+	PublicationID string `json:"publicationId,omitempty"`
+	URI           string `json:"uri"`
+	Version       int    `json:"version"`
+	YAML          string `json:"yaml"`
+	Hash          string `json:"hash"`
 }
 
 func (m *Manager) WorkflowDefinition(ctx context.Context, uri string) (WorkflowDefinition, error) {
@@ -51,12 +52,18 @@ func (m *Manager) WorkflowDefinition(ctx context.Context, uri string) (WorkflowD
 		return WorkflowDefinition{}, hubResponseError(status, data)
 	}
 	hash := sha256.Sum256(data)
-	return WorkflowDefinition{URI: fmt.Sprintf("akoflow://hub/publications/%s/versions/%d", id, version), Version: version, YAML: string(data), Hash: hex.EncodeToString(hash[:])}, nil
+	return WorkflowDefinition{PublicationID: id, URI: fmt.Sprintf("akoflow://hub/publications/%s/versions/%d", id, version), Version: version, YAML: string(data), Hash: hex.EncodeToString(hash[:])}, nil
 }
-func (m *Manager) readWorkflowYAML(ctx context.Context, address, token string) ([]byte, int, int, error) {
+
+type resolvedDefinitionHeaders struct {
+	version       int
+	publicationID string
+}
+
+func (m *Manager) readWorkflowYAML(ctx context.Context, address, token string) ([]byte, int, resolvedDefinitionHeaders, error) {
 	request, err := http.NewRequestWithContext(ctx, "GET", address, nil)
 	if err != nil {
-		return nil, 0, 0, err
+		return nil, 0, resolvedDefinitionHeaders{}, err
 	}
 	request.Header.Set("Accept", "application/yaml")
 	if token != "" {
@@ -69,13 +76,15 @@ func (m *Manager) readWorkflowYAML(ctx context.Context, address, token string) (
 	client.CheckRedirect = func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }
 	response, err := client.Do(request)
 	if err != nil {
-		return nil, 0, 0, failure(502, "hub_unavailable", "AkôFlow Hub cannot be reached. Try again.")
+		return nil, 0, resolvedDefinitionHeaders{}, failure(502, "hub_unavailable", "AkôFlow Hub cannot be reached. Try again.")
 	}
 	defer response.Body.Close()
 	data, err := io.ReadAll(io.LimitReader(response.Body, (8<<20)+1))
 	if err != nil || len(data) > 8<<20 || (response.StatusCode == 200 && len(data) == 0) {
-		return nil, 0, 0, failure(502, "hub_response", "The workflow YAML is unavailable or exceeds the definition size limit.")
+		return nil, 0, resolvedDefinitionHeaders{}, failure(502, "hub_response", "The workflow YAML is unavailable or exceeds the definition size limit.")
 	}
 	version, _ := strconv.Atoi(response.Header.Get("X-Akoflow-Workflow-Version"))
-	return data, response.StatusCode, version, nil
+	return data, response.StatusCode, resolvedDefinitionHeaders{
+		version: version, publicationID: response.Header.Get("X-Akoflow-Publication-ID"),
+	}, nil
 }

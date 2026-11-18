@@ -21,7 +21,12 @@ func detectCapacity(ctx context.Context, executor runtimecommon.CommandExecutor)
 			return domain.NewLocalCapacity(cpus, memory, "docker")
 		}
 	}
-	cpus = runtime.NumCPU()
+	return nativeCapacity()
+}
+
+func nativeCapacity() (*domain.LocalCapacity, error) {
+	cpus := runtime.NumCPU()
+	var memory int64
 	data, err := os.ReadFile("/proc/meminfo")
 	if err != nil {
 		return nil, fmt.Errorf("detect local memory: %w", err)

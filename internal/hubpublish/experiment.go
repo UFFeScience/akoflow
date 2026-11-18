@@ -102,7 +102,9 @@ func buildExperiment(context, execution map[string]any, metrics []any) (captured
 	if err != nil || len(yaml) > 8<<20 {
 		return result, failure(422, "invalid_workflow", "The captured workflow YAML is invalid or too large.")
 	}
+	environment := executionEnvironment(context, execution)
 	execution = exportExecution(execution, snapshot["metrics"])
+	execution["environmentSnapshot"] = environment
 	plans := []any{map[string]any{"plan": plan, "context": context}}
 	return encodeExperiment(workflow, plans, execution, string(yaml), redactions)
 }

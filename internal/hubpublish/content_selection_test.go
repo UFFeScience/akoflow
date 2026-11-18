@@ -63,3 +63,29 @@ func TestSelectionRetainsOnlyAcceptedSections(t *testing.T) {
 		t.Fatal("selection not respected")
 	}
 }
+
+func TestSelectionIncludesReviewedMachineLabelInPackage(t *testing.T) {
+	workflow := map[string]any{"id": "workflow", "version": map[string]any{"id": "v1"}}
+	execution := map[string]any{"environmentSnapshot": publishedEnvironment{Mode: "real"}}
+	capture, err := encodeExperiment(workflow, []any{}, execution, "name: Workflow", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := selectCapture(capture, ContentSelection{MachineLabel: "operator@private.example"}); err == nil {
+		t.Fatal("expected address-like label to be rejected")
+	}
+	selected, err := selectCapture(capture, ContentSelection{MachineLabel: " Lab workstation "})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if snapshot := selected.execution["environmentSnapshot"].(publishedEnvironment); snapshot.MachineLabel != "Lab workstation" {
+		t.Fatalf("unexpected review label: %q", snapshot.MachineLabel)
+	}
+	for _, file := range selected.bundle.Files {
+		if file.Path == "executions.json" && strings.Contains(file.Content, `"machineLabel":"Lab workstation"`) &&
+			file.SHA256 == digest([]byte(file.Content)) {
+			return
+		}
+	}
+	t.Fatal("reviewed label missing from the checksummed upload")
+}

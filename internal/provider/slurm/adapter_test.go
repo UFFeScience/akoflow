@@ -314,6 +314,7 @@ func installFakeContainerRuntime(t *testing.T, hasSeed bool, seedPaths []string)
 	t.Helper()
 	directory := t.TempDir()
 	script := `#!/bin/sh
+if [ "$1" = --version ]; then echo "apptainer version 1.5.5"; exit 0; fi
 test "$1" = exec || exit 64
 shift
 bound=
@@ -558,5 +559,21 @@ func TestBatchRootWorkspaceUsesSelectedSharedFilesystem(t *testing.T) {
 	}
 	if !strings.Contains(string(executor.input), want) {
 		t.Fatalf("batch script does not use selected workspace: %s", executor.input)
+	}
+}
+
+func TestBatchScriptRecordsAllocatedGPUAndNodeCapacitySeparately(t *testing.T) {
+	installFakeContainerRuntime(t, false, nil)
+	commands := t.TempDir()
+	t.Setenv("PATH", commands+string(os.PathListSeparator)+os.Getenv("PATH"))
+	t.Setenv("SLURM_GPUS_ON_NODE", "1")
+	if err := os.WriteFile(filepath.Join(commands, "scontrol"), []byte("#!/bin/sh\n echo 'NodeName=private CfgTRES=cpu=8,mem=32G,gres/gpu=4,gres/gpu:a100=4 AllocTRES=gres/gpu=1'\n"), 0700); err != nil {
+		t.Fatal(err)
+	}
+	values, err := runBatchScript(t, t.TempDir(), domain.Activity{ID: "gpu", Command: domain.ActivityCommand{
+		Image: "image.sif", WorkingDirectory: "workspace", Entrypoint: "true",
+	}})
+	if err != nil || values["node_gpu_capacity"] != "4" || values["node_allocated_gpus"] != "1" || values["container_runtime_version"] != "1.5.5" {
+		t.Fatalf("unexpected facts: %+v %v", values, err)
 	}
 }

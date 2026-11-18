@@ -17,17 +17,19 @@ type publishedEnvironment struct {
 }
 
 type publishedResource struct {
-	OS             string  `json:"os"`
-	Kernel         string  `json:"kernel"`
-	Number         int     `json:"number"`
-	Source         string  `json:"source"`
-	CPUModel       string  `json:"cpuModel,omitempty"`
-	Architecture   string  `json:"architecture"`
-	CPUCores       float64 `json:"cpuCores,omitempty"`
-	CPUCapacity    float64 `json:"cpuCapacity,omitempty"`
-	Runtime        string  `json:"runtime,omitempty"`
-	RuntimeVersion string  `json:"runtimeVersion,omitempty"`
-	MemoryBytes    float64 `json:"memoryBytes,omitempty"`
+	ContainerRuntimeVersion string   `json:"containerRuntimeVersion,omitempty"`
+	GPUCapacity             *float64 `json:"gpuCapacity,omitempty"`
+	OS                      string   `json:"os"`
+	Kernel                  string   `json:"kernel"`
+	Number                  int      `json:"number"`
+	Source                  string   `json:"source"`
+	CPUModel                string   `json:"cpuModel,omitempty"`
+	Architecture            string   `json:"architecture"`
+	CPUCores                float64  `json:"cpuCores,omitempty"`
+	CPUCapacity             float64  `json:"cpuCapacity,omitempty"`
+	Runtime                 string   `json:"runtime,omitempty"`
+	RuntimeVersion          string   `json:"runtimeVersion,omitempty"`
+	MemoryBytes             float64  `json:"memoryBytes,omitempty"`
 }
 
 type publishedAllocation struct {
@@ -152,8 +154,16 @@ func describeObservedResource(number int, mode string, facts map[string]any, run
 	if model, _ := facts["cpuModel"].(string); runtimeName != "Docker" && cpuModel.MatchString(model) {
 		observation.CPUModel = model
 	}
-	if version, _ := facts["version"].(string); runtimeName == "Docker" && dockerVersion.MatchString(version) {
-		observation.RuntimeVersion = version
+	if version, _ := facts["version"].(string); runtimeVersion.MatchString(version) {
+		switch runtimeName {
+		case "Docker":
+			observation.RuntimeVersion = version
+		case "Slurm":
+			observation.ContainerRuntimeVersion = version
+		}
+	}
+	if count, ok := facts["gpuCapacity"].(float64); runtimeName == "Slurm" && ok && count >= 0 && count <= 65535 && math.Trunc(count) == count {
+		observation.GPUCapacity = &count
 	}
 	return observation
 }
@@ -162,7 +172,7 @@ var linuxKernel = regexp.MustCompile(`^[0-9]{1,5}\.[0-9]{1,5}\.[0-9]{1,5}(-[0-9]
 
 var cpuModel = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9 ().+_-]{0,95}$`)
 
-var dockerVersion = regexp.MustCompile(`^[0-9]{1,5}\.[0-9]{1,5}\.[0-9]{1,5}$`)
+var runtimeVersion = regexp.MustCompile(`^[0-9]{1,5}\.[0-9]{1,5}\.[0-9]{1,5}$`)
 
 func describePublishedResource(number int, mode string, item map[string]any) publishedResource {
 	source := "unknown"

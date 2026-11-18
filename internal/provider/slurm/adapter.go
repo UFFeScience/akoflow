@@ -314,15 +314,21 @@ func applySentinelStatus(handle domain.ActivityHandle, payload string) (domain.A
 			handle.Metadata["slurmAllocatedGpus"] = gpus
 		}
 		architecture := values["node_arch"]
+		gpuCapacity, gpuErr := strconv.ParseUint(values["node_gpu_capacity"], 10, 16)
+		runtimeVersion := values["container_runtime_version"]
 		cpuModel := values["node_cpu_model"]
 		osType, kernel := values["node_os"], values["node_kernel"]
 		cpus, _ := strconv.ParseInt(values["node_cpus"], 10, 32)
 		memory, _ := strconv.ParseInt(values["node_memory_kib"], 10, 53)
 		if architecture != "" || cpuModel != "" || osType != "" || kernel != "" || cpus > 0 || memory > 0 {
-			handle.Metadata["slurmEnvironment"] = map[string]any{
+			facts := map[string]any{
 				"architecture": architecture, "cpuModel": cpuModel, "os": osType, "kernel": kernel,
-				"cpuCores": cpus, "memoryBytes": memory * 1024,
+				"cpuCores": cpus, "memoryBytes": memory * 1024, "version": runtimeVersion,
 			}
+			if gpuErr == nil {
+				facts["gpuCapacity"] = gpuCapacity
+			}
+			handle.Metadata["slurmEnvironment"] = facts
 		}
 	}
 	if started, _ := handle.Metadata[domain.TimingContainerStartedAt].(float64); started > 0 {
@@ -687,9 +693,18 @@ node_kernel=$(uname -r 2>/dev/null || true)
 node_cpus=$(getconf _NPROCESSORS_ONLN 2>/dev/null || true)
 node_memory_kib=$(awk '/^MemTotal:/ { print $2; exit }' /proc/meminfo 2>/dev/null || true)
 node_allocated_gpus=${SLURM_GPUS_ON_NODE:-}
+node_gpu_capacity=
+case "$node_allocated_gpus" in
+  ""|0|*[!0-9]*) ;;
+  *) node_gpu_capacity=$(timeout 2s scontrol show node "$(hostname -s)" -o 2>/dev/null | awk '
+      {for (i=1;i<=NF;i++) if ($i ~ /^CfgTRES=/) {
+        n=split($i,items,","); for (j=1;j<=n;j++) if (items[j] ~ /^gres\/gpu=[0-9]+$/) {sub(/^gres\/gpu=/,"",items[j]); print items[j]; exit}
+      }}') ;;
+esac
+
 node_cpu_model=$(awk -F: '/^model name[[:space:]]*:/ { sub(/^[[:space:]]+/, "", $2); print $2; exit }' /proc/cpuinfo 2>/dev/null || true)
 write_node_facts() {
-  printf 'node_arch=%s\nnode_cpus=%s\nnode_memory_kib=%s\nnode_cpu_model=%s\nnode_os=%s\nnode_kernel=%s\nnode_allocated_gpus=%s\n' "$node_arch" "$node_cpus" "$node_memory_kib" "$node_cpu_model" "$node_os" "$node_kernel" "$node_allocated_gpus"
+  printf 'node_arch=%s\nnode_cpus=%s\nnode_memory_kib=%s\nnode_cpu_model=%s\nnode_os=%s\nnode_kernel=%s\nnode_allocated_gpus=%s\nnode_gpu_capacity=%s\ncontainer_runtime_version=%s\n' "$node_arch" "$node_cpus" "$node_memory_kib" "$node_cpu_model" "$node_os" "$node_kernel" "$node_allocated_gpus" "$node_gpu_capacity" "${container_runtime_version:-}"
 }
 `)
 	script.WriteString(`started_at=$(date +%s.%N)
@@ -736,7 +751,7 @@ write_node_facts >> "$sentinel"
 }
 
 func writeSharedImageSeedPreparation(script *strings.Builder, image string) {
-	script.WriteString("container_runtime=$(command -v apptainer || command -v singularity)\n")
+	script.WriteString("container_runtime=$(command -v apptainer || command -v singularity)\ncontainer_runtime_version=$(\"$container_runtime\" --version 2>/dev/null | awk 'NR==1 {for (i=1;i<=NF;i++) if ($i ~ /^[0-9]+\\.[0-9]+\\.[0-9]+$/) {print $i; exit}}')\n")
 	script.WriteString("image=")
 	script.WriteString(shellQuote(image))
 	script.WriteByte('\n')

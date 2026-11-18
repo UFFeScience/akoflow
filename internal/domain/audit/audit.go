@@ -11,18 +11,19 @@ const (
 )
 
 type Event struct {
-	RequestID     string `json:"requestId,omitempty"`
-	CorrelationID string `json:"correlationId,omitempty"`
-	Transport     string `json:"transport,omitempty"`
-	Source        string `json:"source,omitempty"`
-	Method        string `json:"method,omitempty"`
-	Route         string `json:"route,omitempty"`
-	Status        int    `json:"status,omitempty"`
-	DurationMS    int64  `json:"durationMs,omitempty"`
-	AuthOutcome   string `json:"authOutcome,omitempty"`
-	ActivityID    string `json:"activityId,omitempty"`
-	Attempt       int    `json:"attempt,omitempty"`
-	OperationID   string `json:"operationId,omitempty"`
+	InternalFailure bool   `json:"-"`
+	RequestID       string `json:"requestId,omitempty"`
+	CorrelationID   string `json:"correlationId,omitempty"`
+	Transport       string `json:"transport,omitempty"`
+	Source          string `json:"source,omitempty"`
+	Method          string `json:"method,omitempty"`
+	Route           string `json:"route,omitempty"`
+	Status          int    `json:"status,omitempty"`
+	DurationMS      int64  `json:"durationMs,omitempty"`
+	AuthOutcome     string `json:"authOutcome,omitempty"`
+	ActivityID      string `json:"activityId,omitempty"`
+	Attempt         int    `json:"attempt,omitempty"`
+	OperationID     string `json:"operationId,omitempty"`
 
 	ID            string         `json:"id"`
 	EventType     string         `json:"eventType"`

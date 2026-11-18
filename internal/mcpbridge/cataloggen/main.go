@@ -121,7 +121,7 @@ func routeOperation(node ast.Node) (operation, bool) {
 	}
 	pattern, _ := strconv.Unquote(literal.Value)
 	method, path, ok := strings.Cut(pattern, " ")
-	if !ok {
+	if !ok || path == "/akoflow-api/telemetry/consent" {
 		return operation{}, false
 	}
 	name := ""

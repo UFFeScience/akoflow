@@ -250,6 +250,7 @@ func ServeSecure(ctx context.Context, address string, workflowEngine *workflow_e
 	var handler http.Handler = AllowCORSFor(SecureAPI(audit.Routes(readOnlyAPI(routes, workflowEngine)), security), security.AllowedOrigins)
 
 	settings := config.Load()
+	auditStore = telemetryAuditStore(cleanupCtx, auditStore, routes, security)
 	handler, closeMCP, err := managedMCPRoutes(handler, address, security, settings, auditStore)
 	if err != nil {
 		return err

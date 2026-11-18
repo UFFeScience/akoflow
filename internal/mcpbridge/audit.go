@@ -8,6 +8,7 @@ import (
 	"github.com/UFFeScience/akoflow/internal/application/auditcontext"
 	domainaudit "github.com/UFFeScience/akoflow/internal/domain/audit"
 	"github.com/google/uuid"
+	"github.com/modelcontextprotocol/go-sdk/jsonrpc"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
@@ -45,6 +46,9 @@ func (b *Bridge) auditMiddleware(next mcp.MethodHandler) mcp.MethodHandler {
 			if failure != nil || err != nil || toolFailure || ctx.Err() != nil {
 				event.Outcome = domainaudit.OutcomeFailed
 			}
+			var protocolError *jsonrpc.Error
+			event.InternalFailure = failure != nil ||
+				(errors.As(err, &protocolError) && protocolError.Code == jsonrpc.CodeInternalError)
 			if b.recordProtocol(event) != nil {
 				b.options.Logger.Error("MCP audit completion persistence failed")
 			}

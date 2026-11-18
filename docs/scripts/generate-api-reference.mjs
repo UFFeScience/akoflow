@@ -82,6 +82,7 @@ const groupMetadata = {
 };
 
 const queryDescriptions = {
+  refresh: "Set to 1 to request fresh installation health observations.",
   portable:
     "Set to `1` to enrich the saved workflow with immutable artifact origins and portable build recipes for export or Hub publication. Missing source data returns a validation error.",
   name: "Override the imported workflow name before validation and registration.",
@@ -140,6 +141,7 @@ const statusNames = {
 // These handlers delegate their responses. The WebSocket upgrade writes 101;
 // enqueueCloudOperation writes 202. Shallow handler scans cannot see either.
 const delegatedSuccessStatuses = {
+  RecoverExecution: ["202 Accepted"],
   StreamConsoleSession: ["101 Switching Protocols"],
   ProvisionCloudInstance: ["202 Accepted"],
   StartCloudProvisioning: ["202 Accepted"],
@@ -382,6 +384,18 @@ const runnableSimulationRequests = {
 // These notes come from handler calls and the credential/operation services,
 // not from JSON tags alone. Keep them scoped to fields the service validates.
 const verifiedRequestNotes = {
+  "PUT /akoflow-api/instances/default/backups/":
+    "Provide an absolute daemon-side `destination`, `intervalHours` from 0 to 8760, and `retain` from 1 to 1000. Zero disables automatic backups.",
+  "POST /akoflow-api/instances/default/backups/":
+    "Creates a backup using the current destination and retention settings. No request body is required.",
+  "POST /akoflow-api/instance-backup-imports/":
+    "Provide `file` with a managed backup filename from the backup status. The import creates a read-only snapshot.",
+  "POST /akoflow-api/instance-restorations/{instanceId}/":
+    "Provide the `checksum` from the restore preview and set `confirmReplacement` to true. The replacement is queued for daemon restart.",
+  "POST /akoflow-api/execution-schedules/":
+    "Provide a pinned workflow version and its schedule plan, a daily or weekly frequency, local time, IANA time zone, and missed and overlap policies.",
+  "PATCH /akoflow-api/execution-schedules/{scheduleId}/":
+    "Provide the boolean `paused`. Resuming schedules the next future occurrence.",
   "POST /akoflow-api/artifacts/inspect/":
     "Provide an executable source to inspect OCI or SIF metadata.",
   "POST /akoflow-api/artifacts/recipe/":

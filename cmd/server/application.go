@@ -17,6 +17,7 @@ import (
 	applicationplanning "github.com/UFFeScience/akoflow/internal/application/planning"
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/application/recurring"
+	"github.com/UFFeScience/akoflow/internal/application/supportbundle"
 	"github.com/UFFeScience/akoflow/internal/controlplane/eventloop"
 	"github.com/UFFeScience/akoflow/internal/domain"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/config"
@@ -121,7 +122,12 @@ func newApplication(ctx context.Context, settings config.Settings, log *logger.L
 		return fail(err)
 	}
 	api.WithAlgorithmLibrary(algorithmLibrary)
-	api.WithInstallationHealth(buildInstallationHealth(storage, settings))
+	health := buildInstallationHealth(storage, settings)
+	api.WithInstallationHealth(health)
+	api.WithSupportObservations(&supportbundle.Collector{
+		Version: config.GetVersion(), ReadOnly: storage.readOnly, ConsoleEnabled: settings.ConsoleEnabled,
+		BuildContextMaxBytes: settings.BuildContextMaxBytes, Health: health, Audit: storage.audit,
+	})
 	loop, err := buildEventLoop(
 		storage.events, storage.executions, storage.data, storage.instance,
 		storage.environments, activities, simulator, settings.ArtifactStoreRoot,

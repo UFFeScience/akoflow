@@ -30,6 +30,7 @@ import (
 	applicationconfiguration "github.com/UFFeScience/akoflow/internal/application/machineconfiguration"
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/application/recurring"
+	"github.com/UFFeScience/akoflow/internal/application/supportbundle"
 	"github.com/UFFeScience/akoflow/internal/controlplane/eventloop"
 	executioncontrol "github.com/UFFeScience/akoflow/internal/controlplane/execution"
 	"github.com/UFFeScience/akoflow/internal/domain"
@@ -180,6 +181,7 @@ type Dependencies struct {
 }
 
 type Handler struct {
+	supportObservations *supportbundle.Collector
 	installationHealth  *installationhealth.Service
 	executionSchedules  *recurring.Coordinator
 	search              ports.GlobalSearch

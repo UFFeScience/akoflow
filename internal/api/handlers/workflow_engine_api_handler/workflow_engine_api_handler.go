@@ -9,6 +9,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	applicationplanning "github.com/UFFeScience/akoflow/internal/application/planning"
+	"github.com/UFFeScience/akoflow/internal/hubpublish"
 	"io"
 	"log"
 	"net/http"
@@ -123,6 +125,14 @@ type BuildOrchestrator interface {
 	Start(context.Context, domain.ArtifactBuild) (domain.BuildRun, error)
 	OpenOutput(context.Context, string) (io.ReadCloser, string, error)
 	MaxUploadBytes() int64
+}
+
+func (h *Handler) ConfigureHubPlanningHistory(manager *hubpublish.Manager) {
+	if planning, ok := h.planning.(interface {
+		SetHistoricalProfiles(applicationplanning.HistoricalProfileSource)
+	}); ok {
+		planning.SetHistoricalProfiles(manager.HistoricalProfiles)
+	}
 }
 
 type PlanningOrchestrator interface {

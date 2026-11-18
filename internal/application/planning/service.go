@@ -27,7 +27,11 @@ type SchedulerRegistry interface {
 	List() []ports.SchedulerDescriptor
 }
 
+type HistoricalProfileSource func(context.Context, domain.WorkflowDefinition, []domain.Resource, []domain.EnvironmentDefinition) []domain.ActivityResourceProfile
+
 type Coordinator struct {
+	historyMu    sync.RWMutex
+	history      HistoricalProfileSource
 	Store        ports.PlanningStore
 	Plans        ports.PlanStore
 	Workflows    ports.WorkflowStore
@@ -42,6 +46,28 @@ type Coordinator struct {
 	activeMu     sync.Mutex
 	activeID     string
 	activeCancel context.CancelFunc
+}
+
+func (s *Coordinator) SetHistoricalProfiles(source HistoricalProfileSource) {
+	s.historyMu.Lock()
+	defer s.historyMu.Unlock()
+	s.history = source
+}
+
+func (s *Coordinator) historicalProfiles(ctx context.Context, workflow domain.WorkflowVersion, resources []domain.Resource, environments []domain.EnvironmentDefinition) []domain.ActivityResourceProfile {
+	s.historyMu.RLock()
+	source := s.history
+	s.historyMu.RUnlock()
+	if source == nil {
+		return nil
+	}
+	definition, err := s.Workflows.Find(ctx, workflow.WorkflowID)
+	if err != nil || definition == nil {
+		return nil
+	}
+	copy := *definition
+	copy.Version = workflow
+	return source(ctx, copy, resources, environments)
 }
 
 func (s *Coordinator) Algorithms() []ports.SchedulerDescriptor { return s.Registry.List() }
@@ -445,6 +471,8 @@ func (s *Coordinator) buildRequest(
 		return domain.PlanningRequest{}, snapshotErr
 	} else if snapshot != nil {
 		profiles = snapshot
+	} else {
+		profiles = append(profiles, s.historicalProfiles(ctx, *workflow, resources, definitions)...)
 	}
 	return domain.PlanningRequest{
 		Workflow:              projectedWorkflow,

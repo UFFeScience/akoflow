@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func managedHubRoutes(next http.Handler, source http.Handler, security SecurityOptions, readOnly bool) (http.Handler, error) {
+func managedHubRoutes(next http.Handler, source http.Handler, security SecurityOptions, readOnly bool, bindHistory func(*hubpublish.Manager)) (http.Handler, error) {
 	directory := filepath.Join(filepath.Dir(instancearchive.ResolveDatabasePath()), "credentials", "hub")
 	hubURL := strings.TrimSpace(os.Getenv("AKOFLOW_HUB_URL"))
 	if hubURL == "" {
@@ -19,6 +19,7 @@ func managedHubRoutes(next http.Handler, source http.Handler, security SecurityO
 	if err != nil {
 		return nil, err
 	}
+	bindHistory(manager)
 	controls := AllowCORSFor(SecureAPI(manager.Handler(), security), security.AllowedOrigins)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if strings.HasPrefix(r.URL.Path, "/akoflow-api/hub/") {

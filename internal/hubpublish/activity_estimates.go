@@ -29,6 +29,10 @@ type ActivityHistoryEstimate struct {
 }
 
 func (m *Manager) ActivityEstimates(ctx context.Context, uri string, activities map[string]ActivityHistoryProfile) (map[string]ActivityHistoryEstimate, error) {
+	return m.activityEstimates(ctx, uri, "", activities)
+}
+
+func (m *Manager) activityEstimates(ctx context.Context, uri, expectedOrigin string, activities map[string]ActivityHistoryProfile) (map[string]ActivityHistoryEstimate, error) {
 	publicationID, version, err := parseWorkflowURI(uri)
 	if err != nil {
 		return nil, err
@@ -48,6 +52,9 @@ func (m *Manager) ActivityEstimates(ctx context.Context, uri string, activities 
 	defer cancel()
 	m.mu.Lock()
 	defer m.mu.Unlock()
+	if expectedOrigin != "" && m.state.HubURL != expectedOrigin {
+		return estimates, nil
+	}
 	err = m.requestLocked(ctx, http.MethodPost, path, body, nil, false, &estimates)
 	var response *apiError
 	if errors.As(err, &response) && response.Status == http.StatusNotFound && m.state.AccessToken != "" {

@@ -258,7 +258,7 @@ func ServeSecure(ctx context.Context, address string, workflowEngine *workflow_e
 		return err
 	}
 	defer closeMCP()
-	handler, err = managedHubRoutes(handler, routes, security, workflowEngine.IsReadOnly())
+	handler, err = managedHubRoutes(handler, routes, security, workflowEngine.IsReadOnly(), workflowEngine.ConfigureHubPlanningHistory)
 	if err != nil {
 		return err
 	}

@@ -156,6 +156,7 @@ type ActivityDataDependency struct {
 }
 
 type ActivityResourceProfile struct {
+	ActivityID           string         `json:"activityId,omitempty"`
 	ID                   string         `json:"id"`
 	ActivityTypeID       string         `json:"activityTypeId"`
 	ResourceID           string         `json:"resourceId"`

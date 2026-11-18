@@ -2993,10 +2993,17 @@ func (h *Handler) resolveBuildPreparations(ctx context.Context, request *ports.E
 	resolver := applicationbuild.OutputResolver{Catalog: h.data}
 	for index := range request.Workflow.Activities {
 		activity := request.Workflow.Activities[index]
+		assignment, ok := assignments[activity.ID]
+		driver := executionRuntimeDriver(*request, assignment)
+		if activity.Command.Executable == nil && driver == domain.RuntimeDriverSlurm {
+			image := strings.TrimSpace(activity.Command.Image)
+			if !strings.HasPrefix(image, "/") && !strings.HasPrefix(image, "./") && !strings.HasSuffix(image, ".sif") {
+				activity.Command.Executable = activity.Command.EffectiveExecutable()
+			}
+		}
 		if activity.Command.Executable == nil {
 			continue
 		}
-		assignment, ok := assignments[activity.ID]
 		if !ok {
 			return fmt.Errorf("build activity %q has no plan assignment", activity.ID)
 		}
@@ -3287,18 +3294,8 @@ func (h *Handler) catalogPreparation(ctx context.Context, resolver applicationbu
 		if driver != domain.RuntimeDriverSlurm {
 			return requirement, false, nil
 		}
-		var err error
-		requirement, required, err = resolver.PreparationForDockerImage(ctx, activity.Command.Executable.Source.Reference, activity.ID, resource, "")
-		if err != nil {
-			return domain.PreparationRequirement{}, false, err
-		}
-		if !required {
-			return domain.PreparationRequirement{}, false, operationerror.Wrap(
-				fmt.Errorf("activity %q requires a completed SIF build for OCI image %q before Slurm execution", activity.ID, activity.Command.Executable.Source.Reference),
-				"artifact_sif_required", "artifact_compatibility", activity.ID, false,
-				"Build and register a SIF artifact for this image and destination architecture before executing on Slurm.",
-			)
-		}
+		requirement.SIFImage = activity.Command.Executable.Source.Reference
+		required = true
 	}
 
 	return requirement, required, nil

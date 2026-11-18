@@ -14,6 +14,7 @@ import (
 	applicationtransfer "github.com/UFFeScience/akoflow/internal/application/transfer"
 	"github.com/UFFeScience/akoflow/internal/controlplane/eventloop"
 	controlexecution "github.com/UFFeScience/akoflow/internal/controlplane/execution"
+	"github.com/UFFeScience/akoflow/internal/domain"
 	domainevents "github.com/UFFeScience/akoflow/internal/domain/events"
 	infratransfer "github.com/UFFeScience/akoflow/internal/infrastructure/transfer"
 	"github.com/UFFeScience/akoflow/internal/provider"
@@ -36,11 +37,12 @@ func buildEventLoop(
 	},
 	cloudProvisioner ports.CloudProvisioner,
 	prepare func(context.Context, *ports.ExecutionRequest) error,
+	prepareSIF func(context.Context, string, domain.Activity, domain.Resource) (domain.PreparationRequirement, error),
 ) (*eventloop.Loop, error) {
 	dispatcher := eventloop.NewDispatcher()
 	if err := registerExecutionHandlers(
 		dispatcher, events, executions, data, instance, connections, activities, simulator,
-		artifactStoreRoot, cloud, cloudProvisioner, prepare,
+		artifactStoreRoot, cloud, cloudProvisioner, prepare, prepareSIF,
 	); err != nil {
 		return nil, err
 	}
@@ -80,6 +82,7 @@ func registerExecutionHandlers(
 	},
 	cloudProvisioner ports.CloudProvisioner,
 	prepare func(context.Context, *ports.ExecutionRequest) error,
+	prepareSIF func(context.Context, string, domain.Activity, domain.Resource) (domain.PreparationRequirement, error),
 ) error {
 	if err := dispatcher.Register(eventloop.EventActivityExecutionRequested,
 		eventloop.NewActivityExecutionHandler(activities)); err != nil {
@@ -115,7 +118,7 @@ func registerExecutionHandlers(
 	supervisor, err := controlexecution.New(
 		executions, activities, simulator,
 		controlexecution.Config{
-			PollInterval: time.Second, Preparer: preparer, PrepareRun: prepare, SharedLocalCapacity: capacity, ReconcileLocalCapacity: reconcileCapacity,
+			PollInterval: time.Second, Preparer: preparer, PrepareRun: prepare, PrepareSIF: prepareSIF, SharedLocalCapacity: capacity, ReconcileLocalCapacity: reconcileCapacity,
 			Data: data, Cloud: cloudProvisioner, CloudStore: cloud,
 			Workspaces:     infratransfer.ActivityWorkspaceManager{Resolver: resolver, Kubernetes: kubernetesTransfer},
 			CloudAllocator: controlexecution.QueuedCloudAllocator{Cloud: cloud, Operations: cloud, Queue: events, PollInterval: 500 * time.Millisecond},

@@ -12,7 +12,9 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/UFFeScience/akoflow/internal/application/imagepreparation"
 	"github.com/UFFeScience/akoflow/internal/domain"
+	domainexecution "github.com/UFFeScience/akoflow/internal/domain/execution"
 )
 
 type CommandRunner interface {
@@ -59,7 +61,14 @@ func (s Executor) Execute(ctx context.Context, spec domain.ArtifactBuild, run do
 	if err != nil {
 		return s.fail(ctx, run, err.Error())
 	}
-	return s.publish(ctx, spec, run, outputPath)
+	if spec.SourceType != "docker-image" || !strings.Contains(spec.RecipePath, "@sha256:") {
+		return s.publish(ctx, spec, run, outputPath)
+	}
+	err = imagepreparation.Observe(ctx, domainexecution.ImagePreparationRegister, func() error {
+		run, err = s.publish(ctx, spec, run, outputPath)
+		return err
+	})
+	return run, err
 }
 
 func (s Executor) buildOutput(ctx context.Context, spec domain.ArtifactBuild, run domain.BuildRun, contextPath string) (string, string, error) {
@@ -79,7 +88,9 @@ func (s Executor) buildOutput(ctx context.Context, spec domain.ArtifactBuild, ru
 		}
 		apptainer := s.Apptainer
 		if apptainer == "" {
-			return "", "", fmt.Errorf("Apptainer builder is not configured")
+			return "", "", imagepreparation.Observe(ctx, domainexecution.ImagePreparationSIF, func() error {
+				return fmt.Errorf("Apptainer builder is not configured")
+			})
 		}
 		sifPath := filepath.Join(s.ArtifactStoreRoot, "outputs", run.ID+".sif")
 		// Apptainer otherwise selects the image matching the architecture of the
@@ -89,6 +100,10 @@ func (s Executor) buildOutput(ctx context.Context, spec domain.ArtifactBuild, ru
 		architecture := strings.TrimSpace(spec.TargetArchitecture)
 		if architecture == "" {
 			architecture = "amd64"
+		}
+		if strings.Contains(image, "@sha256:") {
+			logs, err := s.buildPinnedSIF(ctx, image, architecture, apptainer, sifPath)
+			return sifPath, logs, err
 		}
 		output, err := s.Runner.Run(ctx, apptainer, []string{"build", "--arch", architecture, sifPath, "docker://" + image}, nil)
 		if err != nil {

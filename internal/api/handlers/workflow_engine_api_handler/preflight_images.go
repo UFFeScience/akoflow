@@ -14,6 +14,9 @@ func (h *Handler) preflightImages(request *ports.ExecutionRequest) []appprefligh
 	for index := range request.Workflow.Activities {
 		activity := request.Workflow.Activities[index]
 		probes = append(probes, apppreflight.Probe{Code: "executable_availability", Stage: "artifacts", EntityID: activity.ID, Run: func(ctx context.Context) (string, string, string) {
+			if request.PreparationRequirementsByActivity[activity.ID].SIFImage != "" {
+				return "unverified", "AkôFlow will resolve, reuse or build a compatible SIF before submission.", "Review the activity preparation steps if the image cannot be built."
+			}
 			if requirement, exists := request.PreparationRequirementsByActivity[activity.ID]; exists && requirement.Artifact != nil && requirement.Reproduction == nil {
 				return "unverified",
 					"A compatible catalog artifact is selected; its bytes and transfer route are verified during preparation.",

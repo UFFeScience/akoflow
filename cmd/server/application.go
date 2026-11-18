@@ -132,7 +132,7 @@ func newApplication(ctx context.Context, settings config.Settings, log *logger.L
 	loop, err := buildEventLoop(
 		storage.events, storage.executions, storage.data, storage.instance,
 		storage.environments, activities, simulator, settings.ArtifactStoreRoot,
-		planningService, storage.cloud, cloudProvisioner, api.PrepareExecution,
+		planningService, storage.cloud, cloudProvisioner, api.PrepareExecution, api.PrepareSIF,
 	)
 	if err != nil {
 		return fail(err)

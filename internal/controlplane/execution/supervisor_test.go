@@ -902,3 +902,53 @@ func TestSupervisorMarksActivityFailedWhenStartIsRejected(t *testing.T) {
 		t.Fatalf("handle status=%q, want failed", handle.Status)
 	}
 }
+
+type sifGateFunc func(context.Context, string, domain.PreparationRequirement) (*domain.PreparationGate, error)
+
+func (f sifGateFunc) Prepare(ctx context.Context, id string, requirement domain.PreparationRequirement) (*domain.PreparationGate, error) {
+	return f(ctx, id, requirement)
+}
+
+func TestSlurmSubmissionWaitsForAutomaticSIF(t *testing.T) {
+	for _, fail := range []bool{false, true} {
+		t.Run(fmt.Sprintf("failure=%t", fail), func(t *testing.T) {
+			request := requestFixture(domain.ExecutionModeReal)
+			request.Runtimes[0].Driver = domain.RuntimeDriverSlurm
+			request.PreparationRequirementsByActivity = map[string]domain.PreparationRequirement{"a": {SIFImage: "registry.example/tool:1"}}
+			activities := &activityControllerFake{}
+			config := Config{
+				PrepareSIF: func(_ context.Context, image string, activity domain.Activity, resource domain.Resource) (domain.PreparationRequirement, error) {
+					if image != "registry.example/tool:1" || activity.ID != "a" || resource.ID != "r" || len(activities.started) != 0 {
+						t.Fatalf("unexpected SIF preparation for %q, %q, %q", image, activity.ID, resource.ID)
+					}
+					if fail {
+						return domain.PreparationRequirement{}, fmt.Errorf("build SIF failed")
+					}
+					return domain.PreparationRequirement{
+						Artifact:         &domain.ArtifactMaterialization{ID: "sif"},
+						ArtifactTransfer: &domain.DataTransferPlan{ID: "sif-transfer"},
+					}, nil
+				},
+				Preparer: sifGateFunc(func(_ context.Context, id string, requirement domain.PreparationRequirement) (*domain.PreparationGate, error) {
+					if id != "a" || requirement.Artifact == nil || requirement.Artifact.ID != "run:a:1:sif" || requirement.Artifact.RunID != "run" || len(activities.started) != 0 {
+						t.Fatalf("unexpected SIF materialization: %#v", requirement)
+					}
+					requirement.Artifact.Status = domain.MaterializationCommitted
+					return &domain.PreparationGate{Executable: requirement.Artifact}, nil
+				}),
+			}
+			supervisor := Supervisor{executions: &executionStoreFake{}, activities: activities, config: config}
+			result := supervisor.startReadyActivity(context.Background(), request, "a", 1,
+				map[string]domain.Activity{"a": request.Workflow.Activities[0]},
+				map[string]domain.PlanAssignment{"a": request.Plan.Assignments[0]},
+				map[string]domain.Resource{"r": request.Resources[0]}, nil)
+			if fail {
+				if result.err == nil || len(activities.started) != 0 {
+					t.Fatalf("failure should block submission, got %v, %v", result.err, activities.started)
+				}
+			} else if result.err != nil || len(activities.started) != 1 || activities.contexts[0].Preparation.Executable.ID != "run:a:1:sif" {
+				t.Fatalf("verified SIF should continue to submission, got %v, %v", result.err, activities.started)
+			}
+		})
+	}
+}

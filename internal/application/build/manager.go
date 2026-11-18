@@ -186,6 +186,15 @@ func (m Manager) ResolveBuildContext(_ context.Context, digest string) (string, 
 	}
 	return dir, nil
 }
+func (m Manager) BuildSIF(ctx context.Context, spec domain.ArtifactBuild) error {
+	run := domain.BuildRun{ID: provider.NewID("build-run"), ArtifactBuildID: spec.ID, Status: "queued"}
+	if err := m.Catalog.SaveBuildRun(ctx, run); err != nil {
+		return err
+	}
+	_, err := m.Executor.Execute(ctx, spec, run)
+	return err
+}
+
 func (m Manager) Start(ctx context.Context, spec domain.ArtifactBuild) (domain.BuildRun, error) {
 	run := domain.BuildRun{ID: provider.NewID("build-run"), ArtifactBuildID: spec.ID, Status: "queued"}
 	if err := m.Catalog.SaveBuildRun(ctx, run); err != nil {

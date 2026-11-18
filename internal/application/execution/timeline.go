@@ -211,7 +211,8 @@ func addTimelineTotal(total *domain.ExecutionTimelineTotals, category string, se
 		total.StartSeconds += seconds
 	case PhaseValidation:
 		total.ValidationSeconds += seconds
-	case PhaseExecutablePreparation:
+	case PhaseExecutablePreparation, string(domainexecution.ImagePreparationPush),
+		string(domainexecution.ImagePreparationSIF), string(domainexecution.ImagePreparationRegister):
 		total.ExecutablePreparationSeconds += seconds
 	case PhaseWorkspaceTransfer:
 		total.WorkspaceTransferSeconds += seconds

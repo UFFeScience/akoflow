@@ -34,6 +34,7 @@ type ActivityController interface {
 
 type Config struct {
 	PrepareRun             func(context.Context, *ports.ExecutionRequest) error
+	PrepareSIF             func(context.Context, string, domain.Activity, domain.Resource) (domain.PreparationRequirement, error)
 	PollInterval           time.Duration
 	SharedLocalCapacity    ports.LocalActivityCapacity
 	ReconcileLocalCapacity func(context.Context) error
@@ -840,7 +841,7 @@ func (s *Supervisor) startReadyActivity(
 		return result
 	}
 	if requirement, required := request.PreparationRequirementsByActivity[activityID]; required {
-		preparation, err := s.prepareActivity(ctx, request.Run.ID, activityID, attempt, requirement)
+		preparation, err := s.prepareActivity(ctx, request.Run.ID, activity, resource, attempt, requirement)
 		if err != nil {
 			result.err = fmt.Errorf("prepare activity %q: %w", activityID, err)
 			return result
@@ -1253,19 +1254,44 @@ func workspaceClaimName(runID, activityID string) string {
 
 func (s *Supervisor) prepareActivity(
 	ctx context.Context,
-	runID, activityID string,
+	runID string,
+	activity domain.Activity,
+	resource domain.Resource,
 	attempt int,
 	requirement domain.PreparationRequirement,
 ) (*domain.PreparationGate, error) {
+	activityID := activity.ID
 	if s.config.Preparer == nil {
 		return nil, fmt.Errorf("activity %q requires materialization but no preparation coordinator is configured", activityID)
 	}
-	if requirement.Artifact != nil {
-		requirement.Artifact.RunID = runID
-		requirement.Artifact.ActivityID = activityID
-	}
 	if recorder, ok := s.executions.(ports.ImagePreparationRecorder); ok {
 		ctx = imagepreparation.WithTarget(ctx, recorder, runID, activityID, attempt)
+	}
+	if requirement.SIFImage != "" {
+		if s.config.PrepareSIF == nil {
+			return nil, fmt.Errorf("automatic SIF preparation is unavailable")
+		}
+		artifact, err := s.config.PrepareSIF(ctx, requirement.SIFImage, activity, resource)
+		if err != nil {
+			return nil, err
+		}
+		if artifact.Artifact == nil || artifact.ArtifactTransfer == nil {
+			return nil, fmt.Errorf("automatic SIF preparation returned no artifact transfer")
+		}
+		requirement.Artifact, requirement.ArtifactTransfer = artifact.Artifact, artifact.ArtifactTransfer
+	}
+	if requirement.Artifact != nil {
+		prefix := fmt.Sprintf("%s:%s:%d:", runID, activityID, attempt)
+		artifact := *requirement.Artifact
+		artifact.ID = prefix + artifact.ID
+		artifact.RunID = runID
+		artifact.ActivityID = activityID
+		requirement.Artifact = &artifact
+		if requirement.ArtifactTransfer != nil {
+			transfer := *requirement.ArtifactTransfer
+			transfer.ID = prefix + transfer.ID
+			requirement.ArtifactTransfer = &transfer
+		}
 	}
 	return s.config.Preparer.Prepare(ctx, activityID, requirement)
 }

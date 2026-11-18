@@ -729,12 +729,13 @@ func (r *Repository) FindDockerBuildOutput(ctx context.Context, image, architect
 		JOIN artifact_variants v ON v.id=r.output_variant_id
 		JOIN artifact_locations l ON l.variant_id=v.id
 		WHERE b.source_type='docker-image' AND b.recipe_path=? AND r.status='completed'
-		AND (?='' OR b.target_architecture='' OR b.target_architecture=?)
-		ORDER BY CASE WHEN b.target_architecture=? THEN 0 ELSE 1 END, r.finished_at DESC LIMIT 1`
+		AND v.format='sif' AND l.available=1 AND l.digest=v.digest
+		AND (?='' OR COALESCE(NULLIF(v.architecture,''), NULLIF(b.target_architecture,''), 'amd64')=?)
+		ORDER BY r.finished_at DESC LIMIT 1`
 	var build domain.ArtifactBuild
 	var variant domain.ArtifactVariant
 	var location domain.ArtifactLocation
-	err := r.db.QueryRowContext(ctx, query, image, architecture, architecture, architecture).Scan(
+	err := r.db.QueryRowContext(ctx, query, image, architecture, architecture).Scan(
 		&build.ID, &build.ArtifactVersionID, &build.SourceType, &build.ContextDigest, &build.RecipePath, &build.RecipeDigest, &build.TargetFormat, &build.TargetOS, &build.TargetArchitecture, &build.BuildArguments, &build.CacheKey,
 		&variant.ID, &variant.Digest, &variant.Format, &variant.Architecture, &variant.SizeBytes,
 		&location.ID, &location.VariantID, &location.Scope, &location.ScopeID, &location.EndpointID, &location.URI, &location.Digest, &location.Available,

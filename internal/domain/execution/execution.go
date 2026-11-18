@@ -163,6 +163,9 @@ type ImagePreparationKind string
 const (
 	ImagePreparationPull     ImagePreparationKind = "image-pull"
 	ImagePreparationBuild    ImagePreparationKind = "image-build"
+	ImagePreparationPush     ImagePreparationKind = "image-push"
+	ImagePreparationSIF      ImagePreparationKind = "sif-build"
+	ImagePreparationRegister ImagePreparationKind = "sif-register"
 	ImagePreparationCacheHit ImagePreparationKind = "image-cache-hit"
 )
 

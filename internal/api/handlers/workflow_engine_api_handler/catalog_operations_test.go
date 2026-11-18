@@ -520,7 +520,7 @@ func TestResolveBuildPreparationsForCatalogBuildAndDockerSources(t *testing.T) {
 	if request.Workflow.Activities[0].Command.Image != "registry.example/tool:1" {
 		t.Fatalf("catalog image=%q", request.Workflow.Activities[0].Command.Image)
 	}
-	if len(request.PreparationRequirementsByActivity) != 2 || request.PreparationRequirementsByActivity["build-slurm"].Artifact == nil || request.PreparationRequirementsByActivity["oci-slurm"].Artifact == nil {
+	if len(request.PreparationRequirementsByActivity) != 2 || request.PreparationRequirementsByActivity["build-slurm"].Artifact == nil || request.PreparationRequirementsByActivity["oci-slurm"].SIFImage != "ubuntu:latest" {
 		t.Fatalf("requirements=%#v", request.PreparationRequirementsByActivity)
 	}
 }
@@ -543,7 +543,7 @@ func TestResolveBuildPreparationsReportsInvalidAssignmentsAndReferences(t *testi
 	}
 }
 
-func TestResolveBuildPreparationsRejectsMissingSlurmImageBeforeSubmission(t *testing.T) {
+func TestResolveBuildPreparationsDefersMissingSlurmImageToActivity(t *testing.T) {
 	h := &Handler{data: &dataCatalogRichStub{}}
 	request := ports.ExecutionRequest{
 		Run: domain.ExecutionRun{Mode: domain.ExecutionModeReal},
@@ -558,8 +558,11 @@ func TestResolveBuildPreparationsRejectsMissingSlurmImageBeforeSubmission(t *tes
 		Runtimes:        []domain.EnvironmentRuntime{{ID: "slurm", Driver: domain.RuntimeDriverSlurm, Mode: domain.RuntimeModeExecution}},
 		RuntimeBindings: []domain.ResourceRuntimeBinding{{ResourceID: "hpc", RuntimeID: "slurm", Enabled: true}},
 	}
-	if err := h.resolveBuildPreparations(context.Background(), &request); err == nil || !strings.Contains(err.Error(), "requires a completed SIF build") {
-		t.Fatalf("missing build error=%v", err)
+	if err := h.resolveBuildPreparations(context.Background(), &request); err != nil {
+		t.Fatal(err)
+	}
+	if got := request.PreparationRequirementsByActivity["missing-image"]; got.SIFImage != "registry.example/tool@sha256:missing" || got.Artifact != nil {
+		t.Fatalf("expected deferred SIF preparation, got %#v", got)
 	}
 }
 
@@ -759,5 +762,20 @@ func TestBuildCacheMissingContextAndResetFailures(t *testing.T) {
 	}
 	if response := callHandler(t, http.MethodPost, "/", `{"artifactId":"tool","version":"1","image":"bad image"}`, nil, h.RegisterDockerArtifact); response.Code != 422 {
 		t.Fatalf("docker validation=%d", response.Code)
+	}
+}
+
+func TestPrepareSIFReusesPinnedCatalogOutputWithoutBuilder(t *testing.T) {
+	pinned := "registry.example/tool@sha256:" + strings.Repeat("b", 64)
+	digest := "sha256:" + strings.Repeat("c", 64)
+	data := &dataCatalogRichStub{
+		variant:  &domain.ArtifactVariant{ID: "sif", Digest: digest, Format: "sif"},
+		location: &domain.ArtifactLocation{URI: "artifact://outputs/tool.sif"},
+	}
+	h := &Handler{data: data}
+	requirement, err := h.PrepareSIF(context.Background(), pinned, domain.Activity{ID: "activity"}, domain.Resource{ID: "slurm"})
+	if err != nil || requirement.Artifact == nil || requirement.Artifact.Digest != digest ||
+		requirement.ArtifactTransfer == nil || data.saved != 0 {
+		t.Fatalf("expected existing SIF without build or registration, got %#v, %v", requirement, err)
 	}
 }

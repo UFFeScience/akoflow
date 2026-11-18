@@ -306,6 +306,7 @@ type WorkspaceMaterialization struct {
 }
 
 type PreparationRequirement struct {
+	SIFImage           string                    `json:"sifImage,omitempty"`
 	Reproduction       *workflow.ArtifactOrigin  `json:"reproduction,omitempty"`
 	Artifact           *ArtifactMaterialization  `json:"artifact,omitempty"`
 	ArtifactTransfer   *DataTransferPlan         `json:"artifactTransfer,omitempty"`

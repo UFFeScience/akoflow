@@ -47,6 +47,14 @@ func (r *Repository) FindLatestByAggregate(ctx context.Context, aggregateType, a
 	return job, err
 }
 
+func (r *Repository) FindByIdempotencyKey(ctx context.Context, key string) (*domainqueue.Job, error) {
+	job, err := scanJob(r.db.QueryRowContext(ctx, "SELECT "+columns+" FROM queue_jobs WHERE idempotency_key=?", key))
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	return job, err
+}
+
 func (r *Repository) Publish(ctx context.Context, job domainqueue.Job) (domainqueue.Job, error) {
 	tx, err := r.db.BeginTx(ctx, nil)
 	if err != nil {

@@ -87,7 +87,7 @@ type ExecutionSubmissionStore interface {
 }
 
 type ExecutionRecoveryCommandStore interface {
-	ResumeRun(context.Context, string) error
+	SubmitRecovery(context.Context, domainqueue.Job, string) (domainqueue.Job, error)
 }
 
 type QueueCancellationStore interface {
@@ -2918,81 +2918,6 @@ func recoveryProducerIDs(workflow domain.WorkflowVersion, activityID string) []s
 		}
 	}
 	return result
-}
-
-func (h *Handler) RecoverExecution(w http.ResponseWriter, r *http.Request) {
-	if h.readOnly {
-		writeError(w, http.StatusForbidden, fmt.Errorf("read-only instances cannot recover executions"))
-		return
-	}
-	recoveryCommands, supportsRecovery := h.executionCommands.(ExecutionRecoveryCommandStore)
-	recoveryQueue, supportsRecoveryQueue := h.queue.(ExecutionRecoveryQueueStore)
-	if h.executionCommands == nil || !supportsRecovery || h.queue == nil || !supportsRecoveryQueue || h.events == nil {
-		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("execution recovery is unavailable"))
-		return
-	}
-	runID := r.PathValue("runId")
-	preview, err := h.executionRecoveryPreview(r.Context(), runID)
-	if err != nil {
-		writeError(w, http.StatusUnprocessableEntity, err)
-		return
-	}
-	if !preview.Recoverable {
-		writeError(w, http.StatusConflict, fmt.Errorf("execution run %q is not recoverable", runID))
-		return
-	}
-	var input struct {
-		Mode string `json:"mode"`
-	}
-	if !decode(w, r, &input) {
-		return
-	}
-	if input.Mode == "" {
-		input.Mode = "continue"
-	}
-	if input.Mode != "continue" && input.Mode != "retry_failures" {
-		writeError(w, http.StatusBadRequest, fmt.Errorf("unsupported recovery mode %q", input.Mode))
-		return
-	}
-	original, err := recoveryQueue.FindLatestByAggregate(r.Context(), "execution_run", runID, eventloop.EventExecutionRunRequested)
-	if err != nil || original == nil {
-		if err == nil {
-			err = fmt.Errorf("the original execution request for %q is unavailable", runID)
-		}
-		writeError(w, http.StatusUnprocessableEntity, err)
-		return
-	}
-	var request ports.ExecutionRequest
-	if err := json.Unmarshal(original.Payload, &request); err != nil {
-		writeError(w, http.StatusUnprocessableEntity, fmt.Errorf("decode original execution request: %w", err))
-		return
-	}
-	request.Recovery = &ports.ExecutionRecovery{Mode: input.Mode, ReuseActivityIDs: preview.Reusable}
-	request.Recovery.RetryActivityIDs = append(append([]string{}, preview.Failed...), preview.Interrupted...)
-	payload, err := json.Marshal(request)
-	if err != nil {
-		writeError(w, http.StatusInternalServerError, err)
-		return
-	}
-	if err := recoveryCommands.ResumeRun(r.Context(), runID); err != nil {
-		writeError(w, http.StatusConflict, err)
-		return
-	}
-	job, err := domainqueue.New(domainqueue.CategoryExecution, eventloop.EventExecutionRunRequested, payload, time.Now().UTC())
-	if err != nil {
-		writeError(w, http.StatusInternalServerError, err)
-		return
-	}
-	job.AggregateType, job.AggregateID = "execution_run", runID
-	configureExecutionJobRetries(&job, request.Run.Mode)
-	job.IdempotencyKey = fmt.Sprintf("execution-recovery:%s:%d", runID, time.Now().UTC().UnixNano())
-	stored, err := h.events.Publish(r.Context(), job)
-	if err != nil {
-		_ = h.executionCommands.FailRun(context.WithoutCancel(r.Context()), runID, err.Error())
-		writeError(w, http.StatusUnprocessableEntity, err)
-		return
-	}
-	writeJSON(w, http.StatusAccepted, map[string]any{"job": stored, "preview": preview})
 }
 
 // Kubernetes accepts OCI references directly. Preserve the executable contract

@@ -257,13 +257,20 @@ func (r *Repository) ResumeRun(ctx context.Context, id string) error {
 		return err
 	}
 	defer tx.Rollback()
+	if err := resumeRunIn(ctx, tx, id); err != nil {
+		return err
+	}
+	return tx.Commit()
+}
+
+func resumeRunIn(ctx context.Context, tx *sql.Tx, id string) error {
 	result, err := tx.ExecContext(ctx, `UPDATE execution_runs SET status='created',
 		finished_at=NULL, failure_reason='' WHERE id=? AND status IN ('failed','cancelled')`, id)
 	if err != nil {
 		return err
 	}
 	if changed, _ := result.RowsAffected(); changed != 1 {
-		return fmt.Errorf("execution run %q is not recoverable", id)
+		return fmt.Errorf("%w: execution run %q is not recoverable", ports.ErrExecutionSubmissionConflict, id)
 	}
 	if err := dbaudit.AppendLifecycle(ctx, tx, domainaudit.Event{
 		ID: fmt.Sprintf("run-recovery:%s:%d", id, time.Now().UnixNano()), EventType: "execution.run.recovery_requested",
@@ -273,7 +280,7 @@ func (r *Repository) ResumeRun(ctx context.Context, id string) error {
 	}, "execution_run", id); err != nil {
 		return err
 	}
-	return tx.Commit()
+	return nil
 }
 
 func (r *Repository) FindRun(ctx context.Context, id string) (*domain.ExecutionRun, error) {

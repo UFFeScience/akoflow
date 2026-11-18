@@ -137,6 +137,9 @@ func exportExecution(detail map[string]any, metrics any) map[string]any {
 		logs = append(logs, record)
 	}
 	result["processLogs"] = logs
+	if images := exportImageObservations(detail, handles); len(images) > 0 {
+		result["imageObservations"] = images
+	}
 	result["metricSummaries"] = metrics
 	if result["metricSummaries"] == nil {
 		result["metricSummaries"] = []any{}

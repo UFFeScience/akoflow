@@ -162,6 +162,9 @@ func (c *Client) requestWithLimit(
 
 func collectionPath(namespace, resource string) string {
 	base := "/api/v1"
+	if resource == "nodes" {
+		return base + "/nodes"
+	}
 	if resource == "jobs" {
 		base = "/apis/batch/v1"
 	}

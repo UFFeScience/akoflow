@@ -51,7 +51,11 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 	if activity.Command.Image == "" {
 		return domain.ActivityHandle{}, fmt.Errorf("activity image is required for Kubernetes")
 	}
-	name := kubernetesName("akoflow-" + execution.Run.ID + "-" + activity.ID)
+	jobName := "akoflow-" + execution.Run.ID + "-" + activity.ID
+	if execution.Attempt > 1 {
+		jobName += fmt.Sprintf("-attempt-%d", execution.Attempt)
+	}
+	name := kubernetesName(jobName)
 	job, service, err := resources(
 		name, a.namespace, execution.Workflow, activity, execution.Resource, execution.Run.ID,
 	)
@@ -92,6 +96,7 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 		Endpoints: serviceEndpoints(name, a.namespace, activity),
 		Metadata: map[string]any{
 			domain.TimingSubmittedAt:    submittedAt,
+			"imageObservation":          map[string]any{"requestedReference": activity.Command.Image, "status": "unavailable"},
 			"artifactObservationDriver": "filesystem-diff",
 			"artifactObservationRoot":   observationRoot(activity, execution.Run.ID),
 			"artifactStorageType":       storageBindingFor(activity).Type,
@@ -244,7 +249,7 @@ func (a *Adapter) Inspect(ctx context.Context, handle domain.ActivityHandle) (do
 	if err := json.Unmarshal(output, &job); err != nil {
 		return handle, fmt.Errorf("decode Kubernetes job: %w", err)
 	}
-	a.applyPodTiming(ctx, handle.ExternalID, &handle)
+	a.applyPodObservation(ctx, handle.ExternalID, &handle)
 	switch {
 	case job.Status.Succeeded > 0:
 		handle.Status = domain.HandleCompleted
@@ -295,45 +300,6 @@ func (a *Adapter) Inspect(ctx context.Context, handle domain.ActivityHandle) (do
 		}
 	}
 	return handle, nil
-}
-
-func (a *Adapter) applyPodTiming(ctx context.Context, jobName string, handle *domain.ActivityHandle) {
-	payload, err := a.api.List(ctx, a.namespace, "pods", "job-name="+jobName)
-	if err != nil {
-		return
-	}
-	var pods struct {
-		Items []struct {
-			Status struct {
-				StartTime         *time.Time `json:"startTime"`
-				ContainerStatuses []struct {
-					Name  string `json:"name"`
-					State struct {
-						Running *struct {
-							StartedAt time.Time `json:"startedAt"`
-						} `json:"running"`
-					} `json:"state"`
-				} `json:"containerStatuses"`
-			} `json:"status"`
-		} `json:"items"`
-	}
-	if json.Unmarshal(payload, &pods) != nil || len(pods.Items) == 0 {
-		return
-	}
-	status := pods.Items[0].Status
-	if status.StartTime != nil && !status.StartTime.IsZero() {
-		handle.StartedAt = runtimecommon.UnixSeconds(*status.StartTime)
-	}
-	for _, container := range status.ContainerStatuses {
-		if container.Name != activityContainer || container.State.Running == nil || container.State.Running.StartedAt.IsZero() {
-			continue
-		}
-		if handle.Metadata == nil {
-			handle.Metadata = make(map[string]any)
-		}
-		handle.Metadata[domain.TimingContainerStartedAt] = runtimecommon.UnixSeconds(container.State.Running.StartedAt)
-		return
-	}
 }
 
 func (a *Adapter) activityLog(ctx context.Context, jobName string) ([]byte, error) {

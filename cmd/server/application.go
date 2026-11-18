@@ -121,6 +121,7 @@ func newApplication(ctx context.Context, settings config.Settings, log *logger.L
 		return fail(err)
 	}
 	api.WithAlgorithmLibrary(algorithmLibrary)
+	api.WithInstallationHealth(buildInstallationHealth(storage, settings))
 	loop, err := buildEventLoop(
 		storage.events, storage.executions, storage.data, storage.instance,
 		storage.environments, activities, simulator, settings.ArtifactStoreRoot,

@@ -26,6 +26,7 @@ import (
 	apirequests "github.com/UFFeScience/akoflow/internal/api/requests"
 	applicationbuild "github.com/UFFeScience/akoflow/internal/application/build"
 	applicationexecution "github.com/UFFeScience/akoflow/internal/application/execution"
+	"github.com/UFFeScience/akoflow/internal/application/installationhealth"
 	applicationconfiguration "github.com/UFFeScience/akoflow/internal/application/machineconfiguration"
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/application/recurring"
@@ -179,6 +180,7 @@ type Dependencies struct {
 }
 
 type Handler struct {
+	installationHealth  *installationhealth.Service
 	executionSchedules  *recurring.Coordinator
 	search              ports.GlobalSearch
 	dockerHub           *dockerhub.Client

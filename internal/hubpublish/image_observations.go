@@ -1,6 +1,12 @@
 package hubpublish
 
-import "fmt"
+import (
+	"fmt"
+	"regexp"
+	"strings"
+)
+
+var publishedImageDigest = regexp.MustCompile(`^sha256:[a-f0-9]{64}$`)
 
 func exportImageObservations(detail map[string]any, handles []any) []map[string]any {
 	run, _ := detail["run"].(map[string]any)
@@ -28,6 +34,20 @@ func exportImageObservations(detail map[string]any, handles []any) []map[string]
 		for _, key := range []string{"status", "requestedReference", "registryDigest", "runtimeImageId", "platform"} {
 			if value, ok := observation[key].(string); ok && value != "" {
 				record[key] = value
+			}
+		}
+		if requested, _ := record["requestedReference"].(string); strings.HasPrefix(requested, "/") ||
+			strings.HasPrefix(requested, ".") || strings.HasPrefix(requested, "file:") ||
+			strings.HasSuffix(strings.ToLower(requested), ".sif") {
+			delete(record, "requestedReference")
+		}
+		sif, _ := observation["sifDigest"].(string)
+		if observation["status"] == "observed" && publishedImageDigest.MatchString(sif) {
+			record["sifDigest"] = sif
+			link, _ := metadata["executionImageArtifact"].(map[string]any)
+			source, _ := link["sourceDigest"].(string)
+			if link["digest"] == sif && publishedImageDigest.MatchString(source) {
+				record["sourceOCIDigest"] = source
 			}
 		}
 		result = append(result, record)

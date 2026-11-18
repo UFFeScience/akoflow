@@ -723,6 +723,7 @@ func (r *Repository) CompleteRun(ctx context.Context, trace domain.ExecutionTrac
 		metadata, err := json.Marshal(map[string]any{
 			"strategy": transfer.Strategy, "route": transfer.Route,
 			"logicalBytes": transfer.LogicalBytes, "networkBytes": transfer.NetworkBytes,
+			"pricing": transfer.Pricing,
 		})
 		if err != nil {
 			return err

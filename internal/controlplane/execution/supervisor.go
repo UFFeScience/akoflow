@@ -18,6 +18,7 @@ import (
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
 	domainplanning "github.com/UFFeScience/akoflow/internal/domain/planning"
+	domainresource "github.com/UFFeScience/akoflow/internal/domain/resource"
 )
 
 const (
@@ -140,6 +141,23 @@ func (s *Supervisor) Execute(ctx context.Context, request ports.ExecutionRequest
 	}
 	if err != nil {
 		return domain.ExecutionTrace{}, err
+	}
+	if request.Run.Mode == domain.ExecutionModeSimulation {
+		resources := indexResources(request.Resources)
+		for index := range trace.Tasks {
+			task := &trace.Tasks[index]
+			if task.Metadata == nil {
+				task.Metadata = map[string]any{}
+			}
+			task.Metadata["computePrice"] = resources[task.AllocatedResourceID].ComputePrice()
+		}
+		for index := range trace.Transfers {
+			transfer := &trace.Transfers[index]
+			price, rate := transferPrice(request.NetworkTopology, transfer.SourceResourceID, transfer.TargetResourceID)
+			if price.Rate != nil && transfer.Cost == rate*float64(transfer.Bytes) {
+				transfer.Pricing = &price
+			}
+		}
 	}
 	if request.Run.Mode == domain.ExecutionModeInteractive {
 		return trace, nil
@@ -1281,6 +1299,7 @@ func transferObservations(
 		// schema. Attribute ingress to the selected resource until the schema
 		// includes a storage endpoint dimension.
 		bytes := observedNetworkBytes(observation)
+		price, rate := transferPrice(topology, sourceResourceID, targetResourceID)
 		transfers = append(transfers, domain.DataTransfer{
 			ID:                 runID + ":" + activityID + ":" + observation.ID,
 			ExecutionRunID:     runID,
@@ -1294,7 +1313,8 @@ func transferObservations(
 			StartedAt:        observation.StartedAt,
 			FinishedAt:       observation.FinishedAt,
 			DurationSeconds:  maxFloat(0, observation.FinishedAt-observation.StartedAt),
-			Cost:             transferPrice(topology, sourceResourceID, targetResourceID) * float64(bytes),
+			Cost:             rate * float64(bytes),
+			Pricing:          &price,
 			Strategy:         observation.Strategy,
 			Route:            observation.Route,
 			LogicalBytes:     observation.LogicalBytes,
@@ -1305,15 +1325,15 @@ func transferObservations(
 	return transfers
 }
 
-func transferPrice(topology domain.NetworkTopology, sourceResourceID, targetResourceID string) float64 {
+func transferPrice(topology domain.NetworkTopology, sourceResourceID, targetResourceID string) (domainresource.UnitPrice, float64) {
 	for _, link := range topology.Links {
 		direct := link.SourceResourceID == sourceResourceID && link.TargetResourceID == targetResourceID
 		reverse := link.Bidirectional && link.SourceResourceID == targetResourceID && link.TargetResourceID == sourceResourceID
 		if direct || reverse {
-			return link.PricePerByte
+			return link.TransferPrice(), link.PricePerByte
 		}
 	}
-	return 0
+	return domainresource.UnitPrice{}, 0
 }
 
 func (s *Supervisor) recordStartFailure(
@@ -1402,7 +1422,12 @@ func newRunningTask(
 		CloudInstanceID: allocation.CloudInstanceID,
 		Attempt:         attempt, Status: domain.TaskRunning, ReadyAt: readyAt, DataReadyAt: dataReadyAt,
 		QueuedAt: handle.StartedAt, StartedAt: handle.StartedAt,
-		Metadata: map[string]any{"pricePerSecond": resource.PricePerSecond},
+		Metadata: map[string]any{
+			"pricePerSecond": resource.PricePerSecond,
+			"computePrice":   resource.ComputePrice(),
+			"diskPrice":      resource.DiskPrice(),
+			"diskGiB":        float64(resource.StorageBytes) / float64(1<<30),
+		},
 	}
 	if preparation != nil {
 		var preparationStartedAt, preparationFinishedAt float64

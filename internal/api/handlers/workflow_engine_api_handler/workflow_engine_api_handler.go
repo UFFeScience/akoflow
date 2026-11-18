@@ -1976,6 +1976,7 @@ func (h *Handler) CreateCloudCapacityTarget(w http.ResponseWriter, r *http.Reque
 			"diskPricePerGiBMonth": configurationFloat64(value.Configuration, "diskPricePerGiBMonth"),
 			"priceCurrency":        value.Configuration["priceCurrency"],
 			"priceSource":          value.Configuration["priceSource"],
+			"priceObservedAt":      value.Configuration["priceObservedAt"],
 		},
 	}
 	resource.Metadata["pricingStatus"] = "estimated"
@@ -2015,6 +2016,9 @@ func (h *Handler) enrichCapacityTargetPricing(ctx context.Context, target *domai
 			target.Configuration["pricePerHour"] = machine.PricePerHour
 			target.Configuration["priceCurrency"] = machine.PriceCurrency
 			target.Configuration["priceSource"] = machine.PriceSource
+			if !catalog.DiscoveredAt.IsZero() {
+				target.Configuration["priceObservedAt"] = catalog.DiscoveredAt.Format(time.RFC3339)
+			}
 			break
 		}
 	}

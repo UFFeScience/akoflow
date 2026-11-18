@@ -557,6 +557,7 @@ func (s *candidateSink) Emit(ctx context.Context, plan domain.SchedulePlan) erro
 	); err != nil {
 		return fmt.Errorf("validate %s candidate: %w", s.run.Algorithm, err)
 	}
+	recordPlanPricing(&plan, s.request)
 	planHash, err := planFingerprint(plan)
 	if err != nil {
 		return err

@@ -221,22 +221,23 @@ type ExecutionTimelinePhase struct {
 }
 
 type DataTransfer struct {
-	ID                 string           `json:"id"`
-	ExecutionRunID     string           `json:"executionRunId"`
-	ProducerActivityID string           `json:"producerActivityId"`
-	ConsumerActivityID string           `json:"consumerActivityId"`
-	SourceResourceID   string           `json:"sourceResourceId"`
-	TargetResourceID   string           `json:"targetResourceId"`
-	Bytes              int64            `json:"bytes"`
-	StartedAt          float64          `json:"startedAt"`
-	FinishedAt         float64          `json:"finishedAt"`
-	DurationSeconds    float64          `json:"durationSeconds"`
-	Cost               float64          `json:"cost"`
-	Strategy           TransferStrategy `json:"strategy,omitempty"`
-	Route              TransferRoute    `json:"route,omitempty"`
-	LogicalBytes       int64            `json:"logicalBytes,omitempty"`
-	NetworkBytes       int64            `json:"networkBytes,omitempty"`
-	FilesTransferred   int64            `json:"filesTransferred,omitempty"`
+	ID                 string              `json:"id"`
+	ExecutionRunID     string              `json:"executionRunId"`
+	ProducerActivityID string              `json:"producerActivityId"`
+	ConsumerActivityID string              `json:"consumerActivityId"`
+	SourceResourceID   string              `json:"sourceResourceId"`
+	TargetResourceID   string              `json:"targetResourceId"`
+	Bytes              int64               `json:"bytes"`
+	StartedAt          float64             `json:"startedAt"`
+	FinishedAt         float64             `json:"finishedAt"`
+	DurationSeconds    float64             `json:"durationSeconds"`
+	Cost               float64             `json:"cost"`
+	Pricing            *resource.UnitPrice `json:"pricing,omitempty"`
+	Strategy           TransferStrategy    `json:"strategy,omitempty"`
+	Route              TransferRoute       `json:"route,omitempty"`
+	LogicalBytes       int64               `json:"logicalBytes,omitempty"`
+	NetworkBytes       int64               `json:"networkBytes,omitempty"`
+	FilesTransferred   int64               `json:"filesTransferred,omitempty"`
 }
 
 type ActivityExecutionContext struct {

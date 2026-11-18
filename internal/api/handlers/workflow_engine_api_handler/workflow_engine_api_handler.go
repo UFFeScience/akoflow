@@ -382,17 +382,31 @@ func (h *Handler) ListArchiveInstances(w http.ResponseWriter, r *http.Request) {
 	writeList(w, items, err)
 }
 
+type instanceArchiveResponse struct {
+	http.ResponseWriter
+	started bool
+}
+
+func (w *instanceArchiveResponse) Write(data []byte) (int, error) {
+	if !w.started {
+		w.Header().Set("Content-Type", "application/zip")
+		w.Header().Set("Content-Disposition", `attachment; filename="akoflow-instance.zip"`)
+		w.started = true
+	}
+	return w.ResponseWriter.Write(data)
+}
+
 func (h *Handler) ExportArchiveInstance(w http.ResponseWriter, r *http.Request) {
 	if h.instanceArchive == nil {
 		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("instance archives are unavailable"))
 		return
 	}
-	w.Header().Set("Content-Type", "application/zip")
-	w.Header().Set("Content-Disposition", `attachment; filename="akoflow-instance.zip"`)
+	response := &instanceArchiveResponse{ResponseWriter: w}
 	includeArtifacts := r.URL.Query().Get("includeArtifacts") == "true"
-	if err := h.instanceArchive.Export(r.Context(), w, includeArtifacts); err != nil {
-		// Export streams directly. If no bytes were written the normal API error is
-		// returned; otherwise the client observes a truncated, invalid ZIP.
+	if err := h.instanceArchive.Export(r.Context(), response, includeArtifacts); err != nil {
+		if response.started {
+			panic(http.ErrAbortHandler)
+		}
 		writeError(w, http.StatusUnprocessableEntity, err)
 	}
 }

@@ -181,18 +181,15 @@ func (s *Service) Export(ctx context.Context, output io.Writer, includeArtifacts
 	}
 	archive := zip.NewWriter(output)
 	if err := addFile(archive, "database/akoflow.sqlite", snapshot); err != nil {
-		_ = archive.Close()
 		return err
 	}
 	if includeArtifacts && strings.TrimSpace(s.artifacts) != "" {
 		if err := addDirectory(archive, "artifacts", s.artifacts); err != nil {
-			_ = archive.Close()
 			return err
 		}
 	}
 	value, err := json.MarshalIndent(manifest, "", "  ")
 	if err != nil {
-		_ = archive.Close()
 		return err
 	}
 	entry, err := archive.Create("manifest.json")
@@ -200,7 +197,6 @@ func (s *Service) Export(ctx context.Context, output io.Writer, includeArtifacts
 		_, err = entry.Write(value)
 	}
 	if err != nil {
-		_ = archive.Close()
 		return err
 	}
 	return archive.Close()

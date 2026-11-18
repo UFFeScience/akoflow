@@ -18,8 +18,10 @@ import (
 	"sync"
 	"time"
 
+	"github.com/UFFeScience/akoflow/internal/application/imagepreparation"
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
+	domainexecution "github.com/UFFeScience/akoflow/internal/domain/execution"
 	"github.com/UFFeScience/akoflow/internal/domain/workflow"
 	"github.com/UFFeScience/akoflow/internal/operationerror"
 	"github.com/UFFeScience/akoflow/internal/provider"
@@ -257,9 +259,15 @@ func (r *Reproducer) Reproduce(ctx context.Context, origin domain.ArtifactOrigin
 		}
 	} else {
 		if _, err := r.inspect(ctx, image, origin); err != nil {
-			if _, err := r.run(ctx, "docker", "pull", "--platform", origin.Platform, image); err != nil {
+			err = imagepreparation.Observe(ctx, domainexecution.ImagePreparationPull, func() error {
+				_, err := r.run(ctx, "docker", "pull", "--platform", origin.Platform, image)
+				return err
+			})
+			if err != nil {
 				return nil, err
 			}
+		} else if err := recordImageCacheHit(ctx); err != nil {
+			return nil, err
 		}
 	}
 	info, err := r.inspect(ctx, image, origin)
@@ -297,7 +305,7 @@ func (r *Reproducer) build(ctx context.Context, origin domain.ArtifactOrigin, ke
 	}
 	image := "akoflow-reproduced:" + key
 	if _, err := r.inspect(ctx, image, origin); err == nil {
-		return image, nil
+		return image, recordImageCacheHit(ctx)
 	}
 	output := filepath.Join(temp, "image.tar")
 	args := []string{
@@ -318,13 +326,14 @@ func (r *Reproducer) build(ctx context.Context, origin domain.ArtifactOrigin, ke
 	if buildctl == "" {
 		buildctl = "buildctl"
 	}
-	if _, err := r.run(ctx, buildctl, args...); err != nil {
-		return "", err
-	}
-	if _, err := r.run(ctx, "docker", "load", "--input", output); err != nil {
-		return "", err
-	}
-	return image, nil
+	err = imagepreparation.Observe(ctx, domainexecution.ImagePreparationBuild, func() error {
+		if _, err := r.run(ctx, buildctl, args...); err != nil {
+			return err
+		}
+		_, err := r.run(ctx, "docker", "load", "--input", output)
+		return err
+	})
+	return image, err
 }
 
 func (r *Reproducer) publish(ctx context.Context, origin domain.ArtifactOrigin, key string, image inspectedImage) (string, error) {
@@ -424,4 +433,8 @@ func (r *Reproducer) ensureOriginSpec(ctx context.Context, origin domain.Artifac
 		return spec, err
 	}
 	return spec, r.Catalog.SaveArtifactBuild(ctx, spec)
+}
+
+func recordImageCacheHit(ctx context.Context) error {
+	return imagepreparation.Observe(ctx, domainexecution.ImagePreparationCacheHit, func() error { return nil })
 }

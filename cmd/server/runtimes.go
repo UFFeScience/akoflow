@@ -36,11 +36,12 @@ func buildRuntimes(
 	catalog ports.EnvironmentCatalog,
 	cloudStore ports.CloudConfigurationStore,
 	cloudProvisioner ports.CloudProvisioner,
+	imagePreparation ports.ImagePreparationRecorder,
 ) (ports.RuntimeResolver, error) {
 	runtimes := registry.New()
 	adapters := map[string]ports.RuntimeAdapter{
 		"*":     simgrid.NewActivityRuntime(),
-		"local": local.New(),
+		"local": local.NewWithImagePreparation(imagePreparation),
 		"slurm": slurm.NewWithConfig(provider.OSCommandExecutor{}, slurm.Config{
 			ScriptDirectory: settings.SlurmScriptDirectory,
 		}),

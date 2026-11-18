@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/UFFeScience/akoflow/internal/domain"
 	domainevents "github.com/UFFeScience/akoflow/internal/domain/events"
+	domainexecution "github.com/UFFeScience/akoflow/internal/domain/execution"
 	"net/http"
 )
 
@@ -217,4 +218,15 @@ func (h *Handler) processHandles(ctx context.Context, runID string) ([]domain.Ac
 		return reader.ListProcessHandles(ctx, runID)
 	}
 	return h.executionHandles(ctx, runID, "", true)
+}
+
+type imagePreparationReader interface {
+	ListImagePreparation(context.Context, string) ([]domainexecution.ImagePreparationObservation, error)
+}
+
+func (h *Handler) executionImagePreparation(ctx context.Context, runID string) ([]domainexecution.ImagePreparationObservation, error) {
+	if reader, ok := h.executions.(imagePreparationReader); ok {
+		return reader.ListImagePreparation(ctx, runID)
+	}
+	return nil, nil
 }

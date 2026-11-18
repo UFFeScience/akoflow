@@ -12,7 +12,9 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/UFFeScience/akoflow/internal/application/imagepreparation"
 	"github.com/UFFeScience/akoflow/internal/domain"
+	domainexecution "github.com/UFFeScience/akoflow/internal/domain/execution"
 )
 
 func portableBuildFixture(t *testing.T, files map[string]string) domain.ArtifactOrigin {
@@ -165,14 +167,33 @@ func TestReproductionRequiresVerifiedImageAndPlatformBeforeGate(t *testing.T) {
 	}
 }
 
+type buildObservationRecorder struct {
+	observations []domainexecution.ImagePreparationObservation
+}
+
+func (r *buildObservationRecorder) RecordImagePreparation(_ context.Context, _ string, observation domainexecution.ImagePreparationObservation) error {
+	r.observations = append(r.observations, observation)
+	return nil
+}
+
 func TestReproductionBuildLoadsArchiveAndPassesArguments(t *testing.T) {
 	origin := portableBuildFixture(t, map[string]string{"Dockerfile": "FROM scratch"})
 	origin.Build.Arguments = map[string]string{"NAME": "world"}
 	runner := &reproductionRunner{missing: true}
 	r := Reproducer{Runner: runner, Manager: Manager{Root: t.TempDir()}}
-	result, err := r.Reproduce(context.Background(), origin)
+	recorder := &buildObservationRecorder{}
+	ctx := imagepreparation.WithTarget(context.Background(), recorder, "run", "activity", 2)
+	result, err := r.Reproduce(ctx, origin)
 	if err != nil || !result.Committed() {
 		t.Fatalf("%+v %v", result, err)
+	}
+	observations := recorder.observations
+	if len(observations) != 2 || observations[0].Kind != domainexecution.ImagePreparationBuild ||
+		observations[0].FinishedAt != nil || observations[1].FinishedAt == nil ||
+		observations[1].OperationID != observations[0].OperationID ||
+		observations[1].ActivityID != "activity" || observations[1].Attempt != 2 ||
+		observations[1].Status != "completed" {
+		t.Fatalf("unexpected build observations: %+v", observations)
 	}
 	calls := strings.Join(runner.calls, "\n")
 	if !strings.Contains(calls, "build-arg:NAME=world") || !strings.Contains(calls, "docker load --input") {

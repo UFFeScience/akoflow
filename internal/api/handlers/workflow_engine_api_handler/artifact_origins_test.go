@@ -18,12 +18,15 @@ import (
 	"time"
 
 	appbuild "github.com/UFFeScience/akoflow/internal/application/build"
+	"github.com/UFFeScience/akoflow/internal/application/imagepreparation"
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	apptransfer "github.com/UFFeScience/akoflow/internal/application/transfer"
 	"github.com/UFFeScience/akoflow/internal/domain"
+	domainexecution "github.com/UFFeScience/akoflow/internal/domain/execution"
 	domainworkflow "github.com/UFFeScience/akoflow/internal/domain/workflow"
 	database "github.com/UFFeScience/akoflow/internal/infrastructure/database"
 	datadb "github.com/UFFeScience/akoflow/internal/infrastructure/database/data"
+	executiondb "github.com/UFFeScience/akoflow/internal/infrastructure/database/execution"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/dockerhub"
 	"github.com/UFFeScience/akoflow/internal/provider"
 	"github.com/UFFeScience/akoflow/internal/provider/local"
@@ -205,6 +208,17 @@ func runPortableOriginLinux(t *testing.T, ctx context.Context, image string, rec
 	}
 	reproducer := &appbuild.Reproducer{Manager: appbuild.Manager{Root: t.TempDir(), Catalog: target.data}, Catalog: target.data, Runner: provider.OSCommandExecutor{}}
 	coordinator := apptransfer.Coordinator{Reproducer: reproducer}
+	db, err := sql.Open("sqlite3", ":memory:")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	db.SetMaxOpenConns(1)
+	if err := database.Bootstrap(ctx, db); err != nil {
+		t.Fatal(err)
+	}
+	recorder := executiondb.New(db)
+	ctx = imagepreparation.WithTarget(ctx, recorder, request.Run.ID, activity.ID, 1)
 	gate, err := coordinator.Prepare(ctx, activity.ID, request.PreparationRequirementsByActivity[activity.ID])
 	if err != nil {
 		t.Fatal(err)
@@ -212,11 +226,27 @@ func runPortableOriginLinux(t *testing.T, ctx context.Context, image string, rec
 	if err := gate.Ready(); err != nil {
 		t.Fatal(err)
 	}
-	verifyOriginReuse(t, ctx, target, reproducer, coordinator, request, gate)
-	t.Logf("verified loaded image: %s", gate.Executable.OCIReference)
 	if recipe {
 		t.Cleanup(func() { _ = exec.Command("docker", "image", "rm", gate.Executable.OCIReference).Run() })
 	}
+	verifyOriginReuse(t, ctx, target, reproducer, coordinator, request, gate)
+	observations, err := recorder.ListImagePreparation(ctx, request.Run.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	kind := domainexecution.ImagePreparationPull
+	if recipe {
+		kind = domainexecution.ImagePreparationBuild
+	}
+	if len(observations) != 3 || observations[0].Kind != kind ||
+		observations[0].FinishedAt == nil || observations[0].Status != "completed" ||
+		observations[1].Kind != kind || observations[1].Status != "failed" ||
+		observations[2].Kind != domainexecution.ImagePreparationCacheHit {
+		t.Fatalf("unexpected persisted image observations: %+v", observations)
+	}
+	t.Logf("persisted %s, then verified cache reuse for activity attempt %d", kind, observations[0].Attempt)
+	t.Logf("verified loaded image: %s", gate.Executable.OCIReference)
+
 	executePortableActivity(t, ctx, request, gate, recipe)
 }
 
@@ -278,8 +308,13 @@ func verifyOriginReuse(t *testing.T, ctx context.Context, target *Handler, repro
 		t.Fatal("unavailable preparation succeeded")
 	}
 	artifacts, err := target.data.ListArtifacts(ctx, true)
-	if err != nil || len(artifacts) != 0 {
-		t.Fatalf("stale image remains available: %+v %v", artifacts, err)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, artifact := range artifacts {
+		if artifact.Available {
+			t.Fatalf("stale image remains available: %+v", artifact)
+		}
 	}
 	again, err := coordinator.Prepare(ctx, request.Workflow.Activities[0].ID, requirement)
 	if err != nil {

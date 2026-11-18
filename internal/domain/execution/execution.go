@@ -158,6 +158,26 @@ type ExecutionTrace struct {
 	Transfers []DataTransfer            `json:"transfers"`
 }
 
+type ImagePreparationKind string
+
+const (
+	ImagePreparationPull     ImagePreparationKind = "image-pull"
+	ImagePreparationBuild    ImagePreparationKind = "image-build"
+	ImagePreparationCacheHit ImagePreparationKind = "image-cache-hit"
+)
+
+type ImagePreparationObservation struct {
+	Shared      bool                 `json:"shared,omitempty"`
+	OperationID string               `json:"operationId"`
+	ActivityID  string               `json:"activityId"`
+	Attempt     int                  `json:"attempt"`
+	Kind        ImagePreparationKind `json:"kind"`
+	Status      string               `json:"status"`
+	StartedAt   time.Time            `json:"startedAt"`
+	FinishedAt  *time.Time           `json:"finishedAt,omitempty"`
+	Progress    *float64             `json:"progress,omitempty"`
+}
+
 type ExecutionTimeline struct {
 	StartedAt               float64                  `json:"startedAt"`
 	FinishedAt              float64                  `json:"finishedAt"`
@@ -170,6 +190,8 @@ type ExecutionTimeline struct {
 }
 
 type ExecutionTimelineTotals struct {
+	ImagePullSeconds             float64 `json:"imagePullSeconds"`
+	ImageBuildSeconds            float64 `json:"imageBuildSeconds"`
 	ResourceQueueSeconds         float64 `json:"resourceQueueSeconds"`
 	ProvisionSeconds             float64 `json:"provisionSeconds"`
 	StartSeconds                 float64 `json:"startSeconds"`
@@ -183,16 +205,19 @@ type ExecutionTimelineTotals struct {
 }
 
 type ExecutionTimelinePhase struct {
-	ID              string  `json:"id"`
-	Category        string  `json:"category"`
-	ActivityID      string  `json:"activityId,omitempty"`
-	OperationID     string  `json:"operationId,omitempty"`
-	TransferID      string  `json:"transferId,omitempty"`
-	Status          string  `json:"status"`
-	Source          string  `json:"source"`
-	StartedAt       float64 `json:"startedAt"`
-	FinishedAt      float64 `json:"finishedAt"`
-	DurationSeconds float64 `json:"durationSeconds"`
+	Attempt         int      `json:"attempt,omitempty"`
+	Active          bool     `json:"active,omitempty"`
+	Progress        *float64 `json:"progress,omitempty"`
+	ID              string   `json:"id"`
+	Category        string   `json:"category"`
+	ActivityID      string   `json:"activityId,omitempty"`
+	OperationID     string   `json:"operationId,omitempty"`
+	TransferID      string   `json:"transferId,omitempty"`
+	Status          string   `json:"status"`
+	Source          string   `json:"source"`
+	StartedAt       float64  `json:"startedAt"`
+	FinishedAt      float64  `json:"finishedAt"`
+	DurationSeconds float64  `json:"durationSeconds"`
 }
 
 type DataTransfer struct {

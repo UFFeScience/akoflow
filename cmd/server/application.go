@@ -60,7 +60,7 @@ func newApplication(ctx context.Context, settings config.Settings, log *logger.L
 	sshKeys := sshkey.New(settings.SSHKeyDirectory)
 	cloudCredentials := cloudcredential.New(settings.CloudCredentialDirectory)
 	cloudProvisioner := buildCloudProvisioner(storage, settings, cloudCredentials, sshKeys)
-	runtimes, err := buildRuntimes(settings, storage.environments, storage.cloud, cloudProvisioner)
+	runtimes, err := buildRuntimes(settings, storage.environments, storage.cloud, cloudProvisioner, storage.executions)
 	if err != nil {
 		return fail(err)
 	}

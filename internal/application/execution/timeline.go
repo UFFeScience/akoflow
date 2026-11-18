@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
+	domainexecution "github.com/UFFeScience/akoflow/internal/domain/execution"
 )
 
 const (
@@ -25,6 +26,10 @@ const (
 // observations. It does not mutate legacy queue or makespan measurements, so
 // completed executions gain the corrected semantics without a data migration.
 func BuildTimeline(run domain.ExecutionRun, tasks []domain.TaskExecution, transfers []domain.DataTransfer, operations []domain.CloudOperationRun) domain.ExecutionTimeline {
+	return BuildTimelineWithImagePreparation(run, tasks, transfers, operations, nil, time.Now())
+}
+
+func BuildTimelineWithImagePreparation(run domain.ExecutionRun, tasks []domain.TaskExecution, transfers []domain.DataTransfer, operations []domain.CloudOperationRun, preparation []domainexecution.ImagePreparationObservation, now time.Time) domain.ExecutionTimeline {
 	timeline := domain.ExecutionTimeline{ComputeMakespanSeconds: run.MakespanSeconds, Phases: make([]domain.ExecutionTimelinePhase, 0)}
 	if run.StartedAt != nil {
 		timeline.StartedAt = unixSeconds(*run.StartedAt)
@@ -57,8 +62,9 @@ func BuildTimeline(run domain.ExecutionRun, tasks []domain.TaskExecution, transf
 		timeline.Phases = append(timeline.Phases, phase(transfer.ID, category, transfer.ConsumerActivityID,
 			"", transfer.ID, "completed", "transfer-observation", transfer.StartedAt, transfer.FinishedAt))
 	}
+	imageIntervals := appendImagePreparation(&timeline, preparation, now)
 	for _, task := range tasks {
-		appendTaskPhases(&timeline, task)
+		appendTaskPhases(&timeline, task, imageIntervals[preparationActivity{task.ActivityID, max(1, task.Attempt)}])
 	}
 	sort.SliceStable(timeline.Phases, func(i, j int) bool {
 		if timeline.Phases[i].StartedAt == timeline.Phases[j].StartedAt {
@@ -74,7 +80,7 @@ func BuildTimeline(run domain.ExecutionRun, tasks []domain.TaskExecution, transf
 	return timeline
 }
 
-func appendTaskPhases(timeline *domain.ExecutionTimeline, task domain.TaskExecution) {
+func appendTaskPhases(timeline *domain.ExecutionTimeline, task domain.TaskExecution, imageIntervals []timelineInterval) {
 	runtimeStart := task.StartedAt
 	if task.RuntimeSeconds > 0 && task.FinishedAt >= task.RuntimeSeconds {
 		runtimeStart = task.FinishedAt - task.RuntimeSeconds
@@ -88,15 +94,21 @@ func appendTaskPhases(timeline *domain.ExecutionTimeline, task domain.TaskExecut
 		launchStart = timelineNumber(task.Metadata, domain.TimingSubmittedAt)
 	}
 	if launchStart > 0 && runtimeStart > launchStart {
-		timeline.Phases = append(timeline.Phases, phase(task.ID+":launch", PhaseLaunch, task.ActivityID,
-			"", "", "completed", "task-metadata", launchStart, runtimeStart))
+		for index, gap := range subtractTimeline(launchStart, runtimeStart, imageIntervals) {
+			id := task.ID + ":launch"
+			if index > 0 {
+				id += ":" + strconv.Itoa(index)
+			}
+			timeline.Phases = append(timeline.Phases, phase(id, PhaseLaunch, task.ActivityID,
+				"", "", "completed", "task-metadata", gap.start, gap.finish))
+		}
 	}
 	if task.ReadyAt <= 0 || task.StartedAt <= task.ReadyAt {
 		return
 	}
-	known := make([]timelineInterval, 0)
+	known := append([]timelineInterval(nil), imageIntervals...)
 	for _, item := range timeline.Phases {
-		if item.ActivityID == task.ActivityID && item.Category != PhaseRuntime && item.Category != PhaseResourceQueue {
+		if item.ActivityID == task.ActivityID && item.Category != PhaseRuntime && item.Category != PhaseResourceQueue && item.Source != "image-preparation" {
 			known = append(known, timelineInterval{start: item.StartedAt, finish: item.FinishedAt})
 		}
 	}
@@ -180,6 +192,10 @@ func coveredSeconds(phases []domain.ExecutionTimelinePhase, start, finish float6
 
 func addTimelineTotal(total *domain.ExecutionTimelineTotals, category string, seconds float64) {
 	switch category {
+	case string(domainexecution.ImagePreparationPull):
+		total.ImagePullSeconds += seconds
+	case string(domainexecution.ImagePreparationBuild):
+		total.ImageBuildSeconds += seconds
 	case PhaseResourceQueue:
 		total.ResourceQueueSeconds += seconds
 	case PhaseProvision:

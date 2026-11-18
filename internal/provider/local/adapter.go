@@ -12,6 +12,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
 	runtimecommon "github.com/UFFeScience/akoflow/internal/provider"
 	"github.com/UFFeScience/akoflow/internal/provider/telemetry"
@@ -44,6 +45,9 @@ func (b *logBuffer) String() string {
 }
 
 type Adapter struct {
+	pullsMu      sync.Mutex
+	pulls        map[imagePullKey]*imagePull
+	preparation  ports.ImagePreparationRecorder
 	mu           sync.RWMutex
 	results      map[string]processResult
 	logs         map[string]*logBuffer
@@ -51,7 +55,11 @@ type Adapter struct {
 }
 
 func New() *Adapter {
-	return &Adapter{results: make(map[string]processResult), logs: make(map[string]*logBuffer), observations: make(map[string]runtimecommon.ArtifactSnapshot)}
+	return NewWithImagePreparation(nil)
+}
+
+func NewWithImagePreparation(recorder ports.ImagePreparationRecorder) *Adapter {
+	return &Adapter{preparation: recorder, results: make(map[string]processResult), logs: make(map[string]*logBuffer), observations: make(map[string]runtimecommon.ArtifactSnapshot)}
 }
 func (*Adapter) Modes() []domain.ExecutionMode {
 	return []domain.ExecutionMode{domain.ExecutionModeReal, domain.ExecutionModeInteractive}
@@ -152,7 +160,13 @@ func (a *Adapter) startContainer(ctx context.Context, execution domain.ActivityE
 	}
 	args = append(args, activity.Command.Entrypoint)
 	args = append(args, activity.Command.Arguments...)
-	output, warning, err := startContainerForPlatform(ctx, args, image)
+	var options []imagePreparation
+	if a.preparation != nil {
+		options = append(options, func(ctx context.Context, platform string) ([]byte, error) {
+			return a.prepareImage(ctx, execution, image, platform)
+		})
+	}
+	output, warning, err := startContainerForPlatform(ctx, args, image, options...)
 	if err != nil {
 		return domain.ActivityHandle{}, fmt.Errorf("start local activity: %w: %s", err, strings.TrimSpace(string(output)))
 	}

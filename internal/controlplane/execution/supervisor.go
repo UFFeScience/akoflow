@@ -14,6 +14,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/UFFeScience/akoflow/internal/application/imagepreparation"
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
 	domainplanning "github.com/UFFeScience/akoflow/internal/domain/planning"
@@ -820,7 +821,7 @@ func (s *Supervisor) startReadyActivity(
 		return result
 	}
 	if requirement, required := request.PreparationRequirementsByActivity[activityID]; required {
-		preparation, err := s.prepareActivity(ctx, request.Run.ID, activityID, requirement)
+		preparation, err := s.prepareActivity(ctx, request.Run.ID, activityID, attempt, requirement)
 		if err != nil {
 			result.err = fmt.Errorf("prepare activity %q: %w", activityID, err)
 			return result
@@ -1226,6 +1227,7 @@ func workspaceClaimName(runID, activityID string) string {
 func (s *Supervisor) prepareActivity(
 	ctx context.Context,
 	runID, activityID string,
+	attempt int,
 	requirement domain.PreparationRequirement,
 ) (*domain.PreparationGate, error) {
 	if s.config.Preparer == nil {
@@ -1234,6 +1236,9 @@ func (s *Supervisor) prepareActivity(
 	if requirement.Artifact != nil {
 		requirement.Artifact.RunID = runID
 		requirement.Artifact.ActivityID = activityID
+	}
+	if recorder, ok := s.executions.(ports.ImagePreparationRecorder); ok {
+		ctx = imagepreparation.WithTarget(ctx, recorder, runID, activityID, attempt)
 	}
 	return s.config.Preparer.Prepare(ctx, activityID, requirement)
 }

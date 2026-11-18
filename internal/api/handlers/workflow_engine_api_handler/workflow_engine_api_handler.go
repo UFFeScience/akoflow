@@ -1276,7 +1276,12 @@ func (h *Handler) GetExecution(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	response["cloudBilling"] = billing
-	response["timeline"] = applicationexecution.BuildTimeline(*run, tasks, transfers, operations)
+	preparation, err := h.executionImagePreparation(r.Context(), run.ID)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+	response["timeline"] = applicationexecution.BuildTimelineWithImagePreparation(*run, tasks, transfers, operations, preparation, time.Now())
 	if err := h.addExecutionData(r.Context(), run.ID, response, monitor); err != nil {
 		writeError(w, http.StatusInternalServerError, err)
 		return

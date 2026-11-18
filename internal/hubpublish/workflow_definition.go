@@ -7,12 +7,16 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 	"time"
 )
 
 type WorkflowDefinition struct {
+	origin        string
+	Publication   string `json:"publication,omitempty"`
+	Owner         string `json:"owner,omitempty"`
 	PublicationID string `json:"publicationId,omitempty"`
 	URI           string `json:"uri"`
 	Version       int    `json:"version"`
@@ -21,7 +25,18 @@ type WorkflowDefinition struct {
 }
 
 func (m *Manager) WorkflowDefinition(ctx context.Context, uri string) (WorkflowDefinition, error) {
-	if strings.HasPrefix(strings.TrimSpace(uri), "/") || strings.HasPrefix(strings.TrimSpace(uri), "akoflow::") {
+	uri = strings.TrimSpace(uri)
+	if strings.HasPrefix(uri, "https://") || strings.HasPrefix(uri, "http://") {
+		m.mu.Lock()
+		origin, browser := m.state.HubURL, m.options.BrowserURL
+		m.mu.Unlock()
+		reference, err := browserWorkflowReference(uri, origin, browser)
+		if err != nil {
+			return WorkflowDefinition{}, err
+		}
+		return m.workflowReference(ctx, reference)
+	}
+	if strings.HasPrefix(uri, "/") || strings.HasPrefix(uri, "akoflow::") {
 		return m.workflowReference(ctx, uri)
 	}
 	id, version, err := parseWorkflowURI(uri)
@@ -35,12 +50,12 @@ func (m *Manager) WorkflowDefinition(ctx context.Context, uri string) (WorkflowD
 		return WorkflowDefinition{}, failure(503, "hub_not_configured", "AkôFlow Hub is not configured for this installation.")
 	}
 	path := fmt.Sprintf("/publications/%s/versions/%d/yaml", id, version)
-	data, status, _, err := m.readWorkflowYAML(ctx, origin+"/api/v1"+path, "")
+	data, status, headers, err := m.readWorkflowYAML(ctx, origin+"/api/v1"+path, "")
 	if err != nil {
 		return WorkflowDefinition{}, err
 	}
 	if status == 404 && token != "" {
-		data, status, _, err = m.readWorkflowYAML(ctx, origin+"/api/v1/desktop"+path, token)
+		data, status, headers, err = m.readWorkflowYAML(ctx, origin+"/api/v1/desktop"+path, token)
 	}
 	if err != nil {
 		return WorkflowDefinition{}, err
@@ -52,12 +67,14 @@ func (m *Manager) WorkflowDefinition(ctx context.Context, uri string) (WorkflowD
 		return WorkflowDefinition{}, hubResponseError(status, data)
 	}
 	hash := sha256.Sum256(data)
-	return WorkflowDefinition{PublicationID: id, URI: fmt.Sprintf("akoflow://hub/publications/%s/versions/%d", id, version), Version: version, YAML: string(data), Hash: hex.EncodeToString(hash[:])}, nil
+	return WorkflowDefinition{origin: origin, Publication: headers.title, Owner: headers.owner, PublicationID: id, URI: fmt.Sprintf("akoflow://hub/publications/%s/versions/%d", id, version), Version: version, YAML: string(data), Hash: hex.EncodeToString(hash[:])}, nil
 }
 
 type resolvedDefinitionHeaders struct {
 	version       int
 	publicationID string
+	title         string
+	owner         string
 }
 
 func (m *Manager) readWorkflowYAML(ctx context.Context, address, token string) ([]byte, int, resolvedDefinitionHeaders, error) {
@@ -84,7 +101,9 @@ func (m *Manager) readWorkflowYAML(ctx context.Context, address, token string) (
 		return nil, 0, resolvedDefinitionHeaders{}, failure(502, "hub_response", "The workflow YAML is unavailable or exceeds the definition size limit.")
 	}
 	version, _ := strconv.Atoi(response.Header.Get("X-Akoflow-Workflow-Version"))
+	title, _ := url.QueryUnescape(response.Header.Get("X-Akoflow-Publication-Title"))
+	owner, _ := url.QueryUnescape(response.Header.Get("X-Akoflow-Publication-Owner"))
 	return data, response.StatusCode, resolvedDefinitionHeaders{
-		version: version, publicationID: response.Header.Get("X-Akoflow-Publication-ID"),
+		version: version, publicationID: response.Header.Get("X-Akoflow-Publication-ID"), title: title, owner: owner,
 	}, nil
 }

@@ -39,13 +39,20 @@ func respond(w http.ResponseWriter, value any, err error) {
 			failure = &apiError{Status: 500, Code: "hub_storage", Message: "The daemon could not save the Hub connection. Try again."}
 		}
 		w.WriteHeader(failure.Status)
-		_ = json.NewEncoder(w).Encode(map[string]string{"error": failure.Message, "code": failure.Code})
+		body := map[string]string{"error": failure.Message, "code": failure.Code}
+		if failure.ExistingID != "" {
+			body["existingId"] = failure.ExistingID
+		}
+		_ = json.NewEncoder(w).Encode(body)
 		return
 	}
 	_ = json.NewEncoder(w).Encode(value)
 }
 func decodeRequest(w http.ResponseWriter, r *http.Request, value any) error {
-	r.Body = http.MaxBytesReader(w, r.Body, 128<<10)
+	return decodeBoundedRequest(w, r, value, 128<<10)
+}
+func decodeBoundedRequest(w http.ResponseWriter, r *http.Request, value any, limit int64) error {
+	r.Body = http.MaxBytesReader(w, r.Body, limit)
 	decoder := json.NewDecoder(r.Body)
 	decoder.DisallowUnknownFields()
 	if decoder.Decode(value) != nil || decoder.Decode(new(any)) != io.EOF {
@@ -60,7 +67,7 @@ func (m *Manager) serveStatus(w http.ResponseWriter, r *http.Request) {
 		source, ok := m.state.WorkflowSources[r.URL.Query().Get("workflowVersionId")]
 		m.mu.Unlock()
 		if ok && source.HubOrigin == value.HubURL {
-			value.WorkflowSource = &WorkflowSource{PublicationID: source.PublicationID, Version: source.Version, Hash: source.Hash}
+			value.WorkflowSource = &WorkflowSource{PublicationID: source.PublicationID, Version: source.Version, Hash: source.Hash, URI: source.URI}
 		}
 	}
 	respond(w, value, err)

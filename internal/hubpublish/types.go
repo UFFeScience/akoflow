@@ -47,6 +47,7 @@ type Identity struct {
 	ExpiresAt       time.Time `json:"expiresAt"`
 }
 type WorkflowSource struct {
+	URI           string `json:"uri,omitempty"`
 	LocalHash     string `json:"localHash,omitempty"`
 	HubOrigin     string `json:"hubOrigin,omitempty"`
 	PublicationID string `json:"publicationId"`
@@ -124,9 +125,10 @@ type Receipt struct {
 	ResultCount        int    `json:"resultCount"`
 }
 type apiError struct {
-	Status  int
-	Code    string
-	Message string
+	Status     int
+	Code       string
+	Message    string
+	ExistingID string
 }
 
 func (e *apiError) Error() string { return e.Message }

@@ -11,6 +11,10 @@ import (
 )
 
 func (m *Manager) ImportWorkflow(ctx context.Context, uri, name string) (json.RawMessage, error) {
+	return m.importWorkflow(ctx, uri, name, "", "")
+}
+
+func (m *Manager) importWorkflow(ctx context.Context, uri, name, expectedHash, editedYAML string) (json.RawMessage, error) {
 	if m.options.ReadOnly {
 		return nil, failure(403, "read_only", "Read-only instances cannot import workflows.")
 	}
@@ -18,11 +22,21 @@ func (m *Manager) ImportWorkflow(ctx context.Context, uri, name string) (json.Ra
 	if err != nil {
 		return nil, err
 	}
+	if expectedHash != "" && expectedHash != definition.Hash {
+		return nil, failure(409, "workflow_source_changed", "The reviewed Hub definition changed. Reload the source before importing.")
+	}
+	if editedYAML != "" && expectedHash == "" {
+		return nil, failure(422, "workflow_source_required", "Review a Hub version before importing an edited copy.")
+	}
+	yaml := definition.YAML
+	if editedYAML != "" {
+		yaml = editedYAML
+	}
 	path := "/workflow-definitions/import/"
 	if name != "" {
 		path += "?" + url.Values{"name": {name}}.Encode()
 	}
-	data, err := m.sourceRequest(ctx, http.MethodPost, path, []byte(definition.YAML), "application/yaml")
+	data, err := m.sourceRequest(ctx, http.MethodPost, path, []byte(yaml), "application/yaml")
 	if err != nil {
 		return nil, err
 	}
@@ -31,7 +45,7 @@ func (m *Manager) ImportWorkflow(ctx context.Context, uri, name string) (json.Ra
 	}
 	var imported domain.WorkflowDefinition
 	publicationID, version := definition.PublicationID, definition.Version
-	if publicationID != "" && version > 0 && json.Unmarshal(data, &imported) == nil && imported.Version.ID != "" {
+	if version > 0 && json.Unmarshal(data, &imported) == nil && imported.Version.ID != "" {
 		localYAML, err := apirequests.FromDomain(imported).YAML()
 		if err != nil {
 			return nil, err
@@ -40,7 +54,11 @@ func (m *Manager) ImportWorkflow(ctx context.Context, uri, name string) (json.Ra
 		if m.state.WorkflowSources == nil {
 			m.state.WorkflowSources = make(map[string]WorkflowSource)
 		}
-		m.state.WorkflowSources[imported.Version.ID] = WorkflowSource{PublicationID: publicationID, Version: version, Hash: definition.Hash, LocalHash: digest(localYAML), HubOrigin: m.state.HubURL}
+		localHash := ""
+		if editedYAML == "" {
+			localHash = digest(localYAML)
+		}
+		m.state.WorkflowSources[imported.Version.ID] = WorkflowSource{PublicationID: publicationID, Version: version, Hash: definition.Hash, LocalHash: localHash, HubOrigin: definition.origin, URI: definition.URI}
 		saveErr := m.persistLocked()
 		m.mu.Unlock()
 		if saveErr != nil {
@@ -68,6 +86,14 @@ func (m *Manager) sourceRequest(ctx context.Context, method, path string, body [
 		if status < 400 || status > 599 {
 			status = 502
 		}
+		if status == http.StatusConflict {
+			var conflict struct {
+				ExistingID string `json:"existingId"`
+			}
+			if json.Unmarshal(response.data.Bytes(), &conflict) == nil && conflict.ExistingID != "" {
+				return nil, &apiError{Status: status, Code: "workflow_exists", Message: "This workflow name is already in use.", ExistingID: conflict.ExistingID}
+			}
+		}
 		return nil, failure(status, "workflow_source_rejected", "The workflow API rejected this request. Review the definition or choose another name.")
 	}
 	return response.data.Bytes(), nil
@@ -75,13 +101,15 @@ func (m *Manager) sourceRequest(ctx context.Context, method, path string, body [
 
 func (m *Manager) serveImportWorkflow(w http.ResponseWriter, r *http.Request) {
 	var input struct {
-		URI  string `json:"uri"`
-		Name string `json:"name,omitempty"`
+		URI          string `json:"uri"`
+		Name         string `json:"name,omitempty"`
+		ExpectedHash string `json:"expectedHash,omitempty"`
+		YAML         string `json:"yaml,omitempty"`
 	}
-	if err := decodeRequest(w, r, &input); err != nil {
+	if err := decodeBoundedRequest(w, r, &input, 16<<20); err != nil {
 		respond(w, nil, err)
 		return
 	}
-	value, err := m.ImportWorkflow(r.Context(), input.URI, input.Name)
+	value, err := m.importWorkflow(r.Context(), input.URI, input.Name, input.ExpectedHash, input.YAML)
 	respond(w, value, err)
 }

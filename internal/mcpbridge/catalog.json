@@ -370,6 +370,12 @@
           },
           "type": "array"
         },
+        "connectionRevisions": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        },
         "connections": {
           "items": {
             "properties": {
@@ -394,6 +400,9 @@
                 "type": "string"
               },
               "name": {
+                "type": "string"
+              },
+              "revision": {
                 "type": "string"
               },
               "type": {
@@ -9584,6 +9593,12 @@
           },
           "type": "array"
         },
+        "connectionRevisions": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        },
         "connections": {
           "items": {
             "properties": {
@@ -9608,6 +9623,9 @@
                 "type": "string"
               },
               "name": {
+                "type": "string"
+              },
+              "revision": {
                 "type": "string"
               },
               "type": {
@@ -10625,6 +10643,9 @@
         "name": {
           "type": "string"
         },
+        "revision": {
+          "type": "string"
+        },
         "type": {
           "type": "string"
         },
@@ -10664,6 +10685,9 @@
           "type": "string"
         },
         "name": {
+          "type": "string"
+        },
+        "revision": {
           "type": "string"
         },
         "type": {

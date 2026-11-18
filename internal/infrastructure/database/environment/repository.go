@@ -27,6 +27,12 @@ func (r *Repository) Replace(ctx context.Context, definition Definition) error {
 		return err
 	}
 	defer func() { _ = tx.Rollback() }()
+	if _, err := tx.ExecContext(ctx, `UPDATE environments SET name=name WHERE id=?`, definition.Environment.ID); err != nil {
+		return err
+	}
+	if err := verifyConnectionRevisions(ctx, tx, definition); err != nil {
+		return err
+	}
 	var exists bool
 	if err := tx.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM environments WHERE id=?)`, definition.Environment.ID).Scan(&exists); err != nil {
 		return err
@@ -518,7 +524,7 @@ func insertEnvironment(tx *sql.Tx, definition Definition) error {
 func insertConnections(tx *sql.Tx, definition Definition) error {
 	environmentID := definition.Environment.ID
 	for _, connection := range definition.Connections {
-		configuration, err := json.Marshal(connection.Configuration)
+		configuration, err := encodeNewConnectionRevision(connection.Configuration)
 		if err != nil {
 			return err
 		}
@@ -718,7 +724,7 @@ func (r *Repository) ListConnections(ctx context.Context, environmentID string) 
 			return nil, err
 		}
 		connection.Type = domain.ConnectionType(connectionType)
-		if err := json.Unmarshal([]byte(configuration), &connection.Configuration); err != nil {
+		if err := decodeConnectionConfiguration(&connection, configuration); err != nil {
 			return nil, err
 		}
 		connections = append(connections, connection)
@@ -743,7 +749,7 @@ func (r *Repository) FindConnection(ctx context.Context, id string) (*domain.Env
 		return nil, err
 	}
 	connection.Type = domain.ConnectionType(connectionType)
-	if err := json.Unmarshal([]byte(configuration), &connection.Configuration); err != nil {
+	if err := decodeConnectionConfiguration(&connection, configuration); err != nil {
 		return nil, err
 	}
 	return &connection, nil
@@ -767,7 +773,7 @@ func (r *Repository) ListAllConnections(ctx context.Context) ([]domain.Environme
 			return nil, err
 		}
 		connection.Type = domain.ConnectionType(connectionType)
-		if err := json.Unmarshal([]byte(configuration), &connection.Configuration); err != nil {
+		if err := decodeConnectionConfiguration(&connection, configuration); err != nil {
 			return nil, err
 		}
 		connections = append(connections, connection)

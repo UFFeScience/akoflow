@@ -52,6 +52,10 @@ func (s *environmentCatalogRichStub) Delete(context.Context, string) error {
 func (s *environmentCatalogRichStub) UpsertConnection(context.Context, domain.EnvironmentConnection) error {
 	return s.err
 }
+func (s *environmentCatalogRichStub) UpdateConnectionRevision(_ context.Context, connection domain.EnvironmentConnection) (domain.EnvironmentConnection, error) {
+	connection.Revision = "updated"
+	return connection, s.err
+}
 func (s *environmentCatalogRichStub) FindConnection(context.Context, string) (*domain.EnvironmentConnection, error) {
 	return s.connection, s.err
 }
@@ -393,7 +397,7 @@ func TestExecutionListingAndConnectionOperations(t *testing.T) {
 		contains                   string
 	}{
 		{"executions", http.MethodGet, "/", "", nil, h.ListExecutions, 200, "run"}, {"executions page", http.MethodGet, "/?page=1&pageSize=10", "", nil, h.ListExecutions, 200, "pageSize"},
-		{"test connection", http.MethodPost, "/", `{"id":"connection"}`, nil, h.TestEnvironmentConnection, 200, "healthy"}, {"check", http.MethodPost, "/", "", map[string]string{"connectionId": "connection"}, h.CheckEnvironmentConnection, 200, "check"}, {"history", http.MethodGet, "/?limit=5", "", map[string]string{"connectionId": "connection"}, h.ListEnvironmentConnectionHistory, 200, "history"}, {"discover", http.MethodPost, "/", "", map[string]string{"connectionId": "connection"}, h.DiscoverEnvironmentConnection, 200, "snapshot"}, {"update", http.MethodPut, "/", `{"id":"connection","environmentId":"environment"}`, map[string]string{"connectionId": "connection"}, h.UpdateEnvironmentConnection, 200, "environment"},
+		{"test connection", http.MethodPost, "/", `{"id":"connection"}`, nil, h.TestEnvironmentConnection, 200, "healthy"}, {"check", http.MethodPost, "/", "", map[string]string{"connectionId": "connection"}, h.CheckEnvironmentConnection, 200, "check"}, {"history", http.MethodGet, "/?limit=5", "", map[string]string{"connectionId": "connection"}, h.ListEnvironmentConnectionHistory, 200, "history"}, {"discover", http.MethodPost, "/", "", map[string]string{"connectionId": "connection"}, h.DiscoverEnvironmentConnection, 200, "snapshot"}, {"update", http.MethodPut, "/", `{"id":"connection","environmentId":"environment","revision":"original"}`, map[string]string{"connectionId": "connection"}, h.UpdateEnvironmentConnection, 200, "environment"},
 	}
 	for _, test := range tests {
 		response := callHandler(t, test.method, test.target, test.body, test.values, test.handler)

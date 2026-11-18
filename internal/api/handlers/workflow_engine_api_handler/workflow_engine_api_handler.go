@@ -885,11 +885,25 @@ func (h *Handler) UpdateEnvironmentConnection(w http.ResponseWriter, r *http.Req
 		writeError(w, http.StatusUnprocessableEntity, fmt.Errorf("connection id and environment id are required"))
 		return
 	}
-	if err := h.environments.UpsertConnection(r.Context(), connection); err != nil {
-		writeError(w, http.StatusUnprocessableEntity, err)
+	if connection.Revision == "" {
+		writeError(w, http.StatusPreconditionRequired, fmt.Errorf("read the latest connection revision before saving"))
 		return
 	}
-	writeJSON(w, http.StatusOK, connection)
+	store, ok := h.environments.(ports.ConnectionRevisionStore)
+	if !ok {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("conditional connection updates are unavailable"))
+		return
+	}
+	updated, err := store.UpdateConnectionRevision(r.Context(), connection)
+	if err != nil {
+		status := http.StatusUnprocessableEntity
+		if errors.Is(err, ports.ErrConnectionRevisionConflict) {
+			status = http.StatusConflict
+		}
+		writeError(w, status, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, updated)
 }
 
 func (h *Handler) ListEnvironmentConnectionHistory(w http.ResponseWriter, r *http.Request) {
@@ -2343,6 +2357,10 @@ func (h *Handler) ReplaceEnvironment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err := h.environments.Replace(r.Context(), definition); err != nil {
+		if errors.Is(err, ports.ErrConnectionRevisionConflict) {
+			writeError(w, http.StatusConflict, err)
+			return
+		}
 		if err == sql.ErrNoRows {
 			writeError(w, http.StatusNotFound, fmt.Errorf("environment not found"))
 			return

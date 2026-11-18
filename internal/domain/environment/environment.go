@@ -64,6 +64,7 @@ type Environment struct {
 }
 
 type EnvironmentConnection struct {
+	Revision      string         `json:"revision,omitempty"`
 	ID            string         `json:"id"`
 	EnvironmentID string         `json:"environmentId"`
 	Name          string         `json:"name"`
@@ -143,15 +144,16 @@ type ExecutionScope struct {
 }
 
 type Definition struct {
-	Environment       Environment                        `json:"environment"`
-	Version           EnvironmentVersion                 `json:"version"`
-	Runtimes          []EnvironmentRuntime               `json:"runtimes"`
-	Resources         []resource.Resource                `json:"resources"`
-	RuntimeBindings   []resource.ResourceRuntimeBinding  `json:"resourceRuntimeBindings,omitempty"`
-	Relations         []resource.ResourceRelation        `json:"resourceRelations,omitempty"`
-	Storages          []resource.StorageResource         `json:"storages,omitempty"`
-	Profiles          []workflow.ActivityResourceProfile `json:"activityResourceProfiles,omitempty"`
-	Connections       []EnvironmentConnection            `json:"connections,omitempty"`
-	ConnectionChecks  []ConnectionCheck                  `json:"connectionChecks,omitempty"`
-	ConnectorBindings []ConnectorBinding                 `json:"connectorBindings,omitempty"`
+	ConnectionRevisions map[string]string                  `json:"connectionRevisions,omitempty"`
+	Environment         Environment                        `json:"environment"`
+	Version             EnvironmentVersion                 `json:"version"`
+	Runtimes            []EnvironmentRuntime               `json:"runtimes"`
+	Resources           []resource.Resource                `json:"resources"`
+	RuntimeBindings     []resource.ResourceRuntimeBinding  `json:"resourceRuntimeBindings,omitempty"`
+	Relations           []resource.ResourceRelation        `json:"resourceRelations,omitempty"`
+	Storages            []resource.StorageResource         `json:"storages,omitempty"`
+	Profiles            []workflow.ActivityResourceProfile `json:"activityResourceProfiles,omitempty"`
+	Connections         []EnvironmentConnection            `json:"connections,omitempty"`
+	ConnectionChecks    []ConnectionCheck                  `json:"connectionChecks,omitempty"`
+	ConnectorBindings   []ConnectorBinding                 `json:"connectorBindings,omitempty"`
 }

@@ -110,7 +110,8 @@ func TestPublishedAttemptTimingTracksRetriesAndSanitizesKernel(t *testing.T) {
 			{"category":"sif-register","activityId":"step","attempt":2,"status":"completed","durationSeconds":0.5},
 			{"category":"image-build","activityId":"other","attempt":2,"status":"completed","durationSeconds":99}
 		]},
-		"handles":[{"id":"run:step:attempt-2","metadata":{"slurmEnvironment":{"os":"linux","kernel":"6.12.62-1-private-host.example","architecture":"amd64"}},"artifacts":{"runId":"run","activityId":"step","attempt":2,"initialSnapshot":[{"path":"private-input-path","sizeBytes":14},{"path":"other","sizeBytes":6}]}}]
+		"handles":[{"id":"run:step:attempt-2","metadata":{"slurmEnvironment":{"os":"linux","kernel":"6.12.62-1-private-host.example","architecture":"amd64"}},"artifacts":{"runId":"run","activityId":"step","attempt":2,
+		  "initialSnapshot":[{"path":"private-input-path","sizeBytes":14},{"path":"other","sizeBytes":6}]}}]
 	}`), &run)
 	if err != nil {
 		t.Fatal(err)

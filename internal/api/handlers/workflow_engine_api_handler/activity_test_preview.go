@@ -82,32 +82,9 @@ func (h *Handler) buildActivityTestPreview(ctx context.Context, runID, activityI
 	if err := json.Unmarshal(job.Payload, &request); err != nil {
 		return empty, fmt.Errorf("decode original execution request: %w", err)
 	}
-	tasks, err := h.executions.ListTasks(ctx, runID)
+	selectedAttempt, manifest, err := h.recordedActivityAttempt(ctx, runID, activityID, attempt)
 	if err != nil {
 		return empty, err
-	}
-	var selected *domain.TaskExecution
-	for _, task := range tasks {
-		if task.ActivityID == activityID && (attempt == 0 || task.Attempt == attempt) &&
-			(selected == nil || task.Attempt > selected.Attempt) {
-			copy := task
-			selected = &copy
-		}
-	}
-	if selected == nil || selected.StartedAt == 0 {
-		return empty, fmt.Errorf("the selected activity attempt did not start")
-	}
-	handles, err := h.executions.ListHandles(ctx, runID)
-	if err != nil {
-		return empty, err
-	}
-	var manifest *domain.ArtifactManifest
-	for _, handle := range handles {
-		if item := handle.Artifacts; item != nil && item.RunID == runID &&
-			item.ActivityID == activityID && item.Attempt == selected.Attempt {
-			manifest = item
-			break
-		}
 	}
 	var workspaces []domain.ActivityWorkspace
 	if store, ok := h.executions.(WorkspaceQuery); ok {
@@ -116,7 +93,7 @@ func (h *Handler) buildActivityTestPreview(ctx context.Context, runID, activityI
 			return empty, err
 		}
 	}
-	preview, err := describeActivityTest(request.Workflow, runID, activityID, selected.Attempt, manifest, workspaces)
+	preview, err := describeActivityTest(request.Workflow, runID, activityID, selectedAttempt, manifest, workspaces)
 	if err != nil {
 		return empty, err
 	}
@@ -134,7 +111,7 @@ func (h *Handler) buildActivityTestPreview(ctx context.Context, runID, activityI
 		}
 	}
 	if changed {
-		preview, err = describeActivityTest(request.Workflow, runID, activityID, selected.Attempt, manifest, workspaces)
+		preview, err = describeActivityTest(request.Workflow, runID, activityID, selectedAttempt, manifest, workspaces)
 		if err != nil {
 			return empty, err
 		}
@@ -154,6 +131,37 @@ func (h *Handler) buildActivityTestPreview(ctx context.Context, runID, activityI
 	}
 	preview.Revision = fmt.Sprintf("%x", sha256.Sum256(payload))
 	return preview, nil
+}
+
+func (h *Handler) recordedActivityAttempt(ctx context.Context, runID, activityID string, attempt int) (int, *domain.ArtifactManifest, error) {
+	tasks, err := h.executions.ListTasks(ctx, runID)
+	if err != nil {
+		return 0, nil, err
+	}
+	var selected *domain.TaskExecution
+	for _, task := range tasks {
+		if task.ActivityID == activityID && (attempt == 0 || task.Attempt == attempt) &&
+			(selected == nil || task.Attempt > selected.Attempt) {
+			copy := task
+			selected = &copy
+		}
+	}
+	if selected == nil || selected.StartedAt == 0 {
+		return 0, nil, fmt.Errorf("the selected activity attempt did not start")
+	}
+	handles, err := h.executions.ListHandles(ctx, runID)
+	if err != nil {
+		return 0, nil, err
+	}
+	var manifest *domain.ArtifactManifest
+	for _, handle := range handles {
+		if item := handle.Artifacts; item != nil && item.RunID == runID &&
+			item.ActivityID == activityID && item.Attempt == selected.Attempt {
+			manifest = item
+			break
+		}
+	}
+	return selected.Attempt, manifest, nil
 }
 
 func describeActivityTest(workflow domain.WorkflowVersion, runID, activityID string, attempt int, manifest *domain.ArtifactManifest, workspaces []domain.ActivityWorkspace) (activityTestPreview, error) {

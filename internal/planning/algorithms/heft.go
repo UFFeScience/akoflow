@@ -90,13 +90,7 @@ func (HEFT) Schedule(ctx context.Context, request domain.PlanningRequest, _ map[
 			return fmt.Errorf("no feasible resource for activity %q", activity.ID)
 		}
 		commitHEFTPlacement(&state, activity, index, *selected)
-		calendar := calendars[selected.core]
-		interval := heftInterval{selected.start - selected.resource.ContainerOverhead, selected.finish, len(state.assignments) - 1}
-		position := sort.Search(len(calendar), func(i int) bool { return calendar[i].start > interval.start })
-		calendar = append(calendar, heftInterval{})
-		copy(calendar[position+1:], calendar[position:])
-		calendar[position] = interval
-		calendars[selected.core] = calendar
+		recordHEFTInterval(calendars, selected, len(state.assignments)-1)
 		if progress != nil {
 			_ = progress.Report(ctx, float64(index+1)/float64(len(order)), activity.ID)
 		}
@@ -118,6 +112,16 @@ func (HEFT) Schedule(ctx context.Context, request domain.PlanningRequest, _ map[
 	plan.Metadata["rank"] = "average-feasible-node-runtime-plus-average-directed-communication"
 	plan.Metadata["coreExtension"] = "independent lanes within each physical resource; same-resource communication is zero"
 	return sink.Emit(ctx, plan)
+}
+
+func recordHEFTInterval(calendars map[string][]heftInterval, selected *heftPlacement, assignmentIndex int) {
+	calendar := calendars[selected.core]
+	interval := heftInterval{selected.start - selected.resource.ContainerOverhead, selected.finish, assignmentIndex}
+	position := sort.Search(len(calendar), func(i int) bool { return calendar[i].start > interval.start })
+	calendar = append(calendar, heftInterval{})
+	copy(calendar[position+1:], calendar[position:])
+	calendar[position] = interval
+	calendars[selected.core] = calendar
 }
 
 func heftReadyAt(

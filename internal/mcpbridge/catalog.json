@@ -147,6 +147,27 @@
     }
   },
   {
+    "name": "create_activity_test",
+    "method": "POST",
+    "path": "/akoflow-api/execution-runs/{runId}/activities/{activityId}/test/",
+    "handler": "CreateActivityTest",
+    "description": "create activity test. POST /akoflow-api/execution-runs/{runId}/activities/{activityId}/test/. Uses the daemon API and its domain validation.",
+    "body": {
+      "properties": {
+        "attempt": {
+          "type": "integer"
+        },
+        "revision": {
+          "type": "string"
+        },
+        "submissionId": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
     "name": "create_artifact_build",
     "method": "POST",
     "path": "/akoflow-api/artifact-builds/",
@@ -319,6 +340,9 @@
         "activityResourceProfiles": {
           "items": {
             "properties": {
+              "activityId": {
+                "type": "string"
+              },
               "activityTypeId": {
                 "type": "string"
               },
@@ -955,6 +979,9 @@
         "activityProfiles": {
           "items": {
             "properties": {
+              "activityId": {
+                "type": "string"
+              },
               "activityTypeId": {
                 "type": "string"
               },
@@ -1002,6 +1029,58 @@
             "type": "object"
           },
           "type": "array"
+        },
+        "activityTest": {
+          "anyOf": [
+            {
+              "properties": {
+                "activityId": {
+                  "type": "string"
+                },
+                "attempt": {
+                  "type": "integer"
+                },
+                "inputs": {
+                  "additionalProperties": {
+                    "items": {
+                      "properties": {
+                        "entries": {
+                          "items": {
+                            "properties": {
+                              "digest": {
+                                "type": "string"
+                              },
+                              "path": {
+                                "type": "string"
+                              },
+                              "sizeBytes": {
+                                "type": "integer"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "producerActivityId": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "type": "object"
+                },
+                "runId": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "executionScope": {
           "properties": {
@@ -1390,6 +1469,23 @@
                       "executionRunId": {
                         "type": "string"
                       },
+                      "expectedWorkspaceEntries": {
+                        "items": {
+                          "properties": {
+                            "digest": {
+                              "type": "string"
+                            },
+                            "path": {
+                              "type": "string"
+                            },
+                            "sizeBytes": {
+                              "type": "integer"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
                       "id": {
                         "type": "string"
                       },
@@ -1766,6 +1862,9 @@
                   }
                 ]
               },
+              "sifImage": {
+                "type": "string"
+              },
               "workspace": {
                 "anyOf": [
                   {
@@ -1959,6 +2058,23 @@
                       },
                       "executionRunId": {
                         "type": "string"
+                      },
+                      "expectedWorkspaceEntries": {
+                        "items": {
+                          "properties": {
+                            "digest": {
+                              "type": "string"
+                            },
+                            "path": {
+                              "type": "string"
+                            },
+                            "sizeBytes": {
+                              "type": "integer"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
                       },
                       "id": {
                         "type": "string"
@@ -2382,6 +2498,23 @@
                     },
                     "executionRunId": {
                       "type": "string"
+                    },
+                    "expectedWorkspaceEntries": {
+                      "items": {
+                        "properties": {
+                          "digest": {
+                            "type": "string"
+                          },
+                          "path": {
+                            "type": "string"
+                          },
+                          "sizeBytes": {
+                            "type": "integer"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "type": "array"
                     },
                     "id": {
                       "type": "string"
@@ -3463,6 +3596,9 @@
         "activityProfiles": {
           "items": {
             "properties": {
+              "activityId": {
+                "type": "string"
+              },
               "activityTypeId": {
                 "type": "string"
               },
@@ -3510,6 +3646,58 @@
             "type": "object"
           },
           "type": "array"
+        },
+        "activityTest": {
+          "anyOf": [
+            {
+              "properties": {
+                "activityId": {
+                  "type": "string"
+                },
+                "attempt": {
+                  "type": "integer"
+                },
+                "inputs": {
+                  "additionalProperties": {
+                    "items": {
+                      "properties": {
+                        "entries": {
+                          "items": {
+                            "properties": {
+                              "digest": {
+                                "type": "string"
+                              },
+                              "path": {
+                                "type": "string"
+                              },
+                              "sizeBytes": {
+                                "type": "integer"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "producerActivityId": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "type": "object"
+                },
+                "runId": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "executionScope": {
           "properties": {
@@ -3898,6 +4086,23 @@
                       "executionRunId": {
                         "type": "string"
                       },
+                      "expectedWorkspaceEntries": {
+                        "items": {
+                          "properties": {
+                            "digest": {
+                              "type": "string"
+                            },
+                            "path": {
+                              "type": "string"
+                            },
+                            "sizeBytes": {
+                              "type": "integer"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
                       "id": {
                         "type": "string"
                       },
@@ -4274,6 +4479,9 @@
                   }
                 ]
               },
+              "sifImage": {
+                "type": "string"
+              },
               "workspace": {
                 "anyOf": [
                   {
@@ -4467,6 +4675,23 @@
                       },
                       "executionRunId": {
                         "type": "string"
+                      },
+                      "expectedWorkspaceEntries": {
+                        "items": {
+                          "properties": {
+                            "digest": {
+                              "type": "string"
+                            },
+                            "path": {
+                              "type": "string"
+                            },
+                            "sizeBytes": {
+                              "type": "integer"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
                       },
                       "id": {
                         "type": "string"
@@ -4890,6 +5115,23 @@
                     },
                     "executionRunId": {
                       "type": "string"
+                    },
+                    "expectedWorkspaceEntries": {
+                      "items": {
+                        "properties": {
+                          "digest": {
+                            "type": "string"
+                          },
+                          "path": {
+                            "type": "string"
+                          },
+                          "sizeBytes": {
+                            "type": "integer"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "type": "array"
                     },
                     "id": {
                       "type": "string"
@@ -8188,6 +8430,16 @@
     ]
   },
   {
+    "name": "get_activity_test_preview",
+    "method": "GET",
+    "path": "/akoflow-api/execution-runs/{runId}/activities/{activityId}/test-preview/",
+    "handler": "GetActivityTestPreview",
+    "description": "get activity test preview. GET /akoflow-api/execution-runs/{runId}/activities/{activityId}/test-preview/. Uses the daemon API and its domain validation.",
+    "query": [
+      "attempt"
+    ]
+  },
+  {
     "name": "get_artifact_build",
     "method": "GET",
     "path": "/akoflow-api/artifact-builds/{buildId}/",
@@ -8521,6 +8773,13 @@
     "description": "hub disconnect. DELETE /akoflow-api/hub/connection/. Uses the daemon API and its domain validation."
   },
   {
+    "name": "hub_get_activity_estimates",
+    "method": "POST",
+    "path": "/akoflow-api/hub/workflow/activity-estimates/",
+    "handler": "serveActivityEstimates",
+    "description": "hub get activity estimates. POST /akoflow-api/hub/workflow/activity-estimates/. Uses the daemon API and its domain validation."
+  },
+  {
     "name": "hub_get_contribution_destination",
     "method": "GET",
     "path": "/akoflow-api/hub/publications/{publicationId}/contribution-destination/",
@@ -8639,6 +8898,24 @@
     }
   },
   {
+    "name": "hub_preview_profile_execution",
+    "method": "POST",
+    "path": "/akoflow-api/hub/profile-executions/preview/",
+    "handler": "serveProfileExecutionPreview",
+    "description": "hub preview profile execution. POST /akoflow-api/hub/profile-executions/preview/. Uses the daemon API and its domain validation.",
+    "body": {
+      "properties": {
+        "machineLabel": {
+          "type": "string"
+        },
+        "runId": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
     "name": "hub_preview_workflow",
     "method": "POST",
     "path": "/akoflow-api/hub/publications/workflow-preview/",
@@ -8653,6 +8930,45 @@
           "type": "string"
         },
         "workflowId": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
+    "name": "hub_review_activity_estimates",
+    "method": "POST",
+    "path": "/akoflow-api/hub/workflow/activity-estimate-review/",
+    "handler": "serveActivityEstimateReview",
+    "description": "hub review activity estimates. POST /akoflow-api/hub/workflow/activity-estimate-review/. Uses the daemon API and its domain validation.",
+    "body": {
+      "properties": {
+        "hash": {
+          "type": "string"
+        },
+        "reference": {
+          "anyOf": [
+            {
+              "properties": {
+                "experimentId": {
+                  "type": "string"
+                },
+                "runId": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "resourceId": {
+          "type": "string"
+        },
+        "uri": {
           "type": "string"
         }
       },
@@ -9697,6 +10013,9 @@
         "activityResourceProfiles": {
           "items": {
             "properties": {
+              "activityId": {
+                "type": "string"
+              },
               "activityTypeId": {
                 "type": "string"
               },

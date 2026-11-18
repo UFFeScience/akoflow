@@ -26,7 +26,8 @@ func appendImagePreparation(timeline *domain.ExecutionTimeline, observations []d
 			continue
 		}
 		switch observation.Kind {
-		case domainexecution.ImagePreparationPull, domainexecution.ImagePreparationBuild, domainexecution.ImagePreparationPush, domainexecution.ImagePreparationSIF, domainexecution.ImagePreparationRegister, domainexecution.ImagePreparationCacheHit:
+		case domainexecution.ImagePreparationPull, domainexecution.ImagePreparationBuild,
+			domainexecution.ImagePreparationPush, domainexecution.ImagePreparationSIF, domainexecution.ImagePreparationRegister, domainexecution.ImagePreparationCacheHit:
 		default:
 			continue
 		}

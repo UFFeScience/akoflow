@@ -493,7 +493,8 @@ func TestInspectionDeadlineDoesNotTurnTimeoutIntoTerminalStatus(t *testing.T) {
 }
 
 func TestSentinelRecordsContainerStartupTiming(t *testing.T) {
-	executor := &executorFake{output: []byte("state=completed\nexit_code=0\nstarted_at=100\nallocated_node=bora017\ncontainer_started_at=103.25\nnode_arch=x86_64\nnode_cpus=32\nnode_memory_kib=65536\nnode_cpu_model=Test CPU\nnode_os=linux\nnode_kernel=6.12.62\n")}
+	executor := &executorFake{output: []byte("state=completed\nexit_code=0\nstarted_at=100\nallocated_node=bora017\n" +
+		"container_started_at=103.25\nnode_arch=x86_64\nnode_cpus=32\nnode_memory_kib=65536\nnode_cpu_model=Test CPU\nnode_os=linux\nnode_kernel=6.12.62\n")}
 	handle, found := New(executor, "").sentinelStatus(context.Background(), domain.ActivityHandle{
 		Metadata: map[string]any{"sentinelPath": "status"},
 	})

@@ -136,15 +136,20 @@ func TestArtifactBuildCatalogLifecycle(t *testing.T) {
 	}
 	assertArtifactCatalog(t, repository, ctx)
 	assertSelectableArtifacts(t, repository, ctx, true)
+	assertSIFCatalogProvenance(t, repository, ctx, variant.ID, digest, sourceDigest)
+}
+
+func assertSIFCatalogProvenance(t *testing.T, repository *Repository, ctx context.Context, variantID, digest, sourceDigest string) {
+	t.Helper()
 	locations, err := repository.ListArtifactLocations(ctx)
 	if err != nil || len(locations) != 1 {
 		t.Fatalf("locations = %#v, %v", locations, err)
 	}
 	handle := domain.ActivityHandle{Metadata: map[string]any{"imageObservation": map[string]any{
-		"status": "observed", "sifVariantId": variant.ID, "sifDigest": digest,
+		"status": "observed", "sifVariantId": variantID, "sifDigest": digest,
 	}}}
 	link, err := repository.CatalogExecutionImage(ctx, handle)
-	if err != nil || link["variantId"] != variant.ID || link["sourceVariantId"] == "" || link["sourceDigest"] != sourceDigest {
+	if err != nil || link["variantId"] != variantID || link["sourceVariantId"] == "" || link["sourceDigest"] != sourceDigest {
 		t.Fatalf("unexpected SIF provenance: %+v, %v", link, err)
 	}
 	locations, err = repository.ListArtifactLocations(ctx)

@@ -75,12 +75,7 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 	}
 	partition, node := slurmPlacement(a.partition, execution.Resource)
 	activity := execution.Activity
-	if activity.Command.WorkingDirectory == "" {
-		activity.Command.WorkingDirectory = slurmArtifactRoot(execution.Run.ID, activity.ID)
-		if root, _ := execution.Resource.Metadata["homeDirectory"].(string); filepath.IsAbs(root) {
-			activity.Command.WorkingDirectory = filepath.Join(root, activity.Command.WorkingDirectory)
-		}
-	}
+	activity = withBatchWorkspace(execution, activity)
 	plannedNode := node
 	fallbackFeatures := ""
 	fallbackExcluded := ""
@@ -141,6 +136,16 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 			"artifactObservationDriver": "filesystem-diff", "artifactObservationRoot": activity.Command.WorkingDirectory}}
 	prepareImageObservation(&handle, activity.Command)
 	return handle, nil
+}
+
+func withBatchWorkspace(execution domain.ActivityExecutionContext, activity domain.Activity) domain.Activity {
+	if activity.Command.WorkingDirectory == "" {
+		activity.Command.WorkingDirectory = slurmArtifactRoot(execution.Run.ID, activity.ID)
+		if root, _ := execution.Resource.Metadata["homeDirectory"].(string); filepath.IsAbs(root) {
+			activity.Command.WorkingDirectory = filepath.Join(root, activity.Command.WorkingDirectory)
+		}
+	}
+	return activity
 }
 
 func slurmPlacement(defaultPartition string, resource domain.Resource) (string, string) {
@@ -693,32 +698,10 @@ func batchScript(runID string, activity domain.Activity, partition, node string)
 	script.WriteString(")\nsentinel=\"${sentinel}${SLURM_JOB_ID}.status\"\n")
 	script.WriteString("artifact_root=")
 	script.WriteString(shellQuote(activity.Command.WorkingDirectory))
-	script.WriteString("\nmkdir -p \"$artifact_root\"\nartifact_root=$(cd \"$artifact_root\" && pwd -P)\ncontainer_start_directory=$(mktemp -d \"$artifact_root/.akoflow-container-start.XXXXXX\")\ncontainer_start_marker=\"$container_start_directory/started\"\nartifact_before=$(mktemp)\nartifact_after=$(mktemp)\nseed_links=$(mktemp)\nseed_list=$(mktemp)\n")
-	script.WriteString(`snapshot_artifacts() { destination=$1; : > "$destination"; find "$artifact_root" -type f -exec sh -c '
-root=$1; destination=$2; shift 2
-for file do relative=${file#"$root"/}; size=$(wc -c < "$file") || exit 1; checksum=$(sha256sum "$file" | awk "{print \$1}") || exit 1; encoded=$(printf "%s" "$relative" | base64 | tr -d "\\n"); printf "%s|%s|%s\\n" "$encoded" "$size" "$checksum" >> "$destination"; done
-' snapshot "$artifact_root" "$destination" {} +; sort -o "$destination" "$destination"; }
-`)
-	script.WriteString(`node_arch=$(uname -m 2>/dev/null || true)
-node_os=$(uname -s 2>/dev/null | tr "[:upper:]" "[:lower:]" || true)
-node_kernel=$(uname -r 2>/dev/null || true)
-node_cpus=$(getconf _NPROCESSORS_ONLN 2>/dev/null || true)
-node_memory_kib=$(awk '/^MemTotal:/ { print $2; exit }' /proc/meminfo 2>/dev/null || true)
-node_allocated_gpus=${SLURM_GPUS_ON_NODE:-}
-node_gpu_capacity=
-case "$node_allocated_gpus" in
-  ""|0|*[!0-9]*) ;;
-  *) node_gpu_capacity=$(timeout 2s scontrol show node "$(hostname -s)" -o 2>/dev/null | awk '
-      {for (i=1;i<=NF;i++) if ($i ~ /^CfgTRES=/) {
-        n=split($i,items,","); for (j=1;j<=n;j++) if (items[j] ~ /^gres\/gpu=[0-9]+$/) {sub(/^gres\/gpu=/,"",items[j]); print items[j]; exit}
-      }}') ;;
-esac
-
-node_cpu_model=$(awk -F: '/^model name[[:space:]]*:/ { sub(/^[[:space:]]+/, "", $2); print $2; exit }' /proc/cpuinfo 2>/dev/null || true)
-write_node_facts() {
-  printf 'node_arch=%s\nnode_cpus=%s\nnode_memory_kib=%s\nnode_cpu_model=%s\nnode_os=%s\nnode_kernel=%s\nnode_allocated_gpus=%s\nnode_gpu_capacity=%s\ncontainer_runtime_version=%s\n' "$node_arch" "$node_cpus" "$node_memory_kib" "$node_cpu_model" "$node_os" "$node_kernel" "$node_allocated_gpus" "$node_gpu_capacity" "${container_runtime_version:-}"
-}
-`)
+	script.WriteString("\nmkdir -p \"$artifact_root\"\nartifact_root=$(cd \"$artifact_root\" && pwd -P)\n" +
+		"container_start_directory=$(mktemp -d \"$artifact_root/.akoflow-container-start.XXXXXX\")\ncontainer_start_marker=\"$container_start_directory/started\"\n" +
+		"artifact_before=$(mktemp)\nartifact_after=$(mktemp)\nseed_links=$(mktemp)\nseed_list=$(mktemp)\n")
+	writeBatchObservationHelpers(&script)
 	script.WriteString(`started_at=$(date +%s.%N)
 allocated_node=$(hostname -s)
 container_epoch_anchor=$(date +%s.%N)
@@ -738,7 +721,8 @@ write_node_facts >> "$sentinel"
 	script.WriteString("finish() { code=$?; set +e; state=completed; [ \"$code\" -eq 0 ] || state=failed; ")
 	script.WriteString("[ -z \"$metric_pid\" ] || { kill \"$metric_pid\" 2>/dev/null || true; wait \"$metric_pid\" 2>/dev/null || true; }; ")
 	script.WriteString("[ -z \"$metric_pid\" ] || sample_metrics; ")
-	script.WriteString("container_started_at=0; if [ -f \"$container_start_marker\" ]; then container_uptime=$(cat \"$container_start_marker\"); container_started_at=$(awk -v epoch=\"$container_epoch_anchor\" -v anchor=\"$container_uptime_anchor\" -v current=\"$container_uptime\" 'BEGIN { printf \"%.9f\", epoch + current - anchor }'); fi; rm -f -- \"$container_start_marker\"; rmdir -- \"$container_start_directory\"; ")
+	script.WriteString("container_started_at=0; if [ -f \"$container_start_marker\" ]; then container_uptime=$(cat \"$container_start_marker\"); ")
+	script.WriteString("container_started_at=$(awk -v epoch=\"$container_epoch_anchor\" -v anchor=\"$container_uptime_anchor\" -v current=\"$container_uptime\" 'BEGIN { printf \"%.9f\", epoch + current - anchor }'); fi; rm -f -- \"$container_start_marker\"; rmdir -- \"$container_start_directory\"; ")
 	script.WriteString("while IFS= read -r seed_link; do [ -L \"$seed_link\" ] && rm -f -- \"$seed_link\"; done < \"$seed_links\"; ")
 	script.WriteString("snapshot_artifacts \"$artifact_after\" || true; ")
 	script.WriteString("finished_at=$(date +%s.%N); { printf 'state=%s\\nexit_code=%s\\nstarted_at=%s\\nfinished_at=%s\\nallocated_node=%s\\ncontainer_started_at=%s\\nartifact_root=%s\\n' \"$state\" \"$code\" \"$started_at\" \"$finished_at\" \"$allocated_node\" \"$container_started_at\" \"$artifact_root\"; ")
@@ -746,7 +730,8 @@ write_node_facts >> "$sentinel"
 	script.WriteString("while IFS= read -r entry; do printf 'initial=%s\\n' \"$entry\"; done < \"$artifact_before\"; ")
 	script.WriteString("while IFS= read -r entry; do printf 'final=%s\\n' \"$entry\"; done < \"$artifact_after\"; ")
 	// Publish the complete manifest atomically before readers skip accounting.
-	script.WriteString("printf 'publication_complete=1\\n'; } > \"${sentinel}.publishing.$$\" && mv -f -- \"${sentinel}.publishing.$$\" \"$sentinel\"; rm -f \"${sentinel}.publishing.$$\" \"$artifact_before\" \"$artifact_after\" \"$container_start_marker\" \"$seed_links\" \"$seed_list\"; exit \"$code\"; }\n")
+	script.WriteString("printf 'publication_complete=1\\n'; } > \"${sentinel}.publishing.$$\" && mv -f -- \"${sentinel}.publishing.$$\" \"$sentinel\"; ")
+	script.WriteString("rm -f \"${sentinel}.publishing.$$\" \"$artifact_before\" \"$artifact_after\" \"$container_start_marker\" \"$seed_links\" \"$seed_list\"; exit \"$code\"; }\n")
 	script.WriteString("trap finish EXIT\nset -eu\n")
 	image, err := slurmExecutable(activity.Command)
 	if err != nil {
@@ -760,6 +745,40 @@ write_node_facts >> "$sentinel"
 		return "", err
 	}
 	return script.String(), nil
+}
+
+func writeBatchObservationHelpers(script *strings.Builder) {
+	script.WriteString(`snapshot_artifacts() { destination=$1; : > "$destination"; find "$artifact_root" -type f -exec sh -c '
+root=$1; destination=$2; shift 2
+for file do
+  relative=${file#"$root"/}; size=$(wc -c < "$file") || exit 1; checksum=$(sha256sum "$file" | awk "{print \$1}") || exit 1
+  encoded=$(printf "%s" "$relative" | base64 | tr -d "\\n")
+  printf "%s|%s|%s\\n" "$encoded" "$size" "$checksum" >> "$destination"
+done
+' snapshot "$artifact_root" "$destination" {} +; sort -o "$destination" "$destination"; }
+`)
+	script.WriteString(`node_arch=$(uname -m 2>/dev/null || true)
+node_os=$(uname -s 2>/dev/null | tr "[:upper:]" "[:lower:]" || true)
+node_kernel=$(uname -r 2>/dev/null || true)
+node_cpus=$(getconf _NPROCESSORS_ONLN 2>/dev/null || true)
+node_memory_kib=$(awk '/^MemTotal:/ { print $2; exit }' /proc/meminfo 2>/dev/null || true)
+node_allocated_gpus=${SLURM_GPUS_ON_NODE:-}
+node_gpu_capacity=
+case "$node_allocated_gpus" in
+  ""|0|*[!0-9]*) ;;
+  *) node_gpu_capacity=$(timeout 2s scontrol show node "$(hostname -s)" -o 2>/dev/null | awk '
+      {for (i=1;i<=NF;i++) if ($i ~ /^CfgTRES=/) {
+        n=split($i,items,","); for (j=1;j<=n;j++) if (items[j] ~ /^gres\/gpu=[0-9]+$/) {sub(/^gres\/gpu=/,"",items[j]); print items[j]; exit}
+      }}') ;;
+esac
+
+node_cpu_model=$(awk -F: '/^model name[[:space:]]*:/ { sub(/^[[:space:]]+/, "", $2); print $2; exit }' /proc/cpuinfo 2>/dev/null || true)
+write_node_facts() {
+  printf 'node_arch=%s\nnode_cpus=%s\nnode_memory_kib=%s\nnode_cpu_model=%s\nnode_os=%s\nnode_kernel=%s\nnode_allocated_gpus=%s\nnode_gpu_capacity=%s\ncontainer_runtime_version=%s\n' \
+    "$node_arch" "$node_cpus" "$node_memory_kib" "$node_cpu_model" "$node_os" "$node_kernel" \
+    "$node_allocated_gpus" "$node_gpu_capacity" "${container_runtime_version:-}"
+}
+`)
 }
 
 func writeSharedImageSeedPreparation(script *strings.Builder, image string) {

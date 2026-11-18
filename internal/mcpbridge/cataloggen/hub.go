@@ -2,6 +2,9 @@ package main
 
 func hubToolName(handler string) string {
 	names := map[string]string{
+		"serveActivityEstimates":       "hub_get_activity_estimates",
+		"serveActivityEstimateReview":  "hub_review_activity_estimates",
+		"serveProfileExecutionPreview": "hub_preview_profile_execution",
 		"serveStatus":                  "hub_status",
 		"serveSettings":                "hub_update_settings",
 		"serveStart":                   "hub_start_authorization",

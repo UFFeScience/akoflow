@@ -18,15 +18,19 @@ func TestAdapterRunsDockerActivityDetached(t *testing.T) {
 	if _, err := exec.LookPath("docker"); err != nil {
 		t.Skip("docker is unavailable")
 	}
-	if err := exec.Command("docker", "image", "inspect", "busybox:1.36").Run(); err != nil {
-		t.Skip("busybox:1.36 is unavailable")
+	image := os.Getenv("AKOFLOW_TEST_DOCKER_IMAGE")
+	if image == "" {
+		image = "busybox:1.36"
+	}
+	if err := exec.Command("docker", "image", "inspect", image).Run(); err != nil {
+		t.Skipf("Docker fixture %s is unavailable", image)
 	}
 	root := t.TempDir()
 	adapter := New()
 	handle, err := adapter.Start(context.Background(), domain.ActivityExecutionContext{
 		Run: domain.ExecutionRun{ID: "docker-run"},
 		Activity: domain.Activity{ID: "activity", Command: domain.ActivityCommand{
-			Image: "busybox:1.36", Entrypoint: "sh", Arguments: []string{"-c", "printf result > output.txt"}, WorkingDirectory: root,
+			Image: image, Entrypoint: "sh", Arguments: []string{"-c", "printf result > output.txt"}, WorkingDirectory: root,
 		}},
 		Resource: domain.Resource{ID: "local"}, RuntimeID: "local",
 	})
@@ -37,6 +41,13 @@ func TestAdapterRunsDockerActivityDetached(t *testing.T) {
 	if handle.ExternalID == "" || handle.Metadata["executionTarget"] != "local-docker" {
 		t.Fatalf("handle=%+v", handle)
 	}
+	observed, _ := handle.Metadata["imageObservation"].(map[string]any)
+	imageID, _ := observed["runtimeImageId"].(string)
+	if observed["status"] != "observed" || observed["requestedReference"] != image ||
+		!dockerImageID.MatchString(imageID) || observed["platform"] == "" {
+		t.Fatalf("image observation = %+v", observed)
+	}
+	t.Logf("requested=%s observed=%s platform=%s", image, imageID, observed["platform"])
 	deadline := time.Now().Add(5 * time.Second)
 	for handle.Status == domain.HandleRunning && time.Now().Before(deadline) {
 		time.Sleep(50 * time.Millisecond)

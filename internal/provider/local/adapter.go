@@ -196,6 +196,7 @@ func (a *Adapter) startContainer(ctx context.Context, execution domain.ActivityE
 			"artifactObservationRoot": root, "localContainerName": name, "executionTarget": "local-docker",
 		}}
 	handle.Metadata["dockerEnvironment"] = dockerEnvironment(ctx, warning != "")
+	handle.Metadata["imageObservation"] = containerImageObservation(ctx, containerID, image)
 	if allocatedCPU > 0 && allocatedMemory > 0 {
 		handle.Metadata["dockerLimits"] = map[string]any{"cpu": allocatedCPU, "memoryBytes": allocatedMemory}
 	}

@@ -57,11 +57,15 @@ func (m *Manager) HistoricalProfiles(ctx context.Context, workflow domain.Workfl
 			if !found {
 				continue
 			}
+			metadata := map[string]any{"minSeconds": estimate.MinSeconds, "maxSeconds": estimate.MaxSeconds}
+			if estimate.PreparationMedianSeconds != nil && *estimate.PreparationMedianSeconds >= 0 {
+				metadata["preparationMedianSeconds"] = *estimate.PreparationMedianSeconds
+			}
 			profiles = append(profiles, domain.ActivityResourceProfile{
 				ID:         "hub-history:" + activity.ID + ":" + resource.ID,
 				ActivityID: activity.ID, ResourceID: resource.ID, RuntimeSeconds: estimate.MedianSeconds,
 				Source: "hub-history", SampleSize: estimate.SampleCount,
-				Metadata: map[string]any{"minSeconds": estimate.MinSeconds, "maxSeconds": estimate.MaxSeconds},
+				Metadata: metadata,
 			})
 		}
 	}

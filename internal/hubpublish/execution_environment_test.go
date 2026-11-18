@@ -106,6 +106,7 @@ func TestPublishedAttemptTimingTracksRetriesAndSanitizesKernel(t *testing.T) {
 			{"category":"image-pull","activityId":"step","attempt":1,"status":"failed","durationSeconds":4},
 			{"category":"image-pull","activityId":"step","attempt":2,"status":"completed","durationSeconds":2},
 			{"category":"sif-build","activityId":"step","attempt":2,"status":"completed","durationSeconds":3},
+			{"category":"sif-register","activityId":"step","attempt":2,"status":"completed","durationSeconds":0.5},
 			{"category":"image-build","activityId":"other","attempt":2,"status":"completed","durationSeconds":99}
 		]},
 		"handles":[{"id":"run:step:attempt-2","metadata":{"slurmEnvironment":{"os":"linux","kernel":"6.12.62-1-private-host.example","architecture":"amd64"}}}]
@@ -119,7 +120,7 @@ func TestPublishedAttemptTimingTracksRetriesAndSanitizesKernel(t *testing.T) {
 		second.ActivityID != "step" || second.Status != "completed" ||
 		second.Timing.PullSeconds == nil || *second.Timing.PullSeconds != 2 ||
 		second.Timing.SIFSeconds == nil || *second.Timing.SIFSeconds != 3 ||
-		second.Timing.BuildSeconds != nil || second.Timing.RuntimeSeconds == nil || *second.Timing.RuntimeSeconds != 5 {
+		second.Timing.RegisterSeconds == nil || *second.Timing.RegisterSeconds != 0.5 || second.Timing.BuildSeconds != nil || second.Timing.RuntimeSeconds == nil || *second.Timing.RuntimeSeconds != 5 {
 		t.Fatalf("unexpected timing by attempt: %+v", snapshot.Attempts)
 	}
 	if snapshot.Resources[0].OS != "linux" || snapshot.Resources[0].Kernel != "6.12.62-1" {

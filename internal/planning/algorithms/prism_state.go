@@ -202,7 +202,7 @@ func compactPRISMPlacePreparedAlternatives(
 		return nil
 	}
 	start, order, boot := compactPRISMPlacementStart(state, resource, coreOrdinal, transfer.readyAt, coreRoot.bestValue)
-	container := resource.resource.ContainerOverhead
+	container := search.preparation[activityOrdinal][resourceOrdinal]
 	start += container
 	baseRuntime := search.durations[activityOrdinal][resourceOrdinal]
 	publication, valid := compactPRISMPublicationSeconds(search, activityOrdinal, resource.resource.ID)

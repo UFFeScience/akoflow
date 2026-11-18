@@ -34,6 +34,7 @@ type compactPRISMContext struct {
 	resources                []compactPRISMResource
 	router                   compactPRISMRouter
 	durations                [][]float64
+	preparation              [][]float64
 	feasible                 [][]bool
 	minimumCosts             []float64
 	averageDurations         []float64
@@ -101,6 +102,7 @@ func newCompactPRISMContext(
 		predecessors:         make([][]compactPRISMDependency, len(ranked)),
 		successors:           make([][]int, len(ranked)),
 		durations:            make([][]float64, len(ranked)),
+		preparation:          make([][]float64, len(ranked)),
 		feasible:             make([][]bool, len(ranked)),
 		minimumCosts:         make([]float64, len(ranked)),
 		averageDurations:     make([]float64, len(ranked)),
@@ -201,6 +203,7 @@ func (search *compactPRISMContext) buildExecutionMatrices() {
 	resources := extractCompactPRISMResources(search.resources)
 	for activityOrdinal, activity := range search.activities {
 		search.durations[activityOrdinal] = make([]float64, len(search.resources))
+		search.preparation[activityOrdinal] = make([]float64, len(search.resources))
 		search.feasible[activityOrdinal] = make([]bool, len(search.resources))
 		minimumCost := minimumActivityCost(
 			activity,
@@ -228,6 +231,7 @@ func (search *compactPRISMContext) buildExecutionMatrices() {
 				resource.resource,
 				search.request.ActivityProfiles,
 			)
+			search.preparation[activityOrdinal][resourceOrdinal] = preparationOverhead(activity, resource.resource, search.request.ActivityProfiles)
 			search.averageDurations[activityOrdinal] += search.durations[activityOrdinal][resourceOrdinal]
 		}
 		search.averageDurations[activityOrdinal] /= float64(len(search.resources))

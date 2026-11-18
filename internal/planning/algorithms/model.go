@@ -158,6 +158,17 @@ func duration(activity domain.Activity, resource domain.Resource, profiles []dom
 	return base / speedup
 }
 
+func preparationOverhead(activity domain.Activity, resource domain.Resource, profiles []domain.ActivityResourceProfile) float64 {
+	for _, profile := range profiles {
+		if profile.ActivityID == activity.ID && profile.ResourceID == resource.ID && profile.Source == "hub-history" {
+			if seconds, ok := profile.Metadata["preparationMedianSeconds"].(float64); ok && seconds >= 0 && !math.IsInf(seconds, 0) {
+				return seconds
+			}
+		}
+	}
+	return resource.ContainerOverhead
+}
+
 func resourceFeasible(activity domain.Activity, resource domain.Resource) bool {
 	if opaqueBatchTarget(resource) {
 		return true
@@ -260,7 +271,7 @@ func place(request domain.PlanningRequest, state scheduledState, activity domain
 	if state.coreOrder[core] == 0 {
 		start += resource.BootOverheadSeconds
 	}
-	start += resource.ContainerOverhead
+	start += preparationOverhead(activity, resource, request.ActivityProfiles)
 	finish := start + runtime
 	assignment := domain.PlanAssignment{
 		ID: fmt.Sprintf("assignment-%d-%s-%s", sequence, activity.ID, resource.ID), ActivityID: activity.ID,
@@ -324,7 +335,7 @@ func placePRISM(
 	if state.coreOrder[core] == 0 {
 		start += resource.BootOverheadSeconds
 	}
-	start += resource.ContainerOverhead
+	start += preparationOverhead(activity, resource, request.ActivityProfiles)
 	finish := start + runtime
 	assignment := domain.PlanAssignment{
 		ID:                       fmt.Sprintf("assignment-%d-%s-%s", sequence, activity.ID, resource.ID),

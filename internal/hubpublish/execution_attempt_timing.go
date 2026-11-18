@@ -11,7 +11,7 @@ type attemptKey struct {
 }
 
 type preparationDurations struct {
-	pull, build, sif *float64
+	pull, build, sif, push, register, reuse *float64
 }
 
 type publishedAttemptTiming struct {
@@ -23,6 +23,9 @@ type publishedAttemptTiming struct {
 	PullSeconds     *float64   `json:"imagePullSeconds"`
 	BuildSeconds    *float64   `json:"imageBuildSeconds"`
 	SIFSeconds      *float64   `json:"sifBuildSeconds"`
+	PushSeconds     *float64   `json:"imagePushSeconds"`
+	RegisterSeconds *float64   `json:"sifRegisterSeconds"`
+	ReuseSeconds    *float64   `json:"imageReuseSeconds"`
 	TransferSeconds *float64   `json:"transferSeconds"`
 	RuntimeSeconds  *float64   `json:"runtimeSeconds"`
 }
@@ -45,6 +48,12 @@ func preparationTiming(timeline map[string]any) map[attemptKey]preparationDurati
 		key := attemptKey{activityID, max(1, positiveMetric(phase["attempt"]))}
 		durations := result[key]
 		switch kind {
+		case "image-push":
+			durations.push = addDuration(durations.push, seconds)
+		case "sif-register":
+			durations.register = addDuration(durations.register, seconds)
+		case "image-cache-hit":
+			durations.reuse = addDuration(durations.reuse, seconds)
 		case "image-pull":
 			durations.pull = addDuration(durations.pull, seconds)
 		case "image-build":
@@ -73,6 +82,7 @@ func describeAttemptTiming(task map[string]any, preparation preparationDurations
 		QueueSeconds: measuredDuration(task["queueSeconds"]), RuntimeSeconds: measuredDuration(task["runtimeSeconds"]),
 		TransferSeconds: measuredDuration(task["transferSeconds"]),
 		PullSeconds:     preparation.pull, BuildSeconds: preparation.build, SIFSeconds: preparation.sif,
+		PushSeconds: preparation.push, RegisterSeconds: preparation.register, ReuseSeconds: preparation.reuse,
 	}
 }
 

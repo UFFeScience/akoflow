@@ -70,6 +70,7 @@ func (HEFT) Schedule(ctx context.Context, request domain.PlanningRequest, _ map[
 				bytes[activity.ID],
 			)
 			runtime := duration(activity, resource, request.ActivityProfiles)
+			resource.ContainerOverhead = preparationOverhead(activity, resource, request.ActivityProfiles)
 			for _, core := range candidate.cores {
 				placement := evaluateHEFTCalendar(
 					state,

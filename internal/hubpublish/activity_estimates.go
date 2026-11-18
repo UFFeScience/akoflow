@@ -22,10 +22,11 @@ type ActivityHistoryProfile struct {
 }
 
 type ActivityHistoryEstimate struct {
-	MedianSeconds float64 `json:"medianSeconds"`
-	MinSeconds    float64 `json:"minSeconds"`
-	MaxSeconds    float64 `json:"maxSeconds"`
-	SampleCount   int     `json:"sampleCount"`
+	MedianSeconds            float64  `json:"medianSeconds"`
+	MinSeconds               float64  `json:"minSeconds"`
+	MaxSeconds               float64  `json:"maxSeconds"`
+	SampleCount              int      `json:"sampleCount"`
+	PreparationMedianSeconds *float64 `json:"preparationMedianSeconds,omitempty"`
 }
 
 func (m *Manager) ActivityEstimates(ctx context.Context, uri string, activities map[string]ActivityHistoryProfile) (map[string]ActivityHistoryEstimate, error) {

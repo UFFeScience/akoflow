@@ -34,7 +34,7 @@ func TestPlanningHistoryAppliesOnlyToUneditedImportAndCompatibleResource(t *test
 		t.Fatal(err)
 	}
 	manager.state.WorkflowSources = map[string]WorkflowSource{
-		"imported-version": {URI: definitionURI, HubOrigin: manager.state.HubURL, LocalHash: digest(data)},
+		"imported-version": {URI: "akoflow::test/workflow:v1", PublicationID: "35746b14-7dc2-454c-a74f-902d58b50c94", Version: 1, HubOrigin: manager.state.HubURL, LocalHash: digest(data)},
 	}
 	resources := []domain.Resource{{ID: "slurm", Architecture: "x86_64"}, {ID: "unbound", Architecture: "amd64"}}
 	environments := []domain.EnvironmentDefinition{{

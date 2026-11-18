@@ -11,6 +11,7 @@ func (m *Manager) Handler() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /akoflow-api/hub/workflow-definition/", m.serveWorkflowDefinition)
 	mux.HandleFunc("POST /akoflow-api/hub/workflow/activity-estimates/", m.serveActivityEstimates)
+	mux.HandleFunc("POST /akoflow-api/hub/workflow/activity-estimate-review/", m.serveActivityEstimateReview)
 	mux.HandleFunc("POST /akoflow-api/hub/workflows/import/", m.serveImportWorkflow)
 	mux.HandleFunc("POST /akoflow-api/hub/publications/workflow-preview/", m.servePreviewWorkflow)
 	mux.HandleFunc("GET /akoflow-api/hub/status/", m.serveStatus)

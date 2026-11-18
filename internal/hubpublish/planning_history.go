@@ -2,6 +2,7 @@ package hubpublish
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"time"
 
@@ -15,7 +16,7 @@ func (m *Manager) HistoricalProfiles(ctx context.Context, workflow domain.Workfl
 	source := m.state.WorkflowSources[workflow.Version.ID]
 	origin := m.state.HubURL
 	m.mu.Unlock()
-	if source.LocalHash == "" || source.HubOrigin != origin || source.URI == "" {
+	if source.LocalHash == "" || source.HubOrigin != origin || source.PublicationID == "" || source.Version < 1 {
 		return nil
 	}
 	yaml, err := apirequests.FromDomain(workflow).YAML()
@@ -48,7 +49,7 @@ func (m *Manager) HistoricalProfiles(ctx context.Context, workflow domain.Workfl
 		estimates, known := byResourceShape[key]
 		if !known {
 			request := historyProfilesForResource(workflow.Version.Activities, resource, architecture, driver, model)
-			estimates, _ = m.activityEstimates(ctx, source.URI, origin, request)
+			estimates, _ = m.activityEstimates(ctx, historySourceURI(source.PublicationID, source.Version), origin, request)
 			byResourceShape[key] = estimates
 		}
 		for _, activity := range workflow.Version.Activities {
@@ -146,4 +147,8 @@ func historyArchitecture(architecture string) string {
 	default:
 		return ""
 	}
+}
+
+func historySourceURI(publicationID string, version int) string {
+	return fmt.Sprintf("akoflow://hub/publications/%s/versions/%d", publicationID, version)
 }

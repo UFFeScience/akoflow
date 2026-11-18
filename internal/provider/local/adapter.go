@@ -105,6 +105,9 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 			"localContainerName":        "",
 			"nativeEnvironment":         nativeEnvironment(),
 		}}
+	if identity, _, err := nativeProcessIdentity(command.Process.Pid); err == nil {
+		handle.Metadata["nativeProcessIdentity"] = identity
+	}
 	a.mu.Lock()
 	a.logs[handle.ID] = output
 	a.observations[handle.ID] = before
@@ -130,10 +133,7 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 
 func (a *Adapter) startContainer(ctx context.Context, execution domain.ActivityExecutionContext, root string, before runtimecommon.ArtifactSnapshot, image string) (domain.ActivityHandle, error) {
 	activity := execution.Activity
-	name := "akoflow-" + strings.NewReplacer(":", "-", "/", "-").Replace(execution.Run.ID+"-"+activity.ID)
-	if execution.Attempt > 1 {
-		name += fmt.Sprintf("-attempt-%d", execution.Attempt)
-	}
+	name := ExecutionContainerName(execution.Run.ID, activity.ID, execution.Attempt)
 	args := []string{"run", "--detach", "--name", name, "--label", "akoflow.run=" + execution.Run.ID}
 	if volume := os.Getenv("AKOFLOW_LOCAL_WORKSPACE_VOLUME"); volume != "" {
 		mountRoot := os.Getenv("AKOFLOW_LOCAL_WORKSPACE_ROOT")
@@ -301,9 +301,9 @@ func (a *Adapter) inspectContainer(ctx context.Context, handle domain.ActivityHa
 	return handle, nil
 }
 
-func (*Adapter) Stop(_ context.Context, handle domain.ActivityHandle) error {
+func (*Adapter) Stop(ctx context.Context, handle domain.ActivityHandle) error {
 	if name, _ := handle.Metadata["localContainerName"].(string); name != "" {
-		return exec.Command("docker", "rm", "--force", name).Run()
+		return exec.CommandContext(ctx, "docker", "rm", "--force", name).Run()
 	}
 	pid, err := strconv.Atoi(handle.ExternalID)
 	if err != nil {
@@ -313,7 +313,21 @@ func (*Adapter) Stop(_ context.Context, handle domain.ActivityHandle) error {
 	if err != nil {
 		return err
 	}
-	return process.Signal(os.Interrupt)
+	defer process.Release()
+	identity, _ := handle.Metadata["nativeProcessIdentity"].(string)
+	if NativeReservationReleased(handle.ExternalID, identity) {
+		return nil
+	}
+	if err := process.Signal(os.Interrupt); err != nil {
+		if NativeReservationReleased(handle.ExternalID, identity) {
+			return nil
+		}
+		return err
+	}
+	if identity == "" {
+		return nil
+	}
+	return waitForNativeExit(ctx, handle.ExternalID, identity)
 }
 
 func (*Adapter) Release(ctx context.Context, handle domain.ActivityHandle) error {

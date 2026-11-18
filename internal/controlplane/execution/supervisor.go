@@ -32,14 +32,16 @@ type ActivityController interface {
 }
 
 type Config struct {
-	PrepareRun     func(context.Context, *ports.ExecutionRequest) error
-	PollInterval   time.Duration
-	Preparer       ports.PreparationCoordinator
-	Data           ports.DataCatalog
-	Cloud          ports.CloudProvisioner
-	CloudStore     ports.CloudConfigurationStore
-	CloudAllocator CloudAllocator
-	Workspaces     WorkspaceManager
+	PrepareRun             func(context.Context, *ports.ExecutionRequest) error
+	PollInterval           time.Duration
+	SharedLocalCapacity    ports.LocalActivityCapacity
+	ReconcileLocalCapacity func(context.Context) error
+	Preparer               ports.PreparationCoordinator
+	Data                   ports.DataCatalog
+	Cloud                  ports.CloudProvisioner
+	CloudStore             ports.CloudConfigurationStore
+	CloudAllocator         CloudAllocator
+	Workspaces             WorkspaceManager
 }
 
 type WorkspaceManager interface {
@@ -394,15 +396,14 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 				break
 			}
 			task := tasks[activityID]
-			task.Status = domain.TaskPreparing
-			if task.Metadata == nil {
-				task.Metadata = make(map[string]any)
-			}
-			task.Metadata["queueReason"] = "synchronizing predecessor workspaces and preparing runtime"
-			if err := s.executions.SaveTask(ctx, task); err != nil {
-				return domain.ExecutionTrace{}, fmt.Errorf("mark activity %q preparing: %w", activityID, err)
+			reserved, err := s.markPreparing(ctx, &task, resources[assignments[activityID].ResourceID], activities[activityID])
+			if err != nil {
+				return domain.ExecutionTrace{}, fmt.Errorf("admit activity %q: %w", activityID, err)
 			}
 			tasks[activityID] = task
+			if !reserved {
+				continue
+			}
 			startRequest := request
 			startRequest.RuntimeAllocations = cloneRuntimeAllocations(request.RuntimeAllocations)
 			allocated := cloneRuntimeAllocations(readyAllocations)
@@ -418,7 +419,7 @@ func (s *Supervisor) executeActivities(ctx context.Context, request ports.Execut
 		if len(running) == 0 && len(pendingStarts) == 0 && len(pendingAllocations) == 0 && len(immediate) == 0 && len(completed) < len(activities) {
 			return domain.ExecutionTrace{}, fmt.Errorf("execution cannot progress: dependency cycle or incomplete plan")
 		}
-		if len(running) > 0 || len(pendingStarts) > 0 || len(pendingAllocations) > 0 {
+		if len(running) > 0 || len(pendingStarts) > 0 || len(pendingAllocations) > 0 || len(immediate) > 0 {
 			select {
 			case <-ctx.Done():
 				return domain.ExecutionTrace{}, ctx.Err()
@@ -838,6 +839,10 @@ func (s *Supervisor) startReadyActivity(
 	}
 	if err := s.activateWorkspace(ctx, request.Run.ID, activityID, allocation); err != nil {
 		result.err = fmt.Errorf("activate workspace for activity %q: %w", activityID, err)
+		return result
+	}
+	if err := s.markLocalLaunching(ctx, request.Run.ID, activityID, attempt, resource, activity); err != nil {
+		result.err = err
 		return result
 	}
 	handle, err := s.activities.Start(ctx, domain.ActivityExecutionContext{
@@ -1742,7 +1747,7 @@ func (s *Supervisor) queueReadyActivities(ctx context.Context, request ports.Exe
 	for _, activityID := range ready {
 		queueReason := "awaiting assigned runtime"
 		if queued, exists := tasks[activityID]; exists {
-			if queued.Metadata["queueReason"] != queueReason {
+			if queued.Metadata["queueReason"] != queueReason && queued.Metadata["queueReason"] != sharedLocalWaitReason {
 				if queued.Metadata == nil {
 					queued.Metadata = make(map[string]any)
 				}

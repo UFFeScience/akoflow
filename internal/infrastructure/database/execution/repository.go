@@ -894,7 +894,15 @@ func saveTask(ctx context.Context, tx *sql.Tx, task domain.TaskExecution) error 
 		transfer_seconds=excluded.transfer_seconds, transfer_bytes=excluded.transfer_bytes,
 		interference_seconds=excluded.interference_seconds,
 		overhead_seconds=excluded.overhead_seconds, cost=excluded.cost,
-		failure_reason=excluded.failure_reason, metadata=excluded.metadata`,
+		failure_reason=excluded.failure_reason, metadata=CASE
+			WHEN json_extract(task_executions.metadata, '$.localReservedCpu') IS NULL THEN excluded.metadata
+			ELSE json_patch(json_object(
+				'localReservedCpu', json_extract(task_executions.metadata, '$.localReservedCpu'),
+				'localReservedMemoryBytes', json_extract(task_executions.metadata, '$.localReservedMemoryBytes'),
+				'localLaunchMayExist', json_extract(task_executions.metadata, '$.localLaunchMayExist'),
+				'localDockerLaunch', json_extract(task_executions.metadata, '$.localDockerLaunch'),
+				'localNeedsReconciliation', json_extract(task_executions.metadata, '$.localNeedsReconciliation')
+			), excluded.metadata) END`,
 		task.ID, task.ExecutionRunID, task.PlanAssignmentID, task.ActivityID,
 		task.PlannedResourceID, nullableString(task.AllocatedResourceID), task.Attempt,
 		task.Status, task.ReadyAt, task.DataReadyAt, task.QueuedAt, task.StartedAt,

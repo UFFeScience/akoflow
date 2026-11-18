@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"math"
 	"os"
 	"strconv"
 	"time"
@@ -16,6 +17,7 @@ import (
 	domainevents "github.com/UFFeScience/akoflow/internal/domain/events"
 	infratransfer "github.com/UFFeScience/akoflow/internal/infrastructure/transfer"
 	"github.com/UFFeScience/akoflow/internal/provider"
+	localprovider "github.com/UFFeScience/akoflow/internal/provider/local"
 )
 
 func buildEventLoop(
@@ -97,10 +99,23 @@ func registerExecutionHandlers(
 	preparer := applicationtransfer.Coordinator{Catalog: data, Reproducer: reproducer, WorkspaceSyncer: infratransfer.WorkspaceRsync{Resolver: resolver, Parallelism: parallelism}, Materializer: applicationtransfer.Materializer{Resolver: resolver, Progress: data, VerifiedArtifacts: verifiedArtifacts, Connectors: []ports.TransferConnector{
 		infratransfer.ArtifactStore{Root: artifactStoreRoot}, infratransfer.LocalFilesystem{BufferSize: bufferSize}, infratransfer.RsyncSSH{BufferSize: bufferSize}, kubernetesTransfer, infratransfer.HTTPDownload{}, infratransfer.S3Compatible{BufferSize: bufferSize}, infratransfer.GCS{},
 	}}}
+	capacity, err := sharedLocalCapacity()
+	if err != nil {
+		return err
+	}
+	var reconcileCapacity func(context.Context) error
+	if store, ok := executions.(ports.LocalAdmissionStore); ok && capacity.CPU > 0 {
+		if err := store.RecoverLocalPreparations(context.Background()); err != nil {
+			return fmt.Errorf("recover local preparation reservations: %w", err)
+		}
+		reconcileCapacity = func(ctx context.Context) error {
+			return reconcileLocalReservations(ctx, store, provider.OSCommandExecutor{})
+		}
+	}
 	supervisor, err := controlexecution.New(
 		executions, activities, simulator,
 		controlexecution.Config{
-			PollInterval: time.Second, Preparer: preparer, PrepareRun: prepare,
+			PollInterval: time.Second, Preparer: preparer, PrepareRun: prepare, SharedLocalCapacity: capacity, ReconcileLocalCapacity: reconcileCapacity,
 			Data: data, Cloud: cloudProvisioner, CloudStore: cloud,
 			Workspaces:     infratransfer.ActivityWorkspaceManager{Resolver: resolver, Kubernetes: kubernetesTransfer},
 			CloudAllocator: controlexecution.QueuedCloudAllocator{Cloud: cloud, Operations: cloud, Queue: events, PollInterval: 500 * time.Millisecond},
@@ -121,4 +136,39 @@ func domainEventTypes() []string {
 		domainevents.ExecutionStarted, domainevents.ExecutionCompleted, domainevents.ExecutionFailed,
 		domainevents.ActivityStarted, domainevents.ActivityCompleted, domainevents.ActivityFailed,
 	}
+}
+
+func sharedLocalCapacity() (ports.LocalActivityCapacity, error) {
+	cpuValue, memoryValue := os.Getenv("AKOFLOW_SHARED_LOCAL_CPUS"), os.Getenv("AKOFLOW_SHARED_LOCAL_MEMORY_BYTES")
+	if cpuValue == "" && memoryValue == "" {
+		return ports.LocalActivityCapacity{}, nil
+	}
+	cpus, cpuErr := strconv.ParseFloat(cpuValue, 64)
+	memory, memoryErr := strconv.ParseInt(memoryValue, 10, 64)
+	if cpuErr != nil || memoryErr != nil || cpus <= 0 || math.IsNaN(cpus) || math.IsInf(cpus, 0) || memory <= 0 {
+		return ports.LocalActivityCapacity{}, fmt.Errorf("set AKOFLOW_SHARED_LOCAL_CPUS and AKOFLOW_SHARED_LOCAL_MEMORY_BYTES to positive capacities")
+	}
+	return ports.LocalActivityCapacity{CPU: cpus, MemoryBytes: memory}, nil
+}
+
+func reconcileLocalReservations(ctx context.Context, store ports.LocalAdmissionStore, executor provider.CommandExecutor) error {
+	tasks, err := store.ListLocalReconciliations(ctx)
+	if err != nil {
+		return err
+	}
+	for _, task := range tasks {
+		released := false
+		if task.Docker {
+			name := localprovider.ExecutionContainerName(task.RunID, task.ActivityID, task.Attempt)
+			released = localprovider.ContainerReservationReleased(ctx, executor, name)
+		} else {
+			released = localprovider.NativeReservationReleased(task.ProcessID, task.ProcessIdentity)
+		}
+		if released {
+			if err := store.ReleaseReconciledLocalActivity(ctx, task.TaskID); err != nil {
+				return err
+			}
+		}
+	}
+	return ctx.Err()
 }

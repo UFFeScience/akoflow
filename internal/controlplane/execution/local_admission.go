@@ -1,6 +1,15 @@
 package execution
 
-import "github.com/UFFeScience/akoflow/internal/domain"
+import (
+	"context"
+	"maps"
+	"strings"
+
+	"github.com/UFFeScience/akoflow/internal/application/ports"
+	"github.com/UFFeScience/akoflow/internal/domain"
+)
+
+const sharedLocalWaitReason = "waiting for shared local CPU or memory capacity"
 
 type localReservation struct {
 	cpu    float64
@@ -60,4 +69,42 @@ func capacityReadyActivities(
 ) []string {
 	ready = restrictedCapacityReady(ready, assignments, resources, tasks, pending)
 	return localCapacityReady(ready, assignments, resources, activities, tasks, pending)
+}
+
+func (s *Supervisor) markPreparing(ctx context.Context, task *domain.TaskExecution, resource domain.Resource, activity domain.Activity) (bool, error) {
+	previousReason, _ := task.Metadata["queueReason"].(string)
+	task.Metadata = maps.Clone(task.Metadata)
+	if task.Metadata == nil {
+		task.Metadata = make(map[string]any)
+	}
+	task.Metadata["queueReason"] = "synchronizing predecessor workspaces and preparing runtime"
+	capacity := s.config.SharedLocalCapacity
+	store, ok := s.executions.(ports.LocalAdmissionStore)
+	if ok && capacity.CPU > 0 && capacity.MemoryBytes > 0 && resource.HasLocalAllocation() {
+		cpu, memory := resource.LocalActivityBudget(activity.Resources.CPU, activity.Resources.MemoryBytes)
+		reserved, err := store.ReserveLocalActivity(ctx, task, ports.LocalActivityCapacity{CPU: cpu, MemoryBytes: memory}, capacity)
+		if err != nil || reserved {
+			return reserved, err
+		}
+		if s.config.ReconcileLocalCapacity != nil {
+			if err := s.config.ReconcileLocalCapacity(ctx); err != nil {
+				return false, err
+			}
+		}
+		task.Metadata["queueReason"] = sharedLocalWaitReason
+		if previousReason == task.Metadata["queueReason"] {
+			return false, nil
+		}
+		return false, s.executions.SaveTask(ctx, *task)
+	}
+	task.Status = domain.TaskPreparing
+	return true, s.executions.SaveTask(ctx, *task)
+}
+
+func (s *Supervisor) markLocalLaunching(ctx context.Context, runID, activityID string, attempt int, resource domain.Resource, activity domain.Activity) error {
+	store, ok := s.executions.(ports.LocalAdmissionStore)
+	if ok && s.config.SharedLocalCapacity.CPU > 0 && resource.HasLocalAllocation() {
+		return store.MarkLocalActivityLaunching(ctx, runID, activityID, attempt, strings.TrimSpace(activity.Command.Image) != "")
+	}
+	return nil
 }

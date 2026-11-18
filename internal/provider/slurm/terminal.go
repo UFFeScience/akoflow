@@ -16,6 +16,8 @@ import (
 	"github.com/creack/pty"
 )
 
+const directInteractiveShell = "if command -v bash >/dev/null 2>&1; then exec bash -il; fi; exec /bin/sh -il"
+
 var safeSchedulerTarget = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9._-]*$`)
 
 // TerminalRunner creates an actual interactive shell. SSH resources receive a
@@ -33,6 +35,7 @@ func (TerminalRunner) StartInteractive(ctx context.Context, connection domain.En
 	if err != nil {
 		return nil, fmt.Errorf("wait for SSH console channel: %w", err)
 	}
+	command.Env = append(command.Environ(), "TERM=xterm-256color")
 	terminal, err := pty.Start(command)
 	if err != nil {
 		releaseChannel()
@@ -53,14 +56,14 @@ func interactiveCommand(connection domain.EnvironmentConnection, resource domain
 
 func interactiveCommandForJob(connection domain.EnvironmentConnection, resource domain.Resource, jobName string) (*exec.Cmd, func(), error) {
 	if connection.Type == domain.ConnectionLocal || connection.Type == domain.ConnectionAgent {
-		return exec.Command("/bin/sh", "-l"), nil, nil
+		return exec.Command("/bin/sh", "-c", directInteractiveShell), nil, nil
 	}
 	if connection.Type == domain.ConnectionKubernetes {
 		container, _ := resource.Metadata["interactiveDockerContainer"].(string)
 		if container == "" {
 			return nil, nil, fmt.Errorf("interactive Kubernetes terminals are currently available only for discovered Kind control-plane resources")
 		}
-		return exec.Command("docker", "exec", "-it", container, "/bin/sh", "-l"), nil, nil
+		return exec.Command("docker", "exec", "-it", container, "/bin/sh", "-il"), nil, nil
 	}
 	if connection.Type != domain.ConnectionSSH {
 		return nil, nil, fmt.Errorf("interactive terminals are not supported for connection type %q", connection.Type)
@@ -82,7 +85,7 @@ func interactiveCommandForJob(connection domain.EnvironmentConnection, resource 
 	// not an intermediate SLURM allocation for an interactive shell.
 	if resource.ExecutionTarget == domain.ExecutionTargetDirect ||
 		(resource.Type == domain.ResourceCloudVM && configBool(connection.Configuration, "dynamicHost", false)) {
-		args = append(args, "/bin/sh", "-l")
+		args = append(args, "/bin/sh -c '"+directInteractiveShell+"'")
 		return exec.Command("ssh", args...), nil, nil
 	}
 	if !safeSchedulerTarget.MatchString(resource.ProviderID) {

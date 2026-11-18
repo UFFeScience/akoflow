@@ -313,11 +313,12 @@ func applySentinelStatus(handle domain.ActivityHandle, payload string) (domain.A
 		}
 		architecture := values["node_arch"]
 		cpuModel := values["node_cpu_model"]
+		osType, kernel := values["node_os"], values["node_kernel"]
 		cpus, _ := strconv.ParseInt(values["node_cpus"], 10, 32)
 		memory, _ := strconv.ParseInt(values["node_memory_kib"], 10, 53)
-		if architecture != "" || cpuModel != "" || cpus > 0 || memory > 0 {
+		if architecture != "" || cpuModel != "" || osType != "" || kernel != "" || cpus > 0 || memory > 0 {
 			handle.Metadata["slurmEnvironment"] = map[string]any{
-				"architecture": architecture, "cpuModel": cpuModel,
+				"architecture": architecture, "cpuModel": cpuModel, "os": osType, "kernel": kernel,
 				"cpuCores": cpus, "memoryBytes": memory * 1024,
 			}
 		}
@@ -674,12 +675,14 @@ for file do relative=${file#"$root"/}; size=$(wc -c < "$file") || exit 1; checks
 ' snapshot "$artifact_root" "$destination" {} +; sort -o "$destination" "$destination"; }
 `)
 	script.WriteString(`node_arch=$(uname -m 2>/dev/null || true)
+node_os=$(uname -s 2>/dev/null | tr "[:upper:]" "[:lower:]" || true)
+node_kernel=$(uname -r 2>/dev/null || true)
 node_cpus=$(getconf _NPROCESSORS_ONLN 2>/dev/null || true)
 node_memory_kib=$(awk '/^MemTotal:/ { print $2; exit }' /proc/meminfo 2>/dev/null || true)
 node_allocated_gpus=${SLURM_GPUS_ON_NODE:-}
 node_cpu_model=$(awk -F: '/^model name[[:space:]]*:/ { sub(/^[[:space:]]+/, "", $2); print $2; exit }' /proc/cpuinfo 2>/dev/null || true)
 write_node_facts() {
-  printf 'node_arch=%s\nnode_cpus=%s\nnode_memory_kib=%s\nnode_cpu_model=%s\nnode_allocated_gpus=%s\n' "$node_arch" "$node_cpus" "$node_memory_kib" "$node_cpu_model" "$node_allocated_gpus"
+  printf 'node_arch=%s\nnode_cpus=%s\nnode_memory_kib=%s\nnode_cpu_model=%s\nnode_os=%s\nnode_kernel=%s\nnode_allocated_gpus=%s\n' "$node_arch" "$node_cpus" "$node_memory_kib" "$node_cpu_model" "$node_os" "$node_kernel" "$node_allocated_gpus"
 }
 `)
 	script.WriteString(`started_at=$(date +%s.%N)

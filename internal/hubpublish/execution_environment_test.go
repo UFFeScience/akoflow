@@ -93,3 +93,41 @@ func TestPublishedEnvironmentUsesDockerObservationsAndDistinguishesSlurmNodes(t 
 		t.Fatalf("expected anonymous node references, got %s (%v)", encoded, err)
 	}
 }
+
+func TestPublishedAttemptTimingTracksRetriesAndSanitizesKernel(t *testing.T) {
+	var run map[string]any
+	err := json.Unmarshal([]byte(`{
+		"run":{"id":"run","mode":"real"},
+		"activityAttempts":[
+			{"activityId":"step","attempt":1,"status":"failed","startedAt":10.25},
+			{"activityId":"step","attempt":2,"status":"completed","queuedAt":12,"startedAt":14,"finishedAt":19,"queueSeconds":2,"runtimeSeconds":5,"transferSeconds":1}
+		],
+		"timeline":{"phases":[
+			{"category":"image-pull","activityId":"step","attempt":1,"status":"failed","durationSeconds":4},
+			{"category":"image-pull","activityId":"step","attempt":2,"status":"completed","durationSeconds":2},
+			{"category":"sif-build","activityId":"step","attempt":2,"status":"completed","durationSeconds":3},
+			{"category":"image-build","activityId":"other","attempt":2,"status":"completed","durationSeconds":99}
+		]},
+		"handles":[{"id":"run:step:attempt-2","metadata":{"slurmEnvironment":{"os":"linux","kernel":"6.12.62-1-private-host.example","architecture":"amd64"}}}]
+	}`), &run)
+	if err != nil {
+		t.Fatal(err)
+	}
+	snapshot := executionEnvironment(nil, run)
+	first, second := snapshot.Attempts[0], snapshot.Attempts[1]
+	if first.Timing.PullSeconds == nil || *first.Timing.PullSeconds != 4 || first.Timing.FinishedAt != nil ||
+		second.ActivityID != "step" || second.Status != "completed" ||
+		second.Timing.PullSeconds == nil || *second.Timing.PullSeconds != 2 ||
+		second.Timing.SIFSeconds == nil || *second.Timing.SIFSeconds != 3 ||
+		second.Timing.BuildSeconds != nil || second.Timing.RuntimeSeconds == nil || *second.Timing.RuntimeSeconds != 5 {
+		t.Fatalf("unexpected timing by attempt: %+v", snapshot.Attempts)
+	}
+	if snapshot.Resources[0].OS != "linux" || snapshot.Resources[0].Kernel != "6.12.62-1" {
+		t.Fatalf("unexpected OS or kernel: %+v", snapshot.Resources[0])
+	}
+	encoded, err := json.Marshal(snapshot)
+	if err != nil || !strings.Contains(string(encoded), `"startedAt":"1970-01-01T00:00:10.25Z"`) ||
+		strings.Contains(string(encoded), "private-host.example") {
+		t.Fatalf("unexpected published snapshot: %s (%v)", encoded, err)
+	}
+}

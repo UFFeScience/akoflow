@@ -17,6 +17,8 @@ type publishedEnvironment struct {
 }
 
 type publishedResource struct {
+	OS             string  `json:"os"`
+	Kernel         string  `json:"kernel"`
 	Number         int     `json:"number"`
 	Source         string  `json:"source"`
 	CPUModel       string  `json:"cpuModel,omitempty"`
@@ -29,15 +31,18 @@ type publishedResource struct {
 }
 
 type publishedAllocation struct {
-	ResourceNumber int      `json:"resourceNumber,omitempty"`
-	ExecutionStyle string   `json:"executionStyle,omitempty"`
-	Attempt        float64  `json:"attempt"`
-	AllocatedGPU   *float64 `json:"allocatedGpus,omitempty"`
-	AllocatedCPU   float64  `json:"allocatedCpu,omitempty"`
-	AllocatedRAM   float64  `json:"allocatedMemoryBytes,omitempty"`
-	RequestedCPU   float64  `json:"requestedCpu,omitempty"`
-	RequestedRAM   float64  `json:"requestedMemoryBytes,omitempty"`
-	RequestedGPU   float64  `json:"requestedGpus,omitempty"`
+	ActivityID     string                 `json:"activityId"`
+	Status         string                 `json:"status"`
+	Timing         publishedAttemptTiming `json:"timing"`
+	ResourceNumber int                    `json:"resourceNumber,omitempty"`
+	ExecutionStyle string                 `json:"executionStyle,omitempty"`
+	Attempt        float64                `json:"attempt"`
+	AllocatedGPU   *float64               `json:"allocatedGpus,omitempty"`
+	AllocatedCPU   float64                `json:"allocatedCpu,omitempty"`
+	AllocatedRAM   float64                `json:"allocatedMemoryBytes,omitempty"`
+	RequestedCPU   float64                `json:"requestedCpu,omitempty"`
+	RequestedRAM   float64                `json:"requestedMemoryBytes,omitempty"`
+	RequestedGPU   float64                `json:"requestedGpus,omitempty"`
 }
 
 func executionEnvironment(context, execution map[string]any) publishedEnvironment {
@@ -53,6 +58,7 @@ func executionEnvironment(context, execution map[string]any) publishedEnvironmen
 	totals, _ := timeline["totals"].(map[string]any)
 	result.ImagePullSeconds = positiveMetric(totals["imagePullSeconds"])
 	result.ImageBuildSeconds = positiveMetric(totals["imageBuildSeconds"])
+	timingByAttempt := preparationTiming(timeline)
 	resources := indexEnvironmentRecords(context["resources"])
 	workflow, _ := context["workflow"].(map[string]any)
 	version, _ := workflow["version"].(map[string]any)
@@ -108,6 +114,8 @@ func executionEnvironment(context, execution map[string]any) publishedEnvironmen
 		}
 		request, _ := activities[activityID]["resources"].(map[string]any)
 		result.Attempts = append(result.Attempts, publishedAllocation{
+			ActivityID: activityID, Status: attemptStatus(task["status"]),
+			Timing:         describeAttemptTiming(task, timingByAttempt[attemptKey{activityID, attempt}]),
 			ResourceNumber: number, Attempt: attempt, ExecutionStyle: style, AllocatedGPU: allocatedGPU,
 			AllocatedCPU: positiveMetric(limits["cpu"]), AllocatedRAM: positiveMetric(limits["memoryBytes"]),
 			RequestedCPU: positiveMetric(request["cpu"]), RequestedRAM: positiveMetric(request["memoryBytes"]),
@@ -132,6 +140,13 @@ func describeObservedResource(number int, mode string, facts map[string]any, run
 	observation := describePublishedResource(number, mode, facts)
 	observation.Source = "observed"
 	observation.Runtime = runtimeName
+	switch facts["os"] {
+	case "linux", "darwin", "windows", "freebsd":
+		observation.OS = facts["os"].(string)
+	}
+	if kernel, _ := facts["kernel"].(string); linuxKernel.MatchString(kernel) {
+		observation.Kernel = linuxKernel.FindString(kernel)
+	}
 	if model, _ := facts["cpuModel"].(string); runtimeName != "Docker" && cpuModel.MatchString(model) {
 		observation.CPUModel = model
 	}
@@ -140,6 +155,8 @@ func describeObservedResource(number int, mode string, facts map[string]any, run
 	}
 	return observation
 }
+
+var linuxKernel = regexp.MustCompile(`^[0-9]{1,5}\.[0-9]{1,5}\.[0-9]{1,5}(-[0-9]{1,5})?`)
 
 var cpuModel = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9 ().+_-]{0,95}$`)
 
@@ -164,7 +181,7 @@ func describePublishedResource(number int, mode string, item map[string]any) pub
 	default:
 		architecture = "unknown"
 	}
-	return publishedResource{Number: number, Source: source, Architecture: architecture,
+	return publishedResource{Number: number, Source: source, Architecture: architecture, OS: "unknown", Kernel: "unknown",
 		CPUCores: positiveMetric(item["cpuCores"]), CPUCapacity: positiveMetric(item["cpuCapacity"]),
 		MemoryBytes: positiveMetric(item["memoryBytes"])}
 }

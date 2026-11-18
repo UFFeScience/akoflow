@@ -488,7 +488,7 @@ func TestInspectionDeadlineDoesNotTurnTimeoutIntoTerminalStatus(t *testing.T) {
 }
 
 func TestSentinelRecordsContainerStartupTiming(t *testing.T) {
-	executor := &executorFake{output: []byte("state=completed\nexit_code=0\nstarted_at=100\nallocated_node=bora017\ncontainer_started_at=103.25\nnode_arch=x86_64\nnode_cpus=32\nnode_memory_kib=65536\nnode_cpu_model=Test CPU\n")}
+	executor := &executorFake{output: []byte("state=completed\nexit_code=0\nstarted_at=100\nallocated_node=bora017\ncontainer_started_at=103.25\nnode_arch=x86_64\nnode_cpus=32\nnode_memory_kib=65536\nnode_cpu_model=Test CPU\nnode_os=linux\nnode_kernel=6.12.62\n")}
 	handle, found := New(executor, "").sentinelStatus(context.Background(), domain.ActivityHandle{
 		Metadata: map[string]any{"sentinelPath": "status"},
 	})
@@ -497,7 +497,7 @@ func TestSentinelRecordsContainerStartupTiming(t *testing.T) {
 	}
 	facts, _ := handle.Metadata["slurmEnvironment"].(map[string]any)
 	if facts["cpuCores"] != int64(32) || facts["memoryBytes"] != int64(65536*1024) ||
-		facts["architecture"] != "x86_64" || facts["cpuModel"] != "Test CPU" {
+		facts["architecture"] != "x86_64" || facts["cpuModel"] != "Test CPU" || facts["os"] != "linux" || facts["kernel"] != "6.12.62" {
 		t.Fatalf("unexpected compute node facts: %v", facts)
 	}
 }

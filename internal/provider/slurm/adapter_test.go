@@ -577,3 +577,21 @@ func TestBatchScriptRecordsAllocatedGPUAndNodeCapacitySeparately(t *testing.T) {
 		t.Fatalf("unexpected facts: %+v %v", values, err)
 	}
 }
+
+func TestAdapterRecordsAndClearsSlurmWaitReason(t *testing.T) {
+	payload := func(state, reason string) []byte {
+		control := base64.StdEncoding.EncodeToString([]byte("JobState=" + state + " Reason=" + reason))
+		return []byte("LOG=\nMETRICS=\nSENTINEL=\nSACCT=\nSQUEUE=\nSCONTROL=" + control + "\n")
+	}
+	executor := &executorFake{output: payload("PENDING", "Resources")}
+	adapter := New(executor, "")
+	handle, err := adapter.Inspect(context.Background(), domain.ActivityHandle{ExternalID: "1"})
+	if err != nil || handle.Status != domain.HandleStarting || handle.Metadata["runtimeWaitReason"] != "Resources" {
+		t.Fatalf("wait not recorded: %+v %v", handle, err)
+	}
+	executor.output = payload("RUNNING", "None")
+	handle, err = adapter.Inspect(context.Background(), handle)
+	if err != nil || handle.Status != domain.HandleRunning || handle.Metadata["runtimeWaitReason"] != nil {
+		t.Fatalf("wait not cleared: %+v %v", handle, err)
+	}
+}

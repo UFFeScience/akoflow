@@ -226,6 +226,18 @@ func (a *Adapter) Inspect(ctx context.Context, handle domain.ActivityHandle) (do
 		// accounting row directly.
 		return applySlurmStatus(handle, string(output)), nil
 	}
+	delete(handle.Metadata, "runtimeWaitReason")
+	if slurmControlState(sections["SCONTROL"]) == "PENDING" {
+		for _, field := range strings.Fields(sections["SCONTROL"]) {
+			if reason, found := strings.CutPrefix(field, "Reason="); found && reason != "" && reason != "None" {
+				if handle.Metadata == nil {
+					handle.Metadata = make(map[string]any)
+				}
+				handle.Metadata["runtimeWaitReason"] = reason
+				break
+			}
+		}
+	}
 	handle.Log = sections["LOG"]
 	applyMetricSamples(&handle, sections["METRICS"])
 	if observed, found := applySentinelStatus(handle, sections["SENTINEL"]); found {

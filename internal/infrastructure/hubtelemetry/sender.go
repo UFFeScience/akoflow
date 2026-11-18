@@ -66,6 +66,12 @@ func New(endpoint, token string) *Sender {
 	}
 }
 
+func (s *Sender) SetToken(token string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.token = token
+}
+
 func (s *Sender) SetConsent(stream Stream, enabled bool) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -145,9 +151,10 @@ func (s *Sender) flush(ctx context.Context, stream Stream) bool {
 	enabledAt := queue.enabledAt
 	requestCtx, cancel := context.WithCancel(ctx)
 	queue.cancel = cancel
+	token := s.token
 	s.mu.Unlock()
 
-	discard := s.submit(requestCtx, batch)
+	discard := s.submit(requestCtx, batch, token)
 	cancel()
 
 	s.mu.Lock()
@@ -163,14 +170,14 @@ func (s *Sender) flush(ctx context.Context, stream Stream) bool {
 	return discard
 }
 
-func (s *Sender) submit(ctx context.Context, batch []byte) bool {
+func (s *Sender) submit(ctx context.Context, batch []byte, token string) bool {
 	body := append([]byte(`{"schemaVersion":1,"events":[`), batch...)
 	body = append(body, ']', '}')
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, s.endpoint, bytes.NewReader(body))
 	if err != nil {
 		return false
 	}
-	req.Header.Set("Authorization", "Bearer "+s.token)
+	req.Header.Set("Authorization", "Bearer "+token)
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := s.client.Do(req)
 	if err != nil {

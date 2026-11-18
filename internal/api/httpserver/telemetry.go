@@ -2,6 +2,7 @@ package httpserver
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"io"
 	"net/http"
@@ -46,8 +47,9 @@ func telemetryConsent(ctx context.Context, sender *hubtelemetry.Sender, security
 			return
 		}
 		var choice struct {
-			Diagnostics *bool `json:"diagnostics"`
-			APIAccess   *bool `json:"apiAccess"`
+			Diagnostics    *bool  `json:"diagnostics"`
+			APIAccess      *bool  `json:"apiAccess"`
+			TelemetryToken string `json:"telemetryToken,omitempty"`
 		}
 		decoder := json.NewDecoder(http.MaxBytesReader(w, r.Body, 1024))
 		decoder.DisallowUnknownFields()
@@ -55,6 +57,13 @@ func telemetryConsent(ctx context.Context, sender *hubtelemetry.Sender, security
 			choice.Diagnostics == nil || choice.APIAccess == nil {
 			http.Error(w, "explicit consent is required for each category", http.StatusBadRequest)
 			return
+		}
+		if choice.TelemetryToken != "" {
+			credential, err := base64.RawURLEncoding.Strict().DecodeString(choice.TelemetryToken)
+			if err != nil || len(credential) != 32 || (!*choice.Diagnostics && !*choice.APIAccess) {
+				http.Error(w, "invalid telemetry credential", http.StatusBadRequest)
+				return
+			}
 		}
 		mu.Lock()
 		defer mu.Unlock()
@@ -76,6 +85,9 @@ func telemetryConsent(ctx context.Context, sender *hubtelemetry.Sender, security
 					sender.SetConsent(hubtelemetry.APIAccess, false)
 				}
 			})
+		}
+		if choice.TelemetryToken != "" {
+			sender.SetToken(choice.TelemetryToken)
 		}
 		sender.SetConsent(hubtelemetry.Diagnostics, *choice.Diagnostics)
 		sender.SetConsent(hubtelemetry.APIAccess, *choice.APIAccess)

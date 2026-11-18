@@ -85,7 +85,7 @@ func appendTaskPhases(timeline *domain.ExecutionTimeline, task domain.TaskExecut
 	if task.RuntimeSeconds > 0 && task.FinishedAt >= task.RuntimeSeconds {
 		runtimeStart = task.FinishedAt - task.RuntimeSeconds
 	}
-	if task.FinishedAt > task.StartedAt {
+	if task.StartedAt > 0 && task.FinishedAt > task.StartedAt {
 		timeline.Phases = append(timeline.Phases, phase(task.ID+":runtime", PhaseRuntime, task.ActivityID,
 			"", "", string(task.Status), "activity-handle", runtimeStart, task.FinishedAt))
 	}

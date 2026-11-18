@@ -32,3 +32,16 @@ func TestTimelineCountsParallelPreparationAndDeduplicatesSharedWork(t *testing.T
 	assertTimelineSeconds(t, "queue", timeline.Totals.ResourceQueueSeconds, 0)
 	assertTimelineSeconds(t, "compute", timeline.ComputeMakespanSeconds, 4)
 }
+
+func TestFailedPreparationBeforeLaunchDoesNotProduceRuntime(t *testing.T) {
+	start, end := time.Unix(100, 0), time.Unix(115, 0)
+	run := domain.ExecutionRun{StartedAt: &start, FinishedAt: &end}
+	tasks := []domain.TaskExecution{{ID: "task", ActivityID: "activity", ReadyAt: 100, FinishedAt: 115}}
+	observations := []domainexecution.ImagePreparationObservation{{
+		OperationID: "failed-pull", ActivityID: "activity", Attempt: 1,
+		Kind: domainexecution.ImagePreparationPull, Status: "failed", StartedAt: start, FinishedAt: &end,
+	}}
+	timeline := BuildTimelineWithImagePreparation(run, tasks, nil, nil, observations, end)
+	assertTimelineSeconds(t, "runtime", timeline.Totals.RuntimeSeconds, 0)
+	assertTimelineSeconds(t, "pull", timeline.Totals.ImagePullSeconds, 15)
+}

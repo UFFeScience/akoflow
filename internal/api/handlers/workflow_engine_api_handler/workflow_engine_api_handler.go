@@ -16,6 +16,7 @@ import (
 	"path"
 	"path/filepath"
 	"reflect"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -2830,12 +2831,13 @@ func (h *Handler) CancelExecution(w http.ResponseWriter, r *http.Request) {
 }
 
 type executionRecoveryPreview struct {
-	RunID          string   `json:"runId"`
-	Recoverable    bool     `json:"recoverable"`
-	Reusable       []string `json:"reusableActivityIds"`
-	Failed         []string `json:"failedActivityIds"`
-	Interrupted    []string `json:"interruptedActivityIds"`
-	CleanupPending []string `json:"cleanupPendingActivityIds"`
+	RunID          string                       `json:"runId"`
+	Recoverable    bool                         `json:"recoverable"`
+	Reusable       []string                     `json:"reusableActivityIds"`
+	Failed         []string                     `json:"failedActivityIds"`
+	Interrupted    []string                     `json:"interruptedActivityIds"`
+	CleanupPending []string                     `json:"cleanupPendingActivityIds"`
+	Reasons        map[string]map[string]string `json:"reasons,omitempty"`
 }
 
 func (h *Handler) GetExecutionRecovery(w http.ResponseWriter, r *http.Request) {
@@ -2917,6 +2919,8 @@ func (h *Handler) executionRecoveryPreview(ctx context.Context, runID string) (e
 	sort.Strings(preview.Failed)
 	sort.Strings(preview.Interrupted)
 	sort.Strings(preview.CleanupPending)
+	preview.CleanupPending = slices.Compact(preview.CleanupPending)
+	preview.Reasons = recoveryReasons(preview, latestByActivity)
 	return preview, nil
 }
 

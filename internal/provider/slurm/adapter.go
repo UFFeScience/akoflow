@@ -304,7 +304,6 @@ func applySentinelStatus(handle domain.ActivityHandle, payload string) (domain.A
 			handle.Metadata = make(map[string]any)
 		}
 		handle.Metadata[domain.TimingContainerStartedAt] = containerStartedAt
-		confirmImageObservation(&handle)
 	}
 	if node := strings.TrimSpace(values["allocated_node"]); node != "" {
 		if handle.Metadata == nil {
@@ -325,6 +324,9 @@ func applySentinelStatus(handle domain.ActivityHandle, payload string) (domain.A
 				"cpuCores": cpus, "memoryBytes": memory * 1024,
 			}
 		}
+	}
+	if started, _ := handle.Metadata[domain.TimingContainerStartedAt].(float64); started > 0 {
+		confirmImageObservation(&handle)
 	}
 	switch values["state"] {
 	case "running":

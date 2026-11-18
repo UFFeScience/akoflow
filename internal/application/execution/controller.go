@@ -45,6 +45,7 @@ func (s *Controller) Start(ctx context.Context, execution domain.ActivityExecuti
 	// This is intentionally enforced at the final execution boundary as well as
 	// by the supervisor. A caller cannot bypass a failed materialization by
 	// constructing an ActivityExecutionContext directly.
+	requestedImage := requestedExecutableReference(execution.Activity.Command)
 	if err := prepareActivityCommand(&execution); err != nil {
 		return domain.ActivityHandle{}, err
 	}
@@ -83,6 +84,9 @@ func (s *Controller) Start(ctx context.Context, execution domain.ActivityExecuti
 		return domain.ActivityHandle{}, fmt.Errorf("runtime returned an invalid activity handle")
 	}
 	handle.ID = handleID
+	if observation, _ := handle.Metadata["imageObservation"].(map[string]any); observation != nil && requestedImage != "" {
+		observation["requestedReference"] = requestedImage
+	}
 	s.catalogExecutionImage(ctx, &handle)
 	handle.Log = appendLog(handle.Log, "info", "Activity started on runtime "+handle.RuntimeID+".")
 	if handle.Status == domain.HandleCompleted {
@@ -202,6 +206,24 @@ func (s *Controller) catalogExecutionImage(ctx context.Context, handle *domain.A
 		delete(handle.Metadata, "executionImageCatalogError")
 		handle.Metadata["executionImageArtifact"] = link
 	}
+}
+
+func requestedExecutableReference(command domain.ActivityCommand) string {
+	executable := command.EffectiveExecutable()
+	if executable == nil {
+		return ""
+	}
+	source := executable.Source
+	if source.ArtifactRef != nil && source.ArtifactRef.ID != "" {
+		if source.ArtifactRef.Version != "" {
+			return source.ArtifactRef.ID + "@" + source.ArtifactRef.Version
+		}
+		return source.ArtifactRef.ID
+	}
+	if source.ArtifactBuildRef != "" {
+		return source.ArtifactBuildRef
+	}
+	return source.Reference
 }
 
 func prepareActivityCommand(execution *domain.ActivityExecutionContext) error {

@@ -403,6 +403,7 @@ func TestStartPersistsExecutionImageLinkPerAttempt(t *testing.T) {
 	catalog := &executionImageCatalogFake{}
 	runtime := &runtimeFake{handle: domain.ActivityHandle{RunID: "run", ActivityID: "activity", Status: domain.HandleRunning}}
 	execution := executionFixture()
+	execution.Activity.Command.Image = "workflow:latest"
 	for attempt := 1; attempt <= 2; attempt++ {
 		execution.Attempt = attempt
 		runtime.handle.Metadata = map[string]any{"imageObservation": map[string]any{"status": "observed"}}
@@ -412,7 +413,9 @@ func TestStartPersistsExecutionImageLinkPerAttempt(t *testing.T) {
 			t.Fatal(err)
 		}
 		link, _ := handles.handle.Metadata["executionImageArtifact"].(map[string]string)
-		if link["variantId"] != "immutable" || handles.handle.ID != execution.HandleID() {
+		observation, _ := handles.handle.Metadata["imageObservation"].(map[string]any)
+		if link["variantId"] != "immutable" || handles.handle.ID != execution.HandleID() ||
+			observation["requestedReference"] != "workflow:latest" {
 			t.Fatalf("wrong attempt link: %+v", handles.handle)
 		}
 	}

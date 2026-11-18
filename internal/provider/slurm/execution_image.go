@@ -23,5 +23,16 @@ func confirmImageObservation(handle *domain.ActivityHandle) {
 	observation, _ := handle.Metadata["imageObservation"].(map[string]any)
 	if observation["sifVariantId"] != nil {
 		observation["status"] = "observed"
+		environment, _ := handle.Metadata["slurmEnvironment"].(map[string]any)
+		architecture, _ := environment["architecture"].(string)
+		switch architecture {
+		case "x86_64":
+			architecture = "amd64"
+		case "aarch64":
+			architecture = "arm64"
+		}
+		if osType, _ := environment["os"].(string); osType != "" && architecture != "" {
+			observation["platform"] = osType + "/" + architecture
+		}
 	}
 }

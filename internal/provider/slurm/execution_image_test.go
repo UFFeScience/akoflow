@@ -20,9 +20,9 @@ func TestSIFUsageRequiresContainerStartEvidence(t *testing.T) {
 	if observation["status"] != "unavailable" {
 		t.Fatalf("preparation became usage: %v", observation)
 	}
-	handle, _ = applySentinelStatus(handle, "state=failed\nexit_code=1\ncontainer_started_at=10\n")
+	handle, _ = applySentinelStatus(handle, "state=failed\nexit_code=1\ncontainer_started_at=10\nallocated_node=node\nnode_arch=x86_64\nnode_os=linux\n")
 	observation = handle.Metadata["imageObservation"].(map[string]any)
-	if observation["status"] != "observed" || observation["sifVariantId"] != "sif" || observation["requestedReference"] != command.Image {
+	if observation["status"] != "observed" || observation["sifVariantId"] != "sif" || observation["platform"] != "linux/amd64" || observation["requestedReference"] != command.Image {
 		t.Fatalf("missing observed usage: %v", observation)
 	}
 }

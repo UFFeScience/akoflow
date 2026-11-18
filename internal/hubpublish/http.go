@@ -29,6 +29,7 @@ func (m *Manager) Handler() http.Handler {
 	mux.HandleFunc("GET /akoflow-api/hub/publications/{publicationId}/contribution-destination/", m.serveContributionDestination)
 	mux.HandleFunc("POST /akoflow-api/hub/publications/", m.serveCreate)
 	mux.HandleFunc("POST /akoflow-api/hub/publications/preview/", m.servePreview)
+	mux.HandleFunc("POST /akoflow-api/hub/profile-executions/preview/", m.serveProfileExecutionPreview)
 	mux.HandleFunc("POST /akoflow-api/hub/publications/confirm/", m.serveConfirm)
 	return mux
 }

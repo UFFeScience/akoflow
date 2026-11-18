@@ -24,6 +24,7 @@ type Manager struct {
 	previews map[string]preparedPublication
 }
 type savedState struct {
+	ProfileShareSecret   string                    `json:"profileShareSecret,omitempty"`
 	WorkflowSources      map[string]WorkflowSource `json:"workflowSources,omitempty"`
 	Enabled              bool                      `json:"enabled"`
 	HubURL               string                    `json:"hubUrl"`
@@ -97,6 +98,7 @@ type importInput struct {
 	Message       string `json:"message"`
 }
 type preparedPublication struct {
+	Profile      *profileExecutionInput
 	RunID        string
 	VersionInput *publicationVersionInput
 	Input        importInput

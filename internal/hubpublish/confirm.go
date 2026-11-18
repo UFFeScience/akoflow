@@ -18,6 +18,9 @@ func (m *Manager) Confirm(ctx context.Context, id string, acknowledgePublic bool
 	if !ok || time.Now().After(prepared.ExpiresAt) || prepared.TokenHash != digest([]byte(m.state.AccessToken)) {
 		return result, failure(409, "review_expired", "This review expired or the connected account changed. Review the result again.")
 	}
+	if prepared.Profile != nil {
+		return m.confirmProfileExecutionLocked(ctx, *prepared.Profile, acknowledgePublic)
+	}
 	current, err := m.executionDestinationLocked(ctx, prepared.Publication.ID, prepared.Input.Contribution)
 	if err != nil {
 		return result, err

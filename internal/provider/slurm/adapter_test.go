@@ -316,12 +316,16 @@ func installFakeContainerRuntime(t *testing.T, hasSeed bool, seedPaths []string)
 	script := `#!/bin/sh
 test "$1" = exec || exit 64
 shift
-while [ "$1" = --bind ]; do shift 2; done
+bound=
+while [ "$1" = --bind ]; do bound=${2%%:*}; shift 2; done
 image=$1
 shift
 if [ "$1" = test ] && [ "$2" = -d ] && [ "$3" = /akoflow-wfa-shared ]; then
   [ "${AKOFLOW_TEST_HAS_SEED:-false}" = true ]
   exit
+fi
+if [ "$1" = /bin/sh ] && [ "$2" = -c ]; then
+  case "$5" in "$bound"/*) ;; *) exit 65 ;; esac
 fi
 if [ "$1" = find ] && [ "$2" = /akoflow-wfa-shared ]; then
   printf '%s\n' ${AKOFLOW_TEST_SEED_PATHS:-}

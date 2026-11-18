@@ -49,7 +49,7 @@ func (m *Manager) HistoricalProfiles(ctx context.Context, workflow domain.Workfl
 		estimates, known := byResourceShape[key]
 		if !known {
 			request := historyProfilesForResource(workflow.Version, resource, architecture, driver, model)
-			estimates, _ = m.activityEstimates(ctx, historySourceURI(source.PublicationID, source.Version), origin, request)
+			estimates, _ = m.activityEstimates(ctx, historySourceURI(source.PublicationID, source.Version), origin, request, source.Reference)
 			byResourceShape[key] = estimates
 		}
 		for _, activity := range workflow.Version.Activities {

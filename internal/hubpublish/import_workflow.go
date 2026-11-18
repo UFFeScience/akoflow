@@ -11,10 +11,10 @@ import (
 )
 
 func (m *Manager) ImportWorkflow(ctx context.Context, uri, name string) (json.RawMessage, error) {
-	return m.importWorkflow(ctx, uri, name, "", "")
+	return m.importWorkflow(ctx, uri, name, "", "", nil)
 }
 
-func (m *Manager) importWorkflow(ctx context.Context, uri, name, expectedHash, editedYAML string) (json.RawMessage, error) {
+func (m *Manager) importWorkflow(ctx context.Context, uri, name, expectedHash, editedYAML string, selected *ExecutionReference) (json.RawMessage, error) {
 	if m.options.ReadOnly {
 		return nil, failure(403, "read_only", "Read-only instances cannot import workflows.")
 	}
@@ -27,6 +27,11 @@ func (m *Manager) importWorkflow(ctx context.Context, uri, name, expectedHash, e
 	}
 	if editedYAML != "" && expectedHash == "" {
 		return nil, failure(422, "workflow_source_required", "Review a Hub version before importing an edited copy.")
+	}
+	if selected != nil {
+		if expectedHash == "" || definition.PublicationID == "" || len(selected.ExperimentID) == 0 || len(selected.ExperimentID) > 128 || len(selected.RunID) == 0 || len(selected.RunID) > 128 {
+			return nil, failure(422, "invalid_execution_reference", "Select an execution from the reviewed Hub version.")
+		}
 	}
 	yaml := definition.YAML
 	if editedYAML != "" {
@@ -58,7 +63,7 @@ func (m *Manager) importWorkflow(ctx context.Context, uri, name, expectedHash, e
 		if editedYAML == "" {
 			localHash = digest(localYAML)
 		}
-		m.state.WorkflowSources[imported.Version.ID] = WorkflowSource{PublicationID: publicationID, Version: version, Hash: definition.Hash, LocalHash: localHash, HubOrigin: definition.origin, URI: definition.URI}
+		m.state.WorkflowSources[imported.Version.ID] = WorkflowSource{PublicationID: publicationID, Version: version, Hash: definition.Hash, LocalHash: localHash, HubOrigin: definition.origin, URI: definition.URI, Reference: selected}
 		saveErr := m.persistLocked()
 		m.mu.Unlock()
 		if saveErr != nil {
@@ -101,15 +106,16 @@ func (m *Manager) sourceRequest(ctx context.Context, method, path string, body [
 
 func (m *Manager) serveImportWorkflow(w http.ResponseWriter, r *http.Request) {
 	var input struct {
-		URI          string `json:"uri"`
-		Name         string `json:"name,omitempty"`
-		ExpectedHash string `json:"expectedHash,omitempty"`
-		YAML         string `json:"yaml,omitempty"`
+		URI          string              `json:"uri"`
+		Name         string              `json:"name,omitempty"`
+		ExpectedHash string              `json:"expectedHash,omitempty"`
+		Reference    *ExecutionReference `json:"reference,omitempty"`
+		YAML         string              `json:"yaml,omitempty"`
 	}
 	if err := decodeBoundedRequest(w, r, &input, 16<<20); err != nil {
 		respond(w, nil, err)
 		return
 	}
-	value, err := m.importWorkflow(r.Context(), input.URI, input.Name, input.ExpectedHash, input.YAML)
+	value, err := m.importWorkflow(r.Context(), input.URI, input.Name, input.ExpectedHash, input.YAML, input.Reference)
 	respond(w, value, err)
 }

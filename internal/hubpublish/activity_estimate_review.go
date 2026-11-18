@@ -3,6 +3,7 @@ package hubpublish
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"sort"
 
@@ -22,26 +23,28 @@ type reviewActivityEstimate struct {
 }
 
 type activityEstimateReview struct {
-	Resources  []reviewResource         `json:"resources"`
-	ResourceID string                   `json:"resourceId"`
-	Activities []reviewActivityEstimate `json:"activities"`
+	Resources  []reviewResource           `json:"resources"`
+	ResourceID string                     `json:"resourceId"`
+	References []executionReferenceChoice `json:"references"`
+	Activities []reviewActivityEstimate   `json:"activities"`
 }
 
 func (m *Manager) serveActivityEstimateReview(w http.ResponseWriter, r *http.Request) {
 	var input struct {
-		URI        string `json:"uri"`
-		Hash       string `json:"hash"`
-		ResourceID string `json:"resourceId"`
+		URI        string              `json:"uri"`
+		Hash       string              `json:"hash"`
+		ResourceID string              `json:"resourceId"`
+		Reference  *ExecutionReference `json:"reference"`
 	}
 	if err := decodeRequest(w, r, &input); err != nil {
 		respond(w, nil, err)
 		return
 	}
-	review, err := m.reviewActivityEstimates(r.Context(), input.URI, input.Hash, input.ResourceID)
+	review, err := m.reviewActivityEstimates(r.Context(), input.URI, input.Hash, input.ResourceID, input.Reference)
 	respond(w, review, err)
 }
 
-func (m *Manager) reviewActivityEstimates(ctx context.Context, uri, hash, selectedID string) (activityEstimateReview, error) {
+func (m *Manager) reviewActivityEstimates(ctx context.Context, uri, hash, selectedID string, reference *ExecutionReference) (activityEstimateReview, error) {
 	review := activityEstimateReview{Resources: []reviewResource{}, Activities: []reviewActivityEstimate{}}
 	definition, err := m.WorkflowDefinition(ctx, uri)
 	if err != nil {
@@ -96,7 +99,12 @@ func (m *Manager) reviewActivityEstimates(ctx context.Context, uri, hash, select
 			selected = resource
 		}
 	}
-	if selected.ID == "" || definition.PublicationID == "" {
+	if definition.PublicationID == "" {
+		return review, nil
+	}
+	path := fmt.Sprintf("/publications/%s/versions/%d/execution-references", definition.PublicationID, definition.Version)
+	_ = m.historyRequest(ctx, definition.origin, http.MethodGet, path, nil, &review.References)
+	if selected.ID == "" {
 		return review, nil
 	}
 	review.ResourceID = selected.ID
@@ -105,7 +113,7 @@ func (m *Manager) reviewActivityEstimates(ctx context.Context, uri, hash, select
 		model = ""
 	}
 	profiles := historyProfilesForResource(workflow.Version, selected, historyArchitecture(selected.Architecture), historyRuntime(selected.ID, environments), model)
-	estimates, err := m.activityEstimates(ctx, historySourceURI(definition.PublicationID, definition.Version), definition.origin, profiles)
+	estimates, err := m.activityEstimates(ctx, historySourceURI(definition.PublicationID, definition.Version), definition.origin, profiles, reference)
 	if err != nil {
 		return review, err
 	}

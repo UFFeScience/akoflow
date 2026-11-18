@@ -48,12 +48,13 @@ type Identity struct {
 	ExpiresAt       time.Time `json:"expiresAt"`
 }
 type WorkflowSource struct {
-	URI           string `json:"uri,omitempty"`
-	LocalHash     string `json:"localHash,omitempty"`
-	HubOrigin     string `json:"hubOrigin,omitempty"`
-	PublicationID string `json:"publicationId"`
-	Version       int    `json:"version"`
-	Hash          string `json:"hash"`
+	Reference     *ExecutionReference `json:"reference,omitempty"`
+	URI           string              `json:"uri,omitempty"`
+	LocalHash     string              `json:"localHash,omitempty"`
+	HubOrigin     string              `json:"hubOrigin,omitempty"`
+	PublicationID string              `json:"publicationId"`
+	Version       int                 `json:"version"`
+	Hash          string              `json:"hash"`
 }
 
 type Status struct {

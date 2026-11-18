@@ -101,7 +101,7 @@ func TestImportRejectsDefinitionChangedSinceReview(t *testing.T) {
 	manager.options.Source = http.HandlerFunc(func(http.ResponseWriter, *http.Request) {
 		t.Error("the local import must not run when reviewed content changed")
 	})
-	_, err := manager.importWorkflow(context.Background(), "akoflow::reviewer/study:v2", "copy", "old-hash", "name: edited")
+	_, err := manager.importWorkflow(context.Background(), "akoflow::reviewer/study:v2", "copy", "old-hash", "name: edited", nil)
 	fault, ok := err.(*apiError)
 	if !ok || fault.Code != "workflow_source_changed" {
 		t.Fatalf("expected changed source error, got %v", err)

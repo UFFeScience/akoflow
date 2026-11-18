@@ -8,6 +8,28 @@ import (
 	"time"
 )
 
+type ExecutionReference struct {
+	ExperimentID string `json:"experimentId"`
+	RunID        string `json:"runId"`
+}
+
+type executionReferenceChoice struct {
+	ExecutionReference
+	Author          string  `json:"author"`
+	Date            string  `json:"date"`
+	MachineLabel    string  `json:"machineLabel,omitempty"`
+	DurationSeconds float64 `json:"durationSeconds"`
+	Resources       []struct {
+		Architecture   string `json:"architecture"`
+		CPUModel       string `json:"cpuModel,omitempty"`
+		CPUCores       int    `json:"cpuCores"`
+		MemoryBytes    int64  `json:"memoryBytes"`
+		OS             string `json:"os"`
+		Runtime        string `json:"runtime"`
+		RuntimeVersion string `json:"runtimeVersion,omitempty"`
+	} `json:"resources"`
+}
+
 type ActivityHistoryProfile struct {
 	ImageDigest     string  `json:"imageDigest,omitempty"`
 	Platform        string  `json:"platform,omitempty"`
@@ -22,6 +44,7 @@ type ActivityHistoryProfile struct {
 }
 
 type ActivityHistoryEstimate struct {
+	SelectedReference        bool     `json:"selectedReference,omitempty"`
 	MedianSeconds            float64  `json:"medianSeconds"`
 	MinSeconds               float64  `json:"minSeconds"`
 	MaxSeconds               float64  `json:"maxSeconds"`
@@ -30,10 +53,10 @@ type ActivityHistoryEstimate struct {
 }
 
 func (m *Manager) ActivityEstimates(ctx context.Context, uri string, activities map[string]ActivityHistoryProfile) (map[string]ActivityHistoryEstimate, error) {
-	return m.activityEstimates(ctx, uri, "", activities)
+	return m.activityEstimates(ctx, uri, "", activities, nil)
 }
 
-func (m *Manager) activityEstimates(ctx context.Context, uri, expectedOrigin string, activities map[string]ActivityHistoryProfile) (map[string]ActivityHistoryEstimate, error) {
+func (m *Manager) activityEstimates(ctx context.Context, uri, expectedOrigin string, activities map[string]ActivityHistoryProfile, reference *ExecutionReference) (map[string]ActivityHistoryEstimate, error) {
 	publicationID, version, err := parseWorkflowURI(uri)
 	if err != nil {
 		return nil, err
@@ -48,32 +71,41 @@ func (m *Manager) activityEstimates(ctx context.Context, uri, expectedOrigin str
 	path := fmt.Sprintf("/publications/%s/versions/%d/activity-estimates", publicationID, version)
 	body := struct {
 		Activities map[string]ActivityHistoryProfile `json:"activities"`
-	}{activities}
-	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
-	defer cancel()
-	m.mu.Lock()
-	defer m.mu.Unlock()
-	if expectedOrigin != "" && m.state.HubURL != expectedOrigin {
-		return estimates, nil
-	}
-	err = m.requestLocked(ctx, http.MethodPost, path, body, nil, false, &estimates)
-	var response *apiError
-	if errors.As(err, &response) && response.Status == http.StatusNotFound && m.state.AccessToken != "" {
-		err = m.requestLocked(ctx, http.MethodPost, "/desktop"+path, body, nil, true, &estimates)
-	}
-	if err != nil {
+		Reference  *ExecutionReference               `json:"reference,omitempty"`
+	}{activities, reference}
+	if err := m.historyRequest(ctx, expectedOrigin, http.MethodPost, path, body, &estimates); err != nil {
 		return nil, err
 	}
 	if estimates == nil {
 		estimates = make(map[string]ActivityHistoryEstimate)
 	}
+	minimum := 3
+	if reference != nil {
+		minimum = 1
+	}
 	for id, estimate := range estimates {
-		if _, requested := activities[id]; !requested || estimate.SampleCount < 3 ||
+		if _, requested := activities[id]; !requested || estimate.SampleCount < minimum || estimate.SelectedReference != (reference != nil) ||
 			estimate.MinSeconds <= 0 || estimate.MedianSeconds < estimate.MinSeconds || estimate.MaxSeconds < estimate.MedianSeconds {
 			delete(estimates, id)
 		}
 	}
 	return estimates, nil
+}
+
+func (m *Manager) historyRequest(ctx context.Context, expectedOrigin, method, path string, body, result any) error {
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	if expectedOrigin != "" && m.state.HubURL != expectedOrigin {
+		return nil
+	}
+	err := m.requestLocked(ctx, method, path, body, nil, false, result)
+	var response *apiError
+	if errors.As(err, &response) && response.Status == http.StatusNotFound && m.state.AccessToken != "" {
+		err = m.requestLocked(ctx, method, "/desktop"+path, body, nil, true, result)
+	}
+	return err
 }
 
 func (m *Manager) serveActivityEstimates(w http.ResponseWriter, r *http.Request) {

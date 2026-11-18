@@ -128,7 +128,7 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 		return domain.ActivityHandle{}, a.reconcileSubmission(ctx, jobName, err)
 	}
 	submittedAt := runtimecommon.UnixSeconds(time.Now())
-	return domain.ActivityHandle{ID: runtimecommon.NewID("activity"), RunID: execution.Run.ID,
+	handle := domain.ActivityHandle{ID: runtimecommon.NewID("activity"), RunID: execution.Run.ID,
 		ActivityID: activity.ID, ResourceID: execution.Resource.ID,
 		RuntimeID: execution.RuntimeID, ExternalID: jobID,
 		Status: domain.HandleStarting, StartedAt: submittedAt,
@@ -138,7 +138,9 @@ func (a *Adapter) Start(ctx context.Context, execution domain.ActivityExecutionC
 			"sentinelPath":              slurmSentinelPath(execution.Run.ID, activity.ID, jobID),
 			"metricsPath":               slurmSentinelPath(execution.Run.ID, activity.ID, jobID) + ".metrics.tsv",
 			domain.TimingSubmittedAt:    submittedAt,
-			"artifactObservationDriver": "filesystem-diff", "artifactObservationRoot": activity.Command.WorkingDirectory}}, nil
+			"artifactObservationDriver": "filesystem-diff", "artifactObservationRoot": activity.Command.WorkingDirectory}}
+	prepareImageObservation(&handle, activity.Command)
+	return handle, nil
 }
 
 func slurmPlacement(defaultPartition string, resource domain.Resource) (string, string) {
@@ -302,6 +304,7 @@ func applySentinelStatus(handle domain.ActivityHandle, payload string) (domain.A
 			handle.Metadata = make(map[string]any)
 		}
 		handle.Metadata[domain.TimingContainerStartedAt] = containerStartedAt
+		confirmImageObservation(&handle)
 	}
 	if node := strings.TrimSpace(values["allocated_node"]); node != "" {
 		if handle.Metadata == nil {
@@ -590,6 +593,7 @@ func (a *Adapter) startDirect(ctx context.Context, execution domain.ActivityExec
 			"executionTarget": string(domain.ExecutionTargetDirect), "slurmSubmission": "login-node",
 			"scriptPath": scriptPath, domain.TimingSubmittedAt: startedAt,
 		}}
+	prepareImageObservation(&handle, activity.Command)
 	runContext, cancel := context.WithCancel(ctx)
 	a.directMu.Lock()
 	a.directCancels[handle.ID] = cancel
@@ -619,6 +623,7 @@ func (a *Adapter) inspectDirect(handle domain.ActivityHandle) domain.ActivityHan
 		return handle
 	}
 	handle.Status = domain.HandleCompleted
+	confirmImageObservation(&handle)
 	return handle
 }
 

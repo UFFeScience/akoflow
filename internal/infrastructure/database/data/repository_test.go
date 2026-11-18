@@ -64,6 +64,8 @@ func TestCatalogArtifactsIsIdempotentAndQueryable(t *testing.T) {
 func TestArtifactBuildCatalogLifecycle(t *testing.T) {
 	repository, ctx := testRepository(t), context.Background()
 	digest := "sha256:" + strings.Repeat("a", 64)
+	sourceDigest := "sha256:" + strings.Repeat("c", 64)
+	imageReference := "ubuntu@" + sourceDigest
 	version := domain.ArtifactVersion{ID: "artifact-version", ArtifactID: "tool", Version: "1", Scope: domain.CatalogScope("system")}
 	if err := repository.RegisterArtifactVersion(ctx, version); err != nil {
 		t.Fatal(err)
@@ -76,7 +78,7 @@ func TestArtifactBuildCatalogLifecycle(t *testing.T) {
 	if err != nil || foundContext == nil || foundContext.StorageURI != contextArtifact.StorageURI {
 		t.Fatalf("context = %#v, %v", foundContext, err)
 	}
-	build := domain.ArtifactBuild{ID: "build", ArtifactVersionID: version.ID, SourceType: "docker-image", ContextDigest: contextArtifact.Digest, RecipePath: "ubuntu:latest", RecipeDigest: digest, TargetFormat: "sif", TargetOS: "linux", TargetArchitecture: "amd64", BuildArguments: "{}", CacheKey: "cache"}
+	build := domain.ArtifactBuild{ID: "build", ArtifactVersionID: version.ID, SourceType: "docker-image", ContextDigest: contextArtifact.Digest, RecipePath: imageReference, RecipeDigest: digest, TargetFormat: "sif", TargetOS: "linux", TargetArchitecture: "amd64", BuildArguments: "{}", CacheKey: "cache"}
 	if err = repository.SaveArtifactBuild(ctx, build); err != nil {
 		t.Fatal(err)
 	}
@@ -125,10 +127,10 @@ func TestArtifactBuildCatalogLifecycle(t *testing.T) {
 		t.Fatalf("catalog output = %#v %#v, %v", catalogVariant, catalogLocation, err)
 	}
 	reference, err := repository.FindCatalogOCIReference(ctx, "tool", "1", "amd64")
-	if err != nil || reference != "ubuntu:latest" {
+	if err != nil || reference != imageReference {
 		t.Fatalf("OCI reference = %q, %v", reference, err)
 	}
-	dockerBuild, dockerVariant, dockerLocation, err := repository.FindDockerBuildOutput(ctx, "ubuntu:latest", "amd64")
+	dockerBuild, dockerVariant, dockerLocation, err := repository.FindDockerBuildOutput(ctx, imageReference, "amd64")
 	if err != nil || dockerBuild == nil || dockerVariant == nil || dockerLocation == nil {
 		t.Fatalf("docker output = %#v %#v %#v, %v", dockerBuild, dockerVariant, dockerLocation, err)
 	}
@@ -138,6 +140,18 @@ func TestArtifactBuildCatalogLifecycle(t *testing.T) {
 	if err != nil || len(locations) != 1 {
 		t.Fatalf("locations = %#v, %v", locations, err)
 	}
+	handle := domain.ActivityHandle{Metadata: map[string]any{"imageObservation": map[string]any{
+		"status": "observed", "sifVariantId": variant.ID, "sifDigest": digest,
+	}}}
+	link, err := repository.CatalogExecutionImage(ctx, handle)
+	if err != nil || link["variantId"] != variant.ID || link["sourceVariantId"] == "" || link["sourceDigest"] != sourceDigest {
+		t.Fatalf("unexpected SIF provenance: %+v, %v", link, err)
+	}
+	locations, err = repository.ListArtifactLocations(ctx)
+	if err != nil || len(locations) != 1 {
+		t.Fatalf("catalog inferred a location from the source reference: %+v, %v", locations, err)
+	}
+
 }
 
 func assertSelectableArtifacts(t *testing.T, repository *Repository, ctx context.Context, published bool) {

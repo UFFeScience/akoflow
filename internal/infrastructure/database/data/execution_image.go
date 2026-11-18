@@ -17,6 +17,10 @@ func (r *Repository) CatalogExecutionImage(ctx context.Context, handle domain.Ac
 	if observation["status"] != "observed" {
 		return nil, nil
 	}
+	if variant, _ := observation["sifVariantId"].(string); variant != "" {
+		digest, _ := observation["sifDigest"].(string)
+		return r.catalogUsedSIF(ctx, variant, digest)
+	}
 	digest, _ := observation["registryDigest"].(string)
 	runtimeID, _ := observation["runtimeImageId"].(string)
 	localDocker := handle.Metadata["executionTarget"] == "local-docker"
@@ -85,4 +89,44 @@ func executionImageVariant(ctx context.Context, tx *sql.Tx, digest, architecture
 		return nil, err
 	}
 	return map[string]string{"artifactId": artifactID, "version": version, "variantId": variantID, "digest": digest}, nil
+}
+
+func (r *Repository) catalogUsedSIF(ctx context.Context, variant, digest string) (map[string]string, error) {
+	tx, err := r.db.BeginTx(ctx, nil)
+	if err != nil {
+		return nil, err
+	}
+	defer tx.Rollback()
+	var artifact, version, architecture string
+	err = tx.QueryRowContext(ctx, `SELECT av.artifact_id,av.version,v.architecture
+		FROM artifact_variants v JOIN artifact_versions av ON av.id=v.artifact_version_id
+		WHERE v.id=? AND v.digest=? AND v.format='sif'`, variant, digest).Scan(&artifact, &version, &architecture)
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	link := map[string]string{"artifactId": artifact, "version": version, "variantId": variant, "digest": digest}
+	var reference string
+	err = tx.QueryRowContext(ctx, `SELECT b.recipe_path FROM build_runs br
+		JOIN artifact_builds b ON b.id=br.artifact_build_id
+		WHERE br.output_variant_id=? AND br.status='completed' AND b.source_type='docker-image'
+		ORDER BY br.finished_at DESC,br.id LIMIT 1`, variant).Scan(&reference)
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		return nil, err
+	}
+	if _, sourceDigest, pinned := strings.Cut(reference, "@"); pinned && executionImageDigest.MatchString(sourceDigest) {
+		platform := ""
+		if architecture != "" {
+			platform = "linux/" + architecture
+		}
+		source, err := executionImageVariant(ctx, tx, sourceDigest, architecture, platform, "oci-manifest", false)
+		if err != nil {
+			return nil, err
+		}
+		link["sourceArtifactId"], link["sourceVersion"], link["sourceVariantId"] = source["artifactId"], source["version"], source["variantId"]
+		link["sourceDigest"] = sourceDigest
+	}
+	return link, tx.Commit()
 }

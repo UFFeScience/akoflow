@@ -29,7 +29,14 @@ func BuildTimeline(run domain.ExecutionRun, tasks []domain.TaskExecution, transf
 	return BuildTimelineWithImagePreparation(run, tasks, transfers, operations, nil, time.Now())
 }
 
-func BuildTimelineWithImagePreparation(run domain.ExecutionRun, tasks []domain.TaskExecution, transfers []domain.DataTransfer, operations []domain.CloudOperationRun, preparation []domainexecution.ImagePreparationObservation, now time.Time) domain.ExecutionTimeline {
+func BuildTimelineWithImagePreparation(
+	run domain.ExecutionRun,
+	tasks []domain.TaskExecution,
+	transfers []domain.DataTransfer,
+	operations []domain.CloudOperationRun,
+	preparation []domainexecution.ImagePreparationObservation,
+	now time.Time,
+) domain.ExecutionTimeline {
 	timeline := domain.ExecutionTimeline{ComputeMakespanSeconds: run.MakespanSeconds, Phases: make([]domain.ExecutionTimelinePhase, 0)}
 	if run.StartedAt != nil {
 		timeline.StartedAt = unixSeconds(*run.StartedAt)

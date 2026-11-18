@@ -67,7 +67,16 @@ func (m *Manager) WorkflowDefinition(ctx context.Context, uri string) (WorkflowD
 		return WorkflowDefinition{}, hubResponseError(status, data)
 	}
 	hash := sha256.Sum256(data)
-	return WorkflowDefinition{origin: origin, Publication: headers.title, Owner: headers.owner, PublicationID: id, URI: fmt.Sprintf("akoflow://hub/publications/%s/versions/%d", id, version), Version: version, YAML: string(data), Hash: hex.EncodeToString(hash[:])}, nil
+	return WorkflowDefinition{
+		origin:        origin,
+		Publication:   headers.title,
+		Owner:         headers.owner,
+		PublicationID: id,
+		URI:           fmt.Sprintf("akoflow://hub/publications/%s/versions/%d", id, version),
+		Version:       version,
+		YAML:          string(data),
+		Hash:          hex.EncodeToString(hash[:]),
+	}, nil
 }
 
 type resolvedDefinitionHeaders struct {

@@ -8,7 +8,7 @@ import (
 	"github.com/UFFeScience/akoflow/internal/infrastructure/config"
 )
 
-func buildInstallationHealth(storage persistence, settings config.Settings) *installationhealth.Service {
+func buildInstallationHealth(storage persistence, settings config.Settings) *installationhealth.Monitor {
 	checks := []installationhealth.Probe{
 		{ID: "database", Name: "Instance database", Action: "Review instance data management and available backups.",
 			Check: func(ctx context.Context) installationhealth.Observation {

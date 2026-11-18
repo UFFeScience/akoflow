@@ -50,7 +50,7 @@ type Collector struct {
 	ReadOnly             bool
 	ConsoleEnabled       bool
 	BuildContextMaxBytes int64
-	Health               *installationhealth.Service
+	Health               *installationhealth.Monitor
 	Audit                ports.AuditStore
 }
 

@@ -72,17 +72,7 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 	mux.HandleFunc("POST /akoflow-api/kubernetes-tokens/", http_config.KernelHandler(workflowEngine.SaveKubernetesToken))
 	mux.HandleFunc("PUT /akoflow-api/instance/", http_config.KernelHandler(workflowEngine.SaveInstance))
 	mux.HandleFunc("POST /akoflow-api/factory-reset/", http_config.KernelHandler(workflowEngine.FactoryReset))
-	mux.HandleFunc("GET /akoflow-api/instances/", http_config.KernelHandler(workflowEngine.ListArchiveInstances))
-	mux.HandleFunc("GET /akoflow-api/instances/default/backups/", http_config.KernelHandler(workflowEngine.GetBackups))
-	mux.HandleFunc("PUT /akoflow-api/instances/default/backups/", http_config.KernelHandler(workflowEngine.ConfigureBackups))
-	mux.HandleFunc("POST /akoflow-api/instances/default/backups/", http_config.KernelHandler(workflowEngine.CreateBackup))
-	mux.HandleFunc("POST /akoflow-api/instance-backup-imports/{$}", http_config.KernelHandler(workflowEngine.ImportManagedBackup))
-	mux.HandleFunc("GET /akoflow-api/instances/default/restore/", http_config.KernelHandler(workflowEngine.GetRestoreResult))
-	mux.HandleFunc("GET /akoflow-api/instance-restorations/{instanceId}/preview/{$}", http_config.KernelHandler(workflowEngine.PreviewRestore))
-	mux.HandleFunc("POST /akoflow-api/instance-restorations/{instanceId}/{$}", http_config.KernelHandler(workflowEngine.ScheduleRestore))
-	mux.HandleFunc("GET /akoflow-api/instances/default/export/", workflowEngine.ExportArchiveInstance)
-	mux.HandleFunc("POST /akoflow-api/instances/import/", http_config.KernelHandler(workflowEngine.ImportArchiveInstance))
-	mux.HandleFunc("POST /akoflow-api/instance-activations/{instanceId}/", http_config.KernelHandler(workflowEngine.ActivateArchiveInstance))
+	registerInstanceArchiveRoutes(mux, workflowEngine)
 	mux.HandleFunc("GET /akoflow-api/user-preferences/{clientId}/", http_config.KernelHandler(workflowEngine.GetUserPreferences))
 	mux.HandleFunc("PUT /akoflow-api/user-preferences/{clientId}/", http_config.KernelHandler(workflowEngine.SaveUserPreferences))
 
@@ -168,6 +158,26 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 	mux.HandleFunc("GET /akoflow-api/execution-scopes/{scopeId}/", http_config.KernelHandler(workflowEngine.GetExecutionScope))
 	mux.HandleFunc("DELETE /akoflow-api/execution-scopes/{scopeId}/", http_config.KernelHandler(workflowEngine.DeleteExecutionScope))
 	registerWorkflowRoutes(mux, workflowEngine)
+	registerPlanningRoutes(mux, workflowEngine)
+	registerExecutionRoutes(mux, workflowEngine)
+	return mux
+}
+
+func registerInstanceArchiveRoutes(mux *http.ServeMux, workflowEngine *workflow_engine_api_handler.Handler) {
+	mux.HandleFunc("GET /akoflow-api/instances/", http_config.KernelHandler(workflowEngine.ListArchiveInstances))
+	mux.HandleFunc("GET /akoflow-api/instances/default/backups/", http_config.KernelHandler(workflowEngine.GetBackups))
+	mux.HandleFunc("PUT /akoflow-api/instances/default/backups/", http_config.KernelHandler(workflowEngine.ConfigureBackups))
+	mux.HandleFunc("POST /akoflow-api/instances/default/backups/", http_config.KernelHandler(workflowEngine.CreateBackup))
+	mux.HandleFunc("POST /akoflow-api/instance-backup-imports/{$}", http_config.KernelHandler(workflowEngine.ImportManagedBackup))
+	mux.HandleFunc("GET /akoflow-api/instances/default/restore/", http_config.KernelHandler(workflowEngine.GetRestoreResult))
+	mux.HandleFunc("GET /akoflow-api/instance-restorations/{instanceId}/preview/{$}", http_config.KernelHandler(workflowEngine.PreviewRestore))
+	mux.HandleFunc("POST /akoflow-api/instance-restorations/{instanceId}/{$}", http_config.KernelHandler(workflowEngine.ScheduleRestore))
+	mux.HandleFunc("GET /akoflow-api/instances/default/export/", workflowEngine.ExportArchiveInstance)
+	mux.HandleFunc("POST /akoflow-api/instances/import/", http_config.KernelHandler(workflowEngine.ImportArchiveInstance))
+	mux.HandleFunc("POST /akoflow-api/instance-activations/{instanceId}/", http_config.KernelHandler(workflowEngine.ActivateArchiveInstance))
+}
+
+func registerPlanningRoutes(mux *http.ServeMux, workflowEngine *workflow_engine_api_handler.Handler) {
 	mux.HandleFunc("POST /akoflow-api/schedule-plans/", http_config.KernelHandler(workflowEngine.CreatePlan))
 	mux.HandleFunc("POST /akoflow-api/schedule-plans/import/", http_config.KernelHandler(workflowEngine.ImportPlan))
 	mux.HandleFunc("GET /akoflow-api/schedule-plans/", http_config.KernelHandler(workflowEngine.ListPlans))
@@ -186,8 +196,6 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 	mux.HandleFunc("GET /akoflow-api/planning-sessions/{sessionId}/candidates/", http_config.KernelHandler(workflowEngine.ListPlanningCandidates))
 	mux.HandleFunc("GET /akoflow-api/planning-sessions/{sessionId}/candidates/{candidateId}/", http_config.KernelHandler(workflowEngine.GetPlanningCandidate))
 	mux.HandleFunc("POST /akoflow-api/planning-sessions/{sessionId}/candidates/{candidateId}/select/", http_config.KernelHandler(workflowEngine.SelectPlanningCandidate))
-	registerExecutionRoutes(mux, workflowEngine)
-	return mux
 }
 
 func registerExecutionRoutes(mux *http.ServeMux, workflowEngine *workflow_engine_api_handler.Handler) {

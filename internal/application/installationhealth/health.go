@@ -30,7 +30,7 @@ type Probe struct {
 
 type CheckConnections func(context.Context) ([]Observation, error)
 
-type Service struct {
+type Monitor struct {
 	probes      []Probe
 	connections CheckConnections
 	timeout     time.Duration
@@ -40,14 +40,14 @@ type Service struct {
 	running     map[string]chan struct{}
 }
 
-func New(probes []Probe, connections CheckConnections, timeout, staleAfter time.Duration) *Service {
-	return &Service{
+func New(probes []Probe, connections CheckConnections, timeout, staleAfter time.Duration) *Monitor {
+	return &Monitor{
 		probes: probes, connections: connections, timeout: timeout, staleAfter: staleAfter,
 		last: map[string]Observation{}, running: map[string]chan struct{}{},
 	}
 }
 
-func (s *Service) Snapshot(ctx context.Context, refresh bool) Report {
+func (s *Monitor) Snapshot(ctx context.Context, refresh bool) Report {
 	now := time.Now().UTC()
 	ctx, cancel := context.WithTimeout(ctx, s.timeout)
 	defer cancel()
@@ -97,7 +97,7 @@ func (s *Service) Snapshot(ctx context.Context, refresh bool) Report {
 	return report
 }
 
-func (s *Service) scheduleProbe(ctx context.Context, probe Probe, refresh bool, now time.Time) chan struct{} {
+func (s *Monitor) scheduleProbe(ctx context.Context, probe Probe, refresh bool, now time.Time) chan struct{} {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	if existing := s.running[probe.ID]; existing != nil {
@@ -129,7 +129,7 @@ func (s *Service) scheduleProbe(ctx context.Context, probe Probe, refresh bool, 
 	return done
 }
 
-func (s *Service) observe(ctx context.Context, probe Probe, done chan struct{}, now time.Time) Observation {
+func (s *Monitor) observe(ctx context.Context, probe Probe, done chan struct{}, now time.Time) Observation {
 	if done != nil {
 		select {
 		case <-done:

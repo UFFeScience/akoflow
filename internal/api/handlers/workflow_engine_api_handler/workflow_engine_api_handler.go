@@ -183,7 +183,7 @@ type Dependencies struct {
 
 type Handler struct {
 	supportObservations *supportbundle.Collector
-	installationHealth  *installationhealth.Service
+	installationHealth  *installationhealth.Monitor
 	executionSchedules  *recurring.Coordinator
 	search              ports.GlobalSearch
 	dockerHub           *dockerhub.Client

@@ -98,6 +98,27 @@
     "description": "close console session. DELETE /akoflow-api/console-sessions/{sessionId}/. Uses the daemon API and its domain validation."
   },
   {
+    "name": "configure_backups",
+    "method": "PUT",
+    "path": "/akoflow-api/instances/default/backups/",
+    "handler": "ConfigureBackups",
+    "description": "configure backups. PUT /akoflow-api/instances/default/backups/. Uses the daemon API and its domain validation.",
+    "body": {
+      "properties": {
+        "destination": {
+          "type": "string"
+        },
+        "intervalHours": {
+          "type": "integer"
+        },
+        "retain": {
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
     "name": "configure_cloud_instance",
     "method": "POST",
     "path": "/akoflow-api/cloud-instances/{instanceId}/configure/",
@@ -169,6 +190,13 @@
       },
       "type": "object"
     }
+  },
+  {
+    "name": "create_backup",
+    "method": "POST",
+    "path": "/akoflow-api/instances/default/backups/",
+    "handler": "CreateBackup",
+    "description": "create backup. POST /akoflow-api/instances/default/backups/. Uses the daemon API and its domain validation."
   },
   {
     "name": "create_cloud_capacity_target",
@@ -5930,6 +5958,119 @@
     }
   },
   {
+    "name": "create_execution_schedule",
+    "method": "POST",
+    "path": "/akoflow-api/execution-schedules/",
+    "handler": "CreateExecutionSchedule",
+    "description": "create execution schedule. POST /akoflow-api/execution-schedules/. Uses the daemon API and its domain validation.",
+    "body": {
+      "properties": {
+        "frequency": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "lastLaunch": {
+          "anyOf": [
+            {
+              "properties": {
+                "detail": {
+                  "type": "string"
+                },
+                "handledAt": {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                "outcome": {
+                  "type": "string"
+                },
+                "runId": {
+                  "type": "string"
+                },
+                "runStatus": {
+                  "type": "string"
+                },
+                "scheduledAt": {
+                  "format": "date-time",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "lastOccurrence": {
+          "anyOf": [
+            {
+              "properties": {
+                "detail": {
+                  "type": "string"
+                },
+                "handledAt": {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                "outcome": {
+                  "type": "string"
+                },
+                "runId": {
+                  "type": "string"
+                },
+                "runStatus": {
+                  "type": "string"
+                },
+                "scheduledAt": {
+                  "format": "date-time",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "localTime": {
+          "type": "string"
+        },
+        "missedPolicy": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "nextAt": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "overlapPolicy": {
+          "type": "string"
+        },
+        "paused": {
+          "type": "boolean"
+        },
+        "planId": {
+          "type": "string"
+        },
+        "timeZone": {
+          "type": "string"
+        },
+        "weekday": {
+          "type": "integer"
+        },
+        "workflowVersionId": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
     "name": "create_execution_scope",
     "method": "POST",
     "path": "/akoflow-api/execution-scopes/",
@@ -8054,6 +8195,13 @@
     "description": "get artifact build. GET /akoflow-api/artifact-builds/{buildId}/. Uses the daemon API and its domain validation."
   },
   {
+    "name": "get_backups",
+    "method": "GET",
+    "path": "/akoflow-api/instances/default/backups/",
+    "handler": "GetBackups",
+    "description": "get backups. GET /akoflow-api/instances/default/backups/. Uses the daemon API and its domain validation."
+  },
+  {
     "name": "get_build_run",
     "method": "GET",
     "path": "/akoflow-api/build-runs/{runId}/",
@@ -8246,6 +8394,13 @@
     "description": "get resource snapshot. GET /akoflow-api/resources/{resourceId}/snapshot/. Uses the daemon API and its domain validation."
   },
   {
+    "name": "get_restore_result",
+    "method": "GET",
+    "path": "/akoflow-api/instances/default/restore/",
+    "handler": "GetRestoreResult",
+    "description": "get restore result. GET /akoflow-api/instances/default/restore/. Uses the daemon API and its domain validation."
+  },
+  {
     "name": "get_scheduler_library",
     "method": "GET",
     "path": "/akoflow-api/scheduling-algorithms/{algorithmId}/",
@@ -8399,18 +8554,7 @@
     "method": "POST",
     "path": "/akoflow-api/hub/workflows/import/",
     "handler": "serveImportWorkflow",
-    "description": "hub import workflow. POST /akoflow-api/hub/workflows/import/. Uses the daemon API and its domain validation.",
-    "body": {
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "uri": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    }
+    "description": "hub import workflow. POST /akoflow-api/hub/workflows/import/. Uses the daemon API and its domain validation."
   },
   {
     "name": "hub_list_publications",
@@ -8660,6 +8804,21 @@
     "path": "/akoflow-api/instances/import/",
     "handler": "ImportArchiveInstance",
     "description": "import archive instance. POST /akoflow-api/instances/import/. Uses the daemon API and its domain validation."
+  },
+  {
+    "name": "import_managed_backup",
+    "method": "POST",
+    "path": "/akoflow-api/instance-backup-imports/",
+    "handler": "ImportManagedBackup",
+    "description": "import managed backup. POST /akoflow-api/instance-backup-imports/. Uses the daemon API and its domain validation.",
+    "body": {
+      "properties": {
+        "file": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
   },
   {
     "name": "import_plan",
@@ -8976,6 +9135,16 @@
     ]
   },
   {
+    "name": "installation_health",
+    "method": "GET",
+    "path": "/akoflow-api/installation-health/",
+    "handler": "InstallationHealth",
+    "description": "installation health. GET /akoflow-api/installation-health/. Uses the daemon API and its domain validation.",
+    "query": [
+      "refresh"
+    ]
+  },
+  {
     "name": "interrupt_execution_activity",
     "method": "POST",
     "path": "/akoflow-api/execution-runs/{runId}/activities/{activityId}/interrupt/",
@@ -9121,6 +9290,13 @@
     "query": [
       "view"
     ]
+  },
+  {
+    "name": "list_execution_schedules",
+    "method": "GET",
+    "path": "/akoflow-api/execution-schedules/",
+    "handler": "ListExecutionSchedules",
+    "description": "list execution schedules. GET /akoflow-api/execution-schedules/. Uses the daemon API and its domain validation."
   },
   {
     "name": "list_execution_scopes",
@@ -9291,6 +9467,13 @@
       },
       "type": "object"
     }
+  },
+  {
+    "name": "preview_restore",
+    "method": "GET",
+    "path": "/akoflow-api/instance-restorations/{instanceId}/preview/",
+    "handler": "PreviewRestore",
+    "description": "preview restore. GET /akoflow-api/instance-restorations/{instanceId}/preview/. Uses the daemon API and its domain validation."
   },
   {
     "name": "promote_storage_artifact",
@@ -10446,6 +10629,24 @@
     }
   },
   {
+    "name": "schedule_restore",
+    "method": "POST",
+    "path": "/akoflow-api/instance-restorations/{instanceId}/",
+    "handler": "ScheduleRestore",
+    "description": "schedule restore. POST /akoflow-api/instance-restorations/{instanceId}/. Uses the daemon API and its domain validation.",
+    "body": {
+      "properties": {
+        "checksum": {
+          "type": "string"
+        },
+        "confirmReplacement": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
     "name": "scheduler_template",
     "method": "GET",
     "path": "/akoflow-api/scheduling-algorithms/template/",
@@ -10613,6 +10814,18 @@
     "description": "stream download. GET /akoflow-api/storage-downloads/{downloadId}/content/. Uses the daemon API and its domain validation."
   },
   {
+    "name": "support_observations",
+    "method": "GET",
+    "path": "/akoflow-api/support-observations/",
+    "handler": "SupportObservations",
+    "description": "support observations. GET /akoflow-api/support-observations/. Uses the daemon API and its domain validation.",
+    "query": [
+      "categories",
+      "hours",
+      "until"
+    ]
+  },
+  {
     "name": "test_environment_connection",
     "method": "POST",
     "path": "/akoflow-api/connection-tests/",
@@ -10695,6 +10908,28 @@
         },
         "username": {
           "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  {
+    "name": "update_execution_schedule",
+    "method": "PATCH",
+    "path": "/akoflow-api/execution-schedules/{scheduleId}/",
+    "handler": "UpdateExecutionSchedule",
+    "description": "update execution schedule. PATCH /akoflow-api/execution-schedules/{scheduleId}/. Uses the daemon API and its domain validation.",
+    "body": {
+      "properties": {
+        "paused": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "type": "object"

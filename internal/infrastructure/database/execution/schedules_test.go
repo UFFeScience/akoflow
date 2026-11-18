@@ -43,21 +43,8 @@ func TestScheduleRollsBackAndEnqueuesOnceAcrossRestart(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err := repo.db.ExecContext(ctx, `CREATE TRIGGER interrupt_occurrence BEFORE INSERT ON execution_schedule_occurrences
-		BEGIN SELECT RAISE(ABORT,'interrupted before occurrence commit'); END`); err != nil {
-		t.Fatal(err)
-	}
-	if err := coordinator.Dispatch(ctx, scheduledAt); err == nil {
-		t.Fatal("expected rollback")
-	}
+	verifyInterruptedSchedule(t, ctx, repo, coordinator, scheduledAt)
 	var queueCount, runCount int
-	if err := repo.db.QueryRowContext(ctx, "SELECT (SELECT COUNT(*) FROM queue_jobs),(SELECT COUNT(*) FROM execution_runs)").Scan(&queueCount, &runCount); err != nil ||
-		queueCount != 0 || runCount != 0 {
-		t.Fatalf("partial commit jobs=%d runs=%d error=%v", queueCount, runCount, err)
-	}
-	if _, err := repo.db.ExecContext(ctx, "DROP TRIGGER interrupt_occurrence"); err != nil {
-		t.Fatal(err)
-	}
 	if err := repo.db.Close(); err != nil {
 		t.Fatal(err)
 	}
@@ -71,15 +58,7 @@ func TestScheduleRollsBackAndEnqueuesOnceAcrossRestart(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	var group sync.WaitGroup
-	for range 2 {
-		group.Go(func() {
-			if err := coordinator.Dispatch(ctx, scheduledAt.Add(2*time.Hour)); err != nil {
-				t.Error(err)
-			}
-		})
-	}
-	group.Wait()
+	dispatchConcurrently(t, ctx, coordinator, scheduledAt.Add(2*time.Hour))
 	var payload []byte
 	if err := repo.db.QueryRowContext(ctx, "SELECT payload FROM queue_jobs").Scan(&payload); err != nil {
 		t.Fatal(err)
@@ -109,14 +88,51 @@ func TestScheduleRollsBackAndEnqueuesOnceAcrossRestart(t *testing.T) {
 		queueCount != 1 || runCount != 1 {
 		t.Fatalf("duplicate jobs=%d runs=%d error=%v", queueCount, runCount, err)
 	}
-	if _, err := coordinator.SetPaused(ctx, schedule.ID, true, nextDay); err != nil {
+	verifyPauseAndResume(t, ctx, coordinator, schedule.ID, nextDay)
+}
+
+func dispatchConcurrently(t *testing.T, ctx context.Context, coordinator recurring.Coordinator, now time.Time) {
+	t.Helper()
+	var group sync.WaitGroup
+	for range 2 {
+		group.Go(func() {
+			if err := coordinator.Dispatch(ctx, now); err != nil {
+				t.Error(err)
+			}
+		})
+	}
+	group.Wait()
+}
+
+func verifyInterruptedSchedule(t *testing.T, ctx context.Context, repo *Repository, coordinator recurring.Coordinator, scheduledAt time.Time) {
+	t.Helper()
+	if _, err := repo.db.ExecContext(ctx, `CREATE TRIGGER interrupt_occurrence BEFORE INSERT ON execution_schedule_occurrences
+		BEGIN SELECT RAISE(ABORT,'interrupted before occurrence commit'); END`); err != nil {
+		t.Fatal(err)
+	}
+	if err := coordinator.Dispatch(ctx, scheduledAt); err == nil {
+		t.Fatal("expected rollback")
+	}
+	var queueCount, runCount int
+	if err := repo.db.QueryRowContext(ctx, "SELECT (SELECT COUNT(*) FROM queue_jobs),(SELECT COUNT(*) FROM execution_runs)").Scan(&queueCount, &runCount); err != nil ||
+		queueCount != 0 || runCount != 0 {
+		t.Fatalf("partial commit jobs=%d runs=%d error=%v", queueCount, runCount, err)
+	}
+	if _, err := repo.db.ExecContext(ctx, "DROP TRIGGER interrupt_occurrence"); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func verifyPauseAndResume(t *testing.T, ctx context.Context, coordinator recurring.Coordinator, scheduleID string, nextDay time.Time) {
+	t.Helper()
+	if _, err := coordinator.SetPaused(ctx, scheduleID, true, nextDay); err != nil {
 		t.Fatal(err)
 	}
 	if err := coordinator.Dispatch(ctx, nextDay.AddDate(0, 0, 1)); err != nil {
 		t.Fatal(err)
 	}
 	resumedAt := nextDay.AddDate(0, 0, 2).Add(time.Hour)
-	resumed, err := coordinator.SetPaused(ctx, schedule.ID, false, resumedAt)
+	resumed, err := coordinator.SetPaused(ctx, scheduleID, false, resumedAt)
 	if err != nil || resumed.Paused || !resumed.NextAt.Equal(nextDay.AddDate(0, 0, 3)) {
 		t.Fatalf("resume did not begin at the next future occurrence: %+v %v", resumed, err)
 	}

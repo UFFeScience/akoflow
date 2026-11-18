@@ -7,7 +7,7 @@ import (
 	"github.com/UFFeScience/akoflow/internal/application/installationhealth"
 )
 
-func (h *Handler) WithInstallationHealth(checks *installationhealth.Service) {
+func (h *Handler) WithInstallationHealth(checks *installationhealth.Monitor) {
 	h.installationHealth = checks
 }
 

@@ -115,6 +115,7 @@ func newApplication(ctx context.Context, settings config.Settings, log *logger.L
 		)
 	}
 	api, err := buildAPI(
+		ctx,
 		storage, settings, connectionMonitor, discovery, consoleCommands, terminal,
 		sshKeys, cloudCredentials, cloudProvisioner, planningService, activities,
 	)

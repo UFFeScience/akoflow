@@ -13,6 +13,7 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+	"sync"
 	"time"
 
 	domaininstance "github.com/UFFeScience/akoflow/internal/domain/instance"
@@ -27,6 +28,7 @@ const (
 )
 
 type Service struct {
+	backupMu     sync.Mutex
 	db           *sql.DB
 	databasePath string
 	root         string
@@ -202,7 +204,7 @@ func (s *Service) Export(ctx context.Context, output io.Writer, includeArtifacts
 	return archive.Close()
 }
 
-func (s *Service) Import(_ context.Context, source io.Reader, size int64) (domaininstance.ArchiveInstance, error) {
+func (s *Service) Import(ctx context.Context, source io.Reader, size int64) (domaininstance.ArchiveInstance, error) {
 	temporary, err := os.CreateTemp("", "akoflow-import-*.zip")
 	if err != nil {
 		return domaininstance.ArchiveInstance{}, err
@@ -229,11 +231,17 @@ func (s *Service) Import(_ context.Context, source io.Reader, size int64) (domai
 		return domaininstance.ArchiveInstance{}, fmt.Errorf("instance archive contains too many files")
 	}
 	var uncompressed uint64
+	seen := make(map[string]bool, len(reader.File))
 	for _, file := range reader.File {
-		uncompressed += file.UncompressedSize64
-		if uncompressed > 64<<30 {
+		if file.UncompressedSize64 > 64<<30-uncompressed {
 			return domaininstance.ArchiveInstance{}, fmt.Errorf("instance archive expands beyond the allowed size")
 		}
+		uncompressed += file.UncompressedSize64
+		clean := filepath.ToSlash(filepath.Clean(filepath.FromSlash(file.Name)))
+		if seen[clean] || (clean != "manifest.json" && clean != "database/akoflow.sqlite" && !strings.HasPrefix(clean, "artifacts/")) {
+			return domaininstance.ArchiveInstance{}, fmt.Errorf("unexpected or duplicate instance archive entry: %q", file.Name)
+		}
+		seen[clean] = true
 		if file.Mode()&os.ModeSymlink != 0 {
 			return domaininstance.ArchiveInstance{}, fmt.Errorf("instance archive contains a symbolic link")
 		}
@@ -242,7 +250,7 @@ func (s *Service) Import(_ context.Context, source io.Reader, size int64) (domai
 	if err != nil {
 		return domaininstance.ArchiveInstance{}, err
 	}
-	if manifest.Format != archiveFormat || manifest.FormatVersion != archiveFormatVersion || !manifest.Security.CredentialsRedacted {
+	if manifest.Format != archiveFormat || manifest.FormatVersion != archiveFormatVersion || !manifest.Security.CredentialsRedacted || manifest.Security.CredentialsIncluded {
 		return domaininstance.ArchiveInstance{}, fmt.Errorf("unsupported or unsafe AkôFlow instance archive")
 	}
 	id := provider.NewID("instance")
@@ -257,15 +265,9 @@ func (s *Service) Import(_ context.Context, source io.Reader, size int64) (domai
 	if err != nil || checksum != manifest.Checksums["database/akoflow.sqlite"] {
 		return domaininstance.ArchiveInstance{}, fmt.Errorf("instance database checksum does not match the manifest")
 	}
-	importedDB, err := database.Open(databasePath)
-	if err != nil {
-		return domaininstance.ArchiveInstance{}, err
-	}
-	if err := database.Validate(context.Background(), importedDB); err != nil {
-		_ = importedDB.Close()
+	if err := validateRestoreDatabase(ctx, databasePath); err != nil {
 		return domaininstance.ArchiveInstance{}, fmt.Errorf("validate imported database: %w", err)
 	}
-	_ = importedDB.Close()
 	now := time.Now().UTC()
 	manifest.Instance.ID = id
 	manifest.Instance.Source = "imported"
@@ -432,7 +434,7 @@ func databaseCounts(ctx context.Context, path string) map[string]int64 {
 	defer db.Close()
 	for label, table := range map[string]string{
 		"workflows": "workflow_definitions", "environments": "environments",
-		"plans": "schedule_plans", "runs": "execution_runs", "artifacts": "artifacts",
+		"plans": "schedule_plans", "runs": "execution_runs", "artifacts": "artifact_versions",
 	} {
 		var count int64
 		if db.QueryRowContext(ctx, "SELECT COUNT(*) FROM "+table).Scan(&count) == nil {

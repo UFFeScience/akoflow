@@ -148,6 +148,18 @@ curl --fail-with-body \
 
 Import accepts at most 8 GiB compressed data, at most 10,000 archive entries, and at most 64 GiB expanded data. Symbolic links and unsafe or unsupported archives are rejected with `422`. Activation returns `202 Accepted` with `instance` and a `restarting` boolean.
 
+## Back up and restore the writable instance
+
+1. Open **Settings → Data management → Managed backups**. Enter a directory on the daemon host, choose the interval in hours, set how many backups to keep, and save the settings. Use a mounted directory for backups that need to survive replacement of the daemon container. Set the interval to zero for manual backups only.
+2. Select **Back up now**. The ZIP holds the catalog and instance metadata from a consistent SQLite snapshot, even while the daemon is serving writes. Check the last result and the retention count. Scheduled backups use the same format and report their result separately.
+3. To restore, select a saved backup and choose **Preview backup restore**. For a ZIP copied from elsewhere, import it and choose **Preview restore** on its snapshot card. The daemon validates the format version, database checksum, schema and SQLite integrity before presenting the preview.
+4. Compare the record counts and review the external dependencies. Stop active runs and infrastructure operations. Confirm the replacement and queue it. Restart the daemon if your installation does not restart it automatically.
+5. Once the daemon is available, check **Last restore**. The catalog reflects the verified backup. In-flight jobs are cancelled, surviving workspace references are pinned, and execution schedules are paused for review.
+
+Managed backups contain database records. Restore artifact files, external storage, runtime volumes, images, plugins and credentials separately. The restore does not copy even the optional artifact files of a portable ZIP into active storage.
+
+The daemon keeps a private `pre-restore-*.sqlite` recovery database under `AKOFLOW_INSTANCE_ARCHIVE_ROOT` (by default the `instances` directory beside the database). It automatically returns to the previous database if initialization of the replacement fails. For a manual recovery, stop the daemon, preserve the current database and its SQLite sidecars elsewhere, then copy the recovery database to `AKOFLOW_DATABASE_PATH` before starting the daemon. The private recovery copy can contain live configuration. Store it with the same permissions as the live database.
+
 ## What read-only means
 
 An active imported snapshot is for inspection. The Desktop displays an archive banner, hides or guards editing controls, and leaves read access available. At the HTTP layer, every non-`GET` request returns:

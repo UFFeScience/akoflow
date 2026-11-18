@@ -46,11 +46,34 @@ type persistence struct {
 func openPersistence(ctx context.Context, recreateOnSchemaChange bool) (persistence, error) {
 	readOnly := instancearchive.IsReadOnlySelection()
 	path := instancearchive.ResolveDatabasePath()
-	if !readOnly {
-		if _, err := database.ApplyPendingFactoryReset(path); err != nil {
+	if readOnly {
+		return openSelectedPersistence(ctx, path, true, recreateOnSchemaChange)
+	}
+	reset, err := database.ApplyPendingFactoryReset(path)
+	if err != nil {
+		return persistence{}, err
+	}
+	if reset {
+		if err := instancearchive.CancelRestoreAfterReset(instancearchive.DefaultRoot()); err != nil {
 			return persistence{}, err
 		}
+		return openSelectedPersistence(ctx, path, false, recreateOnSchemaChange)
 	}
+	var result persistence
+	err = instancearchive.RestoreOnStartup(ctx, path, instancearchive.DefaultRoot(), func() error {
+		var openErr error
+		result, openErr = openSelectedPersistence(ctx, path, false, recreateOnSchemaChange)
+		return openErr
+	})
+	if err != nil && result.database != nil {
+		_ = result.analytics.Close()
+		_ = result.database.Close()
+		return persistence{}, err
+	}
+	return result, err
+}
+
+func openSelectedPersistence(ctx context.Context, path string, readOnly, recreateOnSchemaChange bool) (persistence, error) {
 	var db *sql.DB
 	var err error
 	if readOnly {

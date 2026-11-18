@@ -174,6 +174,7 @@ type Dependencies struct {
 	CloudProvisioner    ports.CloudProvisioner
 	CloudCredentials    *cloudcredential.Manager
 	InstanceArchive     ports.InstanceArchive
+	InstanceBackups     InstanceBackups
 	ReadOnly            bool
 	Restart             func()
 	FactoryReset        func(context.Context) error
@@ -221,6 +222,7 @@ type Handler struct {
 	cloudProvisioner    ports.CloudProvisioner
 	cloudCredentials    *cloudcredential.Manager
 	instanceArchive     ports.InstanceArchive
+	instanceBackups     InstanceBackups
 	readOnly            bool
 	restart             func()
 	factoryReset        func(context.Context) error
@@ -262,6 +264,7 @@ func New(dependencies Dependencies) (*Handler, error) {
 		cloudProvisioner:    dependencies.CloudProvisioner,
 		cloudCredentials:    dependencies.CloudCredentials,
 		instanceArchive:     dependencies.InstanceArchive,
+		instanceBackups:     dependencies.InstanceBackups,
 		readOnly:            dependencies.ReadOnly,
 		restart:             dependencies.Restart,
 		factoryReset:        dependencies.FactoryReset,

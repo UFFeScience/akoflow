@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -56,6 +57,7 @@ func buildCloudProvisioner(
 }
 
 func buildAPI(
+	ctx context.Context,
 	storage persistence,
 	settings config.Settings,
 	connections ports.ConnectionHealthMonitor,
@@ -92,6 +94,9 @@ func buildAPI(
 	)
 	if err != nil {
 		return nil, err
+	}
+	if !storage.readOnly {
+		go archives.RunBackupScheduler(ctx, func(err error) { log.Printf("instance backup: %v", err) })
 	}
 	var restart func()
 	if strings.EqualFold(strings.TrimSpace(os.Getenv("AKOFLOW_RESTART_ON_INSTANCE_SWITCH")), "true") {
@@ -134,6 +139,7 @@ func buildAPI(
 		CloudProvisioner:    cloudProvisioner,
 		CloudCredentials:    cloudCredentials,
 		InstanceArchive:     archives,
+		InstanceBackups:     archives,
 		ReadOnly:            storage.readOnly,
 		Restart:             restart,
 		FactoryReset: func(_ context.Context) error {

@@ -33,3 +33,43 @@ type ArchiveSecurity struct {
 	CredentialsIncluded bool `json:"credentialsIncluded"`
 	CredentialsRedacted bool `json:"credentialsRedacted"`
 }
+
+type BackupSettings struct {
+	Destination   string `json:"destination"`
+	IntervalHours int    `json:"intervalHours"`
+	Retain        int    `json:"retain"`
+}
+
+type BackupResult struct {
+	StartedAt  time.Time `json:"startedAt"`
+	FinishedAt time.Time `json:"finishedAt"`
+	Scheduled  bool      `json:"scheduled"`
+	File       string    `json:"file,omitempty"`
+	Removed    []string  `json:"removed,omitempty"`
+	Error      string    `json:"error,omitempty"`
+}
+
+type BackupStatus struct {
+	Files         []string       `json:"files,omitempty"`
+	Settings      BackupSettings `json:"settings"`
+	Last          *BackupResult  `json:"last,omitempty"`
+	LastScheduled *BackupResult  `json:"lastScheduled,omitempty"`
+	NextScheduled time.Time      `json:"nextScheduled,omitempty"`
+}
+
+type RestorePreview struct {
+	Checksum             string           `json:"checksum"`
+	ID                   string           `json:"id"`
+	ExportedAt           time.Time        `json:"exportedAt"`
+	ArchiveVersion       int              `json:"archiveVersion"`
+	Current              map[string]int64 `json:"current"`
+	Replacement          map[string]int64 `json:"replacement"`
+	Excluded             []string         `json:"excluded"`
+	ExternalDependencies map[string]int64 `json:"externalDependencies"`
+}
+
+type RestoreResult struct {
+	CompletedAt  time.Time `json:"completedAt"`
+	RecoveryFile string    `json:"recoveryFile,omitempty"`
+	Error        string    `json:"error,omitempty"`
+}

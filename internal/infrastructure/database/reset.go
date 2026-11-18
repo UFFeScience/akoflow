@@ -12,7 +12,7 @@ const factoryResetSuffix = ".factory-reset-pending"
 // ScheduleFactoryReset records a reset request without modifying the database
 // while it is open. The marker is consumed before SQLite is opened again.
 func ScheduleFactoryReset(path string) error {
-	path, err := normalizePath(path)
+	path, err := NormalizePath(path)
 	if err != nil {
 		return err
 	}
@@ -35,7 +35,7 @@ func ScheduleFactoryReset(path string) error {
 // It must run before any connection to path is opened. The marker is removed
 // last so an interrupted reset is retried on the next process start.
 func ApplyPendingFactoryReset(path string) (bool, error) {
-	path, err := normalizePath(path)
+	path, err := NormalizePath(path)
 	if err != nil {
 		return false, err
 	}
@@ -59,7 +59,7 @@ func ApplyPendingFactoryReset(path string) (bool, error) {
 // Recreate removes a closed SQLite database and all of its sidecar files.
 // Callers must close every connection before using it.
 func Recreate(path string) error {
-	path, err := normalizePath(path)
+	path, err := NormalizePath(path)
 	if err != nil {
 		return err
 	}

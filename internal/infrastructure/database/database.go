@@ -28,7 +28,7 @@ func open(path string, readOnly bool) (*sql.DB, error) {
 	if path == "" {
 		path = DefaultPath
 	}
-	path, err := normalizePath(path)
+	path, err := NormalizePath(path)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +75,7 @@ func open(path string, readOnly bool) (*sql.DB, error) {
 	return db, nil
 }
 
-func normalizePath(path string) (string, error) {
+func NormalizePath(path string) (string, error) {
 	path = strings.TrimSpace(path)
 	if len(path) >= 2 {
 		if first, last := path[0], path[len(path)-1]; (first == '"' && last == '"') || (first == '\'' && last == '\'') {

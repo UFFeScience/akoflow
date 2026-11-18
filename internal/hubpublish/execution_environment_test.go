@@ -109,7 +109,7 @@ func TestPublishedAttemptTimingTracksRetriesAndSanitizesKernel(t *testing.T) {
 			{"category":"sif-register","activityId":"step","attempt":2,"status":"completed","durationSeconds":0.5},
 			{"category":"image-build","activityId":"other","attempt":2,"status":"completed","durationSeconds":99}
 		]},
-		"handles":[{"id":"run:step:attempt-2","metadata":{"slurmEnvironment":{"os":"linux","kernel":"6.12.62-1-private-host.example","architecture":"amd64"}}}]
+		"handles":[{"id":"run:step:attempt-2","metadata":{"slurmEnvironment":{"os":"linux","kernel":"6.12.62-1-private-host.example","architecture":"amd64"}},"artifacts":{"runId":"run","activityId":"step","attempt":2,"initialSnapshot":[{"path":"private-input-path","sizeBytes":14},{"path":"other","sizeBytes":6}]}}]
 	}`), &run)
 	if err != nil {
 		t.Fatal(err)
@@ -117,7 +117,8 @@ func TestPublishedAttemptTimingTracksRetriesAndSanitizesKernel(t *testing.T) {
 	snapshot := executionEnvironment(nil, run)
 	first, second := snapshot.Attempts[0], snapshot.Attempts[1]
 	if first.Timing.PullSeconds == nil || *first.Timing.PullSeconds != 4 || first.Timing.FinishedAt != nil ||
-		second.ActivityID != "step" || second.Status != "completed" ||
+		second.ActivityID != "step" || second.Status != "completed" || first.InputBytes != nil ||
+		second.InputBytes == nil || *second.InputBytes != 20 ||
 		second.Timing.PullSeconds == nil || *second.Timing.PullSeconds != 2 ||
 		second.Timing.SIFSeconds == nil || *second.Timing.SIFSeconds != 3 ||
 		second.Timing.RegisterSeconds == nil || *second.Timing.RegisterSeconds != 0.5 || second.Timing.BuildSeconds != nil || second.Timing.RuntimeSeconds == nil || *second.Timing.RuntimeSeconds != 5 {
@@ -128,7 +129,7 @@ func TestPublishedAttemptTimingTracksRetriesAndSanitizesKernel(t *testing.T) {
 	}
 	encoded, err := json.Marshal(snapshot)
 	if err != nil || !strings.Contains(string(encoded), `"startedAt":"1970-01-01T00:00:10.25Z"`) ||
-		strings.Contains(string(encoded), "private-host.example") {
+		strings.Contains(string(encoded), "private-host.example") || strings.Contains(string(encoded), "private-input-path") {
 		t.Fatalf("unexpected published snapshot: %s (%v)", encoded, err)
 	}
 }

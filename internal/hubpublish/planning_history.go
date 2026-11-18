@@ -48,7 +48,7 @@ func (m *Manager) HistoricalProfiles(ctx context.Context, workflow domain.Workfl
 		key := cacheKey{architecture, driver, model, resource.CPUCores, resource.MemoryBytes}
 		estimates, known := byResourceShape[key]
 		if !known {
-			request := historyProfilesForResource(workflow.Version.Activities, resource, architecture, driver, model)
+			request := historyProfilesForResource(workflow.Version, resource, architecture, driver, model)
 			estimates, _ = m.activityEstimates(ctx, historySourceURI(source.PublicationID, source.Version), origin, request)
 			byResourceShape[key] = estimates
 		}
@@ -72,9 +72,9 @@ func (m *Manager) HistoricalProfiles(ctx context.Context, workflow domain.Workfl
 	return profiles
 }
 
-func historyProfilesForResource(activities []domain.Activity, resource domain.Resource, architecture, driver, model string) map[string]ActivityHistoryProfile {
+func historyProfilesForResource(workflow domain.WorkflowVersion, resource domain.Resource, architecture, driver, model string) map[string]ActivityHistoryProfile {
 	request := make(map[string]ActivityHistoryProfile)
-	for _, activity := range activities {
+	for _, activity := range workflow.Activities {
 		if !activity.Supports(domain.ActivityCapabilityReal) {
 			continue
 		}
@@ -96,6 +96,7 @@ func historyProfilesForResource(activities []domain.Activity, resource domain.Re
 			Architecture: architecture, Runtime: runtime, CPUModel: model,
 			CPUCores: float64(resource.CPUCores), MemoryBytes: float64(resource.MemoryBytes),
 			AllocatedCPU: activity.Resources.CPU, AllocatedMemory: float64(activity.Resources.MemoryBytes),
+			InputBytes: declaredInputBytes(workflow, activity),
 		}
 		if pinned, err := name.NewDigest(strings.TrimPrefix(image, "docker://")); err == nil {
 			profile.ImageDigest = pinned.DigestStr()
@@ -155,4 +156,22 @@ func historyArchitecture(architecture string) string {
 
 func historySourceURI(publicationID string, version int) string {
 	return fmt.Sprintf("akoflow://hub/publications/%s/versions/%d", publicationID, version)
+}
+
+func declaredInputBytes(workflow domain.WorkflowVersion, activity domain.Activity) int64 {
+	if seed, _ := activity.Metadata["workspaceSeedPath"].(string); seed != "" {
+		return 0
+	}
+	var total int64
+	const maxBytes = 1 << 53
+	for _, input := range workflow.DataDependencies {
+		if input.ConsumerActivityID != activity.ID {
+			continue
+		}
+		if input.SizeBytes <= 0 || input.SizeBytes > maxBytes-total {
+			return 0
+		}
+		total += input.SizeBytes
+	}
+	return total
 }

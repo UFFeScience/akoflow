@@ -104,7 +104,7 @@ func (m *Manager) reviewActivityEstimates(ctx context.Context, uri, hash, select
 	if !cpuModel.MatchString(model) {
 		model = ""
 	}
-	profiles := historyProfilesForResource(workflow.Version.Activities, selected, historyArchitecture(selected.Architecture), historyRuntime(selected.ID, environments), model)
+	profiles := historyProfilesForResource(workflow.Version, selected, historyArchitecture(selected.Architecture), historyRuntime(selected.ID, environments), model)
 	estimates, err := m.activityEstimates(ctx, historySourceURI(definition.PublicationID, definition.Version), definition.origin, profiles)
 	if err != nil {
 		return review, err

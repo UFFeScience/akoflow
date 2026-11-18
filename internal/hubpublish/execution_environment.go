@@ -31,6 +31,7 @@ type publishedResource struct {
 }
 
 type publishedAllocation struct {
+	InputBytes     *int64                 `json:"inputBytes,omitempty"`
 	ActivityID     string                 `json:"activityId"`
 	Status         string                 `json:"status"`
 	Timing         publishedAttemptTiming `json:"timing"`
@@ -115,6 +116,7 @@ func executionEnvironment(context, execution map[string]any) publishedEnvironmen
 		request, _ := activities[activityID]["resources"].(map[string]any)
 		result.Attempts = append(result.Attempts, publishedAllocation{
 			ActivityID: activityID, Status: attemptStatus(task["status"]),
+			InputBytes:     observedInputBytes(handles[handleID], runID, activityID, attempt),
 			Timing:         describeAttemptTiming(task, timingByAttempt[attemptKey{activityID, attempt}]),
 			ResourceNumber: number, Attempt: attempt, ExecutionStyle: style, AllocatedGPU: allocatedGPU,
 			AllocatedCPU: positiveMetric(limits["cpu"]), AllocatedRAM: positiveMetric(limits["memoryBytes"]),
@@ -205,4 +207,26 @@ func positiveMetric(value any) float64 {
 		return 0
 	}
 	return number
+}
+
+func observedInputBytes(handle map[string]any, runID, activityID string, attempt float64) *int64 {
+	manifest, _ := handle["artifacts"].(map[string]any)
+	if manifest["runId"] != runID || manifest["activityId"] != activityID || positiveMetric(manifest["attempt"]) != attempt {
+		return nil
+	}
+	initial, ok := manifest["initialSnapshot"].([]any)
+	if !ok {
+		return nil
+	}
+	const safeJSONInteger = 1 << 53
+	var total int64
+	for _, value := range initial {
+		entry, _ := value.(map[string]any)
+		size, ok := entry["sizeBytes"].(float64)
+		if !ok || size < 0 || math.Trunc(size) != size || math.IsNaN(size) || size > float64(safeJSONInteger-total) {
+			return nil
+		}
+		total += int64(size)
+	}
+	return &total
 }

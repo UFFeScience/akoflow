@@ -7,6 +7,7 @@ import (
 	"database/sql"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -79,6 +80,10 @@ type ExecutionCommandStore interface {
 	CreateRun(context.Context, domain.ExecutionRun) error
 	CancelRun(context.Context, string, string) error
 	FailRun(context.Context, string, string) error
+}
+
+type ExecutionSubmissionStore interface {
+	SubmitRun(context.Context, domain.ExecutionRun, domainqueue.Job) (domainqueue.Job, error)
 }
 
 type ExecutionRecoveryCommandStore interface {
@@ -2694,18 +2699,19 @@ func (h *Handler) CreateExecution(w http.ResponseWriter, r *http.Request) {
 	resolveDirectOCIImages(&request.Workflow)
 	request.Run.SchedulePlanID = request.Plan.ID
 	request.Run.Status = domain.ExecutionRunCreated
-	if h.executionCommands == nil {
-		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("execution commands are unavailable"))
+	store, ok := h.executionCommands.(ExecutionSubmissionStore)
+	if !ok {
+		writeError(w, http.StatusServiceUnavailable, fmt.Errorf("execution submission is unavailable"))
+		return
+	}
+	key := strings.TrimSpace(r.Header.Get("Idempotency-Key"))
+	if len(key) > 128 {
+		writeError(w, http.StatusBadRequest, fmt.Errorf("execution submission key must be at most 128 bytes"))
 		return
 	}
 	r.SetPathValue("runId", request.Run.ID)
-	if err := h.executionCommands.CreateRun(r.Context(), request.Run); err != nil {
-		writeError(w, http.StatusUnprocessableEntity, err)
-		return
-	}
 	payload, err := json.Marshal(request)
 	if err != nil {
-		_ = h.executionCommands.FailRun(context.WithoutCancel(r.Context()), request.Run.ID, err.Error())
 		writeError(w, http.StatusBadRequest, err)
 		return
 	}
@@ -2717,10 +2723,16 @@ func (h *Handler) CreateExecution(w http.ResponseWriter, r *http.Request) {
 	job.AggregateType, job.AggregateID = "execution_run", request.Run.ID
 	configureExecutionJobRetries(&job, request.Run.Mode)
 	job.IdempotencyKey = "execution-run:" + request.Run.ID
-	stored, err := h.events.Publish(r.Context(), job)
+	if key != "" {
+		job.IdempotencyKey = "execution-submission:" + key
+	}
+	stored, err := store.SubmitRun(r.Context(), request.Run, job)
 	if err != nil {
-		_ = h.executionCommands.FailRun(context.WithoutCancel(r.Context()), request.Run.ID, err.Error())
-		writeError(w, http.StatusUnprocessableEntity, err)
+		status := http.StatusUnprocessableEntity
+		if errors.Is(err, ports.ErrExecutionSubmissionConflict) {
+			status = http.StatusConflict
+		}
+		writeError(w, status, err)
 		return
 	}
 	writeJSON(w, http.StatusAccepted, stored)

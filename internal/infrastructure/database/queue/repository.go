@@ -48,8 +48,24 @@ func (r *Repository) FindLatestByAggregate(ctx context.Context, aggregateType, a
 }
 
 func (r *Repository) Publish(ctx context.Context, job domainqueue.Job) (domainqueue.Job, error) {
-	if err := job.Validate(); err != nil {
+	tx, err := r.db.BeginTx(ctx, nil)
+	if err != nil {
 		return domainqueue.Job{}, err
+	}
+	defer tx.Rollback()
+	stored, _, err := PublishIn(ctx, tx, job)
+	if err != nil {
+		return domainqueue.Job{}, err
+	}
+	if err := tx.Commit(); err != nil {
+		return domainqueue.Job{}, err
+	}
+	return stored, nil
+}
+
+func PublishIn(ctx context.Context, tx *sql.Tx, job domainqueue.Job) (domainqueue.Job, bool, error) {
+	if err := job.Validate(); err != nil {
+		return domainqueue.Job{}, false, err
 	}
 	if job.AvailableAt.IsZero() {
 		job.AvailableAt = time.Now().UTC()
@@ -57,11 +73,6 @@ func (r *Repository) Publish(ctx context.Context, job domainqueue.Job) (domainqu
 	if job.CreatedAt.IsZero() {
 		job.CreatedAt = job.AvailableAt
 	}
-	tx, err := r.db.BeginTx(ctx, nil)
-	if err != nil {
-		return domainqueue.Job{}, err
-	}
-	defer tx.Rollback()
 	insertResult, err := tx.ExecContext(ctx, `INSERT INTO queue_jobs (
 		id, category, event_type, aggregate_type, aggregate_id, payload, status,
 		priority, available_at, attempts, max_attempts, idempotency_key, created_at
@@ -71,35 +82,32 @@ func (r *Repository) Publish(ctx context.Context, job domainqueue.Job) (domainqu
 		job.Payload, job.Status, job.Priority, job.AvailableAt, job.Attempts,
 		job.MaxAttempts, job.IdempotencyKey, job.CreatedAt)
 	if err != nil {
-		return domainqueue.Job{}, fmt.Errorf("publish queue job: %w", err)
+		return domainqueue.Job{}, false, fmt.Errorf("publish queue job: %w", err)
 	}
 	if job.IdempotencyKey != "" {
 		var existingID string
 		if err := tx.QueryRowContext(ctx, `SELECT id FROM queue_jobs WHERE idempotency_key = ?`, job.IdempotencyKey).Scan(&existingID); err != nil {
-			return domainqueue.Job{}, err
+			return domainqueue.Job{}, false, err
 		}
 		existing, err := scanJob(tx.QueryRowContext(ctx, "SELECT "+columns+" FROM queue_jobs WHERE id=?", existingID))
 		if err != nil {
-			return domainqueue.Job{}, err
+			return domainqueue.Job{}, false, err
 		}
 		if existing == nil {
-			return domainqueue.Job{}, errors.New("idempotent queue job disappeared")
+			return domainqueue.Job{}, false, errors.New("idempotent queue job disappeared")
 		}
 		job = *existing
 	}
 	inserted, _ := insertResult.RowsAffected()
 	if inserted > 0 {
 		if err := dbaudit.Bind(ctx, tx, "queue_job", job.ID); err != nil {
-			return domainqueue.Job{}, err
+			return domainqueue.Job{}, false, err
 		}
 		if err := RecordLifecycle(ctx, tx, job); err != nil {
-			return domainqueue.Job{}, err
+			return domainqueue.Job{}, false, err
 		}
 	}
-	if err := tx.Commit(); err != nil {
-		return domainqueue.Job{}, err
-	}
-	return job, nil
+	return job, inserted > 0, nil
 }
 
 func (r *Repository) Lease(ctx context.Context, owner string, categories []string, limit int, duration time.Duration) ([]domainqueue.Job, error) {

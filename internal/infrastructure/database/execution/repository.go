@@ -210,6 +210,13 @@ func (r *Repository) CreateRun(ctx context.Context, run domain.ExecutionRun) err
 		return err
 	}
 	defer tx.Rollback()
+	if err := createRunIn(ctx, tx, run); err != nil {
+		return err
+	}
+	return tx.Commit()
+}
+
+func createRunIn(ctx context.Context, tx *sql.Tx, run domain.ExecutionRun) error {
 	result, err := tx.ExecContext(ctx, `INSERT INTO execution_runs (
 		id, schedule_plan_id, mode, seed, status, environment_snapshot_id, started_at
 	) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
@@ -241,7 +248,7 @@ func (r *Repository) CreateRun(ctx context.Context, run domain.ExecutionRun) err
 	if err := dbaudit.Bind(ctx, tx, "execution_run", run.ID); err != nil {
 		return err
 	}
-	return tx.Commit()
+	return nil
 }
 
 func (r *Repository) ResumeRun(ctx context.Context, id string) error {

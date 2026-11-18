@@ -9,6 +9,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
 	domainevents "github.com/UFFeScience/akoflow/internal/domain/events"
 	domaininstance "github.com/UFFeScience/akoflow/internal/domain/instance"
@@ -103,6 +104,10 @@ type executionQueryStub struct {
 }
 
 type executionCommandStub struct{}
+
+func (executionCommandStub) SubmitRun(_ context.Context, _ domain.ExecutionRun, job domainqueue.Job) (domainqueue.Job, error) {
+	return job, nil
+}
 
 func (executionCommandStub) CreateRun(context.Context, domain.ExecutionRun) error { return nil }
 func (executionCommandStub) CancelRun(context.Context, string, string) error      { return nil }
@@ -498,6 +503,25 @@ func TestCreateExecutionPublishesPersistentCommand(t *testing.T) {
 	newTestHandler().CreateExecution(recorder, request)
 	require.Equal(t, http.StatusAccepted, recorder.Code)
 	require.Contains(t, recorder.Body.String(), `"eventType":"execution.run.requested"`)
+}
+
+type conflictingSubmissionStore struct{ executionCommandStub }
+
+func (conflictingSubmissionStore) SubmitRun(_ context.Context, _ domain.ExecutionRun, job domainqueue.Job) (domainqueue.Job, error) {
+	if job.IdempotencyKey == "execution-submission:retry-key" {
+		return domainqueue.Job{}, ports.ErrExecutionSubmissionConflict
+	}
+	return domainqueue.Job{}, errors.New("submission key was not passed to the database")
+}
+
+func TestCreateExecutionMapsSubmissionConflictToHTTP409(t *testing.T) {
+	handler := newTestHandler()
+	handler.executionCommands = conflictingSubmissionStore{}
+	recorder := httptest.NewRecorder()
+	request := yamlRequest("run:\n  id: run\n  mode: real\nplan:\n  id: plan\nworkflow:\n  id: workflow\n")
+	request.Header.Set("Idempotency-Key", "retry-key")
+	handler.CreateExecution(recorder, request)
+	require.Equal(t, http.StatusConflict, recorder.Code, recorder.Body.String())
 }
 
 func TestJSONRequestsAreAccepted(t *testing.T) {

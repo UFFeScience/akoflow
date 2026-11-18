@@ -80,3 +80,82 @@ func TestHubRedactionPreservesScientificNumbersAndCredentialReferences(t *testin
 		t.Fatalf("scientific data changed: %+v", snapshot)
 	}
 }
+
+func TestHubPreviewFiltersOversizedLogsBeforeEnforcingLimit(t *testing.T) {
+	var reviewed string
+	var confirmed bool
+	manager := testManager(t, func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.Path {
+		case "/api/v1/desktop/me":
+			_ = json.NewEncoder(w).Encode(Identity{Username: "researcher"})
+		case "/api/v1/desktop/publications/publication":
+			_ = json.NewEncoder(w).Encode(publicationInfo{Publication: Publication{
+				ID: "publication", Visibility: "private", Owner: "researcher", Slug: "experiment",
+			}})
+		case "/api/v1/desktop/publications/publication/import/preview",
+			"/api/v1/desktop/publications/publication/import/confirm":
+			var input importInput
+			if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+				t.Error(err)
+				return
+			}
+			if strings.HasSuffix(r.URL.Path, "/preview") {
+				reviewed = input.BundleFile
+			} else {
+				confirmed = input.BundleFile == reviewed
+			}
+			_ = json.NewEncoder(w).Encode(map[string]any{"version": map[string]int{"number": 1}})
+		default:
+			t.Errorf("unexpected Hub request: %s", r.URL.Path)
+		}
+	})
+	manager.state.AccessToken = strings.Repeat("c", 64)
+	manager.options.Source = oversizedLogSource(t)
+	ctx := context.Background()
+	_, err := manager.Preview(ctx, "run", "publication", "", &ContentSelection{Logs: true})
+	if failure, ok := err.(*apiError); !ok || failure.Code != "package_too_large" || reviewed != "" {
+		t.Fatalf("expected selected capture to be rejected locally, got %v", err)
+	}
+	preview, err := manager.Preview(ctx, "run", "publication", "", &ContentSelection{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	var bundle experimentBundle
+	if err := json.Unmarshal([]byte(reviewed), &bundle); err != nil {
+		t.Fatal(err)
+	}
+	if len(preview.Logs) != 0 || len(bundle.Files) != 4 || strings.Contains(reviewed, "oversized-log-marker") {
+		t.Fatal("review did not preserve the required files and omit the deselected logs")
+	}
+	for _, file := range bundle.Files {
+		if digest([]byte(file.Content)) != file.SHA256 {
+			t.Fatalf("invalid checksum for %s", file.Path)
+		}
+	}
+	if _, err := manager.Confirm(ctx, preview.ID, false); err != nil || !confirmed {
+		t.Fatalf("confirmation did not submit the exact reviewed package: %v", err)
+	}
+}
+
+func oversizedLogSource(t *testing.T) http.Handler {
+	run := map[string]any{"id": "run", "schedulePlanId": "plan", "workflowVersionId": "version", "status": "completed"}
+	workflow := map[string]any{"id": "workflow", "name": "Workflow", "version": map[string]any{"id": "version"}}
+	log := "oversized-log-marker " + strings.Repeat("x", packageLimit)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var value any
+		switch r.URL.Path {
+		case "/akoflow-api/execution-runs/run/":
+			value = map[string]any{"run": run, "handles": []any{map[string]any{"log": log}}}
+			if r.URL.RawQuery != "" {
+				value = map[string]any{"run": run}
+			}
+		case "/akoflow-api/schedule-plans/plan/context/":
+			value = map[string]any{"workflow": workflow, "plan": map[string]any{"id": "plan", "workflowVersionId": "version"}}
+		case "/akoflow-api/execution-runs/run/activity-metrics/":
+			value = map[string]any{"items": []any{}}
+		default:
+			t.Errorf("unexpected source request: %s", r.URL.Path)
+		}
+		_ = json.NewEncoder(w).Encode(value)
+	})
+}

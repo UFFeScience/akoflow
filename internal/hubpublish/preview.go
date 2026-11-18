@@ -35,15 +35,13 @@ func (m *Manager) previewExecution(ctx context.Context, runID, publicationID, me
 	if err != nil {
 		return result, err
 	}
-	capture, err := m.capture(ctx, runID)
+	var selection *ContentSelection
+	if len(selections) > 0 {
+		selection = selections[0]
+	}
+	capture, err := m.capture(ctx, runID, selection)
 	if err != nil {
 		return result, err
-	}
-	if len(selections) > 0 && selections[0] != nil {
-		capture, err = selectCapture(capture, *selections[0])
-		if err != nil {
-			return result, err
-		}
 	}
 	base := 0
 	foundTarget := false
@@ -64,7 +62,7 @@ func (m *Manager) previewExecution(ctx context.Context, runID, publicationID, me
 			return result, err
 		}
 	}
-	data, err := json.Marshal(capture.bundle)
+	data, err := marshalExperiment(capture.bundle)
 	if err != nil {
 		return result, err
 	}

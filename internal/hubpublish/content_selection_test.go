@@ -18,11 +18,10 @@ func TestSelectionRemovesOptionalContentAndRehashesBeforeUpload(t *testing.T) {
 		"timeline":        []any{"timeline-marker"},
 		"metricSummaries": []any{"metric-marker"},
 	}
-	capture, err := encodeExperiment(workflow, []any{}, execution, "name: Workflow", nil)
-	if err != nil {
+	if err := selectExecutionContent(execution, ContentSelection{}); err != nil {
 		t.Fatal(err)
 	}
-	selected, err := selectCapture(capture, ContentSelection{})
+	selected, err := encodeExperiment(workflow, []any{}, execution, "name: Workflow", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -50,11 +49,10 @@ func TestSelectionRetainsOnlyAcceptedSections(t *testing.T) {
 		"metricSummaries": []any{"accepted-metric"},
 		"events":          []any{"rejected-event"},
 	}
-	capture, err := encodeExperiment(workflow, []any{}, execution, "name: Workflow", nil)
-	if err != nil {
+	if err := selectExecutionContent(execution, ContentSelection{Logs: true, Metrics: true}); err != nil {
 		t.Fatal(err)
 	}
-	selected, err := selectCapture(capture, ContentSelection{Logs: true, Metrics: true})
+	selected, err := encodeExperiment(workflow, []any{}, execution, "name: Workflow", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -67,14 +65,13 @@ func TestSelectionRetainsOnlyAcceptedSections(t *testing.T) {
 func TestSelectionIncludesReviewedMachineLabelInPackage(t *testing.T) {
 	workflow := map[string]any{"id": "workflow", "version": map[string]any{"id": "v1"}}
 	execution := map[string]any{"environmentSnapshot": publishedEnvironment{Mode: "real"}}
-	capture, err := encodeExperiment(workflow, []any{}, execution, "name: Workflow", nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if _, err := selectCapture(capture, ContentSelection{MachineLabel: "operator@private.example"}); err == nil {
+	if err := selectExecutionContent(execution, ContentSelection{MachineLabel: "operator@private.example"}); err == nil {
 		t.Fatal("expected address-like label to be rejected")
 	}
-	selected, err := selectCapture(capture, ContentSelection{MachineLabel: " Lab workstation "})
+	if err := selectExecutionContent(execution, ContentSelection{MachineLabel: " Lab workstation "}); err != nil {
+		t.Fatal(err)
+	}
+	selected, err := encodeExperiment(workflow, []any{}, execution, "name: Workflow", nil)
 	if err != nil {
 		t.Fatal(err)
 	}

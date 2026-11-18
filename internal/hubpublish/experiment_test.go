@@ -36,7 +36,7 @@ func TestHubCaptureIncludesOnlySelectedExecutionAndHistoricalWorkflow(t *testing
 		}
 		_ = json.NewEncoder(w).Encode(value)
 	})
-	capture, err := manager.capture(context.Background(), "selected")
+	capture, err := manager.capture(context.Background(), "selected", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -64,7 +64,7 @@ func TestHubCaptureIncludesOnlySelectedExecutionAndHistoricalWorkflow(t *testing
 		}
 	}
 	run["status"] = "running"
-	if _, err := manager.capture(context.Background(), "selected"); err == nil {
+	if _, err := manager.capture(context.Background(), "selected", nil); err == nil {
 		t.Fatal("running execution exported")
 	}
 }
@@ -72,11 +72,15 @@ func TestHubCaptureRejectsUnrelatedPlanAndOversizedPackage(t *testing.T) {
 	workflow := map[string]any{"id": "workflow", "name": "Workflow", "version": map[string]any{"id": "version"}}
 	contextData := map[string]any{"workflow": workflow, "plan": map[string]any{"id": "plan", "workflowVersionId": "different"}}
 	execution := map[string]any{"run": map[string]any{"id": "run", "schedulePlanId": "plan"}}
-	if _, err := buildExperiment(contextData, execution, nil); err == nil {
+	if _, err := buildExperiment(contextData, execution, nil, nil); err == nil {
 		t.Fatal("unrelated plan accepted")
 	}
 	execution["log"] = strings.Repeat("a", packageLimit)
-	if _, err := encodeExperiment(workflow, []any{}, execution, "name: Workflow", nil); err == nil {
+	capture, err := encodeExperiment(workflow, []any{}, execution, "name: Workflow", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := marshalExperiment(capture.bundle); err == nil {
 		t.Fatal("oversized capture silently truncated")
 	}
 }
@@ -87,7 +91,7 @@ func TestExperimentPackageCarriesArtifactInspectionInYAMLAndSnapshot(t *testing.
 	workflow := map[string]any{"id": "workflow", "name": "Workflow", "version": map[string]any{"id": "version", "activities": []any{activity}}}
 	contextData := map[string]any{"workflow": workflow, "plan": map[string]any{"id": "plan", "workflowVersionId": "version"}}
 	execution := map[string]any{"run": map[string]any{"id": "run", "schedulePlanId": "plan", "workflowVersionId": "version"}}
-	capture, err := buildExperiment(contextData, execution, nil)
+	capture, err := buildExperiment(contextData, execution, nil, nil)
 	if err != nil {
 		t.Fatal(err)
 	}

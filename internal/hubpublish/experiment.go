@@ -34,7 +34,7 @@ type capturedExperiment struct {
 }
 
 func digest(data []byte) string { value := sha256.Sum256(data); return hex.EncodeToString(value[:]) }
-func (m *Manager) capture(ctx context.Context, runID string) (capturedExperiment, error) {
+func (m *Manager) capture(ctx context.Context, runID string, selection *ContentSelection) (capturedExperiment, error) {
 	var result capturedExperiment
 	var execution map[string]any
 	runPath := "/execution-runs/" + url.PathEscape(runID) + "/"
@@ -69,9 +69,9 @@ func (m *Manager) capture(ctx context.Context, runID string) (capturedExperiment
 	if digest(beforeJSON) != digest(afterJSON) {
 		return result, failure(409, "run_changed", "The execution changed during export. Review it again.")
 	}
-	return buildExperiment(context, execution, metrics.Items)
+	return buildExperiment(context, execution, metrics.Items, selection)
 }
-func buildExperiment(context, execution map[string]any, metrics []any) (capturedExperiment, error) {
+func buildExperiment(context, execution map[string]any, metrics []any, selection *ContentSelection) (capturedExperiment, error) {
 	var result capturedExperiment
 	raw := map[string]any{"context": context, "execution": execution, "metrics": metrics}
 	cleaned, redactions, err := redactSnapshot(raw)
@@ -105,6 +105,11 @@ func buildExperiment(context, execution map[string]any, metrics []any) (captured
 	environment := executionEnvironment(context, execution)
 	execution = exportExecution(execution, snapshot["metrics"])
 	execution["environmentSnapshot"] = environment
+	if selection != nil {
+		if err := selectExecutionContent(execution, *selection); err != nil {
+			return result, err
+		}
+	}
 	plans := []any{map[string]any{"plan": plan, "context": context}}
 	return encodeExperiment(workflow, plans, execution, string(yaml), redactions)
 }
@@ -169,12 +174,16 @@ func encodeExperiment(workflow map[string]any, plans []any, execution map[string
 		}
 		bundle.Files = append(bundle.Files, experimentFile{Path: file.path, MediaType: mediaType, SHA256: digest([]byte(content)), Content: content})
 	}
+	return capturedExperiment{bundle: bundle, workflow: workflow, execution: execution, yaml: yaml}, nil
+}
+
+func marshalExperiment(bundle experimentBundle) ([]byte, error) {
 	data, err := json.Marshal(bundle)
 	if err != nil {
-		return capturedExperiment{}, err
+		return nil, err
 	}
 	if len(data) > packageLimit {
-		return capturedExperiment{}, failure(422, "package_too_large", "This capture exceeds 8 MiB. No logs or observations were truncated.")
+		return nil, failure(422, "package_too_large", "The selected capture exceeds 8 MiB. Deselect optional content and review again.")
 	}
-	return capturedExperiment{bundle: bundle, workflow: workflow, execution: execution, yaml: yaml}, nil
+	return data, nil
 }

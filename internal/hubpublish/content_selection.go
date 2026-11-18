@@ -1,7 +1,6 @@
 package hubpublish
 
 import (
-	"encoding/json"
 	"regexp"
 	"strings"
 )
@@ -16,12 +15,11 @@ type ContentSelection struct {
 	Events       bool   `json:"events"`
 }
 
-func selectCapture(capture capturedExperiment, selection ContentSelection) (capturedExperiment, error) {
+func selectExecutionContent(execution map[string]any, selection ContentSelection) error {
 	label := strings.TrimSpace(selection.MachineLabel)
 	if label != "" && !machineLabel.MatchString(label) {
-		return capturedExperiment{}, failure(422, "invalid_machine_label", "Use up to 48 letters, numbers, spaces, hyphens or underscores for the public machine label.")
+		return failure(422, "invalid_machine_label", "Use up to 48 letters, numbers, spaces, hyphens or underscores for the public machine label.")
 	}
-	execution := capture.execution
 	if environment, ok := execution["environmentSnapshot"].(publishedEnvironment); ok {
 		environment.MachineLabel = label
 		execution["environmentSnapshot"] = environment
@@ -42,13 +40,5 @@ func selectCapture(capture capturedExperiment, selection ContentSelection) (capt
 			delete(execution, key)
 		}
 	}
-	var plans []any
-	for _, file := range capture.bundle.Files {
-		if file.Path == "plans.json" {
-			if err := json.Unmarshal([]byte(file.Content), &plans); err != nil {
-				return capturedExperiment{}, err
-			}
-		}
-	}
-	return encodeExperiment(capture.workflow, plans, execution, capture.yaml, capture.bundle.Redactions)
+	return nil
 }

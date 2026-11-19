@@ -49,7 +49,9 @@ type Identity struct {
 }
 type WorkflowSource struct {
 	Reference     *ExecutionReference `json:"reference,omitempty"`
+	ReferencePath string              `json:"referencePath,omitempty"`
 	URI           string              `json:"uri,omitempty"`
+	ExecutedHash  string              `json:"executedHash,omitempty"`
 	LocalHash     string              `json:"localHash,omitempty"`
 	HubOrigin     string              `json:"hubOrigin,omitempty"`
 	PublicationID string              `json:"publicationId"`

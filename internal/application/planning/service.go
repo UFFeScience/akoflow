@@ -586,6 +586,7 @@ func (s *candidateSink) Emit(ctx context.Context, plan domain.SchedulePlan) erro
 		return fmt.Errorf("validate %s candidate: %w", s.run.Algorithm, err)
 	}
 	recordPlanPricing(&plan, s.request)
+	recordExecutionReferences(&plan, s.request.ActivityProfiles)
 	planHash, err := planFingerprint(plan)
 	if err != nil {
 		return err
@@ -606,6 +607,25 @@ func (s *candidateSink) Emit(ctx context.Context, plan domain.SchedulePlan) erro
 		CreatedAt:         time.Now().UTC(),
 	}
 	return s.store.SaveCandidate(ctx, candidate)
+}
+
+func recordExecutionReferences(plan *domain.SchedulePlan, profiles []domain.ActivityResourceProfile) {
+	type placement struct{ activityID, resourceID string }
+	references := make(map[placement]any)
+	for _, profile := range profiles {
+		if value := profile.Metadata["executionReference"]; profile.Source == "hub-history" && value != nil {
+			references[placement{profile.ActivityID, profile.ResourceID}] = value
+		}
+	}
+	for index := range plan.Assignments {
+		assignment := &plan.Assignments[index]
+		if value := references[placement{assignment.ActivityID, assignment.ResourceID}]; value != nil {
+			if assignment.Metadata == nil {
+				assignment.Metadata = map[string]any{}
+			}
+			assignment.Metadata["executionReference"] = value
+		}
+	}
 }
 
 func reidentifyCandidatePlan(plan *domain.SchedulePlan, planID string) {

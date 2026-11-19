@@ -230,6 +230,10 @@ func (r *Reproducer) inspect(ctx context.Context, image string, origin domain.Ar
 }
 
 func (r *Reproducer) Reproduce(ctx context.Context, origin domain.ArtifactOrigin) (*domain.ArtifactMaterialization, error) {
+	return r.ReproduceNamed(ctx, origin, "")
+}
+
+func (r *Reproducer) ReproduceNamed(ctx context.Context, origin domain.ArtifactOrigin, displayName string) (*domain.ArtifactMaterialization, error) {
 	if err := origin.Validate(); err != nil {
 		return nil, err
 	}
@@ -274,7 +278,7 @@ func (r *Reproducer) Reproduce(ctx context.Context, origin domain.ArtifactOrigin
 	if err != nil {
 		return nil, err
 	}
-	variantID, err := r.publish(ctx, origin, key, info)
+	variantID, err := r.publishNamed(ctx, origin, key, info, displayName)
 	if err != nil {
 		return nil, err
 	}
@@ -336,11 +340,11 @@ func (r *Reproducer) build(ctx context.Context, origin domain.ArtifactOrigin, ke
 	return image, err
 }
 
-func (r *Reproducer) publish(ctx context.Context, origin domain.ArtifactOrigin, key string, image inspectedImage) (string, error) {
+func (r *Reproducer) publishNamed(ctx context.Context, origin domain.ArtifactOrigin, key string, image inspectedImage, displayName string) (string, error) {
 	if r.Catalog == nil {
 		return "variant-" + key, nil
 	}
-	spec, err := r.ensureOriginSpec(ctx, origin, key, image)
+	spec, err := r.ensureOriginSpec(ctx, origin, key, image, displayName)
 	if err != nil {
 		return "", err
 	}
@@ -402,7 +406,7 @@ type portableAvailability interface {
 	SetPortableOriginAvailability(context.Context, string, string, bool) error
 }
 
-func (r *Reproducer) ensureOriginSpec(ctx context.Context, origin domain.ArtifactOrigin, key string, image inspectedImage) (domain.ArtifactBuild, error) {
+func (r *Reproducer) ensureOriginSpec(ctx context.Context, origin domain.ArtifactOrigin, key string, image inspectedImage, displayName string) (domain.ArtifactBuild, error) {
 	cacheKey := key + ":" + image.ID
 	outputKey := strings.TrimPrefix(contentDigest([]byte(cacheKey)), "sha256:")
 	existing, err := r.Catalog.FindArtifactBuildByCacheKey(ctx, cacheKey)
@@ -427,7 +431,7 @@ func (r *Reproducer) ensureOriginSpec(ctx context.Context, origin domain.Artifac
 		spec.BuildArguments = string(args)
 	}
 	version := domain.ArtifactVersion{
-		ID: spec.ArtifactVersionID, ArtifactID: "origin-" + key, Version: image.ID, Scope: domain.CatalogScope("system"),
+		ID: spec.ArtifactVersionID, ArtifactID: "origin-" + key, Name: displayName, Version: image.ID, Scope: domain.CatalogScope("system"),
 	}
 	if err := r.Catalog.RegisterArtifactVersion(ctx, version); err != nil {
 		return spec, err

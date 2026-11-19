@@ -58,6 +58,16 @@ func (m *Manager) HistoricalProfiles(ctx context.Context, workflow domain.Workfl
 				continue
 			}
 			metadata := map[string]any{"minSeconds": estimate.MinSeconds, "maxSeconds": estimate.MaxSeconds}
+			if source.Reference != nil && estimate.SelectedReference {
+				reference := map[string]any{
+					"publicationId": source.PublicationID, "version": source.Version,
+					"experimentId": source.Reference.ExperimentID, "runId": source.Reference.RunID,
+				}
+				if source.ReferencePath != "" && m.options.BrowserURL != "" {
+					reference["url"] = strings.TrimRight(m.options.BrowserURL, "/") + source.ReferencePath
+				}
+				metadata["executionReference"] = reference
+			}
 			if estimate.PreparationMedianSeconds != nil && *estimate.PreparationMedianSeconds >= 0 {
 				metadata["preparationMedianSeconds"] = *estimate.PreparationMedianSeconds
 			}

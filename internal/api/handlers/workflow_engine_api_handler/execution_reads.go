@@ -51,6 +51,8 @@ func (h *Handler) executionReadView(w http.ResponseWriter, r *http.Request, run 
 	switch r.URL.Query().Get("view") {
 	case "status":
 		writeJSON(w, http.StatusOK, map[string]any{"run": run})
+	case "publication-definition":
+		h.getExecutedWorkflow(w, r, run)
 	case "activity":
 		h.getExecutionActivity(w, r, run)
 	case "logs":

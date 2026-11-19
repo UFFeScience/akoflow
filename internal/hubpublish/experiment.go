@@ -17,7 +17,14 @@ type experimentFile struct {
 	SHA256    string `json:"sha256"`
 	Content   string `json:"content"`
 }
+type forkOrigin struct {
+	PublicationID string `json:"publicationId"`
+	Version       int    `json:"version"`
+	Hash          string `json:"hash"`
+}
+
 type experimentBundle struct {
+	ForkOrigin    *forkOrigin       `json:"forkOrigin,omitempty"`
 	Format        string            `json:"format"`
 	SchemaVersion string            `json:"schemaVersion"`
 	ExportedAt    time.Time         `json:"exportedAt"`

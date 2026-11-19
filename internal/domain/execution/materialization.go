@@ -87,6 +87,7 @@ type TransferLocation struct {
 	Path                     string           `json:"path,omitempty"`
 }
 type ArtifactVersion struct {
+	Name       string       `json:"name,omitempty"`
 	ID         string       `json:"id"`
 	ArtifactID string       `json:"artifactId"`
 	Version    string       `json:"version"`
@@ -308,6 +309,7 @@ type WorkspaceMaterialization struct {
 }
 
 type PreparationRequirement struct {
+	ReproductionName   string                    `json:"reproductionName,omitempty"`
 	SIFImage           string                    `json:"sifImage,omitempty"`
 	Reproduction       *workflow.ArtifactOrigin  `json:"reproduction,omitempty"`
 	Artifact           *ArtifactMaterialization  `json:"artifact,omitempty"`

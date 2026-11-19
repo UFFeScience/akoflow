@@ -1862,6 +1862,9 @@
                   }
                 ]
               },
+              "reproductionName": {
+                "type": "string"
+              },
               "sifImage": {
                 "type": "string"
               },
@@ -4478,6 +4481,9 @@
                     "type": "null"
                   }
                 ]
+              },
+              "reproductionName": {
+                "type": "string"
               },
               "sifImage": {
                 "type": "string"
@@ -8879,6 +8885,9 @@
           ]
         },
         "contribution": {
+          "type": "boolean"
+        },
+        "fork": {
           "type": "boolean"
         },
         "message": {

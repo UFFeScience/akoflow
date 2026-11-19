@@ -56,7 +56,7 @@ func TestPortablePublicationReconcilesBeforeFinalizingFailure(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			catalog := &publicationCatalog{commit: test.commit, lookupFailure: test.unknown}
 			reproducer := &Reproducer{Catalog: catalog}
-			id, err := reproducer.publish(context.Background(), domain.ArtifactOrigin{}, "key", inspectedImage{ID: "image"})
+			id, err := reproducer.publishNamed(context.Background(), domain.ArtifactOrigin{}, "key", inspectedImage{ID: "image"}, "")
 			if test.commit {
 				if err != nil || id != "verified" {
 					t.Fatalf("lost committed publication: %s %v", id, err)

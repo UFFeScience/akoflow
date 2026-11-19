@@ -149,12 +149,28 @@ func (h *Handler) preparePortableOrigin(ctx context.Context, request *ports.Exec
 	if request.PreparationRequirementsByActivity == nil {
 		request.PreparationRequirementsByActivity = make(map[string]domain.PreparationRequirement)
 	}
-	request.PreparationRequirementsByActivity[activity.ID] = domain.PreparationRequirement{Reproduction: origin}
+	request.PreparationRequirementsByActivity[activity.ID] = domain.PreparationRequirement{Reproduction: origin, ReproductionName: h.portableArtifactName(ctx, request.Workflow, *activity, origin.Image)}
 	// Copy the authored source before enriching execution-owned metadata.
 	reference := *activity.Command.Executable
 	reference.Source.Origin = origin
 	activity.Command.Executable = &reference
 	return true, nil
+}
+
+func (h *Handler) portableArtifactName(ctx context.Context, workflow domain.WorkflowVersion, activity domain.Activity, image string) string {
+	if h.workflows == nil || workflow.WorkflowID == "" || image == "" {
+		return activity.Name
+	}
+	definition, err := h.workflows.Find(ctx, workflow.WorkflowID)
+	if err != nil || definition == nil || definition.Version.ID != workflow.ID {
+		return activity.Name
+	}
+	for _, activityType := range definition.Types {
+		if activityType.ID == activity.ActivityTypeID && activityType.DefaultImage == image {
+			return definition.Name
+		}
+	}
+	return activity.Name
 }
 
 func (h *Handler) makeArtifactSourcePortable(ctx context.Context, source *domain.ExecutableSource) error {

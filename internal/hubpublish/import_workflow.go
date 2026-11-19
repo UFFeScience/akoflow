@@ -4,10 +4,13 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	apirequests "github.com/UFFeScience/akoflow/internal/api/requests"
-	"github.com/UFFeScience/akoflow/internal/domain"
+	"fmt"
 	"net/http"
 	"net/url"
+	"strings"
+
+	apirequests "github.com/UFFeScience/akoflow/internal/api/requests"
+	"github.com/UFFeScience/akoflow/internal/domain"
 )
 
 func (m *Manager) ImportWorkflow(ctx context.Context, uri, name string) (json.RawMessage, error) {
@@ -28,10 +31,9 @@ func (m *Manager) importWorkflow(ctx context.Context, uri, name, expectedHash, e
 	if editedYAML != "" && expectedHash == "" {
 		return nil, failure(422, "workflow_source_required", "Review a Hub version before importing an edited copy.")
 	}
-	if selected != nil {
-		if expectedHash == "" || definition.PublicationID == "" || len(selected.ExperimentID) == 0 || len(selected.ExperimentID) > 128 || len(selected.RunID) == 0 || len(selected.RunID) > 128 {
-			return nil, failure(422, "invalid_execution_reference", "Select an execution from the reviewed Hub version.")
-		}
+	referencePath, err := m.importReferencePath(ctx, definition, expectedHash, selected)
+	if err != nil {
+		return nil, err
 	}
 	yaml := definition.YAML
 	if editedYAML != "" {
@@ -59,11 +61,20 @@ func (m *Manager) importWorkflow(ctx context.Context, uri, name, expectedHash, e
 		if m.state.WorkflowSources == nil {
 			m.state.WorkflowSources = make(map[string]WorkflowSource)
 		}
-		localHash := ""
+		localHash, executedHash := "", ""
 		if editedYAML == "" {
 			localHash = digest(localYAML)
+			executedHash, err = workflowChecksum(imported, true)
+			if err != nil {
+				m.mu.Unlock()
+				return nil, err
+			}
 		}
-		m.state.WorkflowSources[imported.Version.ID] = WorkflowSource{PublicationID: publicationID, Version: version, Hash: definition.Hash, LocalHash: localHash, HubOrigin: definition.origin, URI: definition.URI, Reference: selected}
+		m.state.WorkflowSources[imported.Version.ID] = WorkflowSource{
+			PublicationID: publicationID, Version: version, Hash: definition.Hash, LocalHash: localHash,
+			HubOrigin: definition.origin, URI: definition.URI, Reference: selected, ReferencePath: referencePath,
+			ExecutedHash: executedHash,
+		}
 		saveErr := m.persistLocked()
 		m.mu.Unlock()
 		if saveErr != nil {
@@ -71,6 +82,31 @@ func (m *Manager) importWorkflow(ctx context.Context, uri, name, expectedHash, e
 		}
 	}
 	return json.RawMessage(data), nil
+}
+
+func (m *Manager) importReferencePath(ctx context.Context, definition WorkflowDefinition, expectedHash string, selected *ExecutionReference) (string, error) {
+	if selected == nil {
+		return "", nil
+	}
+	if expectedHash == "" || definition.PublicationID == "" || len(selected.ExperimentID) == 0 ||
+		len(selected.ExperimentID) > 128 || len(selected.RunID) == 0 || len(selected.RunID) > 128 {
+		return "", failure(422, "invalid_execution_reference", "Select an execution from the reviewed Hub version.")
+	}
+	path := fmt.Sprintf("/publications/%s/versions/%d/execution-references", definition.PublicationID, definition.Version)
+	var references []executionReferenceChoice
+	if err := m.historyRequest(ctx, definition.origin, http.MethodGet, path, nil, &references); err != nil {
+		return "", err
+	}
+	for _, reference := range references {
+		if reference.ExecutionReference != *selected {
+			continue
+		}
+		if strings.HasPrefix(reference.Path, "/u/") || strings.HasPrefix(reference.Path, "/o/") || strings.HasPrefix(reference.Path, "/a/") {
+			return reference.Path, nil
+		}
+		return "", nil
+	}
+	return "", failure(422, "invalid_execution_reference", "This execution is no longer eligible. Choose another reference.")
 }
 
 func (m *Manager) sourceRequest(ctx context.Context, method, path string, body []byte, contentType string) ([]byte, error) {

@@ -14,6 +14,11 @@ type ExecutionReference struct {
 }
 
 type executionReferenceChoice struct {
+	Path       string `json:"path,omitempty"`
+	Activities []struct {
+		Name    string  `json:"name"`
+		Seconds float64 `json:"seconds"`
+	} `json:"activities,omitempty"`
 	ExecutionReference
 	Author          string  `json:"author"`
 	Date            string  `json:"date"`

@@ -37,7 +37,13 @@ func (c Coordinator) Prepare(ctx context.Context, activityID string, requirement
 			return nil, fmt.Errorf("artifact reproduction is not configured")
 		}
 		var err error
-		reproduced, err = c.Reproducer.Reproduce(ctx, *requirement.Reproduction)
+		if named, ok := c.Reproducer.(interface {
+			ReproduceNamed(context.Context, domain.ArtifactOrigin, string) (*domain.ArtifactMaterialization, error)
+		}); ok && requirement.ReproductionName != "" {
+			reproduced, err = named.ReproduceNamed(ctx, *requirement.Reproduction, requirement.ReproductionName)
+		} else {
+			reproduced, err = c.Reproducer.Reproduce(ctx, *requirement.Reproduction)
+		}
 		if err != nil {
 			return nil, fmt.Errorf("reproduce executable: %w", err)
 		}

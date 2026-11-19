@@ -219,7 +219,26 @@ func (r *Repository) ListArtifacts(ctx context.Context, selectable bool) ([]doma
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
+	disambiguateArtifactNames(values)
 	return r.enrichArtifactBuilds(ctx, values, indexes)
+}
+
+func disambiguateArtifactNames(values []domain.ExecutableArtifact) {
+	owners := make(map[string]string)
+	collisions := make(map[string]bool)
+	for _, value := range values {
+		if previous, exists := owners[value.Name]; exists && previous != value.ID {
+			collisions[value.Name] = true
+		}
+		owners[value.Name] = value.ID
+	}
+	for index := range values {
+		item := &values[index]
+		if collisions[item.Name] {
+			key := sha256.Sum256([]byte(item.ID))
+			item.Name = fmt.Sprintf("%s · %x", item.Name, key[:4])
+		}
+	}
 }
 
 func (r *Repository) enrichArtifactBuilds(ctx context.Context, values []domain.ExecutableArtifact, indexes map[string]int) ([]domain.ExecutableArtifact, error) {
@@ -530,9 +549,16 @@ func (r *Repository) SaveArtifactBuild(ctx context.Context, value domain.Artifac
 	return err
 }
 
+func displayArtifactName(version domain.ArtifactVersion) string {
+	if version.Name != "" {
+		return version.Name
+	}
+	return version.ArtifactID
+}
+
 func (r *Repository) RegisterArtifactVersion(ctx context.Context, value domain.ArtifactVersion) error {
 	_, err := r.db.ExecContext(ctx, `INSERT INTO artifact_versions(id,artifact_id,name,version,scope,scope_id)
-		VALUES(?,?,?,?,?,?)`, value.ID, value.ArtifactID, value.ArtifactID, value.Version, value.Scope, value.ScopeID)
+		VALUES(?,?,?,?,?,?)`, value.ID, value.ArtifactID, displayArtifactName(value), value.Version, value.Scope, value.ScopeID)
 	return err
 }
 

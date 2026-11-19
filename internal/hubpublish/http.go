@@ -125,6 +125,7 @@ func (m *Manager) serveContributionDestination(w http.ResponseWriter, r *http.Re
 
 func (m *Manager) servePreview(w http.ResponseWriter, r *http.Request) {
 	var input struct {
+		Fork          bool              `json:"fork"`
 		Contribution  bool              `json:"contribution"`
 		TargetVersion int               `json:"targetVersion"`
 		RunID         string            `json:"runId"`
@@ -136,7 +137,7 @@ func (m *Manager) servePreview(w http.ResponseWriter, r *http.Request) {
 		respond(w, nil, err)
 		return
 	}
-	value, err := m.previewExecution(r.Context(), input.RunID, input.PublicationID, input.Message, input.TargetVersion, input.Contribution, input.Content)
+	value, err := m.previewExecution(r.Context(), input.RunID, input.PublicationID, input.Message, input.TargetVersion, input.Contribution, input.Fork, input.Content)
 	respond(w, value, err)
 }
 func (m *Manager) serveConfirm(w http.ResponseWriter, r *http.Request) {

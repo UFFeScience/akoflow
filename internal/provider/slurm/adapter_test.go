@@ -563,11 +563,14 @@ func TestBatchRootWorkspaceUsesSelectedSharedFilesystem(t *testing.T) {
 	}
 }
 
-func TestBatchScriptRecordsAllocatedGPUAndNodeCapacitySeparately(t *testing.T) {
+func TestBatchScriptRecordsSlurmNodeAndAllocationSeparatelyFromCapacity(t *testing.T) {
 	installFakeContainerRuntime(t, false, nil)
 	commands := t.TempDir()
 	t.Setenv("PATH", commands+string(os.PathListSeparator)+os.Getenv("PATH"))
 	t.Setenv("SLURM_GPUS_ON_NODE", "1")
+	t.Setenv("SLURMD_NODENAME", "worker-b")
+	t.Setenv("SLURM_CPUS_ON_NODE", "2")
+	t.Setenv("SLURM_MEM_PER_NODE", "512")
 	if err := os.WriteFile(filepath.Join(commands, "scontrol"), []byte("#!/bin/sh\n echo 'NodeName=private CfgTRES=cpu=8,mem=32G,gres/gpu=4,gres/gpu:a100=4 AllocTRES=gres/gpu=1'\n"), 0700); err != nil {
 		t.Fatal(err)
 	}
@@ -576,6 +579,13 @@ func TestBatchScriptRecordsAllocatedGPUAndNodeCapacitySeparately(t *testing.T) {
 	}})
 	if err != nil || values["node_gpu_capacity"] != "4" || values["node_allocated_gpus"] != "1" || values["container_runtime_version"] != "1.5.5" {
 		t.Fatalf("unexpected facts: %+v %v", values, err)
+	}
+	if values["allocated_node"] != "worker-b" || values["node_allocated_cpus"] != "2" || values["node_allocated_memory_mib"] != "512" {
+		t.Fatalf("missing Slurm allocation: %+v", values)
+	}
+	handle, _ := applySentinelStatus(domain.ActivityHandle{}, "allocated_node=worker-b\nnode_allocated_cpus=2\nnode_allocated_memory_mib=512")
+	if handle.Metadata["slurmAllocatedCpu"] != uint64(2) || handle.Metadata["slurmAllocatedMemoryBytes"] != uint64(512<<20) {
+		t.Fatalf("missing parsed allocation: %+v", handle.Metadata)
 	}
 }
 

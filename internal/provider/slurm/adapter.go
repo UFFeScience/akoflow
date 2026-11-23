@@ -327,6 +327,12 @@ func applySentinelStatus(handle domain.ActivityHandle, payload string) (domain.A
 			handle.Metadata = make(map[string]any)
 		}
 		handle.Metadata["allocatedNode"] = node
+		if cpus, err := strconv.ParseUint(values["node_allocated_cpus"], 10, 32); err == nil && cpus > 0 {
+			handle.Metadata["slurmAllocatedCpu"] = cpus
+		}
+		if memory, err := strconv.ParseUint(values["node_allocated_memory_mib"], 10, 32); err == nil && memory > 0 {
+			handle.Metadata["slurmAllocatedMemoryBytes"] = memory * (1 << 20)
+		}
 		if gpus, err := strconv.ParseUint(values["node_allocated_gpus"], 10, 16); err == nil {
 			handle.Metadata["slurmAllocatedGpus"] = gpus
 		}
@@ -704,7 +710,7 @@ func batchScript(runID string, activity domain.Activity, partition, node string)
 		"artifact_before=$(mktemp)\nartifact_after=$(mktemp)\nseed_links=$(mktemp)\nseed_list=$(mktemp)\n")
 	writeBatchObservationHelpers(&script)
 	script.WriteString(`started_at=$(date +%s.%N)
-allocated_node=$(hostname -s)
+allocated_node=${SLURMD_NODENAME:-$(hostname -s)}
 container_epoch_anchor=$(date +%s.%N)
 container_uptime_anchor=$(awk '{print $1}' /proc/uptime)
 printf 'state=running\nstarted_at=%s\nallocated_node=%s\nartifact_root=%s\n' "$started_at" "$allocated_node" "$artifact_root" > "$sentinel"
@@ -768,7 +774,7 @@ node_allocated_gpus=${SLURM_GPUS_ON_NODE:-}
 node_gpu_capacity=
 case "$node_allocated_gpus" in
   ""|0|*[!0-9]*) ;;
-  *) node_gpu_capacity=$(timeout 2s scontrol show node "$(hostname -s)" -o 2>/dev/null | awk '
+  *) node_gpu_capacity=$(timeout 2s scontrol show node "$allocated_node" -o 2>/dev/null | awk '
       {for (i=1;i<=NF;i++) if ($i ~ /^CfgTRES=/) {
         n=split($i,items,","); for (j=1;j<=n;j++) if (items[j] ~ /^gres\/gpu=[0-9]+$/) {sub(/^gres\/gpu=/,"",items[j]); print items[j]; exit}
       }}') ;;
@@ -776,8 +782,9 @@ esac
 
 node_cpu_model=$(awk -F: '/^model name[[:space:]]*:/ { sub(/^[[:space:]]+/, "", $2); print $2; exit }' /proc/cpuinfo 2>/dev/null || true)
 write_node_facts() {
-  printf 'node_arch=%s\nnode_cpus=%s\nnode_memory_kib=%s\nnode_cpu_model=%s\nnode_os=%s\nnode_kernel=%s\nnode_allocated_gpus=%s\nnode_gpu_capacity=%s\ncontainer_runtime_version=%s\nslurm_version=%s\n' \
+  printf 'node_arch=%s\nnode_cpus=%s\nnode_memory_kib=%s\nnode_cpu_model=%s\nnode_os=%s\nnode_kernel=%s\nnode_allocated_cpus=%s\nnode_allocated_memory_mib=%s\nnode_allocated_gpus=%s\nnode_gpu_capacity=%s\ncontainer_runtime_version=%s\nslurm_version=%s\n' \
     "$node_arch" "$node_cpus" "$node_memory_kib" "$node_cpu_model" "$node_os" "$node_kernel" \
+    "${SLURM_CPUS_ON_NODE:-}" "${SLURM_MEM_PER_NODE:-}" \
     "$node_allocated_gpus" "$node_gpu_capacity" "${container_runtime_version:-}" "$slurm_version"
 }
 `)

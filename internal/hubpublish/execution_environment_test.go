@@ -64,7 +64,7 @@ func TestPublishedEnvironmentUsesDockerObservationsAndDistinguishesSlurmNodes(t 
                 "architecture":"x86_64","cpuCapacity":4,"memoryBytes":4096,"memoryCapacityBytes":2048,"cpuModel":"Test CPU (TM)","executionStyle":"native"
             }}},
 			{"id":"run:first","metadata":{
-                "allocatedNode":"private-first","slurmAllocatedGpus":2,
+                "allocatedNode":"private-first","slurmAllocatedGpus":2,"slurmAllocatedCpu":2,"slurmAllocatedMemoryBytes":536870912,
                 "slurmEnvironment":{
                     "architecture":"aarch64","cpuCores":32,"gpuCapacity":8,
                     "version":"1.5.5","schedulerVersion":"24.11.5","cpuModel":"Intel(R) Core(TM) @ 2.80GHz"
@@ -90,6 +90,8 @@ func TestPublishedEnvironmentUsesDockerObservationsAndDistinguishesSlurmNodes(t 
 		t.Fatalf("missing native observation: %+v", snapshot)
 	}
 	if snapshot.Attempts[2].AllocatedGPU == nil || *snapshot.Attempts[2].AllocatedGPU != 2 ||
+		snapshot.Attempts[2].AllocatedCPU != 2 || snapshot.Attempts[2].AllocatedRAM != 512<<20 ||
+		snapshot.Attempts[3].AllocatedCPU != 0 || snapshot.Attempts[3].AllocatedRAM != 0 ||
 		snapshot.Resources[2].Runtime != "Slurm" || snapshot.Resources[2].Architecture != "arm64" ||
 		snapshot.Resources[2].CPUModel != "Intel(R) Core(TM) @ 2.80GHz" ||
 		snapshot.Resources[2].GPUCapacity == nil || *snapshot.Resources[2].GPUCapacity != 8 ||

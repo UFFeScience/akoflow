@@ -1152,7 +1152,7 @@ func (h *Handler) ExportWorkflow(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusUnprocessableEntity, err)
 		return
 	}
-	payload, err := apirequests.FromDomain(portable).YAML()
+	payload, err := apirequests.PortableWorkflow(portable).YAML()
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, err)
 		return
@@ -2484,7 +2484,7 @@ func (h *Handler) DuplicateWorkflow(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusNotFound, nil)
 		return
 	}
-	copy := apirequests.FromDomain(*source)
+	copy := apirequests.PortableWorkflow(*source)
 	copy.Name = request.Name
 	if request.Namespace != "" {
 		copy.Spec.Namespace = request.Namespace

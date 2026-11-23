@@ -4,9 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"strings"
 
+	"github.com/UFFeScience/akoflow/internal/application/ports"
 	"github.com/UFFeScience/akoflow/internal/domain"
 	domainworkflow "github.com/UFFeScience/akoflow/internal/domain/workflow"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/dockerhub"
@@ -139,8 +139,22 @@ func (h *Handler) preparePortableOrigin(ctx context.Context, request *ports.Exec
 	if err != nil {
 		return false, fmt.Errorf("activity %q: %w", activity.ID, err)
 	}
+	attachOrigin := origin != nil
 	if origin == nil {
-		return false, nil
+		source := activity.Command.Executable.Source
+		if source.Type != domain.ExecutableSourceOCI || !strings.Contains(source.Reference, "@sha256:") {
+			return false, nil
+		}
+		platform := normalizedOriginArchitecture(resource.Architecture)
+		if platform != "amd64" && platform != "arm64" {
+			return false, nil
+		}
+		origin, err = originWithExpectedDigest(source, &domain.ArtifactOrigin{
+			Image: source.Reference, Platform: "linux/" + platform,
+		})
+		if err != nil {
+			return false, fmt.Errorf("activity %q: %w", activity.ID, err)
+		}
 	}
 	architecture := strings.Split(origin.Platform, "/")[1]
 	if origin.Build != nil && resource.Architecture != "" && architecture != normalizedOriginArchitecture(resource.Architecture) {
@@ -150,10 +164,12 @@ func (h *Handler) preparePortableOrigin(ctx context.Context, request *ports.Exec
 		request.PreparationRequirementsByActivity = make(map[string]domain.PreparationRequirement)
 	}
 	request.PreparationRequirementsByActivity[activity.ID] = domain.PreparationRequirement{Reproduction: origin, ReproductionName: h.portableArtifactName(ctx, request.Workflow, *activity, origin.Image)}
-	// Copy the authored source before enriching execution-owned metadata.
-	reference := *activity.Command.Executable
-	reference.Source.Origin = origin
-	activity.Command.Executable = &reference
+	if attachOrigin {
+		// Copy the authored source before enriching execution-owned metadata.
+		reference := *activity.Command.Executable
+		reference.Source.Origin = origin
+		activity.Command.Executable = &reference
+	}
 	return true, nil
 }
 

@@ -74,6 +74,19 @@ func FromDomain(definition domain.WorkflowDefinition) Workflow {
 	return request
 }
 
+// PortableWorkflow retains the authored default used to label workflow artifacts.
+// FromDomain also serves existing stored checksums, whose document must stay stable.
+func PortableWorkflow(definition domain.WorkflowDefinition) Workflow {
+	request := FromDomain(definition)
+	for _, activityType := range definition.Types {
+		if activityType.ID == definition.ID+"-activity" {
+			request.Spec.Image = activityType.DefaultImage
+			break
+		}
+	}
+	return request
+}
+
 // YAML serializes through JSON keys first, which keeps the portable document
 // stable even for nested domain types that only declare json tags.
 func (request Workflow) YAML() ([]byte, error) {

@@ -112,7 +112,7 @@ func buildExperiment(context, execution map[string]any, metrics []any, selection
 	if json.Unmarshal(data, &definition) != nil {
 		return result, failure(422, "invalid_workflow", "The captured workflow is invalid.")
 	}
-	yaml, err := apirequests.FromDomain(definition).YAML()
+	yaml, err := apirequests.PortableWorkflow(definition).YAML()
 	if err != nil || len(yaml) > 8<<20 {
 		return result, failure(422, "invalid_workflow", "The captured workflow YAML is invalid or too large.")
 	}
@@ -129,7 +129,7 @@ func buildExperiment(context, execution map[string]any, metrics []any, selection
 }
 func exportExecution(detail map[string]any, metrics any) map[string]any {
 	keys := []string{"run", "activities",
-		"activityAttempts", "activityMetricSeries", "dataTransfers", "timeline", "cloudBilling",
+		"activityAttempts", "activityMetricSeries", "dataTransfers", "timeline",
 		"artifactTransferRuns", "dataObjects", "dataLocations", "workspaces",
 		"workspaceLeases", "artifactMaterializations", "infrastructureRuns", "events", "operationEvents"}
 	result := map[string]any{}
@@ -137,6 +137,17 @@ func exportExecution(detail map[string]any, metrics any) map[string]any {
 		if value, ok := detail[key]; ok {
 			result[key] = value
 		}
+	}
+	if billing, ok := detail["cloudBilling"].(map[string]any); ok {
+		// The live endpoint stamps each read with its query time. Retain the
+		// observed billing values without making identical captures differ.
+		captured := make(map[string]any, len(billing))
+		for key, value := range billing {
+			if key != "asOf" {
+				captured[key] = value
+			}
+		}
+		result["cloudBilling"] = captured
 	}
 	logs := []any{}
 	handles, _ := detail["handles"].([]any)

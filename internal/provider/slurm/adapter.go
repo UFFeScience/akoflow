@@ -333,6 +333,7 @@ func applySentinelStatus(handle domain.ActivityHandle, payload string) (domain.A
 		architecture := values["node_arch"]
 		gpuCapacity, gpuErr := strconv.ParseUint(values["node_gpu_capacity"], 10, 16)
 		runtimeVersion := values["container_runtime_version"]
+		slurmVersion := values["slurm_version"]
 		cpuModel := values["node_cpu_model"]
 		osType, kernel := values["node_os"], values["node_kernel"]
 		cpus, _ := strconv.ParseInt(values["node_cpus"], 10, 32)
@@ -340,7 +341,7 @@ func applySentinelStatus(handle domain.ActivityHandle, payload string) (domain.A
 		if architecture != "" || cpuModel != "" || osType != "" || kernel != "" || cpus > 0 || memory > 0 {
 			facts := map[string]any{
 				"architecture": architecture, "cpuModel": cpuModel, "os": osType, "kernel": kernel,
-				"cpuCores": cpus, "memoryBytes": memory * 1024, "version": runtimeVersion,
+				"cpuCores": cpus, "memoryBytes": memory * 1024, "version": runtimeVersion, "schedulerVersion": slurmVersion,
 			}
 			if gpuErr == nil {
 				facts["gpuCapacity"] = gpuCapacity
@@ -762,6 +763,7 @@ node_os=$(uname -s 2>/dev/null | tr "[:upper:]" "[:lower:]" || true)
 node_kernel=$(uname -r 2>/dev/null || true)
 node_cpus=$(getconf _NPROCESSORS_ONLN 2>/dev/null || true)
 node_memory_kib=$(awk '/^MemTotal:/ { print $2; exit }' /proc/meminfo 2>/dev/null || true)
+slurm_version=$(timeout 2s scontrol --version 2>/dev/null | awk '/^slurm / { print $2; exit }' || true)
 node_allocated_gpus=${SLURM_GPUS_ON_NODE:-}
 node_gpu_capacity=
 case "$node_allocated_gpus" in
@@ -774,9 +776,9 @@ esac
 
 node_cpu_model=$(awk -F: '/^model name[[:space:]]*:/ { sub(/^[[:space:]]+/, "", $2); print $2; exit }' /proc/cpuinfo 2>/dev/null || true)
 write_node_facts() {
-  printf 'node_arch=%s\nnode_cpus=%s\nnode_memory_kib=%s\nnode_cpu_model=%s\nnode_os=%s\nnode_kernel=%s\nnode_allocated_gpus=%s\nnode_gpu_capacity=%s\ncontainer_runtime_version=%s\n' \
+  printf 'node_arch=%s\nnode_cpus=%s\nnode_memory_kib=%s\nnode_cpu_model=%s\nnode_os=%s\nnode_kernel=%s\nnode_allocated_gpus=%s\nnode_gpu_capacity=%s\ncontainer_runtime_version=%s\nslurm_version=%s\n' \
     "$node_arch" "$node_cpus" "$node_memory_kib" "$node_cpu_model" "$node_os" "$node_kernel" \
-    "$node_allocated_gpus" "$node_gpu_capacity" "${container_runtime_version:-}"
+    "$node_allocated_gpus" "$node_gpu_capacity" "${container_runtime_version:-}" "$slurm_version"
 }
 `)
 }

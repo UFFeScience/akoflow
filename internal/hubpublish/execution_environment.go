@@ -29,6 +29,7 @@ type publishedResource struct {
 	CPUCapacity             float64  `json:"cpuCapacity,omitempty"`
 	Runtime                 string   `json:"runtime,omitempty"`
 	RuntimeVersion          string   `json:"runtimeVersion,omitempty"`
+	MemoryCapacityBytes     float64  `json:"memoryCapacityBytes,omitempty"`
 	MemoryBytes             float64  `json:"memoryBytes,omitempty"`
 }
 
@@ -162,6 +163,9 @@ func describeObservedResource(number int, mode string, facts map[string]any, run
 			observation.ContainerRuntimeVersion = version
 		}
 	}
+	if value, _ := facts["schedulerVersion"].(string); runtimeName == "Slurm" && runtimeVersion.MatchString(value) {
+		observation.RuntimeVersion = value
+	}
 	if count, ok := facts["gpuCapacity"].(float64); runtimeName == "Slurm" && ok && count >= 0 && count <= 65535 && math.Trunc(count) == count {
 		observation.GPUCapacity = &count
 	}
@@ -195,7 +199,7 @@ func describePublishedResource(number int, mode string, item map[string]any) pub
 	}
 	return publishedResource{Number: number, Source: source, Architecture: architecture, OS: "unknown", Kernel: "unknown",
 		CPUCores: positiveMetric(item["cpuCores"]), CPUCapacity: positiveMetric(item["cpuCapacity"]),
-		MemoryBytes: positiveMetric(item["memoryBytes"])}
+		MemoryBytes: positiveMetric(item["memoryBytes"]), MemoryCapacityBytes: positiveMetric(item["memoryCapacityBytes"])}
 }
 
 func indexEnvironmentRecords(value any) map[string]map[string]any {

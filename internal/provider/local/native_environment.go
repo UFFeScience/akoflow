@@ -16,7 +16,10 @@ func nativeEnvironment() map[string]any {
 	}
 	if capacity, err := nativeCapacity(); err == nil {
 		result["cpuCapacity"] = capacity.MaxCPUs
-		result["memoryBytes"] = capacity.MaxMemoryBytes
+		result["memoryCapacityBytes"] = capacity.MaxMemoryBytes
+	}
+	if total, err := totalNativeMemory(); err == nil && total > 0 {
+		result["memoryBytes"] = total
 	}
 	if kernel, err := os.ReadFile("/proc/sys/kernel/osrelease"); err == nil {
 		result["kernel"] = strings.TrimSpace(string(kernel))

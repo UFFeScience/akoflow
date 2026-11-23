@@ -26,18 +26,9 @@ func detectCapacity(ctx context.Context, executor runtimecommon.CommandExecutor)
 
 func nativeCapacity() (*domain.LocalCapacity, error) {
 	cpus := runtime.NumCPU()
-	var memory int64
-	data, err := os.ReadFile("/proc/meminfo")
+	memory, err := totalNativeMemory()
 	if err != nil {
-		return nil, fmt.Errorf("detect local memory: %w", err)
-	}
-	for _, line := range strings.Split(string(data), "\n") {
-		if strings.HasPrefix(line, "MemTotal:") {
-			var kib int64
-			fmt.Sscan(strings.TrimPrefix(line, "MemTotal:"), &kib)
-			memory = kib * 1024
-			break
-		}
+		return nil, err
 	}
 	memory = boundedMemory(memory, "/sys/fs/cgroup/memory.max")
 	memory = boundedMemory(memory, "/sys/fs/cgroup/memory/memory.limit_in_bytes")
@@ -48,6 +39,23 @@ func nativeCapacity() (*domain.LocalCapacity, error) {
 		}
 	}
 	return domain.NewLocalCapacity(cpus, memory, "native")
+}
+
+func totalNativeMemory() (int64, error) {
+	var memory int64
+	data, err := os.ReadFile("/proc/meminfo")
+	if err != nil {
+		return 0, fmt.Errorf("detect local memory: %w", err)
+	}
+	for _, line := range strings.Split(string(data), "\n") {
+		if strings.HasPrefix(line, "MemTotal:") {
+			var kib int64
+			fmt.Sscan(strings.TrimPrefix(line, "MemTotal:"), &kib)
+			memory = kib * 1024
+			break
+		}
+	}
+	return memory, nil
 }
 
 func boundedMemory(total int64, path string) int64 {

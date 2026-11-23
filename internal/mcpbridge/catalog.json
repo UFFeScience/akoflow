@@ -8875,6 +8875,9 @@
                 },
                 "metrics": {
                   "type": "boolean"
+                },
+                "resourceUsage": {
+                  "type": "boolean"
                 }
               },
               "type": "object"

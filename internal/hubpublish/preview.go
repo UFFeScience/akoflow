@@ -106,6 +106,12 @@ func describeExecutionPreview(id, runID string, targetVersion int, publication P
 	if hasEnvironment {
 		result.EnvironmentSnapshot = &environment
 	}
+	if usage, ok := capture.execution["activityMetricSeries"].(map[string]any); ok {
+		result.ResourceUsage = map[string]any{
+			"observedSamples": usage["observedSamples"], "includedSamples": usage["includedSamples"],
+			"omittedAttempts": usage["omittedAttempts"], "method": usage["method"],
+		}
+	}
 	return result
 }
 func (m *Manager) expirePreviewsLocked() {

@@ -8,11 +8,12 @@ import (
 var machineLabel = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9 _-]{0,47}$`)
 
 type ContentSelection struct {
-	MachineLabel string `json:"machineLabel,omitempty"`
-	Logs         bool   `json:"logs"`
-	Files        bool   `json:"files"`
-	Metrics      bool   `json:"metrics"`
-	Events       bool   `json:"events"`
+	MachineLabel  string `json:"machineLabel,omitempty"`
+	Logs          bool   `json:"logs"`
+	Files         bool   `json:"files"`
+	Metrics       bool   `json:"metrics"`
+	ResourceUsage bool   `json:"resourceUsage"`
+	Events        bool   `json:"events"`
 }
 
 func selectExecutionContent(execution map[string]any, selection ContentSelection) error {
@@ -34,6 +35,9 @@ func selectExecutionContent(execution map[string]any, selection ContentSelection
 	}
 	if !selection.Metrics {
 		delete(execution, "metricSummaries")
+	}
+	if !selection.ResourceUsage {
+		delete(execution, "activityMetricSeries")
 	}
 	if !selection.Events {
 		for _, key := range []string{"events", "operationEvents", "timeline"} {

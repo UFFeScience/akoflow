@@ -67,6 +67,13 @@ func (m *Manager) capture(ctx context.Context, runID string, selection *ContentS
 	if err := m.readSource(ctx, runPath+"activity-metrics/", &metrics); err != nil {
 		return result, err
 	}
+	if selection != nil && selection.ResourceUsage {
+		usage, err := m.captureResourceUsage(ctx, runPath, metrics.Items)
+		if err != nil {
+			return result, err
+		}
+		execution["activityMetricSeries"] = usage
+	}
 	var after map[string]any
 	if err := m.readSource(ctx, runPath+"?view=status", &after); err != nil {
 		return result, err
@@ -122,7 +129,7 @@ func buildExperiment(context, execution map[string]any, metrics []any, selection
 }
 func exportExecution(detail map[string]any, metrics any) map[string]any {
 	keys := []string{"run", "activities",
-		"activityAttempts", "dataTransfers", "timeline", "cloudBilling",
+		"activityAttempts", "activityMetricSeries", "dataTransfers", "timeline", "cloudBilling",
 		"artifactTransferRuns", "dataObjects", "dataLocations", "workspaces",
 		"workspaceLeases", "artifactMaterializations", "infrastructureRuns", "events", "operationEvents"}
 	result := map[string]any{}

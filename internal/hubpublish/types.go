@@ -110,6 +110,7 @@ type preparedPublication struct {
 	ExpiresAt    time.Time
 }
 type Preview struct {
+	ResourceUsage       map[string]any        `json:"resourceUsage,omitempty"`
 	EnvironmentSnapshot *publishedEnvironment `json:"environmentSnapshot,omitempty"`
 	TargetVersion       int                   `json:"targetVersion,omitempty"`
 	ID                  string                `json:"id"`

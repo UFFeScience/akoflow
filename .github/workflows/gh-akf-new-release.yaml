@@ -12,6 +12,14 @@ on:
         description: Optional completed tagged-push run whose successful runtime archives can be reused.
         required: false
         type: string
+      macos_runner:
+        description: macOS runner for rebuilding packages from the frozen source tag.
+        required: false
+        type: choice
+        default: macos-15
+        options:
+          - macos-15
+          - macos-26
   push:
     tags:
       - "v*.*.*"
@@ -173,7 +181,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - runner: macos-15
+          - runner: ${{ inputs.macos_runner || 'macos-15' }}
             command: npx electron-builder --mac --universal --publish never
             artifact: macos-universal
             signing: macos

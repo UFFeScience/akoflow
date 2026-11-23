@@ -111,16 +111,7 @@ func executionEnvironment(context, execution map[string]any) publishedEnvironmen
 		if style != "native" && style != "emulated" {
 			style = ""
 		}
-		limits, _ := metadata["dockerLimits"].(map[string]any)
-		allocatedCPU, allocatedRAM := positiveMetric(limits["cpu"]), positiveMetric(limits["memoryBytes"])
-		var allocatedGPU *float64
-		if node != "" {
-			allocatedCPU = positiveMetric(metadata["slurmAllocatedCpu"])
-			allocatedRAM = positiveMetric(metadata["slurmAllocatedMemoryBytes"])
-			if gpus, ok := metadata["slurmAllocatedGpus"].(float64); ok && gpus >= 0 && gpus <= 65535 && math.Trunc(gpus) == gpus {
-				allocatedGPU = &gpus
-			}
-		}
+		allocatedCPU, allocatedRAM, allocatedGPU := observedAllocation(metadata, node)
 		request, _ := activities[activityID]["resources"].(map[string]any)
 		result.Attempts = append(result.Attempts, publishedAllocation{
 			ActivityID: activityID, Status: attemptStatus(task["status"]),
@@ -133,6 +124,19 @@ func executionEnvironment(context, execution map[string]any) publishedEnvironmen
 		})
 	}
 	return result
+}
+
+func observedAllocation(metadata map[string]any, node string) (cpu, memory float64, gpu *float64) {
+	if node == "" {
+		limits, _ := metadata["dockerLimits"].(map[string]any)
+		return positiveMetric(limits["cpu"]), positiveMetric(limits["memoryBytes"]), nil
+	}
+	cpu = positiveMetric(metadata["slurmAllocatedCpu"])
+	memory = positiveMetric(metadata["slurmAllocatedMemoryBytes"])
+	if count, ok := metadata["slurmAllocatedGpus"].(float64); ok && count >= 0 && count <= 65535 && math.Trunc(count) == count {
+		gpu = &count
+	}
+	return cpu, memory, gpu
 }
 
 func observedRuntime(metadata map[string]any) (map[string]any, string) {

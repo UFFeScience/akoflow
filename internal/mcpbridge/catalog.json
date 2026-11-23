@@ -8313,6 +8313,20 @@
     }
   },
   {
+    "name": "environment_connection_deletion",
+    "method": "GET",
+    "path": "/akoflow-api/environment-connections/{connectionId}/deletion/",
+    "handler": "EnvironmentConnectionDeletion",
+    "description": "environment connection deletion. GET /akoflow-api/environment-connections/{connectionId}/deletion/. Uses the daemon API and its domain validation."
+  },
+  {
+    "name": "environment_connection_deletion_compat",
+    "method": "DELETE",
+    "path": "/akoflow-api/environment-connections/{connectionId}/",
+    "handler": "EnvironmentConnectionDeletion",
+    "description": "environment connection deletion. DELETE /akoflow-api/environment-connections/{connectionId}/. Uses the daemon API and its domain validation."
+  },
+  {
     "name": "execute_console_command",
     "method": "POST",
     "path": "/akoflow-api/console-commands/",

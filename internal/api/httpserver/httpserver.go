@@ -126,6 +126,8 @@ func NewMux(workflowEngine *workflow_engine_api_handler.Handler) *http.ServeMux 
 	mux.HandleFunc("GET /akoflow-api/storage-downloads/{downloadId}/content/", workflowEngine.StreamDownload)
 	mux.HandleFunc("POST /akoflow-api/environment-connections/{connectionId}/health/", http_config.KernelHandler(workflowEngine.CheckEnvironmentConnection))
 	mux.HandleFunc("POST /akoflow-api/connection-tests/", http_config.KernelHandler(workflowEngine.TestEnvironmentConnection))
+	mux.HandleFunc("GET /akoflow-api/environment-connections/{connectionId}/deletion/", http_config.KernelHandler(workflowEngine.EnvironmentConnectionDeletion))
+	mux.HandleFunc("DELETE /akoflow-api/environment-connections/{connectionId}/", http_config.KernelHandler(workflowEngine.EnvironmentConnectionDeletion))
 	mux.HandleFunc("PUT /akoflow-api/environment-connections/{connectionId}/", http_config.KernelHandler(workflowEngine.UpdateEnvironmentConnection))
 	mux.HandleFunc("POST /akoflow-api/environment-connections/{connectionId}/discover/", http_config.KernelHandler(workflowEngine.DiscoverEnvironmentConnection))
 	mux.HandleFunc("GET /akoflow-api/environment-connections/{connectionId}/history/", http_config.KernelHandler(workflowEngine.ListEnvironmentConnectionHistory))

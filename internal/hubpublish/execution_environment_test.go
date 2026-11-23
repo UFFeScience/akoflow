@@ -63,7 +63,13 @@ func TestPublishedEnvironmentUsesDockerObservationsAndDistinguishesSlurmNodes(t 
 			{"id":"run:native","metadata":{"nativeEnvironment":{
                 "architecture":"x86_64","cpuCapacity":4,"memoryBytes":4096,"memoryCapacityBytes":2048,"cpuModel":"Test CPU (TM)","executionStyle":"native"
             }}},
-			{"id":"run:first","metadata":{"allocatedNode":"private-first","slurmAllocatedGpus":2,"slurmEnvironment":{"architecture":"aarch64","cpuCores":32,"gpuCapacity":8,"version":"1.5.5","schedulerVersion":"24.11.5","cpuModel":"Intel(R) Core(TM) @ 2.80GHz"}}},
+			{"id":"run:first","metadata":{
+                "allocatedNode":"private-first","slurmAllocatedGpus":2,
+                "slurmEnvironment":{
+                    "architecture":"aarch64","cpuCores":32,"gpuCapacity":8,
+                    "version":"1.5.5","schedulerVersion":"24.11.5","cpuModel":"Intel(R) Core(TM) @ 2.80GHz"
+                }
+            }},
 			{"id":"run:second","metadata":{"allocatedNode":"private-second"}}
 		]
 	}`), &execution); err != nil {
@@ -85,7 +91,9 @@ func TestPublishedEnvironmentUsesDockerObservationsAndDistinguishesSlurmNodes(t 
 	}
 	if snapshot.Attempts[2].AllocatedGPU == nil || *snapshot.Attempts[2].AllocatedGPU != 2 ||
 		snapshot.Resources[2].Runtime != "Slurm" || snapshot.Resources[2].Architecture != "arm64" ||
-		snapshot.Resources[2].CPUModel != "Intel(R) Core(TM) @ 2.80GHz" || snapshot.Resources[2].GPUCapacity == nil || *snapshot.Resources[2].GPUCapacity != 8 || snapshot.Resources[2].ContainerRuntimeVersion != "1.5.5" || snapshot.Resources[2].RuntimeVersion != "24.11.5" ||
+		snapshot.Resources[2].CPUModel != "Intel(R) Core(TM) @ 2.80GHz" ||
+		snapshot.Resources[2].GPUCapacity == nil || *snapshot.Resources[2].GPUCapacity != 8 ||
+		snapshot.Resources[2].ContainerRuntimeVersion != "1.5.5" || snapshot.Resources[2].RuntimeVersion != "24.11.5" ||
 		snapshot.Resources[3].Source != "unknown" || snapshot.Attempts[2].ResourceNumber == snapshot.Attempts[3].ResourceNumber {
 		t.Fatalf("expected separate Slurm nodes with unknown capacity: %+v", snapshot)
 	}

@@ -174,7 +174,7 @@ func describeObservedResource(number int, mode string, facts map[string]any, run
 
 var linuxKernel = regexp.MustCompile(`^[0-9]{1,5}\.[0-9]{1,5}\.[0-9]{1,5}(-[0-9]{1,5})?`)
 
-var cpuModel = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9 ().+_-]{0,95}$`)
+var cpuModel = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9 ().+_-]{0,95}( @ [0-9.]{1,8} ?[GM]Hz)?$`)
 
 var runtimeVersion = regexp.MustCompile(`^[0-9]{1,5}\.[0-9]{1,5}\.[0-9]{1,5}$`)
 

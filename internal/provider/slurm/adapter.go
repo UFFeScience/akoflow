@@ -763,7 +763,7 @@ node_os=$(uname -s 2>/dev/null | tr "[:upper:]" "[:lower:]" || true)
 node_kernel=$(uname -r 2>/dev/null || true)
 node_cpus=$(getconf _NPROCESSORS_ONLN 2>/dev/null || true)
 node_memory_kib=$(awk '/^MemTotal:/ { print $2; exit }' /proc/meminfo 2>/dev/null || true)
-slurm_version=$(timeout 2s scontrol --version 2>/dev/null | awk '/^slurm / { print $2; exit }' || true)
+slurm_version=$(timeout 2s scontrol --version 2>/dev/null | awk '/^slurm(-wlm)? / { print $2; exit }' || true)
 node_allocated_gpus=${SLURM_GPUS_ON_NODE:-}
 node_gpu_capacity=
 case "$node_allocated_gpus" in

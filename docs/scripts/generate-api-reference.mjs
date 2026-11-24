@@ -499,6 +499,10 @@ const verifiedRequestNotes = {
     "No JSON body is required. The instance ID must exist (`404` otherwise). `202 Accepted` queues a stop operation; the worker accepts a ready instance and treats an already-stopped instance as a no-op. Other states or lifecycle safety checks can fail after acceptance. A repeated active stop returns the existing operation; a different active action returns `409`.",
   "POST /akoflow-api/cloud-instances/{instanceId}/validate/":
     "No JSON body is required. The instance ID must exist (`404` otherwise). `202 Accepted` queues validation against the target's configured checks; it does not by itself provision, configure, start, or stop the instance. Inspect the operation status and events for the result. A repeated active validation returns the existing operation; a different active action returns `409`.",
+  "POST /akoflow-api/execution-runs/{runId}/activities/{activityId}/test/":
+    "Review the activity test first. Send the reviewed positive `attempt`, its `revision`, and a nonzero UUID as `submissionId`. Changed or missing inputs return `409`. Success returns `202 Accepted` with the test run ID.",
+  "DELETE /akoflow-api/environment-connections/{connectionId}/":
+    "No body is required. Inspect the deletion preview for dependencies. Deletion checks them again and returns `409` with the blocking dependencies when the connection is in use. An unknown connection returns `404`, and successful removal returns `204 No Content`.",
   "DELETE /akoflow-api/environments/{environmentId}/":
     "No body is required. The environment must exist (`404` otherwise) and must not be referenced by an execution scope, network topology, schedule plan, execution data or transfers, console activity, or simulation scenario (`422` if referenced). Success returns `204 No Content` and removes its saved versions, inventory, and connections. Inspect dependencies before deleting; see [environments](/docs/guides/infrastructure/environments).",
   "DELETE /akoflow-api/storages/{storageId}/entries/":

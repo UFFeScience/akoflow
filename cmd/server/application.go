@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/UFFeScience/akoflow/internal/infrastructure/instancearchive"
 	"github.com/UFFeScience/akoflow/internal/planning/library"
+	"os"
 	"path/filepath"
 
 	"github.com/UFFeScience/akoflow/internal/api/handlers/workflow_engine_api_handler"
@@ -34,6 +35,7 @@ import (
 )
 
 type application struct {
+	runtimeUpdate      *httpserver.RuntimeUpdateGate
 	executionSchedules *recurring.Coordinator
 	settings           config.Settings
 	log                *logger.Logger
@@ -141,7 +143,12 @@ func newApplication(ctx context.Context, settings config.Settings, log *logger.L
 	if !storage.readOnly {
 		schedules = api.WithExecutionSchedules(storage.executions)
 	}
+	var runtimeUpdate *httpserver.RuntimeUpdateGate
+	if os.Getenv("AKOFLOW_DESKTOP_RUNTIME_UPDATES") == "true" {
+		runtimeUpdate = httpserver.NewRuntimeUpdateGate(storage.executions.HasRuntimeUpdateWork, os.Getenv("AKOFLOW_DESKTOP_RUNTIME_UPDATE_STARTUP") == "true")
+	}
 	return &application{
+		runtimeUpdate:      runtimeUpdate,
 		executionSchedules: schedules,
 		auditDatabase:      storage.auditDatabase,
 		audit:              storage.audit,
@@ -162,7 +169,7 @@ func (a *application) Run(ctx context.Context) error {
 		go a.dispatchExecutionSchedules(ctx)
 		go a.connectionMonitor.Run(ctx, a.settings.ConnectionCheckInterval)
 	}
-	if err := httpserver.Serve(ctx, a.settings.HTTPAddress, a.api, a.audit); err != nil {
+	if err := httpserver.Serve(ctx, a.settings.HTTPAddress, a.api, a.audit, a.runtimeUpdate); err != nil {
 		return fmt.Errorf("serve Akoflow API: %w", err)
 	}
 	return nil

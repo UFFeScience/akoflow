@@ -291,6 +291,16 @@ func (r *Repository) FindRun(ctx context.Context, id string) (*domain.ExecutionR
 	return run, err
 }
 
+func (r *Repository) HasRuntimeUpdateWork(ctx context.Context) (bool, error) {
+	var active bool
+	err := r.db.QueryRowContext(ctx, `SELECT EXISTS(
+		SELECT 1 FROM (`+runFeedSelect+`) WHERE status NOT IN ('completed', 'failed', 'cancelled')
+	) OR EXISTS(
+		SELECT 1 FROM queue_jobs WHERE status IN ('pending', 'leased')
+	)`).Scan(&active)
+	return active, err
+}
+
 func (r *Repository) ListRuns(ctx context.Context) ([]domain.ExecutionRun, error) {
 	page, err := r.ListRunsPage(ctx, 1, 500, "", "", "")
 	return page.Items, err

@@ -20,6 +20,26 @@ on:
         options:
           - macos-15
           - macos-26
+      component_update:
+        description: Publish a component-only prerelease and advance the in-app component channel.
+        type: boolean
+        default: false
+      minimum_desktop:
+        description: Exact compatible installed Desktop release for the component update (vX.Y.Z).
+        type: string
+      frontend_version:
+        description: Frontend source version, defaulting to the release tag.
+        type: string
+      daemon_version:
+        description: Daemon archive version, defaulting to the release tag.
+        type: string
+      buildkit_version:
+        description: BuildKit archive version, defaulting to the compatible installed Desktop release.
+        type: string
+      rollback_safe:
+        description: Confirm reversible data compatibility for all supported component versions.
+        type: boolean
+        default: false
   push:
     tags:
       - "v*.*.*"
@@ -47,6 +67,17 @@ jobs:
             echo "A semantic version source tag is required." >&2
             exit 1
           fi
+      - name: Verify component release inputs
+        if: inputs.component_update
+        env:
+          MINIMUM_DESKTOP: ${{ inputs.minimum_desktop }}
+          ROLLBACK_SAFE: ${{ inputs.rollback_safe }}
+        run: |
+          if ! [[ "$MINIMUM_DESKTOP" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || [[ "$ROLLBACK_SAFE" != true ]]; then
+            echo "Component updates require an installed Desktop version and verified reversible data compatibility." >&2
+            exit 1
+          fi
+
       - name: Checkout source
         uses: actions/checkout@v6
         with:
@@ -174,7 +205,42 @@ jobs:
             /tmp/akoflow-runtime-${{ env.AKOFLOW_RELEASE_TAG }}-linux-${{ matrix.arch }}.sha256
           if-no-files-found: error
 
+  frontend:
+    name: Build portable frontend bundle
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/checkout@v6
+        with:
+          repository: UFFeScience/akoflow-desktop
+          ref: refs/tags/${{ env.AKOFLOW_RELEASE_TAG }}
+          token: ${{ secrets.DESKTOP_REPOSITORY_TOKEN }}
+          path: desktop
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: desktop/package-lock.json
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+          cache: false
+      - run: npm ci && npm run build
+        working-directory: desktop
+      - run: |
+          go run ./cmd/component-release bundle desktop/dist "akoflow-frontend-$AKOFLOW_RELEASE_TAG.json"
+          cp desktop/electron/component-update-key.pem component-update-key.pem
+      - uses: actions/upload-artifact@v5
+        with:
+          name: frontend-bundle
+          path: |
+            akoflow-frontend-*.json
+            component-update-key.pem
+          if-no-files-found: error
+
   desktop:
+    if: '!inputs.component_update'
     name: Package desktop (${{ matrix.artifact }})
     needs: test
     strategy:
@@ -314,7 +380,8 @@ jobs:
 
   release:
     name: Publish verified GitHub release
-    needs: [runtime-assets, desktop]
+    needs: [runtime-assets, desktop, frontend]
+    if: ${{ !cancelled() && needs.runtime-assets.result == 'success' && needs.frontend.result == 'success' && (needs.desktop.result == 'success' || inputs.component_update) }}
     runs-on: ubuntu-latest
     steps:
       # Runtime archives are large. Download each artifact in sequence so the
@@ -333,18 +400,21 @@ jobs:
           path: release-assets
 
       - name: Download desktop package (macOS)
+        if: '!inputs.component_update'
         uses: actions/download-artifact@v5
         with:
           name: macos-universal
           path: release-assets
 
       - name: Download desktop package (Windows)
+        if: '!inputs.component_update'
         uses: actions/download-artifact@v5
         with:
           name: windows-x64
           path: release-assets
 
       - name: Download desktop package (Linux)
+        if: '!inputs.component_update'
         uses: actions/download-artifact@v5
         with:
           name: linux-x64
@@ -363,6 +433,37 @@ jobs:
             cp "$screenshot" release-assets/
           done
 
+      - name: Download frontend bundle
+        uses: actions/download-artifact@v5
+        with:
+          name: frontend-bundle
+          path: frontend-assets
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: release-source/go.mod
+          cache: false
+
+      - name: Sign the component manifest
+        env:
+          GH_TOKEN: ${{ github.token }}
+          AKOFLOW_COMPONENT_SIGNING_KEY: ${{ secrets.AKOFLOW_COMPONENT_SIGNING_KEY }}
+          MINIMUM_DESKTOP: ${{ inputs.minimum_desktop }}
+          FRONTEND_VERSION: ${{ inputs.frontend_version }}
+          DAEMON_VERSION: ${{ inputs.daemon_version }}
+          BUILDKIT_VERSION: ${{ inputs.buildkit_version }}
+          COMPONENT_UPDATE: ${{ inputs.component_update }}
+        run: |
+          cp frontend-assets/akoflow-frontend-*.json release-assets/
+          if [[ "$COMPONENT_UPDATE" == true ]]; then
+            BUILDKIT_VERSION="${BUILDKIT_VERSION:-$MINIMUM_DESKTOP}"
+          fi
+          cd release-source
+          go run ./cmd/component-release sign ../release-assets "$AKOFLOW_RELEASE_TAG" \
+            "${MINIMUM_DESKTOP:-$AKOFLOW_RELEASE_TAG}" "${FRONTEND_VERSION:-$AKOFLOW_RELEASE_TAG}" \
+            "${DAEMON_VERSION:-$AKOFLOW_RELEASE_TAG}" "${BUILDKIT_VERSION:-$AKOFLOW_RELEASE_TAG}" \
+            ../frontend-assets/component-update-key.pem
+
       - name: Prepare release notes
         shell: bash
         run: |
@@ -370,6 +471,10 @@ jobs:
           if [[ -f "$notes" ]]; then
             cat "$notes" > release-notes.md
             printf '\n\n' >> release-notes.md
+          fi
+          if [[ "${{ inputs.component_update }}" == true ]]; then
+            printf '%s\n' 'Apply this component update through Settings → Updates in a compatible AkôFlow Desktop installation.' >> release-notes.md
+            exit 0
           fi
           cat >> release-notes.md <<EOF
           ## Install AkôFlow Desktop
@@ -390,6 +495,19 @@ jobs:
           draft: false
           fail_on_unmatched_files: true
           generate_release_notes: true
-          prerelease: ${{ contains(env.AKOFLOW_RELEASE_TAG, '-') }}
+          prerelease: ${{ inputs.component_update }}
+          make_latest: ${{ inputs.component_update && 'false' || 'true' }}
           files: release-assets/*
           body_path: release-notes.md
+
+      - name: Advance the signed component channel
+        if: inputs.component_update
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! gh release view desktop-components --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release create desktop-components --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
+              --prerelease --latest=false --title 'Desktop component update channel' \
+              --notes 'Signed manifest consumed by compatible AkôFlow Desktop installations.'
+          fi
+          gh release upload desktop-components release-assets/components.json --repo "$GITHUB_REPOSITORY" --clobber

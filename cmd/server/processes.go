@@ -20,8 +20,12 @@ func (a *application) dispatchExecutionSchedules(ctx context.Context) {
 	ticker := time.NewTicker(5 * time.Second)
 	defer ticker.Stop()
 	for ctx.Err() == nil {
-		if err := a.executionSchedules.Dispatch(ctx, time.Now().UTC()); err != nil && ctx.Err() == nil {
-			a.log.Error("Dispatch execution schedules:", err)
+		if a.runtimeUpdate.Admit() {
+			err := a.executionSchedules.Dispatch(ctx, time.Now().UTC())
+			a.runtimeUpdate.Done()
+			if err != nil && ctx.Err() == nil {
+				a.log.Error("Dispatch execution schedules:", err)
+			}
 		}
 		select {
 		case <-ctx.Done():

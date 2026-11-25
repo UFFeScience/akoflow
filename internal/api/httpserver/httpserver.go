@@ -227,15 +227,15 @@ func registerExecutionRoutes(mux *http.ServeMux, workflowEngine *workflow_engine
 	mux.HandleFunc("GET /akoflow-api/execution-runs/{runId}/activities/{activityId}/metrics/summary/", http_config.KernelHandler(workflowEngine.GetActivityMetricSummary))
 }
 
-func Serve(ctx context.Context, address string, workflowEngine *workflow_engine_api_handler.Handler, auditStore ports.AuditStore) error {
+func Serve(ctx context.Context, address string, workflowEngine *workflow_engine_api_handler.Handler, auditStore ports.AuditStore, gates ...*RuntimeUpdateGate) error {
 	settings := config.Load()
 	return ServeSecure(ctx, address, workflowEngine, SecurityOptions{
 		BearerToken: settings.APIToken, AllowedOrigins: settings.APIAllowedOrigins,
 		LoopbackOnly: !isLoopbackAddress(address) && settings.APIToken == "",
-	}, auditStore)
+	}, auditStore, gates...)
 }
 
-func ServeSecure(ctx context.Context, address string, workflowEngine *workflow_engine_api_handler.Handler, security SecurityOptions, auditStore ports.AuditStore) error {
+func ServeSecure(ctx context.Context, address string, workflowEngine *workflow_engine_api_handler.Handler, security SecurityOptions, auditStore ports.AuditStore, gates ...*RuntimeUpdateGate) error {
 	if auditStore == nil {
 		return fmt.Errorf("audit store is required")
 	}
@@ -280,6 +280,9 @@ func ServeSecure(ctx context.Context, address string, workflowEngine *workflow_e
 		}
 		return "anonymous"
 	})
+	for _, gate := range gates {
+		handler = gate.Wrap(handler, security.BearerToken)
+	}
 	server := &http.Server{Addr: address, Handler: handler, ReadHeaderTimeout: 10 * time.Second, IdleTimeout: 60 * time.Second}
 	shutdownDone := make(chan struct{})
 	go func() { shutdownWhenCanceled(ctx, server); close(shutdownDone) }()

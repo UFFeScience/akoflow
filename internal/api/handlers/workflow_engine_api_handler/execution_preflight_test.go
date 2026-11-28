@@ -3,6 +3,7 @@ package workflow_engine_api_handler
 import (
 	"context"
 	"errors"
+	"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -131,6 +132,43 @@ func TestPreflightReusesCatalogArtifactWithoutRegistryAccess(t *testing.T) {
 		t.Fatalf("cached artifact incorrectly required registry: %s %d", status, checker.calls)
 	}
 }
+
+func TestPreflightChecksEachPortableBuildOncePerReport(t *testing.T) {
+	checker := &imageProbeStub{}
+	h := &Handler{build: checker}
+	request := preflightRequest()
+	request.Workflow.Activities = nil
+	for index := range 514 {
+		archive := []byte("shared archive")
+		if index == 513 {
+			archive = []byte("different archive with the same declared digest")
+		}
+		request.Workflow.Activities = append(request.Workflow.Activities, domain.Activity{
+			ID: strconv.Itoa(index),
+			Command: domain.ActivityCommand{Executable: &domain.ExecutableReference{
+				Source: domain.ExecutableSource{Origin: &domain.ArtifactOrigin{
+					Build: &domain.PortableArtifactBuild{ContextArchive: archive, ContextDigest: "same"},
+				}},
+			}},
+		})
+	}
+	for report := 1; report <= 2; report++ {
+		probes := h.preflightImages(&request)
+		if len(probes) != 514 {
+			t.Fatalf("got %d activity checks, want 514", len(probes))
+		}
+		for index, probe := range probes {
+			status, message, _ := probe.Run(context.Background())
+			if probe.EntityID != strconv.Itoa(index) || status != "blocked" || message != "registry offline" {
+				t.Fatalf("unexpected shared observation for activity %d: %s %s", index, status, message)
+			}
+		}
+		if want := 2 * report; checker.calls != want {
+			t.Fatalf("got %d executable lookups, want %d", checker.calls, want)
+		}
+	}
+}
+
 func TestConnectionProbeUsesRefreshedResourceConfiguration(t *testing.T) {
 	request := preflightRequest()
 	request.Plan.Assignments = []domain.PlanAssignment{{ActivityID: "a", ResourceID: "resource"}}

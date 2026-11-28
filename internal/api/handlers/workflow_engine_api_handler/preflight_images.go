@@ -2,6 +2,8 @@ package workflow_engine_api_handler
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/json"
 
 	"github.com/UFFeScience/akoflow/internal/application/ports"
 	apppreflight "github.com/UFFeScience/akoflow/internal/application/preflight"
@@ -11,6 +13,11 @@ import (
 
 func (h *Handler) preflightImages(request *ports.ExecutionRequest) []apppreflight.Probe {
 	probes := []apppreflight.Probe{}
+	type imageObservation struct {
+		available bool
+		err       error
+	}
+	observations := map[[sha256.Size]byte]imageObservation{}
 	for index := range request.Workflow.Activities {
 		activity := request.Workflow.Activities[index]
 		probes = append(probes, apppreflight.Probe{Code: "executable_availability", Stage: "artifacts", EntityID: activity.ID, Run: func(ctx context.Context) (string, string, string) {
@@ -38,7 +45,25 @@ func (h *Handler) preflightImages(request *ports.ExecutionRequest) []appprefligh
 			if !ok {
 				return "unverified", "Read-only executable availability checks are unavailable.", "Review artifact availability before execution."
 			}
-			observed, err := checker.CheckExecutable(ctx, source)
+			var result imageObservation
+			if source.Origin != nil && source.Origin.Build != nil {
+				// The complete origin includes the archived bytes as well as the
+				// declared digests. Distinct or malformed archives must be checked independently.
+				encoded, err := json.Marshal(source.Origin)
+				if err != nil {
+					return "blocked", err.Error(), operationerror.Describe(err).NextAction
+				}
+				key := sha256.Sum256(encoded)
+				var checked bool
+				result, checked = observations[key]
+				if !checked {
+					result.available, result.err = checker.CheckExecutable(ctx, source)
+					observations[key] = result
+				}
+			} else {
+				result.available, result.err = checker.CheckExecutable(ctx, source)
+			}
+			observed, err := result.available, result.err
 			if err != nil {
 				return "blocked", err.Error(), operationerror.Describe(err).NextAction
 			}

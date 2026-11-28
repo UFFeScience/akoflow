@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/url"
+	"strconv"
 )
 
 type PublicationPatch struct {
@@ -98,6 +99,37 @@ func (m *Manager) DeletePublication(ctx context.Context, id string) error {
 		m.state.DefaultPublicationID = ""
 		return m.persistLocked()
 	}
+	return nil
+}
+
+func (m *Manager) RetireVersion(ctx context.Context, id string, version, replacement int) error {
+	if m.options.ReadOnly {
+		return failure(403, "read_only", "Read-only instances cannot retire Hub workflow versions.")
+	}
+	if version < 1 || replacement <= version {
+		return failure(422, "invalid_version_retirement", "Choose an older version and its verified replacement.")
+	}
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	if _, err := m.identityLocked(ctx); err != nil {
+		return err
+	}
+	publication, err := m.publicationLocked(ctx, id)
+	if err != nil {
+		return err
+	}
+	latest := 0
+	for _, candidate := range publication.Versions {
+		latest = max(latest, candidate.Number)
+	}
+	if latest != replacement {
+		return failure(409, "replacement_version_changed", "The verified replacement is no longer the latest version.")
+	}
+	path := "/desktop/publications/" + url.PathEscape(id) + "/versions/" + strconv.Itoa(version)
+	if err := m.requestLocked(ctx, "DELETE", path, nil, nil, true, nil); err != nil {
+		return err
+	}
+	m.invalidatePublicationPreviewsLocked(id)
 	return nil
 }
 

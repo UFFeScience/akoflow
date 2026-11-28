@@ -14,6 +14,7 @@ func hubToolName(handler string) string {
 		"serveCreate":                  "hub_create_publication",
 		"serveGetPublication":          "hub_get_publication",
 		"serveUpdatePublication":       "hub_update_publication",
+		"serveRetireVersion":           "hub_retire_workflow_version",
 		"serveDeletePublication":       "hub_delete_publication",
 		"serveContributionDestination": "hub_get_contribution_destination",
 		"serveListVersions":            "hub_list_versions",

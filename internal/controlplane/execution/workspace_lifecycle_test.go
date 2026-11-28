@@ -52,3 +52,27 @@ func TestApplyArtifactManifestClassifiesWorkspaceSnapshots(t *testing.T) {
 		t.Fatalf("workspace counters=%+v", workspace)
 	}
 }
+
+func TestApplyArtifactManifestPreservesIdenticalReplacedOutput(t *testing.T) {
+	entries := []domain.ArtifactSnapshotEntry{
+		{Path: "input.csv", SizeBytes: 10, Checksum: "sha256:input"},
+		{Path: "result.csv", SizeBytes: 20, Checksum: "sha256:result"},
+	}
+	manifest := &domain.ArtifactManifest{
+		InitialSnapshot: entries,
+		FinalSnapshot:   entries,
+		Files: []domain.ArtifactObservation{
+			{Path: "result.csv", Change: domain.ArtifactModified, SizeBytes: 20, Checksum: "sha256:result"},
+		},
+		Summary: domain.ArtifactSummary{FinalFiles: 2, OutputBytes: 20},
+	}
+	workspace := &domain.ActivityWorkspace{}
+	applyArtifactManifest(workspace, manifest)
+	if len(workspace.Manifest.Outputs) != 1 || workspace.Manifest.Outputs[0].Path != "result.csv" ||
+		len(workspace.Manifest.Inputs) != 1 || workspace.Manifest.Inputs[0].Path != "input.csv" {
+		t.Fatalf("workspace manifest=%+v", workspace.Manifest)
+	}
+	if workspace.InputBytes != 10 || workspace.OutputBytes != 20 {
+		t.Fatalf("workspace byte counters=%+v", workspace)
+	}
+}

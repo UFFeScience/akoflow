@@ -120,3 +120,36 @@ func writeFile(t *testing.T, path, content string) {
 		t.Fatal(err)
 	}
 }
+
+func TestArtifactSnapshotDetectsIdenticalAtomicReplacement(t *testing.T) {
+	root := t.TempDir()
+	result := filepath.Join(root, "result.csv")
+	input := filepath.Join(root, "input.csv")
+	writeFile(t, result, "deterministic output")
+	writeFile(t, input, "untouched content")
+
+	before, err := SnapshotArtifacts(root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	replacement := filepath.Join(root, "attempt-output")
+	writeFile(t, replacement, "deterministic output")
+	if err := os.Rename(replacement, result); err != nil {
+		t.Fatal(err)
+	}
+	now := time.Now().Add(time.Hour)
+	if err := os.Chtimes(input, now, now); err != nil {
+		t.Fatal(err)
+	}
+	after, err := SnapshotArtifacts(root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	manifest := ArtifactManifestFor("run", "activity", "local", 1, 2, 0, before, after)
+	if len(manifest.Files) != 1 || manifest.Files[0].Path != "result.csv" || manifest.Files[0].Change != domain.ArtifactModified {
+		t.Fatalf("expected only the atomically replaced output, got %#v", manifest.Files)
+	}
+	if before.Files["result.csv"].checksum != after.Files["result.csv"].checksum {
+		t.Fatal("test fixture must reproduce identical bytes")
+	}
+}

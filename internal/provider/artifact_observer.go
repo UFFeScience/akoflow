@@ -23,6 +23,7 @@ type artifactFile struct {
 	size     int64
 	checksum string
 	modified int64
+	identity os.FileInfo
 }
 
 // PrepareArtifactRoot returns the declared workspace or allocates an isolated
@@ -60,7 +61,7 @@ func SnapshotArtifacts(root string) (ArtifactSnapshot, error) {
 		if err != nil {
 			return err
 		}
-		snapshot.Files[filepath.ToSlash(relative)] = artifactFile{size: info.Size(), checksum: checksum, modified: info.ModTime().UnixNano()}
+		snapshot.Files[filepath.ToSlash(relative)] = artifactFile{size: info.Size(), checksum: checksum, modified: info.ModTime().UnixNano(), identity: info}
 		return nil
 	})
 	return snapshot, err
@@ -94,7 +95,8 @@ func ArtifactManifestFor(runID, activityID, runtime string, startedAt, finishedA
 		case !hasCurrent:
 			change = domain.ArtifactDeleted
 			manifest.Summary.DeletedFiles++
-		case previous.size == current.size && previous.checksum == current.checksum:
+		case previous.size == current.size && previous.checksum == current.checksum &&
+			os.SameFile(previous.identity, current.identity):
 			continue
 		default:
 			change = domain.ArtifactModified

@@ -309,6 +309,12 @@ func applyArtifactManifest(workspace *domain.ActivityWorkspace, manifest *domain
 	workspace.Manifest = domain.WorkspaceManifest{}
 	initial := make(map[string]domain.WorkspaceEntry, len(manifest.InitialSnapshot))
 	final := make(map[string]domain.WorkspaceEntry, len(manifest.FinalSnapshot))
+	observedOutputs := make(map[string]bool, len(manifest.Files))
+	for _, file := range manifest.Files {
+		if file.Change == domain.ArtifactCreated || file.Change == domain.ArtifactModified {
+			observedOutputs[file.Path] = true
+		}
+	}
 	for _, file := range manifest.InitialSnapshot {
 		entry := domain.WorkspaceEntry{Path: file.Path, Digest: file.Checksum, SizeBytes: file.SizeBytes}
 		workspace.Manifest.Initial = append(workspace.Manifest.Initial, entry)
@@ -319,7 +325,9 @@ func applyArtifactManifest(workspace *domain.ActivityWorkspace, manifest *domain
 		workspace.Manifest.Final = append(workspace.Manifest.Final, entry)
 		final[file.Path] = entry
 		before, existed := initial[file.Path]
-		if existed && before.Digest == entry.Digest && before.SizeBytes == entry.SizeBytes {
+		// An atomic replacement is an output even when it reproduces the
+		// exact bytes of a file left by an earlier attempt.
+		if existed && before.Digest == entry.Digest && before.SizeBytes == entry.SizeBytes && !observedOutputs[file.Path] {
 			workspace.Manifest.Inputs = append(workspace.Manifest.Inputs, entry)
 			workspace.InputBytes += entry.SizeBytes
 		} else {

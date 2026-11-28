@@ -13,7 +13,7 @@ func TestHubCatalogContractsAndPermissions(t *testing.T) {
 		"hub_get_workflow_definition": Read, "inspect_artifact_image": Read,
 		"hub_update_publication": Write, "hub_import_workflow": Write,
 		"hub_preview_workflow": Write, "hub_preview_execution": Write, "hub_confirm_publication": Write,
-		"hub_delete_publication": Admin, "hub_disconnect": Admin, "hub_update_settings": Admin,
+		"hub_delete_publication": Admin, "hub_retire_workflow_version": Admin, "hub_disconnect": Admin, "hub_update_settings": Admin,
 		"get_execution_status": Read, "get_execution_logs": Read, "get_execution_events": Read,
 		"get_execution_artifacts": Read, "get_execution_activity": Read,
 	}

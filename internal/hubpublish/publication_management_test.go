@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"net/http/httptest"
 	"strings"
 	"testing"
 )
@@ -137,5 +138,51 @@ func TestHubImportPreservesImageMetadataAndDoesNotOverwriteConflicts(t *testing.
 	conflict = true
 	if _, err = manager.ImportWorkflow(context.Background(), definitionURI, "Imported study"); err == nil {
 		t.Fatal("conflict silently overwritten")
+	}
+}
+
+func TestRetireVersionUsesOnlyNumberedHubRoute(t *testing.T) {
+	deleted := 0
+	manager := testManager(t, func(w http.ResponseWriter, r *http.Request) {
+		switch {
+		case r.Method == "GET" && r.URL.Path == "/api/v1/desktop/me":
+			_ = json.NewEncoder(w).Encode(Identity{Username: "researcher", ProjectID: "project"})
+		case r.Method == "GET" && r.URL.Path == "/api/v1/desktop/publications/publication":
+			_ = json.NewEncoder(w).Encode(publicationInfo{Publication: Publication{ID: "publication"},
+				Versions: []publicationVersion{{Number: 1}, {Number: 2}}})
+		case r.Method == "DELETE" && r.URL.Path == "/api/v1/desktop/publications/publication/versions/1":
+			deleted++
+			w.WriteHeader(http.StatusNoContent)
+		default:
+			t.Errorf("unexpected Hub request %s %s", r.Method, r.URL.Path)
+		}
+	})
+	manager.state.AccessToken = "secret"
+	manager.state.DefaultPublicationID = "publication"
+	manager.previews["pending"] = preparedPublication{Publication: Publication{ID: "publication"}}
+	handler := manager.Handler()
+	for _, test := range []struct {
+		path string
+		want int
+	}{
+		{"versions/", 404},
+		{"versions/1/extra/?replacement=2", 404},
+		{"versions/1/", 422},
+		{"versions/1/?replacement=3", 409},
+		{"versions/1/?replacement=2", 200},
+	} {
+		recorder := httptest.NewRecorder()
+		handler.ServeHTTP(recorder, httptest.NewRequest("DELETE",
+			"/akoflow-api/hub/publications/publication/"+test.path, nil))
+		if recorder.Code != test.want {
+			t.Errorf("%s status %d, want %d: %s", test.path, recorder.Code, test.want, recorder.Body)
+		}
+	}
+	if deleted != 1 || len(manager.previews) != 0 || manager.state.DefaultPublicationID != "publication" {
+		t.Fatal("version retirement did not preserve the publication or clear stale previews")
+	}
+	manager.options.ReadOnly = true
+	if err := manager.RetireVersion(context.Background(), "publication", 1, 2); err == nil || deleted != 1 {
+		t.Fatal("retirement succeeded in read-only mode")
 	}
 }

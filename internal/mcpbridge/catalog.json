@@ -8963,6 +8963,16 @@
     }
   },
   {
+    "name": "hub_retire_workflow_version",
+    "method": "DELETE",
+    "path": "/akoflow-api/hub/publications/{publicationId}/versions/{version}/",
+    "handler": "serveRetireVersion",
+    "description": "hub retire workflow version. DELETE /akoflow-api/hub/publications/{publicationId}/versions/{version}/. Uses the daemon API and its domain validation.",
+    "query": [
+      "replacement"
+    ]
+  },
+  {
     "name": "hub_review_activity_estimates",
     "method": "POST",
     "path": "/akoflow-api/hub/workflow/activity-estimate-review/",

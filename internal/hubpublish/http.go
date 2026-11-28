@@ -23,6 +23,7 @@ func (m *Manager) Handler() http.Handler {
 	mux.HandleFunc("GET /akoflow-api/hub/publications/{publicationId}/", m.serveGetPublication)
 	mux.HandleFunc("PATCH /akoflow-api/hub/publications/{publicationId}/", m.serveUpdatePublication)
 	mux.HandleFunc("DELETE /akoflow-api/hub/publications/{publicationId}/", m.serveDeletePublication)
+	mux.HandleFunc("DELETE /akoflow-api/hub/publications/{publicationId}/versions/{version}/", m.serveRetireVersion)
 	mux.HandleFunc("GET /akoflow-api/hub/publications/{publicationId}/versions/", m.serveListVersions)
 	mux.HandleFunc("GET /akoflow-api/hub/publications/{publicationId}/results/", m.serveListResults)
 	mux.HandleFunc("GET /akoflow-api/hub/publications/{publicationId}/compare/", m.serveCompareVersions)

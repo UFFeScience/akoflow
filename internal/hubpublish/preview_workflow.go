@@ -32,7 +32,13 @@ func (m *Manager) PreviewWorkflow(ctx context.Context, workflowID, publicationID
 	if err != nil {
 		return result, err
 	}
-	if len(content) > 8<<20 {
+	if len(content) > packageLimit {
+		content, err = compactWorkflowYAML(content)
+		if err != nil {
+			return result, failure(422, "invalid_workflow", "The portable workflow could not be encoded.")
+		}
+	}
+	if len(content) > packageLimit {
 		return result, failure(422, "workflow_too_large", "The portable workflow exceeds 8 MiB.")
 	}
 	input := publicationVersionInput{YAML: string(content), Message: message}

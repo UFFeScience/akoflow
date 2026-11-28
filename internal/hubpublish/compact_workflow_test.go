@@ -73,3 +73,18 @@ func TestLargeSharedBuildExperimentRemainsPortable(t *testing.T) {
 		}
 	}
 }
+
+func TestLargeCaptureDropsOnlyIdenticalAttemptProjection(t *testing.T) {
+	activity := map[string]any{"activityId": "block", "attempt": 1, "status": "completed"}
+	execution := map[string]any{"activities": []any{activity}, "activityAttempts": []any{activity}}
+	if !compactIdenticalActivityAttempts(execution) || execution["activityAttempts"] != nil {
+		t.Fatal("duplicate attempt projection remained")
+	}
+	execution["activityAttempts"] = []any{
+		map[string]any{"activityId": "block", "attempt": 1, "status": "failed"},
+		activity,
+	}
+	if compactIdenticalActivityAttempts(execution) || execution["activityAttempts"] == nil {
+		t.Fatal("distinct attempt history was lost")
+	}
+}

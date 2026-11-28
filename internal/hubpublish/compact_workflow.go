@@ -2,6 +2,7 @@ package hubpublish
 
 import (
 	"encoding/json"
+	"reflect"
 	"strconv"
 
 	"gopkg.in/yaml.v3"
@@ -111,4 +112,15 @@ func compactWorkflowSnapshot(version map[string]any) bool {
 		}
 	}
 	return changed
+}
+
+// The projected activity rows contain the same attempt data when the arrays
+// are identical. Preserve a distinct attempt history whenever it exists.
+func compactIdenticalActivityAttempts(execution map[string]any) bool {
+	activities, ok := execution["activities"].([]any)
+	if !ok || len(activities) == 0 || !reflect.DeepEqual(activities, execution["activityAttempts"]) {
+		return false
+	}
+	delete(execution, "activityAttempts")
+	return true
 }

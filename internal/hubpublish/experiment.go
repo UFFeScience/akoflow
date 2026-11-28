@@ -132,16 +132,25 @@ func buildExperiment(context, execution map[string]any, metrics []any, selection
 	if err != nil {
 		return result, err
 	}
-	if _, err := marshalExperiment(capture.bundle); err == nil || !compactWorkflowSnapshot(version) {
+	if _, err := marshalExperiment(capture.bundle); err == nil {
 		return capture, nil
 	}
 	// The portable YAML retains complete origins for every activity. Keep one
 	// copy of each repeated payload in the JSON snapshot for inspection.
-	compactYAML, err := compactWorkflowYAML(yaml)
-	if err != nil {
-		return result, err
+	if compactWorkflowSnapshot(version) {
+		yaml, err = compactWorkflowYAML(yaml)
+		if err != nil {
+			return result, err
+		}
+		capture, err = encodeExperiment(workflow, plans, execution, string(yaml), redactions)
+		if err != nil {
+			return result, err
+		}
 	}
-	return encodeExperiment(workflow, plans, execution, string(compactYAML), redactions)
+	if _, err := marshalExperiment(capture.bundle); err != nil && compactIdenticalActivityAttempts(execution) {
+		return encodeExperiment(workflow, plans, execution, string(yaml), redactions)
+	}
+	return capture, nil
 }
 func exportExecution(detail map[string]any, metrics any) map[string]any {
 	keys := []string{"run", "activities",

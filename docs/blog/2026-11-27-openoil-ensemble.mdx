@@ -1,0 +1,46 @@
+---
+slug: openoil-ensemble-workflow
+authors: [ovvesley, llms]
+title: "OpenOil with AkôFlow: from 32 simulations to one coastal map"
+description: Run an OpenOil ensemble on four local Docker slots, trace the output files through 38 activities, and import the workflow from AkôFlow Hub.
+image: /img/blog/openoil-ensemble/mapa_probabilidade.png
+cover_alt: Coastal map colored by the fraction of OpenOil ensemble members that visited each grid cell.
+cover_style: photograph
+tags: [Scientific workflows, Experiments]
+---
+
+The map shows where simulated oil traveled offshore of Maricá and Niterói, Brazil. Each shaded cell represents the fraction of 32 simulation members that recorded an oil position there. AkôFlow ran the ensemble, passed the trajectories to the activities that combined them, and recorded the execution behind the map.
+
+The [published workflow on AkôFlow Hub](https://hub.akoflow.com/o/akoflow/scientific-workflows-openoil-ensemble-32) completed all **38 activities in 8 minutes and 17 seconds** using four local Docker slots on the reference homeserver. You can inspect that run and import the same workflow version into Desktop.
+
+<!-- truncate -->
+
+## Follow the files from simulation to map
+
+Each OpenDrift OpenOil member starts with the same offshore release and a different sampled wind and current configuration. Each writes a NetCDF trajectory and a resource profile. With the common inputs ready, AkôFlow can start independent members as local slots become available. The aggregation activities then combine the declared output files into grid visitation, coast arrival, and oil mass balance.
+
+A final validation activity checks trajectory dimensions, checksums, probability normalization, mass conservation, and the rendered files. Open the Hub **Results** tab to look at the activity attempts, logs, metrics, and observed timing from the reference run.
+
+![OpenOil mass balance, coast arrival and AkôFlow execution timeline](/img/blog/openoil-ensemble/resumo_workflow.png)
+
+## Read the map and watch one member
+
+The scenario uses synthetic wind and current forcings that are constant in space and time. The map summarizes what happened across this teaching ensemble. Its shading represents how many members visited a cell under those assumptions. For example, a value of 0.25 means eight of the 32 members visited that cell.
+
+The animation follows the member with the largest final fraction of stranded particles. The result archive also contains the trajectories for all members, along with the arrival and mass-balance tables.
+
+![Animated OpenOil trajectory for the selected ensemble member](/img/blog/openoil-ensemble/animacao.gif)
+
+[Download the validated results](https://github.com/UFFeScience/akoflow-examples/releases/download/openoil-ensemble-v1/scientific-workflows-openoil-ensemble-32-results.tar.gz) or [inspect the native experiment record](https://hub.akoflow.com/api/v1/publications/05658dfb-216a-4de5-8690-22453ddee8b4/experiments/db67cf0b-077b-4c80-8e57-94d98237affd).
+
+## Import the workflow and run your own ensemble
+
+In AkôFlow Desktop, choose **Create workflow → Import from Hub** and paste the URI for version 1.
+
+```text
+akoflow://hub/publications/05658dfb-216a-4de5-8690-22453ddee8b4/versions/1
+```
+
+The URI imports the workflow definition. Pull the pinned image and register the companion environment, scope, and topology using the [OpenOil showcase guide](/docs/showcase/scientific-workflows/openoil-ensemble-32). The reference profile declares four CPU slots and 16 GiB of capacity. Each concurrent member can use roughly 2–3 GiB for the coastline mask, so choose a slot count that fits your host.
+
+After execution, open the validation output and compare your activity timeline with the reference run. The Hub publication connects the workflow definition, execution evidence, and downloadable outputs so you can trace the map back to the computation that made it.

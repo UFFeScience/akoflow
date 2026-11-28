@@ -5,10 +5,12 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 
 	"github.com/UFFeScience/akoflow/internal/domain"
+	runtimecommon "github.com/UFFeScience/akoflow/internal/provider"
 )
 
 func TestAdapterRunsDockerActivityDetached(t *testing.T) {
@@ -58,6 +60,19 @@ func TestAdapterRunsDockerActivityDetached(t *testing.T) {
 	}
 	if handle.Status != domain.HandleCompleted || handle.ExitCode == nil || *handle.ExitCode != 0 {
 		t.Fatalf("handle=%+v", handle)
+	}
+	output, err := exec.Command("docker", "inspect", "--format", "{{.State.StartedAt}}|{{.State.FinishedAt}}", handle.ExternalID).Output()
+	if err != nil {
+		t.Fatal(err)
+	}
+	start, finish, ok := strings.Cut(strings.TrimSpace(string(output)), "|")
+	dockerStart, startErr := time.Parse(time.RFC3339Nano, start)
+	dockerFinish, finishErr := time.Parse(time.RFC3339Nano, finish)
+	if !ok || startErr != nil || finishErr != nil ||
+		handle.StartedAt != runtimecommon.UnixSeconds(dockerStart) ||
+		handle.FinishedAt != runtimecommon.UnixSeconds(dockerFinish) ||
+		handle.FinishedAt < handle.StartedAt {
+		t.Fatalf("handle interval %.9f–%.9f disagrees with Docker interval %q", handle.StartedAt, handle.FinishedAt, output)
 	}
 	if handle.Artifacts == nil || len(handle.Artifacts.Files) != 1 || handle.Artifacts.Files[0].Path != "output.txt" {
 		t.Fatalf("artifacts=%+v", handle.Artifacts)

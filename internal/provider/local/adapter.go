@@ -178,6 +178,7 @@ func (a *Adapter) startContainer(ctx context.Context, execution domain.ActivityE
 			return a.prepareImage(ctx, execution, image, platform)
 		})
 	}
+	launchRequestedAt := time.Now()
 	output, warning, err := startContainerForPlatform(ctx, args, image, options...)
 	if err != nil {
 		return domain.ActivityHandle{}, fmt.Errorf("start local activity: %w: %s", err, strings.TrimSpace(string(output)))
@@ -187,7 +188,12 @@ func (a *Adapter) startContainer(ctx context.Context, execution domain.ActivityE
 	if containerID == "" {
 		return domain.ActivityHandle{}, fmt.Errorf("start local activity: missing container ID")
 	}
-	startedAt := runtimecommon.UnixSeconds(time.Now())
+	imageObservation, observedStart := containerObservation(ctx, containerID, image)
+	start := observedStart
+	if start.IsZero() {
+		start = launchRequestedAt
+	}
+	startedAt := runtimecommon.UnixSeconds(start)
 	handle := domain.ActivityHandle{ID: execution.HandleID(), RunID: execution.Run.ID,
 		ActivityID: activity.ID, ResourceID: execution.Resource.ID, RuntimeID: execution.RuntimeID,
 		ExternalID: containerID, Status: domain.HandleRunning, StartedAt: startedAt,
@@ -196,7 +202,10 @@ func (a *Adapter) startContainer(ctx context.Context, execution domain.ActivityE
 			"artifactObservationRoot": root, "localContainerName": name, "executionTarget": "local-docker",
 		}}
 	handle.Metadata["dockerEnvironment"] = dockerEnvironment(ctx, warning != "")
-	handle.Metadata["imageObservation"] = containerImageObservation(ctx, containerID, image)
+	handle.Metadata["imageObservation"] = imageObservation
+	if observedStart.IsZero() {
+		handle.Metadata["dockerStartedAtEstimated"] = true
+	}
 	if allocatedCPU > 0 && allocatedMemory > 0 {
 		handle.Metadata["dockerLimits"] = map[string]any{"cpu": allocatedCPU, "memoryBytes": allocatedMemory}
 	}

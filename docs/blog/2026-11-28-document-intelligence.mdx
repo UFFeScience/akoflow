@@ -1,0 +1,52 @@
+---
+slug: document-intelligence-workflow
+publish_at: "2026-11-28T00:00:00-03:00"
+authors: [ovvesley, llms]
+title: "Document Intelligence with AkôFlow: from invoices to a checked CSV"
+description: Run a five-activity invoice workflow locally, inspect its reconciliation report, and import the versioned example from AkôFlow Hub.
+image: /img/blog/document-intelligence/workflow.jpg
+cover_alt: AkôFlow Desktop showing the five activities from document ingestion to the final report.
+tags: [Workflows, Experiments]
+---
+
+An invoice summary is easier to trust when you can see how its fields were extracted and how the line items were reconciled. This AkôFlow example starts with bundled business documents and finishes with an invoice summary CSV and a reconciliation report. Each activity writes a file that you can inspect before opening the final result.
+
+The [Document Intelligence workflow on AkôFlow Hub](https://hub.akoflow.com/o/akoflow/document-ai-document-intelligence) includes a local reference execution. All **five activities completed in 10.76 seconds** in Docker on the reference homeserver. You can open the run in the Hub and import the workflow into Desktop to try it with the same fixture files.
+
+<!-- truncate -->
+
+## Follow an invoice through the workflow
+
+The first activity ingests the bundled documents. Classification assigns a document type, and extraction converts the relevant fields into structured data. Reconciliation checks the extracted invoice lines. The last activity publishes the report and summary CSV.
+
+| Activity | File to inspect |
+| --- | --- |
+| Ingest | `ingested.json` |
+| Classify | `classified.json` |
+| Extract | `extracted.json` |
+| Reconcile | `reconciliation.json` |
+| Report | `invoice-summary.csv` and `report.json` |
+
+AkôFlow records the activity boundaries and the dependencies between those files. If a value in the CSV looks wrong, you can trace it to an earlier file and inspect the corresponding activity logs. The Desktop walkthrough below shows the reconciliation stage on the bundled example.
+
+![AkôFlow Desktop walkthrough showing the invoice reconciliation activity](/img/blog/document-intelligence/reconcile.jpg)
+
+## Inspect the result before you run it
+
+Open **Results** in the Hub to see the measured execution, including its plan, attempts, metrics, and logs. Download the outputs and open `invoice-summary.csv` alongside `reconciliation.json` to see what the workflow checked. The Desktop screenshots show the example walkthrough. The Hub experiment capture contains the measured run.
+
+![AkôFlow Desktop walkthrough showing the final document report](/img/blog/document-intelligence/report.jpg)
+
+[Download the validated output files](https://github.com/UFFeScience/akoflow-examples/releases/download/showcase-hub-v1/document-ai-document-intelligence-results.tar.gz) or [open the native experiment capture](https://hub.akoflow.com/api/v1/publications/85d4152f-da21-4d6b-84d0-6cc937d8b96e/experiments/54ec1072-9abf-410b-8f11-553a16f32340).
+
+## Run the example in AkôFlow Desktop
+
+Choose **Create workflow → Import from Hub** and paste the URI for version 1.
+
+```text
+akoflow://hub/publications/85d4152f-da21-4d6b-84d0-6cc937d8b96e/versions/1
+```
+
+The URI imports the workflow definition. Follow the [showcase guide](/docs/showcase/document-ai/document-intelligence) to obtain the pinned image and register the companion environment, scope, and topology. The example uses a local CPU Docker profile.
+
+Run the bundled documents first and compare your CSV and reconciliation output with the published files. Once you can follow the result through all five activities, you have a concrete starting point for adapting the workflow to your own document format.

@@ -1,0 +1,27 @@
+---
+slug: montage-hybrid-workflow
+publish_at: "2026-12-04T00:00:00-03:00"
+authors: [ovvesley, llms]
+title: "Montage with AkôFlow: placing one workflow across two environments"
+description: Follow the transfers behind the measured GCP and HPC run, then explore a GCP and local Docker deployment profile for the same workload.
+image: /img/blog/montage-050/mosaic-color.png
+cover_alt: Color mosaic produced by the recorded hybrid AkôFlow Montage experiment.
+cover_style: photograph
+tags: [Scientific workflows, Infrastructure]
+---
+
+The mosaic above was produced by a hybrid GCP and HPC execution of Montage 050. AkôFlow placed the work across environments while preserving the dependencies between 58 activities. The [original field note](/blog/montage-050-from-observations-to-a-mosaic) traces the astronomy behind the image. Here, we follow the execution choices behind it.
+
+<!-- truncate -->
+
+## Keep the graph and change where it runs
+
+The graph says which input observations a projection reads and which projected files a downstream activity needs. A deployment profile describes the resources available for that computation. Moving an activity across environments also changes where its input files have to travel. Inspecting both the graph and the transfers helps you decide which work to move.
+
+The historical GCP/HPC run completed **58 of 58 activities**. Its reported makespan was about **115 minutes**, compared with a planned estimate of about **60 minutes**. The [observed results](/downloads/blog/montage-050/observed-results.json) record comparability limits, including different planned and observed transfer scopes.
+
+## Compare the local reference and the hybrid deployment guide
+
+Start at [Montage 050 on AkôFlow Hub](https://hub.akoflow.com/o/akoflow/scientific-workflows-montage-050) to inspect the versioned graph and the measured two-slot Docker run. Then open the [GCP and local Docker deployment guide](/docs/showcase/montage-cloud-local). That profile assigns the twelve projections to four GCP workers and keeps the remaining processing local. It describes a deployment option with your own cloud account and capacity. The hybrid timing above belongs to the recorded GCP/HPC experiment.
+
+Before trying a placement change, identify the files that cross the boundary. Keep the workflow and input versions pinned, then compare observed activity and transfer records against your baseline.

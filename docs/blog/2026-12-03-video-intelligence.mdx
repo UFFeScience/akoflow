@@ -1,0 +1,34 @@
+---
+slug: video-intelligence-workflow
+publish_at: "2026-12-03T00:00:00-03:00"
+authors: [ovvesley, llms]
+title: "Video Intelligence with AkôFlow: from an MP4 to an inspectable timeline"
+description: Run a local video analysis workflow and follow its probe, scene and audio outputs into a consolidated timeline.
+image: /img/blog/video-intelligence/timeline.jpg
+cover_alt: AkôFlow Desktop walkthrough showing the video timeline activity.
+tags: [Workflows, Media]
+---
+
+An MP4 is easy to watch. A pipeline that extracts metadata, scenes, and audio can make the same clip easier to inspect programmatically. This AkôFlow workflow starts with a bundled video fixture and produces separate analysis files, a consolidated timeline, and a report.
+
+The [local reference execution on AkôFlow Hub](https://hub.akoflow.com/o/akoflow/media-video-intelligence) completed **six activities in 12.56 seconds** in Docker.
+
+<!-- truncate -->
+
+## Inspect the files that feed the timeline
+
+Preparation produces the clip. The analysis activities write `probe.json`, `scenes.json`, and `audio.json`. The timeline activity combines their outputs, and the report activity presents the result. If a scene in the timeline looks surprising, open the scene analysis output and trace it to the activity that produced it.
+
+![AkôFlow Desktop walkthrough showing the six video analysis activities](/img/blog/video-intelligence/workflow.jpg)
+
+In the Hub, open **Results** to inspect the attempts, logs, and measured durations. [Download the checked output files](https://github.com/UFFeScience/akoflow-examples/releases/download/showcase-hub-v1/media-video-intelligence-results.tar.gz) to read the timeline alongside its input analysis files.
+
+## Try it with the bundled video
+
+Choose **Create workflow → Import from Hub** in Desktop and paste the version 1 URI.
+
+```text
+akoflow://hub/publications/fffb92b7-1b16-4eb8-a7ab-ef0f9f7a65d4/versions/1
+```
+
+The [video showcase guide](/docs/showcase/media/video-intelligence) provides the image and companion definitions for the local profile. Start with the fixture to see what the workflow emits. You can then adjust the input and compare how each stage responds to a different clip.

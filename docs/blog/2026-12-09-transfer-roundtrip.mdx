@@ -1,0 +1,29 @@
+---
+slug: cross-environment-file-transfers
+publish_at: "2026-12-09T00:00:00-03:00"
+authors: [ovvesley, llms]
+title: "Cross-environment transfers with AkôFlow: follow a file through Slurm, Kind, and GCP"
+description: Trace a recorded round trip from PlaFRIM to Kind and GCP, then back to PlaFRIM with checksum verification at each handoff.
+image: /img/architecture/transfer-runtime-paths.svg
+cover_alt: AkôFlow architecture diagram illustrating runtime file transfer paths.
+tags: [Workflows, Infrastructure]
+---
+
+A workflow can finish an activity on one machine and need its output on another. In this AkôFlow fixture, a payload traveled from the PlaFRIM Slurm environment to Kind, then to a GCP worker, and finally back to PlaFRIM. The last activity checked the original payload and both intermediary receipts before writing its final receipt.
+
+<!-- truncate -->
+
+## Follow each handoff
+
+| Environment | What the activity verifies or writes |
+| --- | --- |
+| PlaFRIM source | Writes the payload and its SHA-256 checksum. |
+| Kind | Verifies the payload and checksum, then writes its receipt. |
+| GCP | Verifies the incoming files and writes the cloud receipt. |
+| PlaFRIM destination | Checks the payload and both receipts, then writes the final receipt. |
+
+The recorded execution completed **four activities** and reported **391 bytes** across three transfers. Its observed makespan was **545.536 seconds**, including the distributed execution lifecycle. The GCP instance was destroyed after the run. The small payload makes this a check of routing and integrity.
+
+## Use the fixture to check your topology
+
+The [round-trip source bundle](https://github.com/UFFeScience/akoflow-examples/tree/main/real/plafrim-kind-cloud-roundtrip) includes the scope, network, workflow, and plan. Adapt the environment IDs and capacity to your deployment. After a run, check the output receipt alongside the activity and transfer records so you can confirm where the files traveled and whether they arrived intact.

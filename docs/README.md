@@ -63,3 +63,15 @@ The Go command `go run ./cmd/docs-release-sync` writes the public build snapshot
 Release publication, edits, deletion or unpublication request a documentation workflow on `main`, preserving the existing Pages deployment branch policy. The existing daily schedule refreshes the saved history as well. Pull request checks use separate concurrency groups from production Pages deployment.
 
 Validate the generator with `go test ./cmd/docs-release-sync` and the browser pagination/normalization with `npm run test:releases --prefix docs`. Runtime release Markdown is parsed and sanitized before rendering. Screenshots in release notes should use an immutable raw GitHub commit URL; the normal documentation guides reference their repository-owned static image paths.
+
+### Scheduled blog posts
+
+Set a quoted `publish_at` timestamp with an explicit offset in the article's
+front matter, for example `publish_at: "2026-12-10T00:00:00-03:00"`. Deploy the
+article and its images together. The blog and article route unlock in the
+browser at the scheduled time. The next daily Pages build updates the feed,
+archive, tags, author pages, search index, and sitemap.
+
+Append `?preview=scheduled` to the blog or article URL to preview scheduled
+posts. The flag is public, and scheduled content ships in the site's static
+assets. Use drafts for content that should stay off the deployed site.

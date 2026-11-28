@@ -2,7 +2,7 @@
 slug: montage-050-from-observations-to-a-mosaic
 authors: [ovvesley, llms]
 title: "Montage 050: a sky made of workflows"
-description: Twelve observations, 58 activities, one astronomical mosaic. Explore the science, reproduce the local workflow, and read the evidence behind a completed experiment.
+description: Twelve observations, 58 activities, one astronomical mosaic. Explore the measured run on AkôFlow Hub and import the versioned workflow into Desktop.
 image: /img/blog/montage-050/mosaic-color.png
 cover_alt: The 1800 by 1800 pixel color mosaic produced by the completed AkôFlow Montage hybrid experiment.
 cover_style: photograph
@@ -13,11 +13,23 @@ import WorkflowDag from "@site/src/components/WorkflowDag";
 
 The stars in the opening image are the output of a scientific computation. Before the color mosaic existed, individual observations had to be reprojected, their overlaps compared, their backgrounds reconciled, and their pixels combined. AkôFlow coordinates those steps as a workflow and keeps the execution evidence alongside the result.
 
-This field note follows **Montage 050**, a 58-activity astronomy workflow. We will look at what the activities do, how to reproduce the local example, and what an existing completed experiment tells us about planning and execution.
+**Montage 050** turns twelve FITS observations into three astronomical mosaics and a color preview. On AkôFlow Hub you can inspect the 58-activity workflow, open the results of a completed local run, and import the same workflow version into Desktop.
 
 <!-- truncate -->
 
-## Start with the image—and its provenance
+## Open the workflow on AkôFlow Hub
+
+Start with [Montage 050 on AkôFlow Hub](https://hub.akoflow.com/o/akoflow/scientific-workflows-montage-050). Follow the dependencies in the workflow graph, then open **Results** to inspect the local run's plan, activity attempts, metrics, and logs. It completed **58 of 58 activities** in **53 minutes and 17 seconds** on the reference homeserver with two local Docker CPU slots. It produced [three validated FITS mosaics and four PNG previews](https://github.com/UFFeScience/akoflow-examples/releases/download/showcase-hub-v1/scientific-workflows-montage-050-results.tar.gz).
+
+To run your own copy, choose **Create workflow → Import from Hub** in Desktop and paste the URI for version 1.
+
+```text
+akoflow://hub/publications/4a1b3c21-a122-4c19-bd2d-c305d400b41f/versions/1
+```
+
+The URI imports the workflow definition. Pull the pinned container image and register the companion environment, scope, and topology from the [local showcase bundle](/docs/showcase/scientific-workflows/montage-050) before planning your run.
+
+## Where the cover image came from
 
 The cover is the actual **1800 × 1800** color preview from run `montage-docker-image-real-20261010-v2`. It is a recorded product of a completed hybrid GCP/HPC experiment. Click it to enlarge the image, or [open the original PNG](/img/blog/montage-050/mosaic-color.png).
 
@@ -350,11 +362,9 @@ The recorded cloud compute-and-boot-disk lifecycle estimate was **USD 0.3532** a
 
 [Download the result summary and its limitations](/downloads/blog/montage-050/observed-results.json). The repository preserves the original [completion record](https://github.com/UFFeScience/akoflow/blob/main/experiments/montage-micro-hpc-e2/docker-image-real-v2-completion.json) and [detailed results](https://github.com/UFFeScience/akoflow/blob/main/experiments/montage-micro-hpc-e2/docker-image-real-v2-results.json).
 
-## What is—and is not—verified for the local bundle
+## Compare your run with the local reference
 
-The checked-in local image contract was validated on **2026-10-20**: twelve FITS inputs, 58 activities, and 138 named handoffs. That record explicitly states `fullExecutionPerformed: false`. Its separate daemon snapshot recorded a running workflow with zero completed activities at capture time. These are historical snapshots; neither establishes the current state of another instance.
-
-The completed hybrid run supplies the mosaic and the results in this article. To claim a completed reproduction on your machine, retain your own successful validator output, activity records, and output manifest. The [local showcase page](/docs/showcase/scientific-workflows/montage-050) links the checked-in contract and daemon evidence.
+Use the [local experiment capture](https://hub.akoflow.com/api/v1/publications/4a1b3c21-a122-4c19-bd2d-c305d400b41f/experiments/4932099c-030e-47c5-acff-0ac0a32611e1) for the two-slot Docker profile. Keep your own validator output, activity records, and output manifest so you can compare the artifacts and observed activity times in the two executions. The historical hybrid metrics above describe a separate GCP/HPC run.
 
 ## Keep the experiment with the picture
 

@@ -3,6 +3,11 @@ import type { Config } from "@docusaurus/types";
 import type * as Preset from "@docusaurus/preset-classic";
 import { publicSiteUrl } from "./src/utils/publicSiteUrl";
 
+import type { BlogPost } from "@docusaurus/plugin-content-blog";
+import { blogSchedulePluginName, isScheduledBlogPost } from "./src/utils/blogSchedule";
+
+const buildTime = Date.now();
+
 const config: Config = {
   title: "AkôFlow",
   tagline: "Open Source Engine for Containerized Scientific Workflows",
@@ -64,6 +69,19 @@ const config: Config = {
             "Tutorials, experiments, and results from the AkôFlow project.",
           showReadingTime: true,
           postsPerPage: "ALL",
+          async processBlogPosts({ blogPosts }) {
+            return blogPosts.map((post) => {
+              if (!isScheduledBlogPost(post.metadata.frontMatter, buildTime)) return post;
+              return {
+                ...post,
+                metadata: {
+                  ...post.metadata,
+                  unlisted: true,
+                  frontMatter: { ...post.metadata.frontMatter, unlisted: true },
+                },
+              };
+            });
+          },
           blogSidebarCount: 0,
           onInlineTags: "ignore",
           onUntruncatedBlogPosts: "ignore",
@@ -93,6 +111,22 @@ const config: Config = {
   ],
 
   plugins: [
+    () => ({
+      name: blogSchedulePluginName,
+      allContentLoaded({ allContent, actions }) {
+        const blog = allContent["docusaurus-plugin-content-blog"]?.default as
+          | { blogPosts: BlogPost[] }
+          | undefined;
+        actions.setGlobalData(
+          (blog?.blogPosts ?? [])
+            .filter(({ metadata }) =>
+              !metadata.frontMatter.draft &&
+              isScheduledBlogPost(metadata.frontMatter, buildTime),
+            )
+            .map(({ metadata }) => metadata),
+        );
+      },
+    }),
     [
       "@docusaurus/plugin-client-redirects",
       {

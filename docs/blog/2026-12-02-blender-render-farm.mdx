@@ -1,0 +1,32 @@
+---
+slug: blender-render-farm-workflow
+publish_at: "2026-12-02T00:00:00-03:00"
+authors: [ovvesley, llms]
+title: "Blender with AkôFlow: split a render and assemble the animation"
+description: Follow a Blender scene through two render branches and download the validated MP4 from the reference execution.
+image: /img/blog/blender-render-farm/compose.jpg
+cover_alt: Desktop walkthrough showing the composition stage of the Blender render workflow.
+tags: [Workflows, Rendering]
+---
+
+A Blender scene goes into this workflow. An MP4 and a render report come out. In between, AkôFlow lets the even and odd frame activities run independently and makes composition wait for both sets of frames. [Download the reference animation and report](https://github.com/UFFeScience/akoflow-examples/releases/download/showcase-hub-v1/rendering-blender-render-farm-results.tar.gz).
+
+The [reference run on AkôFlow Hub](https://hub.akoflow.com/o/akoflow/rendering-blender-render-farm) completed **five activities in 18.98 seconds** on the local Docker profile with the bundled scene.
+
+<!-- truncate -->
+
+## Follow both render branches
+
+Setup creates the scene and render plan. The separate rendering activities consume the same scene and write distinct frame sets. The composition activity consumes both sets, and verification records the completed animation in the report. In AkôFlow, those dependencies are visible in the graph and the execution history shows when each branch ran.
+
+![AkôFlow Desktop walkthrough showing the Blender render branches](/img/blog/blender-render-farm/workflow.jpg)
+
+## Run it in Desktop
+
+Choose **Create workflow → Import from Hub**, then paste the version 1 URI.
+
+```text
+akoflow://hub/publications/f0608ece-22cb-45d9-ba33-aaf5d1c42231/versions/1
+```
+
+Use the [Blender showcase guide](/docs/showcase/rendering/blender-render-farm) to prepare the image and register the companion definitions. After execution, inspect each render activity and open the final report alongside the MP4. The same dependency structure gives you a starting point for splitting a larger scene into frame groups.

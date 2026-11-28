@@ -1,0 +1,34 @@
+---
+slug: oceanbench-glonet-workflow
+publish_at: "2026-12-06T00:00:00-03:00"
+authors: [ovvesley, llms]
+title: "OceanBench with AkôFlow: from GLONET forecasts to nine checked tables"
+description: Explore a versioned workflow that reproduces a bounded OceanBench tutorial using pinned forecast and observation inputs.
+image: /img/blog/oceanbench-glonet/metric-leads.png
+cover_alt: Plots of reproduced OceanBench metrics across GLONET forecast horizons.
+tags: [Scientific workflows, Experiments]
+---
+
+The curves show metrics from an OceanBench tutorial for two GLONET forecast initializations in January 2024. AkôFlow ran nine independent metric calls against a checksum-verified input snapshot, then combined their outputs and checked the resulting tables against the pinned tutorial notebook.
+
+The reference run completed **13 activities** and passed validation after resuming from a local container startup timeout.
+
+<!-- truncate -->
+
+## Follow the metric branches
+
+Preparation pins the public input objects and their checksums. The metric activities evaluate forecasts against the reference data, then aggregation and plotting turn the tables into the graphics below. The final validation checks table cells and coverage fields at the displayed precision of the original notebook.
+
+![OceanBench metric curves as the forecast lead increases](/img/blog/oceanbench-glonet/forecast-lead-metrics.gif)
+
+![Measured activity timing for the OceanBench reproduction](/img/blog/oceanbench-glonet/timeline.png)
+
+The comparison is scoped to the two tutorial initializations. Use the timeline to inspect concurrency and the tables to evaluate agreement with the notebook.
+
+## Reproduce the tutorial workflow
+
+Import version 3 in Desktop using the URI below. The [source bundle](https://github.com/UFFeScience/akoflow-examples/tree/main/oceanography/oceanbench-glonet) documents the public inputs, scientific implementation, preflight, and execution records.
+
+```text
+akoflow://hub/publications/0f2c1803-b55c-41ea-9d86-9e40331763f6/versions/3
+```

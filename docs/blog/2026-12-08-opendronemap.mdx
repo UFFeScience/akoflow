@@ -1,0 +1,31 @@
+---
+slug: opendronemap-workflow
+publish_at: "2026-12-08T00:00:00-03:00"
+authors: [ovvesley, llms]
+title: "OpenDroneMap with AkôFlow: from 77 drone photos to an orthomosaic"
+description: Inspect the parallel submodels, native merge and recovered execution behind the Caliterra geospatial artifacts.
+image: /img/blog/opendronemap/orthophoto.png
+cover_alt: Measured Caliterra orthomosaic produced by the OpenDroneMap workflow.
+cover_style: photograph
+tags: [Scientific workflows, Experiments]
+---
+
+This Caliterra orthomosaic started with **77 CC0 photographs** from Dennis Baldwin and Unmanned Airlines. In the published AkôFlow run, two dense-processing submodels ran in parallel and their native merge produced a point cloud with **4,510,286 points**.
+
+<!-- truncate -->
+
+## Follow the submodels and the merge
+
+The workflow splits the input, reconstructs and aligns the submodels, then starts the two dense-processing activities. The merge consumes both outputs. The final checks reopen the geospatial products and verify the point count, raster properties, and file checksums.
+
+![Colored point cloud rendered from the merged Caliterra result](/img/blog/opendronemap/pointcloud.png)
+
+The Hub record shows **nine completed activities**. It also preserves the earlier attempts interrupted by an external daemon restart and the attempts that completed after recovery. That history lets you inspect which outputs were reused and which activities ran again.
+
+## Inspect and import
+
+Open the [published OpenDroneMap workflow and results](https://hub.akoflow.com/o/akoflow/scientific-workflows-opendronemap). Version 1 can be imported into Desktop with the URI below. The [showcase guide](/docs/showcase/scientific-workflows/opendronemap) describes the exact image and original photos needed for a reproduction.
+
+```text
+akoflow://hub/publications/fa855624-54cc-44a9-9c9a-b3117b31eb33/versions/1
+```

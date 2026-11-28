@@ -1,0 +1,32 @@
+---
+slug: hyperparameter-search-workflow
+publish_at: "2026-12-05T00:00:00-03:00"
+authors: [ovvesley, llms]
+title: "Hyperparameter search with AkôFlow: follow a winning model back to its trial"
+description: Run three training configurations, compare their held-out errors, and publish the selected model and leaderboard.
+image: /img/blog/hyperparameter-search/compare-trials.jpg
+cover_alt: Desktop walkthrough of the activity that compares the three training trials.
+tags: [Workflows, Machine Learning]
+---
+
+Three regressors train on the same dataset with different learning rates and epoch budgets. Their measured held-out errors determine the winner. AkôFlow keeps the independent trials and the comparison in one workflow, so the selected model has a traceable path back to the training activity that produced it.
+
+The [reference run on AkôFlow Hub](https://hub.akoflow.com/o/akoflow/machine-learning-hyperparameter-search) completed **six activities in 14.63 seconds** on the local Docker profile.
+
+<!-- truncate -->
+
+## Give each trial the same starting point
+
+A preparation activity creates the shared dataset. Three trial activities consume it, each writing its model and metrics. The comparison activity reads the three result sets and builds the leaderboard. The last activity records the winning model.
+
+The Desktop image shows the comparison activity in the walkthrough. The Hub **Results** tab shows the observed run of the published version. Read the training configuration alongside the held-out error before interpreting the ranking.
+
+## Import the example
+
+Paste the version 1 URI into **Create workflow → Import from Hub**.
+
+```text
+akoflow://hub/publications/12f30a7f-d58d-43e5-9a90-eba31de75a9e/versions/1
+```
+
+The [showcase guide](/docs/showcase/ai/machine-learning/hyperparameter-search) covers local setup. Run the bundled trials first, then change a learning rate or epoch budget and follow the resulting model through the same comparison and selection activities.

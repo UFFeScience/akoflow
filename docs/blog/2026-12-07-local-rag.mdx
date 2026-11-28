@@ -1,0 +1,28 @@
+---
+slug: local-rag-workflow
+publish_at: "2026-12-07T00:00:00-03:00"
+authors: [ovvesley, llms]
+title: "Local RAG with AkôFlow: trace an answer back to the index"
+description: Inspect how a local workflow ingests documents, chunks text, builds an index, and evaluates retrieval against bundled fixtures.
+image: /img/blog/local-rag/index.jpg
+cover_alt: AkôFlow Desktop walkthrough of the index-building activity.
+tags: [Workflows, AI]
+---
+
+When the documents behind a retrieval pipeline change, you need a way to see which chunks were indexed and what the next query retrieved. This local AkôFlow workflow makes those steps inspectable. The [Hub reference execution](https://hub.akoflow.com/o/akoflow/generative-ai-local-rag) completed **six activities in 11.83 seconds** on the bundled example.
+
+<!-- truncate -->
+
+## Follow the index through retrieval
+
+Ingestion and chunking prepare the text. The index activity packages it for retrieval. The next stages retrieve evidence, produce an answer, and evaluate the result with the supplied fixtures. Open an activity's outputs to see the inputs available to the following stage.
+
+## Try a document change
+
+Import version 1 with **Create workflow → Import from Hub** and follow the [local RAG showcase guide](/docs/showcase/ai/generative-ai/local-rag-factory).
+
+```text
+akoflow://hub/publications/f00526cb-8aa2-4bcf-b28d-8d76c47588fb/versions/1
+```
+
+First run the fixture unchanged. Then update one document and rerun with the same query. Compare the chunk and retrieval artifacts from the two runs. This gives you a way to distinguish a change in retrieved evidence from a change that happens later in the answer stage.

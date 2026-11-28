@@ -1,0 +1,30 @@
+---
+slug: weatherbench2-score-audit
+publish_at: "2026-11-30T00:00:00-03:00"
+authors: [ovvesley, llms]
+title: "WeatherBench 2 with AkôFlow: two forecasts, one reference"
+description: Follow the workflow that compares GraphCast and IFS HRES across 40 forecast horizons using the same ERA5 target.
+image: /img/blog/weatherbench2/rmse-by-lead.png
+cover_alt: GraphCast and IFS HRES global RMSE curves across common forecast horizons.
+tags: [Scientific workflows, Experiments]
+---
+
+A forecast comparison depends on which observations count as the reference and which horizons the two models share. In this example, AkôFlow extracts the official WeatherBench 2 aggregate scores for GraphCast and IFS HRES, aligns them on ERA5, and produces the curves above.
+
+The recorded workflow completed **10 activities in 20.68 seconds**. Its inputs are two immutable score objects for 2020 on the 1.5° grid. The analysis uses global RMSE for Z500 and T2M across 40 six-hour leads, from 6 to 240 hours.
+
+<!-- truncate -->
+
+## Read the result from source to chart
+
+Four independent branches verify and extract scores for the two models and two variables. Two downstream comparisons pair the values at the common leads. The chart and animation activities use those tables, and the final activity validates the numbers against registered hashes.
+
+![WeatherBench 2 score comparison as the forecast horizon increases](/img/blog/weatherbench2/rmse-by-lead.gif)
+
+The workflow audits published aggregate scores. It uses ERA5 for both models and preserves that comparison rule in the outputs. The [source bundle](https://github.com/UFFeScience/akoflow-examples/tree/main/weather/weatherbench2-common-era5-score-audit) records the input objects, measurement evidence, and attribution to the WeatherBench 2 and GraphCast teams.
+
+## Take the workflow apart in AkôFlow
+
+Use the bundle to build the pinned image, run its offline preflight, and import the workflow into an AkôFlow daemon. Open the execution timeline to see which extractions overlap and which outputs the comparison stages depend on. The independent GraphCast branches overlapped for roughly 0.60 seconds in the recorded run.
+
+The comparison CSV is the place to inspect a particular horizon. The validation file records whether the extracted values match the registered inputs. Keeping both files with the execution lets you trace a chart point back to the scores used to draw it.

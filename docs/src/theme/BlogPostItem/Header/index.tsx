@@ -1,5 +1,7 @@
 import React from "react";
 import Link from "@docusaurus/Link";
+import { useLocation } from "@docusaurus/router";
+import { blogPreviewQuery, isBlogPreview } from "@site/src/utils/blogSchedule";
 import useBaseUrl from "@docusaurus/useBaseUrl";
 import { useBlogPost } from "@docusaurus/plugin-content-blog/client";
 import BlogThemeSwitch from "@site/src/components/blog/BlogThemeSwitch";
@@ -9,6 +11,7 @@ import BlogAuthorByline from "@site/src/components/blog/BlogAuthorByline";
 import styles from "@site/src/components/blog/blog.module.css";
 
 export default function BlogPostItemHeader() {
+  const { search } = useLocation();
   const { metadata } = useBlogPost();
   const { title, description, frontMatter } = metadata;
   const image = useBaseUrl(
@@ -23,7 +26,7 @@ export default function BlogPostItemHeader() {
   return (
     <header className={`${styles.articleHeader} ${styles.photoArticleHeader}`}>
       <div className={styles.topline}>
-        <Link to="/blog">← All stories</Link>
+        <Link to={isBlogPreview(search) ? `/blog${blogPreviewQuery}` : "/blog"}>← All stories</Link>
         <BlogThemeSwitch />
       </div>
       <BlogPhotoHero

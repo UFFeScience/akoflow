@@ -1,0 +1,28 @@
+---
+slug: tpch-q1-workflow-audit
+publish_at: "2026-12-01T00:00:00-03:00"
+authors: [ovvesley, llms]
+title: "Auditing PostgreSQL and MongoDB with AkôFlow"
+description: Run the original and aligned TPC-H Q1 variants in isolation and trace a difference in results back to a date filter.
+image: /img/blog/tpch-q1/aligned-aggregates.png
+cover_alt: Numerical aggregates from PostgreSQL and MongoDB after aligning the date cutoffs.
+tags: [Scientific workflows, Experiments]
+---
+
+One query selected **59,307 rows** in PostgreSQL. The other selected **60,175** in MongoDB. Both came from the same TPC-H Q1 comparison. The workflow ran the original queries first, then tested a controlled change to the MongoDB date cutoff. With the filters aligned, all numerical aggregates agreed in the observed run.
+
+<!-- truncate -->
+
+## Preserve the original variants
+
+The PostgreSQL source used September 2, 1998, as its cutoff. The MongoDB pipeline used December 1, 1998. The AkôFlow workflow retains both originals and names the adjusted variant separately. It runs each engine and mode with and without an index in isolated database instances, then checks agreement for the cases that select the same rows.
+
+This is the Q1 audit at scale factor 0.01 using the complete generated lineitem table for that scale. The workflow records the result of each variant so you can trace the difference to the input filter. Timings describe that execution with its particular client and concurrency settings.
+
+![Observed timeline of AkôFlow activities for the TPC-H Q1 audit](/img/blog/tpch-q1/execution-timeline.png)
+
+## Inspect what each activity proved
+
+The reference execution completed **10 activities in 32.59 seconds**, with up to three active at once. Opening the recorded timeline shows how the isolated branches fed the validation. The scientific validation JSON records the original disagreement and the aligned numerical checks.
+
+To run the audit, start with the [AkôFlow source bundle](https://github.com/UFFeScience/akoflow-examples/tree/main/scientific-workflows/tpch-databases). It includes the workflow definition, the observed execution evidence, and the attribution to Merlo and colleagues. Compare the validation output before drawing conclusions from timings. The same workflow pattern works whenever you need to preserve an original query and test a hypothesis about a change.

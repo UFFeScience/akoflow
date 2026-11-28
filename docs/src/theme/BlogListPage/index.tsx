@@ -1,4 +1,9 @@
 import React, { useState } from "react";
+import { usePluginData } from "@docusaurus/useGlobalData";
+import { useLocation } from "@docusaurus/router";
+import useIsBrowser from "@docusaurus/useIsBrowser";
+import type { PropBlogPostMetadata } from "@docusaurus/plugin-content-blog";
+import { blogPreviewQuery, blogSchedulePluginName, isBlogPreview, isScheduledBlogPost } from "@site/src/utils/blogSchedule";
 import Layout from "@theme/Layout";
 import type { Props } from "@theme/BlogListPage";
 import BlogBackdrop from "@site/src/components/blog/BlogBackdrop";
@@ -10,7 +15,16 @@ import styles from "@site/src/components/blog/blog.module.css";
 export default function BlogListPage({ items, metadata }: Props) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All stories");
-  const posts = items.map(({ content }) => content.metadata);
+  const { search } = useLocation();
+  const isBrowser = useIsBrowser();
+  const preview = isBrowser && isBlogPreview(search);
+  const scheduledPosts = usePluginData(blogSchedulePluginName) as PropBlogPostMetadata[];
+  const posts = [
+    ...items.map(({ content }) => content.metadata),
+    ...scheduledPosts.filter(({ frontMatter }) =>
+      isBrowser && (preview || !isScheduledBlogPost(frontMatter)),
+    ),
+  ].sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
   const categories = [
     "All stories",
     ...new Set(posts.flatMap((post) => post.tags.map((tag) => tag.label))),
@@ -79,7 +93,7 @@ export default function BlogListPage({ items, metadata }: Props) {
             </p>
             <div className={styles.grid}>
               {visible.map((post) => (
-                <BlogCard key={post.permalink} post={post} />
+                <BlogCard key={post.permalink} post={post} query={preview ? blogPreviewQuery : undefined} />
               ))}
             </div>
             {visible.length === 0 && (

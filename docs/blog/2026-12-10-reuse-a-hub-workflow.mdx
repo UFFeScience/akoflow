@@ -1,0 +1,32 @@
+---
+slug: reproduce-a-workflow-from-hub
+publish_at: "2026-12-10T00:00:00-03:00"
+authors: [ovvesley, llms]
+title: "AkôFlow Hub: hand a workflow to someone who can run it"
+description: Share a versioned workflow and reference outputs, then import and validate a fresh execution in another Desktop installation.
+image: /img/blog/hub-is-alive/11-import-review.png
+cover_alt: AkôFlow Desktop showing the workflow import review before creating a local copy.
+tags: [Workflows, AkôFlow Hub]
+---
+
+A colleague wants to rerun your invoice workflow on their own machine. Send them the AkôFlow Hub version together with the results they should expect. They can review the dependencies before running and compare their reconciliation output with the reference.
+
+<!-- truncate -->
+
+## As the publisher, share the version and the evidence
+
+Use [Document Intelligence on AkôFlow Hub](https://hub.akoflow.com/o/akoflow/document-ai-document-intelligence) as the example. Its version has a workflow definition, and the Results tab includes the recorded five-activity Docker run. The archive includes the final CSV as well as the extracted fields and reconciliation report.
+
+Share the version URI, a link to the recorded results, and the setup guide for the companion environment. Those three pieces tell the receiver what to import, how to provision it, and what to compare.
+
+## As the receiver, run it in your own Desktop
+
+Open **Create workflow → Import from Hub** and paste the URI for version 1.
+
+```text
+akoflow://hub/publications/85d4152f-da21-4d6b-84d0-6cc937d8b96e/versions/1
+```
+
+Review the import and use the [showcase guide](/docs/showcase/document-ai/document-intelligence) to obtain the image and register the environment, scope, and topology. Run on your local Docker profile with the bundled documents. Compare the new `invoice-summary.csv` and `reconciliation.json` with the [reference output archive](https://github.com/UFFeScience/akoflow-examples/releases/download/showcase-hub-v1/document-ai-document-intelligence-results.tar.gz).
+
+Keep the two execution records alongside the version. The same definition gives you a reference for comparing outputs, and the separate execution records show how the two machines ran it.

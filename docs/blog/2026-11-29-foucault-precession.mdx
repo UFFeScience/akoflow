@@ -1,0 +1,40 @@
+---
+slug: foucault-parallel-workflow
+publish_at: "2026-11-29T00:00:00-03:00"
+authors: [ovvesley, llms]
+title: "Foucault with AkôFlow: one pendulum workflow, five parallel slots"
+description: Compare two measured executions of the same workflow and follow five independent latitude simulations in the AkôFlow timeline.
+image: /img/blog/foucault-precession/precession-vs-latitude.png
+cover_alt: Fitted pendulum precession rates change sign across the equator and follow the analytical latitude curve.
+tags: [Scientific workflows, Experiments]
+---
+
+The same pendulum workflow took **273.21 seconds with one slot** and **82.08 seconds with five** on the reference host. AkôFlow recorded the timing of each activity, so you can see which calculations ran together and where the workflow waited for results.
+
+<!-- truncate -->
+
+## Five latitudes, one comparison
+
+The workflow integrates one sidereal day at latitudes −60°, −30°, 0°, +30°, and +60°. Each branch works from its own initial conditions and can run as soon as its inputs and a slot are available. Downstream activities compare the trajectories with the exact small-angle solution, check step refinement, and render the combined result.
+
+The results recover the expected change in precession direction across the equator. The maximum coordinate disagreement with the exact solution was **2.18 × 10⁻⁸ m**.
+
+![Simulated rotation of the Foucault pendulum plane across five latitudes](/img/blog/foucault-precession/foucault-precession.gif)
+
+## What the timeline shows
+
+All five latitude activities overlapped for **56.25 seconds** in the five-slot run. Compare the full execution times to see the effect of those overlapping intervals. The observed **3.33×** makespan ratio applies to these two runs on this host with the same workflow image.
+
+![Measured execution timeline with five overlapping latitude activities](/img/blog/foucault-precession/measured-timeline.png)
+
+Open the [recorded five-slot execution on AkôFlow Hub](https://hub.akoflow.com/o/akoflow/community-explorer-issue-44-foucault-precession-v1/results/2/executions/a004359f-76ee-4f8a-89c7-3f793d53945b/runs/community-foucault-run-v2/workflow) to inspect the activity graph and observed durations.
+
+## Try the same workflow with a different slot count
+
+In Desktop, choose **Create workflow → Import from Hub** and paste the URI for version 2.
+
+```text
+akoflow://hub/publications/f67f3cd3-de44-48cc-a8ab-f171f9a4132b/versions/2
+```
+
+Use the same image and inputs for both runs. Change the local capacity from one slot to five, then compare the total runtime, the overlap in the timeline, and the validation output. The activity graph gives you a way to identify the branches that can benefit from the extra capacity before launching the comparison.

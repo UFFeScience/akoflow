@@ -113,7 +113,10 @@ func buildExperiment(context, execution map[string]any, metrics []any, selection
 		return result, failure(422, "invalid_workflow", "The captured workflow is invalid.")
 	}
 	yaml, err := apirequests.PortableWorkflow(definition).YAML()
-	if err != nil || len(yaml) > 8<<20 {
+	if err == nil && len(yaml) > packageLimit {
+		yaml, err = compactWorkflowYAML(yaml)
+	}
+	if err != nil || len(yaml) > packageLimit {
 		return result, failure(422, "invalid_workflow", "The captured workflow YAML is invalid or too large.")
 	}
 	environment := executionEnvironment(context, execution)
@@ -125,7 +128,29 @@ func buildExperiment(context, execution map[string]any, metrics []any, selection
 		}
 	}
 	plans := []any{map[string]any{"plan": plan, "context": context}}
-	return encodeExperiment(workflow, plans, execution, string(yaml), redactions)
+	capture, err := encodeExperiment(workflow, plans, execution, string(yaml), redactions)
+	if err != nil {
+		return result, err
+	}
+	if _, err := marshalExperiment(capture.bundle); err == nil {
+		return capture, nil
+	}
+	// The portable YAML retains complete origins for every activity. Keep one
+	// copy of each repeated payload in the JSON snapshot for inspection.
+	if compactWorkflowSnapshot(version) {
+		yaml, err = compactWorkflowYAML(yaml)
+		if err != nil {
+			return result, err
+		}
+		capture, err = encodeExperiment(workflow, plans, execution, string(yaml), redactions)
+		if err != nil {
+			return result, err
+		}
+	}
+	if _, err := marshalExperiment(capture.bundle); err != nil && compactIdenticalActivityAttempts(execution) {
+		return encodeExperiment(workflow, plans, execution, string(yaml), redactions)
+	}
+	return capture, nil
 }
 func exportExecution(detail map[string]any, metrics any) map[string]any {
 	keys := []string{"run", "activities",
